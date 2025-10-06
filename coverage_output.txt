@@ -1,0 +1,874 @@
+
+ RUN  v3.2.4 /home/kade/runeset/reynard/packages/algorithms
+      Coverage enabled with v8
+
+ ✓ src/__tests__/performance/benchmark.test.ts > PerformanceBenchmark > run > should benchmark a synchronous function 7ms
+ ✓ src/__tests__/performance/benchmark.test.ts > PerformanceBenchmark > run > should benchmark an asynchronous function 32ms
+ ✓ src/__tests__/performance/benchmark.test.ts > PerformanceBenchmark > run > should handle function errors gracefully 5ms
+ ✓ src/__tests__/performance/timer.test.ts > PerformanceTimer > start > should start the timer 4ms
+ ✓ src/__tests__/performance/timer.test.ts > PerformanceTimer > stop > should stop the timer and return elapsed time 13ms
+ ✓ src/__tests__/performance/timer.test.ts > PerformanceTimer > stop > should throw error when stopping a timer that is not running 2ms
+ ✓ src/__tests__/performance/timer.test.ts > PerformanceTimer > stop > should throw error when stopping a timer that was already stopped 1ms
+ ✓ src/__tests__/performance/timer.test.ts > PerformanceTimer > getElapsed > should return elapsed time while timer is running 8ms
+ ✓ src/__tests__/performance/timer.test.ts > PerformanceTimer > getElapsed > should return final elapsed time when timer is stopped 7ms
+ ✓ src/__tests__/performance/timer.test.ts > PerformanceTimer > getElapsed > should return 0 when timer has not been started 0ms
+ ✓ src/__tests__/performance/timer.test.ts > PerformanceTimer > reset > should reset the timer to initial state 1ms
+ ✓ src/__tests__/performance/timer.test.ts > PerformanceTimer > reset > should allow starting after reset 0ms
+ ✓ src/__tests__/performance/timer.test.ts > PerformanceTimer > integration > should work correctly for multiple start/stop cycles 11ms
+ ✓ src/__tests__/performance/timer.test.ts > PerformanceTimer > integration > should maintain precision for very short durations 0ms
+ ✓ src/__tests__/geometry/shapes/line-intersection-distance.test.ts > LineOps - Intersection and Distance > distanceToPoint > should return zero for point on line 5ms
+ ✓ src/__tests__/geometry/shapes/line-intersection-distance.test.ts > LineOps - Intersection and Distance > distanceToPoint > should return distance to closest point on line 0ms
+ ✓ src/__tests__/geometry/shapes/line-intersection-distance.test.ts > LineOps - Intersection and Distance > distanceToPoint > should return distance to start point when closest to start 0ms
+ ✓ src/__tests__/geometry/shapes/line-intersection-distance.test.ts > LineOps - Intersection and Distance > distanceToPoint > should return distance to end point when closest to end 0ms
+ ✓ src/__tests__/geometry/shapes/line-intersection-distance.test.ts > LineOps - Intersection and Distance > distanceToPoint > should handle point line 0ms
+ ✓ src/__tests__/geometry/shapes/line-intersection-distance.test.ts > LineOps - Intersection and Distance > intersects > should return intersection point for crossing lines 2ms
+ ✓ src/__tests__/geometry/shapes/line-intersection-distance.test.ts > LineOps - Intersection and Distance > intersects > should return null for parallel lines 1ms
+ ✓ src/__tests__/geometry/shapes/line-intersection-distance.test.ts > LineOps - Intersection and Distance > intersects > should return null for non-intersecting lines 0ms
+ ✓ src/__tests__/geometry/shapes/line-intersection-distance.test.ts > LineOps - Intersection and Distance > intersects > should return null when intersection is outside line segments 0ms
+ ✓ src/__tests__/geometry/shapes/line-intersection-distance.test.ts > LineOps - Intersection and Distance > intersects > should return intersection at line endpoints 0ms
+ ✓ src/__tests__/geometry/shapes/line-intersection-distance.test.ts > LineOps - Intersection and Distance > intersects > should return null for identical lines (parallel) 0ms
+ ✓ src/__tests__/geometry/shapes/line-intersection-distance.test.ts > LineOps - Intersection and Distance > intersects > should return null for point lines (parallel) 0ms
+stdout | src/__tests__/paw-debug.test.ts > PAW Debug Investigation > should investigate algorithm selection for different dataset sizes
+Small dataset (20 objects):
+Workload: {
+  objectCount: [33m20[39m,
+  spatialDensity: [33m0.027959222960354097[39m,
+  overlapRatio: [33m0[39m,
+  updateFrequency: [33m0[39m,
+  queryPattern: [32m'random'[39m
+}
+Selection: {
+  algorithm: [32m'naive'[39m,
+  confidence: [33m0.9[39m,
+  expectedPerformance: { executionTime: [33m0.4[39m, memoryUsage: [33m320[39m },
+  reasoning: [
+    [32m'Small object count favors naive approach'[39m,
+    [32m'PAW findings show naive is optimal for <100 objects'[39m,
+    [32m'Minimal allocation overhead for small datasets'[39m
+  ]
+}
+
+Medium dataset (200 objects):
+Workload: {
+  objectCount: [33m200[39m,
+  spatialDensity: [33m0.2950764610191914[39m,
+  overlapRatio: [33m0.004242424242424243[39m,
+  updateFrequency: [33m0[39m,
+  queryPattern: [32m'random'[39m
+}
+Selection: {
+  algorithm: [32m'spatial'[39m,
+  confidence: [33m0.8[39m,
+  expectedPerformance: { executionTime: [33m1.1186787655134456[39m, memoryUsage: [33m6400[39m },
+  reasoning: [
+    [32m'Medium object count benefits from spatial optimization'[39m,
+    [32m'Spatial hashing reduces collision checks'[39m,
+    [32m'Memory overhead acceptable for this size'[39m
+  ]
+}
+
+Large dataset (1000 objects):
+Workload: {
+  objectCount: [33m1000[39m,
+  spatialDensity: [33m1.406421977318251[39m,
+  overlapRatio: [33m0.006262626262626263[39m,
+  updateFrequency: [33m0[39m,
+  queryPattern: [32m'clustered'[39m
+}
+Selection: {
+  algorithm: [32m'optimized'[39m,
+  confidence: [33m0.95[39m,
+  expectedPerformance: { executionTime: [33m6.914017905244763[39m, memoryUsage: [33m17024[39m },
+  reasoning: [
+    [32m'Large object count requires optimization'[39m,
+    [32m'Memory pooling eliminates allocation overhead'[39m,
+    [32m'PAW findings show 99.91% allocation reduction'[39m,
+    [32m'Best performance for >100 objects'[39m
+  ]
+}
+
+stdout | src/__tests__/paw-debug.test.ts > PAW Debug Investigation > should test actual algorithm execution times
+Medium dataset (200 objects) execution times:
+Adaptive selection: 11.764ms (105 collisions)
+Forced naive: 2.139ms (105 collisions)
+Forced optimized: 3.292ms (105 collisions)
+
+ ✓ src/__tests__/paw-debug.test.ts > PAW Debug Investigation > should investigate algorithm selection for different dataset sizes 12ms
+ ✓ src/__tests__/paw-debug.test.ts > PAW Debug Investigation > should test actual algorithm execution times 25ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > detectCollisions > should detect collisions between overlapping AABBs 10ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > detectCollisions > should return empty array for non-overlapping AABBs 4ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > detectCollisions > should handle large datasets efficiently 6ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > detectCollisions > should automatically select optimal algorithm based on dataset size 7ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > performSpatialQuery > should find objects within query AABB 3ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > findConnectedComponents > should find connected components from edges 2ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > findConnectedComponents > should handle isolated objects 2ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > checkCollision > should detect collision between overlapping AABBs 0ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > checkCollision > should not detect collision between non-overlapping AABBs 1ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > checkCollision > should detect collision for touching AABBs 0ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > PerformanceMonitor > should track performance statistics 3ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > PerformanceMonitor > should provide memory pool statistics 13ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > PerformanceMonitor > should provide optimization recommendations 2ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > PerformanceMonitor > should detect performance degradation 2ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > PerformanceMonitor > should generate comprehensive performance report 10ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > PerformanceMonitor > should reset statistics 2ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > OptimizationConfig > should allow configuration updates 2ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > OptimizationConfig > should provide convenience methods for common configurations 1ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > AlgorithmSelector > should select optimal collision detection algorithm 2ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > AlgorithmSelector > should provide selection statistics 0ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > AlgorithmSelector > should track performance history 0ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > AlgorithmSelector > should clear performance history 0ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > MemoryPool > should provide memory pool statistics 1ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > MemoryPool > should provide pool information 2ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > MemoryPool > should provide optimization recommendations 2ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > MemoryPool > should optimize for specific workloads 3ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > MemoryPool > should clean up resources when destroyed 2ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > Global Configuration > should allow global configuration updates 2ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > Global Configuration > should clean up global instances 6ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > Performance Integration > should maintain performance across multiple operations 6ms
+ ✓ src/__tests__/index.test.ts > Geometry Shapes Index > should export point algorithms 587ms
+ ✓ src/__tests__/optimization/optimized.test.ts > Optimized Algorithms API > Performance Integration > should show memory pool effectiveness 12ms
+stdout | src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Small Dataset Performance (10-50 objects) > should use naive algorithm for small datasets
+Small dataset results:
+Naive: 0.223ms
+PAW: 0.053ms
+Collision counts - Naive: 25, PAW: 4
+
+ ✓ src/__tests__/index.test.ts > Geometry Shapes Index > should export line algorithms 1ms
+ ✓ src/__tests__/index.test.ts > Geometry Shapes Index > should export circle algorithms 0ms
+ ✓ src/__tests__/index.test.ts > Geometry Shapes Index > should export rectangle algorithms 0ms
+ ✓ src/__tests__/index.test.ts > Geometry Shapes Index > should export polygon algorithms 0ms
+ ✓ src/__tests__/index.test.ts > Geometry Shapes Index > should export shape utilities 0ms
+stdout | src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Medium Dataset Performance (100-500 objects) > should outperform naive for medium datasets
+Medium dataset results:
+Naive: 13.086ms
+Spatial: 12.720ms
+PAW: 2.629ms
+Collision counts - Naive: 2706, Spatial: 2706, PAW: 126
+
+ ✓ src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Small Dataset Performance (10-50 objects) > should use naive algorithm for small datasets 44ms
+ ✓ src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Medium Dataset Performance (100-500 objects) > should outperform naive for medium datasets 671ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Basic Operations > identity > should create identity transform 6ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Basic Operations > translate > should create translation transform 1ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Basic Operations > translate > should work with negative values 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Basic Operations > scale > should create uniform scale transform 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Basic Operations > scale > should create non-uniform scale transform 1ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Basic Operations > scale > should work with fractional scale 1ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Basic Operations > rotate > should create rotation transform 1ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Basic Operations > rotate > should work with negative rotation 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Combine Operations > combine > should combine two identity transforms 1ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Combine Operations > combine > should combine translation and scale 1ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Combine Operations > combine > should combine rotation and translation 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Combine Operations > combine > should combine scale and rotation 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Combine Operations > combine > should handle complex combination 1ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Apply Operations > applyToPoint > should apply identity transform to point 2ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Apply Operations > applyToPoint > should apply translation to point 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Apply Operations > applyToPoint > should apply scale to point 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Apply Operations > applyToPoint > should apply rotation to point 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Apply Operations > applyToPoint > should apply combined transform to point 1ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Apply Operations > applyToPoint > should handle point at origin 1ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Apply Operations > applyToRectangle > should apply identity transform to rectangle 2ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Apply Operations > applyToRectangle > should apply translation to rectangle 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Apply Operations > applyToRectangle > should apply scale to rectangle 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Apply Operations > applyToRectangle > should apply rotation to rectangle 1ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Apply Operations > applyToRectangle > should apply combined transform to rectangle 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Apply Operations > applyToRectangle > should handle zero-size rectangle 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Inverse Operations > inverse > should create inverse of identity transform 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Inverse Operations > inverse > should create inverse of translation 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Inverse Operations > inverse > should create inverse of scale 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Inverse Operations > inverse > should create inverse of rotation 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Inverse Operations > inverse > should create inverse of combined transform 0ms
+ ✓ src/__tests__/geometry/transformations/transformation-algorithms.test.ts > TransformOps - Inverse Operations > inverse > should verify inverse property 0ms
+ ✓ src/__tests__/geometry/collision/aabb-batch-collision.test.ts > AABB Batch Collision Detection - Basic Functionality > batchCollisionDetection > should detect collisions between overlapping AABBs 7ms
+ ✓ src/__tests__/geometry/collision/aabb-batch-collision.test.ts > AABB Batch Collision Detection - Basic Functionality > batchCollisionDetection > should handle empty array 0ms
+ ✓ src/__tests__/geometry/collision/aabb-batch-collision.test.ts > AABB Batch Collision Detection - Basic Functionality > batchCollisionDetection > should handle single AABB 0ms
+ ✓ src/__tests__/geometry/collision/aabb-batch-collision.test.ts > AABB Batch Collision Detection - Self-Collision Options > batchCollisionDetection > should not include self-collisions by default 0ms
+ ✓ src/__tests__/geometry/collision/aabb-batch-collision.test.ts > AABB Batch Collision Detection - Self-Collision Options > batchCollisionDetection > should include self-collisions when includeSelf is true 0ms
+ ✓ src/__tests__/geometry/collision/aabb-batch-collision.test.ts > AABB Batch Collision Detection - Distance Filtering > batchCollisionDetection > should respect maxDistance filter 0ms
+ ✓ src/__tests__/geometry/collision/aabb-batch-collision.test.ts > AABB Batch Collision Detection - Spatial Hash Optimization > batchCollisionDetection > should use spatial hash optimization for large arrays 11ms
+ ✓ src/__tests__/geometry/collision/aabb-batch-collision.test.ts > AABB Batch Collision Detection - Spatial Hash Function > batchCollisionWithSpatialHash > should detect collisions using spatial hashing 1ms
+ ✓ src/__tests__/geometry/collision/aabb-batch-collision.test.ts > AABB Batch Collision Detection - Spatial Hash Function > batchCollisionWithSpatialHash > should fallback to regular detection when no spatial hash config 1ms
+ ✓ src/__tests__/geometry/collision/aabb-batch-collision.test.ts > AABB Batch Collision Detection - Spatial Hash Function > batchCollisionWithSpatialHash > should respect includeSelf option with spatial hash 0ms
+ ✓ src/__tests__/geometry/collision/aabb-batch-collision.test.ts > AABB Batch Collision Detection - Spatial Hash Function > batchCollisionWithSpatialHash > should respect maxDistance with spatial hash 0ms
+ ✓ src/__tests__/geometry/collision/aabb-batch-collision.test.ts > AABB Batch Collision Detection - Spatial Hash Function > batchCollisionWithSpatialHash > should handle multiple objects in same cell 0ms
+ ✓ src/__tests__/performance/budget-check.test.ts > PerformanceBudgetChecker - Check > checkBudget > should return true when no budget is set 12ms
+ ✓ src/__tests__/performance/budget-check.test.ts > PerformanceBudgetChecker - Check > checkBudget > should return true when all metrics are within budget 10ms
+ ✓ src/__tests__/performance/budget-check.test.ts > PerformanceBudgetChecker - Check > checkBudget > should return false and warn when duration exceeds budget 5ms
+ ✓ src/__tests__/performance/budget-check.test.ts > PerformanceBudgetChecker - Check > checkBudget > should return false and warn when memory usage exceeds budget 1ms
+ ✓ src/__tests__/performance/budget-check.test.ts > PerformanceBudgetChecker - Check > checkBudget > should return false and warn when iterations exceed budget 0ms
+ ✓ src/__tests__/performance/budget-check.test.ts > PerformanceBudgetChecker - Check > checkBudget > should return false and warn about multiple violations 0ms
+ ✓ src/__tests__/performance/budget-check.test.ts > PerformanceBudgetChecker - Check > checkBudget > should handle edge case values exactly at budget limits 0ms
+ ✓ src/__tests__/performance/budget-check.test.ts > PerformanceBudgetChecker - Check > checkBudget > should handle zero values in metrics 5ms
+ ✓ src/__tests__/performance/budget-check.test.ts > PerformanceBudgetChecker - Check > checkBudget > should handle very large values 1ms
+ ✓ src/__tests__/performance/throttle.test.ts > throttle > should throttle function calls 12ms
+ ✓ src/__tests__/performance/throttle.test.ts > throttle > should pass arguments to throttled function 5ms
+ ✓ src/__tests__/performance/throttle.test.ts > throttle > should maintain context (this) 2ms
+ ✓ src/__tests__/performance/throttle.test.ts > throttle > should handle immediate execution option 2ms
+ ✓ src/__tests__/performance/throttle.test.ts > throttle > should handle trailing execution option 1ms
+ ✓ src/__tests__/performance/throttle.test.ts > debounce > should debounce function calls 1ms
+ ✓ src/__tests__/performance/throttle.test.ts > debounce > should pass arguments to debounced function 1ms
+ ✓ src/__tests__/performance/throttle.test.ts > debounce > should maintain context (this) 1ms
+ ✓ src/__tests__/performance/throttle.test.ts > debounce > should handle immediate execution option 2ms
+ ✓ src/__tests__/performance/throttle.test.ts > debounce > should handle trailing execution option 3ms
+ ✓ src/__tests__/performance/throttle.test.ts > debounce > should cancel previous calls when new call is made 3ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Basic Operations > create > should create a vector with given components 12ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Basic Operations > fromPoints > should create vector from two points 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Basic Operations > add > should add two vectors 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Basic Operations > subtract > should subtract two vectors 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Scalar Operations > multiply > should multiply vector by scalar 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Scalar Operations > divide > should divide vector by scalar 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Scalar Operations > divide > should throw error when dividing by zero 6ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Mathematical Operations > dot > should calculate dot product 3ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Mathematical Operations > dot > should return 0 for perpendicular vectors 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Mathematical Operations > cross > should calculate cross product 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Mathematical Operations > magnitude > should calculate vector magnitude 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Mathematical Operations > magnitude > should return 0 for zero vector 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Mathematical Operations > magnitudeSquared > should calculate squared magnitude 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Geometric Operations > normalize > should normalize a vector 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Geometric Operations > normalize > should return zero vector when normalizing zero vector 5ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Geometric Operations > angle > should calculate angle of a vector 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Geometric Operations > angle > should calculate angle of a vector pointing up 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Geometric Operations > angleBetween > should calculate angle between vectors 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Geometric Operations > angleBetween > should return 0 for parallel vectors 0ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Geometric Operations > rotate > should rotate vector by angle 5ms
+ ✓ src/__tests__/geometry/vectors/vector-algorithms.test.ts > VectorOps - Geometric Operations > rotate > should rotate vector by negative angle 0ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryMonitor > should measure memory usage 8ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryMonitor > should track multiple measurements 1ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryMonitor > should calculate memory delta 2ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryMonitor > should return 0 delta for single measurement 0ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryMonitor > should return 0 average for no measurements 0ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryMonitor > should clear measurements 0ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryMonitor > should handle environment without memory API 0ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryLeakDetector > should take snapshots 2ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryLeakDetector > should limit snapshots to 10 1ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryLeakDetector > should detect memory leak with consistent growth 1ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryLeakDetector > should not detect leak with stable memory 0ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryLeakDetector > should return no leak for insufficient snapshots 1ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryLeakDetector > should calculate confidence based on variance 0ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryLeakDetector > should handle decreasing memory usage 0ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryLeakDetector > should clear snapshots 1ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryLeakDetector > should handle environment without memory API 0ms
+ ✓ src/__tests__/performance/memory-extended.test.ts > Memory Monitoring Extended > MemoryLeakDetector > should handle edge case with zero time difference 0ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > start > should start monitoring and request animation frame 6ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > start > should not start monitoring if already monitoring 0ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > start > should reset counters when starting 1ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > stop > should stop monitoring and cancel animation frame 2ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > stop > should handle stop when not monitoring 0ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > stop > should handle stop when animationFrameId is null 0ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > monitorFrame > should track frame times and increment frame count 1ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > monitorFrame > should detect dropped frames 0ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > monitorFrame > should limit frame times array to 60 entries 1ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > monitorFrame > should not monitor when not monitoring 1ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > monitorFrame > should request next animation frame 0ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > getMetrics > should return metrics with zero values when no frames recorded 1ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > getMetrics > should calculate correct metrics from frame times 1ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > getMetrics > should handle mixed frame times 0ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > getMetrics > should handle single frame time 0ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > getMetrics > should handle very slow frame times 0ms
+ ✓ src/__tests__/performance/framerate.test.ts > FrameRateMonitor > integration > should work end-to-end with mocked animation frames 1ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-transformations.test.ts > PolygonOps - Transformations > translate > should move all points by offset 16ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-transformations.test.ts > PolygonOps - Transformations > translate > should preserve original polygon 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-transformations.test.ts > PolygonOps - Transformations > translate > should work with negative offset 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-transformations.test.ts > PolygonOps - Transformations > scale > should scale from origin when no center specified 1ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-transformations.test.ts > PolygonOps - Transformations > scale > should scale around specified center 7ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-transformations.test.ts > PolygonOps - Transformations > scale > should preserve original polygon 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-transformations.test.ts > PolygonOps - Transformations > scale > should work with scale factor less than 1 1ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-transformations.test.ts > PolygonOps - Transformations > scale > should work with zero scale factor 1ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Basic Operations > create > should create a point with given coordinates 10ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Basic Operations > add > should add two points correctly 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Basic Operations > subtract > should subtract two points correctly 1ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Basic Operations > multiply > should multiply point by scalar correctly 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Basic Operations > divide > should divide point by scalar correctly 2ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Basic Operations > divide > should throw error when dividing by zero 10ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Geometry Operations > distance > should calculate distance between two points 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Geometry Operations > distance > should return 0 for same points 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Geometry Operations > distanceSquared > should calculate squared distance between two points 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Geometry Operations > midpoint > should calculate midpoint between two points 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Geometry Operations > lerp > should interpolate between two points 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Geometry Operations > lerp > should return first point at t=0 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Geometry Operations > lerp > should return second point at t=1 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Utility Operations > equals > should return true for equal points 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Utility Operations > equals > should return false for different points 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Utility Operations > equals > should handle floating point precision 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.test.ts > PointOps - Utility Operations > clone > should create a copy of the point 9ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > createOptimizedSpatialHash > should create spatial hash with default options 11ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > createOptimizedSpatialHash > should create spatial hash with custom options 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > createOptimizedSpatialHash > should calculate optimal cell size based on object distribution 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > createOptimizedSpatialHash > should handle empty object array 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > createOptimizedSpatialHash > should handle objects without dimensions 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > createOptimizedSpatialHash > should insert all objects into the hash 1ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > createOptimizedSpatialHash > should handle objects with zero dimensions 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > createOptimizedSpatialHash > should handle very large objects 14ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > createOptimizedSpatialHash > should handle very small objects 1ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > calculateOptimalCellSize > should return default size for empty array 1ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > calculateOptimalCellSize > should calculate size based on average object dimensions 1ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > calculateOptimalCellSize > should handle objects without dimensions 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > calculateOptimalCellSize > should handle mixed objects with and without dimensions 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > calculateOptimalCellSize > should handle very large objects 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > calculateOptimalCellSize > should handle very small objects 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > calculateOptimalCellSize > should handle single object 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > calculateOptimalCellSize > should handle objects with zero dimensions 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > estimateMemoryUsage > should estimate memory usage for given parameters 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > estimateMemoryUsage > should handle zero parameters 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > estimateMemoryUsage > should scale with cell count 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > estimateMemoryUsage > should scale with object count 3ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > estimateMemoryUsage > should scale with object-to-cell count 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > estimateMemoryUsage > should handle large numbers 1ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > estimateMemoryUsage > should provide reasonable estimates 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash-utils.test.ts > Spatial Hash Utils > estimateMemoryUsage > should handle edge case with very small numbers 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-advanced.test.ts > RectangleAdvanced > intersects > should return true for intersecting rectangles 3ms
+ ✓ src/__tests__/geometry/shapes/rectangle-advanced.test.ts > RectangleAdvanced > intersects > should return false for non-intersecting rectangles 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-advanced.test.ts > RectangleAdvanced > intersection > should return intersection of two rectangles 1ms
+ ✓ src/__tests__/geometry/shapes/rectangle-advanced.test.ts > RectangleAdvanced > intersection > should return null for non-intersecting rectangles 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-advanced.test.ts > RectangleAdvanced > union > should return union of two rectangles 1ms
+ ✓ src/__tests__/geometry/shapes/rectangle-advanced.test.ts > RectangleAdvanced > expand > should expand rectangle by given amount 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-advanced.test.ts > RectangleAdvanced > shrink > should shrink rectangle by given amount 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-advanced.test.ts > RectangleAdvanced > translate > should translate rectangle by given offset 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-advanced.test.ts > RectangleAdvanced > scale > should scale rectangle from origin 1ms
+ ✓ src/__tests__/geometry/shapes/rectangle-advanced.test.ts > RectangleAdvanced > scale > should scale rectangle from center 0ms
+ ✓ src/__tests__/geometry/collision/expand-aabb.test.ts > expandAABB > should expand AABB by given amount 3ms
+ ✓ src/__tests__/geometry/collision/expand-aabb.test.ts > expandAABB > should handle zero expansion 0ms
+ ✓ src/__tests__/geometry/collision/expand-aabb.test.ts > expandAABB > should handle negative expansion (shrink) 0ms
+ ✓ src/__tests__/geometry/collision/expand-aabb.test.ts > expandAABB > should handle large expansion 0ms
+ ✓ src/__tests__/performance/measure-async.test.ts > measureAsync Function > should measure async operation and return result with metrics 10ms
+ ✓ src/__tests__/performance/measure-async.test.ts > measureAsync Function > should work without operation name 1ms
+ ✓ src/__tests__/performance/measure-async.test.ts > measureAsync Function > should handle async operations that throw 3ms
+ ✓ src/__tests__/performance/measure-sync.test.ts > measureSync Function > should measure sync operation and return result with metrics 33ms
+ ✓ src/__tests__/performance/measure-sync.test.ts > measureSync Function > should work with multiple iterations 1ms
+ ✓ src/__tests__/performance/measure-sync.test.ts > measureSync Function > should work without operation name 0ms
+ ✓ src/__tests__/performance/measure-sync.test.ts > measureSync Function > should handle sync operations that throw 12ms
+ ✓ src/__tests__/geometry/shapes/line-geometric-operations.test.ts > LineOps - Geometric Operations > direction > should calculate direction vector correctly 23ms
+ ✓ src/__tests__/geometry/shapes/line-geometric-operations.test.ts > LineOps - Geometric Operations > direction > should work with negative direction 0ms
+ ✓ src/__tests__/geometry/shapes/line-geometric-operations.test.ts > LineOps - Geometric Operations > direction > should return zero vector for point line 0ms
+ ✓ src/__tests__/geometry/shapes/line-geometric-operations.test.ts > LineOps - Geometric Operations > normal > should calculate normalized perpendicular vector 4ms
+ ✓ src/__tests__/geometry/shapes/line-geometric-operations.test.ts > LineOps - Geometric Operations > normal > should calculate normal for diagonal line 0ms
+ ✓ src/__tests__/geometry/shapes/line-geometric-operations.test.ts > LineOps - Geometric Operations > normal > should return zero vector for point line 0ms
+ ✓ src/__tests__/geometry/shapes/line-geometric-operations.test.ts > LineOps - Geometric Operations > pointAt > should return start point at t=0 0ms
+ ✓ src/__tests__/geometry/shapes/line-geometric-operations.test.ts > LineOps - Geometric Operations > pointAt > should return end point at t=1 0ms
+ ✓ src/__tests__/geometry/shapes/line-geometric-operations.test.ts > LineOps - Geometric Operations > pointAt > should return midpoint at t=0.5 0ms
+ ✓ src/__tests__/geometry/shapes/line-geometric-operations.test.ts > LineOps - Geometric Operations > pointAt > should work with t outside [0,1] range 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > constructor > should create spatial hash with default config 8ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > constructor > should create spatial hash with custom config 2ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > insert > should insert an object into the spatial hash 8ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > insert > should handle multiple objects in same cell 1ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > remove > should remove an object from the spatial hash 1ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > remove > should return false when removing non-existent object 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > update > should update an object position 13ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > update > should return false when updating non-existent object 1ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > queryRect > should query objects in rectangular area 2ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > queryRect > should return empty array for empty query area 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > queryRadius > should query objects within radius 1ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > findNearest > should find nearest object to a point 10ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > findNearest > should return null when no objects exist 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > clear > should clear all objects from spatial hash 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > getStats > should return statistics about the spatial hash 0ms
+ ✓ src/__tests__/spatial-hash/spatial-hash.test.ts > SpatialHash > getAllObjects > should return all objects in the spatial hash 1ms
+ ✓ src/__tests__/geometry/shapes/line-basic-operations.test.ts > LineOps - Basic Operations > create > should create a line with start and end points 13ms
+ ✓ src/__tests__/geometry/shapes/line-basic-operations.test.ts > LineOps - Basic Operations > getLength > should calculate length correctly 1ms
+ ✓ src/__tests__/geometry/shapes/line-basic-operations.test.ts > LineOps - Basic Operations > getLength > should calculate length for horizontal line 4ms
+ ✓ src/__tests__/geometry/shapes/line-basic-operations.test.ts > LineOps - Basic Operations > getLength > should calculate length for vertical line 1ms
+ ✓ src/__tests__/geometry/shapes/line-basic-operations.test.ts > LineOps - Basic Operations > getLength > should return zero for point line 0ms
+ ✓ src/__tests__/geometry/shapes/line-basic-operations.test.ts > LineOps - Basic Operations > getLengthSquared > should calculate squared length correctly 5ms
+ ✓ src/__tests__/geometry/shapes/line-basic-operations.test.ts > LineOps - Basic Operations > getLengthSquared > should be faster than getLength for comparisons 0ms
+ ✓ src/__tests__/geometry/shapes/line-basic-operations.test.ts > LineOps - Basic Operations > midpoint > should calculate midpoint correctly 0ms
+ ✓ src/__tests__/geometry/shapes/line-basic-operations.test.ts > LineOps - Basic Operations > midpoint > should work with negative coordinates 0ms
+ ✓ src/__tests__/geometry/shapes/line-basic-operations.test.ts > LineOps - Basic Operations > midpoint > should work for point line 0ms
+ ✓ src/__tests__/geometry/collision/union-aabb.test.ts > unionAABB > should create union of overlapping AABBs 14ms
+ ✓ src/__tests__/geometry/collision/union-aabb.test.ts > unionAABB > should create union of non-overlapping AABBs 4ms
+ ✓ src/__tests__/geometry/collision/union-aabb.test.ts > unionAABB > should handle identical AABBs 0ms
+ ✓ src/__tests__/geometry/collision/union-aabb.test.ts > unionAABB > should handle nested AABBs 0ms
+ ✓ src/__tests__/geometry/shapes/circle-transformations.test.ts > CircleOps - Transformations > expand > should increase radius by specified amount 5ms
+ ✓ src/__tests__/geometry/shapes/circle-transformations.test.ts > CircleOps - Transformations > expand > should work with negative amount (shrink) 0ms
+ ✓ src/__tests__/geometry/shapes/circle-transformations.test.ts > CircleOps - Transformations > shrink > should decrease radius by specified amount 0ms
+ ✓ src/__tests__/geometry/shapes/circle-transformations.test.ts > CircleOps - Transformations > shrink > should not allow negative radius 0ms
+ ✓ src/__tests__/geometry/shapes/circle-transformations.test.ts > CircleOps - Transformations > shrink > should handle exact shrink to zero 0ms
+ ✓ src/__tests__/geometry/shapes/circle-transformations.test.ts > CircleOps - Transformations > translate > should move circle by offset vector 2ms
+ ✓ src/__tests__/geometry/shapes/circle-transformations.test.ts > CircleOps - Transformations > translate > should preserve original circle 1ms
+ ✓ src/__tests__/geometry/shapes/circle-transformations.test.ts > CircleOps - Transformations > translate > should work with negative offset 2ms
+ ✓ src/__tests__/union-find/union-find.test.ts > UnionFind > should create a UnionFind with correct initial state 6ms
+ ✓ src/__tests__/union-find/union-find.test.ts > UnionFind > should union and find connected components 1ms
+ ✓ src/__tests__/union-find/union-find.test.ts > UnionFind > should get set size correctly 1ms
+ ✓ src/__tests__/union-find/union-find.test.ts > UnionFind > should get set members correctly 7ms
+ ✓ src/__tests__/union-find/union-find.test.ts > UnionFind > should provide statistics 1ms
+ ✓ src/__tests__/union-find/union-find.test.ts > UnionFind > should reset correctly 0ms
+ ✓ src/__tests__/union-find/union-find.test.ts > UnionFind > should clone correctly 0ms
+ ✓ src/__tests__/union-find/union-find.test.ts > detectCycle > should detect cycles in a graph 1ms
+ ✓ src/__tests__/union-find/union-find.test.ts > detectCycle > should not detect cycles in a tree 0ms
+ ✓ src/__tests__/union-find/union-find.test.ts > findConnectedComponents > should find connected components correctly 1ms
+ ✓ src/__tests__/performance/benchmark-class.test.ts > PerformanceBenchmark Class > should measure async operations 17ms
+ ✓ src/__tests__/performance/benchmark-class.test.ts > PerformanceBenchmark Class > should measure sync operations 1ms
+ ✓ src/__tests__/performance/benchmark-class.test.ts > PerformanceBenchmark Class > should calculate standard deviation correctly 5ms
+ ✓ src/__tests__/performance/benchmark-class.test.ts > PerformanceBenchmark Class > should handle performance budget warnings 3ms
+ ✓ src/__tests__/performance/benchmark-class.test.ts > PerformanceBenchmark Class > should handle operations that throw errors 6ms
+ ✓ src/__tests__/performance/benchmark-class.test.ts > PerformanceBenchmark Class > should measure memory usage 1ms
+ ✓ src/__tests__/performance/budget-clear.test.ts > PerformanceBudgetChecker - Clear > clearBudget > should clear a specific budget 10ms
+ ✓ src/__tests__/performance/budget-clear.test.ts > PerformanceBudgetChecker - Clear > clearBudget > should not affect other budgets when clearing one 1ms
+ ✓ src/__tests__/performance/budget-clear.test.ts > PerformanceBudgetChecker - Clear > clearBudget > should handle clearing non-existent budget gracefully 2ms
+ ✓ src/__tests__/performance/budget-clear.test.ts > PerformanceBudgetChecker - Clear > clearBudget > should allow setting budget again after clearing 0ms
+ ✓ src/__tests__/performance/budget-clear.test.ts > PerformanceBudgetChecker - Clear > clearAllBudgets > should clear all budgets 0ms
+ ✓ src/__tests__/performance/budget-clear.test.ts > PerformanceBudgetChecker - Clear > clearAllBudgets > should handle clearing when no budgets exist 1ms
+ ✓ src/__tests__/performance/budget-clear.test.ts > PerformanceBudgetChecker - Clear > clearAllBudgets > should allow setting budgets again after clearing all 1ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Constructor > should create spatial hash with given cell size 14ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Constructor > should handle different cell sizes 0ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Insert Operations > should insert AABB into spatial hash 2ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Insert Operations > should insert AABB spanning multiple cells 1ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Insert Operations > should handle multiple AABBs in same cell 1ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Insert Operations > should handle AABB at cell boundaries 0ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Insert Operations > should handle negative coordinates 1ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Query Operations > should return empty array for empty hash 1ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Query Operations > should return correct indices for overlapping AABBs 1ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Query Operations > should return unique indices 0ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Query Operations > should handle query AABB spanning multiple cells 1ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Query Operations > should handle zero-size AABBs 0ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Clear Operations > should clear all stored data 0ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Clear Operations > should allow re-insertion after clear 0ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Edge Cases > should handle very small cell size 0ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Edge Cases > should handle very large cell size 0ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Edge Cases > should handle floating point coordinates 0ms
+ ✓ src/__tests__/geometry/collision/aabb-spatial-hash.test.ts > AABB Spatial Hash - Edge Cases > should handle large numbers of objects 4ms
+ ✓ src/__tests__/geometry/collision/spatial-collision-optimizer.test.ts > SpatialCollisionOptimizer > should detect collisions in small datasets 15ms
+ ✓ src/__tests__/geometry/collision/spatial-collision-optimizer.test.ts > SpatialCollisionOptimizer > should use spatial optimization for large datasets 8ms
+ ✓ src/__tests__/geometry/collision/spatial-collision-optimizer.test.ts > SpatialCollisionOptimizer > should use naive algorithm for small datasets 2ms
+ ✓ src/__tests__/geometry/collision/spatial-collision-optimizer.test.ts > SpatialCollisionOptimizer > should cache collision results 0ms
+ ✓ src/__tests__/geometry/collision/spatial-collision-optimizer.test.ts > SpatialCollisionOptimizer > should track performance statistics 1ms
+ ✓ src/__tests__/geometry/collision/spatial-collision-optimizer.test.ts > SpatialCollisionOptimizer > should clear cache 1ms
+ ✓ src/__tests__/geometry/collision/spatial-collision-optimizer.test.ts > SpatialCollisionOptimizer > should update configuration 1ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > area > should calculate triangle area correctly 7ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > area > should calculate square area correctly 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > area > should return zero for polygon with less than 3 points 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > area > should return zero for empty polygon 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > area > should handle polygon with negative coordinates 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > area > should handle complex polygon 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > perimeter > should calculate triangle perimeter correctly 1ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > perimeter > should calculate square perimeter correctly 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > perimeter > should return zero for polygon with less than 2 points 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > perimeter > should return zero for empty polygon 1ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > centroid > should calculate triangle centroid correctly 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > centroid > should calculate square centroid correctly 1ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > centroid > should return zero point for empty polygon 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-geometry.test.ts > PolygonOps - Geometric Calculations > centroid > should return the point for single-point polygon 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Basic Operations > create > should create a circle with center and radius 12ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Basic Operations > area > should calculate area correctly 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Basic Operations > area > should calculate area for zero radius 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Basic Operations > circumference > should calculate circumference correctly 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Basic Operations > circumference > should calculate circumference for zero radius 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Geometric Operations > containsPoint > should return true for point at center 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Geometric Operations > containsPoint > should return true for point inside circle 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Geometric Operations > containsPoint > should return true for point on circle edge 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Geometric Operations > containsPoint > should return false for point outside circle 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Geometric Operations > containsPoint > should work with offset center 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Geometric Operations > intersects > should return true for overlapping circles 1ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Geometric Operations > intersects > should return true for touching circles 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Geometric Operations > intersects > should return false for non-overlapping circles 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Geometric Operations > intersects > should return true for identical circles 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Geometric Operations > intersects > should work with different sized circles 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Transformations > expand > should increase radius by specified amount 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Transformations > expand > should work with negative amount (shrink) 1ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Transformations > shrink > should decrease radius by specified amount 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Transformations > shrink > should not allow negative radius 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Transformations > shrink > should handle exact shrink to zero 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Transformations > translate > should move circle by offset vector 1ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Transformations > translate > should preserve original circle 0ms
+ ✓ src/__tests__/geometry/shapes/circle-algorithms.test.ts > CircleOps - Transformations > translate > should work with negative offset 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > pointInAABB > should return true for point inside AABB 3ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > pointInAABB > should return false for point outside AABB 3ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > pointInAABB > should handle edge cases 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > unionAABB > should create union of overlapping AABBs 3ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > unionAABB > should create union of non-overlapping AABBs 2ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > unionAABB > should handle identical AABBs 1ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > unionAABB > should handle nested AABBs 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > intersectionAABB > should return intersection of overlapping AABBs 3ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > intersectionAABB > should return null for non-overlapping AABBs 4ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > intersectionAABB > should return null for touching AABBs 1ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > intersectionAABB > should handle identical AABBs 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > intersectionAABB > should handle nested AABBs 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > expandAABB > should expand AABB by given amount 1ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > expandAABB > should handle zero expansion 1ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > expandAABB > should handle negative expansion (shrink) 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > expandAABB > should handle large expansion 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > containsAABB > should return true when container fully contains contained AABB 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > containsAABB > should return true for identical AABBs 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > containsAABB > should return false when AABBs do not overlap 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > containsAABB > should return false when contained AABB extends outside container 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > containsAABB > should return false when contained AABB touches container edge 3ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > areAABBsTouching > should return true for AABBs touching on horizontal edge 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > areAABBsTouching > should return true for AABBs touching on vertical edge 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > areAABBsTouching > should return false for overlapping AABBs 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > areAABBsTouching > should return false for AABBs with gap 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > areAABBsTouching > should return false for identical AABBs 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > areAABBsTouching > should handle corner touching 0ms
+ ✓ src/__tests__/geometry/collision/aabb-operations.test.ts > areAABBsTouching > should handle T-shaped touching 0ms
+ ✓ src/__tests__/geometry/transformations/transform-inverse.test.ts > TransformOps - Inverse Operations > inverse > should create inverse of identity transform 4ms
+ ✓ src/__tests__/geometry/transformations/transform-inverse.test.ts > TransformOps - Inverse Operations > inverse > should create inverse of translation 1ms
+ ✓ src/__tests__/geometry/transformations/transform-inverse.test.ts > TransformOps - Inverse Operations > inverse > should create inverse of scale 1ms
+ ✓ src/__tests__/geometry/transformations/transform-inverse.test.ts > TransformOps - Inverse Operations > inverse > should create inverse of rotation 1ms
+ ✓ src/__tests__/geometry/transformations/transform-inverse.test.ts > TransformOps - Inverse Operations > inverse > should create inverse of combined transform 1ms
+ ✓ src/__tests__/geometry/transformations/transform-inverse.test.ts > TransformOps - Inverse Operations > inverse > should verify inverse property 0ms
+ ✓ src/__tests__/types.test.ts > Performance Types > PerformanceMetrics > should allow creating valid PerformanceMetrics objects 3ms
+ ✓ src/__tests__/types.test.ts > Performance Types > PerformanceMetrics > should allow creating PerformanceMetrics with edge case values 0ms
+ ✓ src/__tests__/types.test.ts > Performance Types > PerformanceBudget > should allow creating valid PerformanceBudget objects 1ms
+ ✓ src/__tests__/types.test.ts > Performance Types > PerformanceBudget > should allow creating PerformanceBudget with high values 0ms
+ ✓ src/__tests__/types.test.ts > Performance Types > PerformanceWarning > should allow creating valid PerformanceWarning objects 1ms
+ ✓ src/__tests__/types.test.ts > Performance Types > PerformanceWarning > should allow all warning types 2ms
+ ✓ src/__tests__/types.test.ts > Performance Types > ThrottleOptions > should allow creating valid ThrottleOptions objects 0ms
+ ✓ src/__tests__/types.test.ts > Performance Types > ThrottleOptions > should allow creating ThrottleOptions with all optional properties 0ms
+ ✓ src/__tests__/types.test.ts > Performance Types > ThrottleOptions > should allow creating empty ThrottleOptions 0ms
+ ✓ src/__tests__/types.test.ts > Performance Types > DebounceOptions > should allow creating valid DebounceOptions objects 1ms
+ ✓ src/__tests__/types.test.ts > Performance Types > DebounceOptions > should allow creating DebounceOptions with all optional properties 0ms
+ ✓ src/__tests__/types.test.ts > Performance Types > DebounceOptions > should allow creating empty DebounceOptions 0ms
+ ✓ src/__tests__/types.test.ts > Performance Types > FrameRateMetrics > should allow creating valid FrameRateMetrics objects 0ms
+ ✓ src/__tests__/types.test.ts > Performance Types > FrameRateMetrics > should allow creating FrameRateMetrics with edge case values 0ms
+ ✓ src/__tests__/types.test.ts > Performance Types > FrameRateMetrics > should allow creating FrameRateMetrics with high values 0ms
+ ✓ src/__tests__/types.test.ts > Performance Types > Type compatibility > should allow using types in function parameters 0ms
+ ✓ src/__tests__/types.test.ts > Performance Types > Type compatibility > should allow using types in function return values 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-basic.test.ts > RectangleBasic > create > should create a rectangle with given parameters 3ms
+ ✓ src/__tests__/geometry/shapes/rectangle-basic.test.ts > RectangleBasic > fromPoints > should create rectangle from two points 1ms
+ ✓ src/__tests__/geometry/shapes/rectangle-basic.test.ts > RectangleBasic > fromPoints > should handle points in reverse order 1ms
+ ✓ src/__tests__/geometry/shapes/rectangle-basic.test.ts > RectangleBasic > area > should calculate rectangle area 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-basic.test.ts > RectangleBasic > area > should return 0 for zero-sized rectangle 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-basic.test.ts > RectangleBasic > perimeter > should calculate rectangle perimeter 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-basic.test.ts > RectangleBasic > center > should calculate rectangle center 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-basic.test.ts > RectangleBasic > corners > should return correct corner points 2ms
+ ✓ src/__tests__/geometry/shapes/rectangle-basic.test.ts > RectangleBasic > containsPoint > should return true for point inside rectangle 1ms
+ ✓ src/__tests__/geometry/shapes/rectangle-basic.test.ts > RectangleBasic > containsPoint > should return false for point outside rectangle 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-basic.test.ts > RectangleBasic > containsPoint > should return true for point on rectangle edge 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-basic.test.ts > RectangleBasic > containsRectangle > should return true when rectangle contains another 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-basic.test.ts > RectangleBasic > containsRectangle > should return false when rectangle does not contain another 0ms
+stdout | src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Large Dataset Performance (1000+ objects) > should significantly outperform naive for large datasets
+Large dataset results:
+Naive: 443.133ms
+Spatial: 344.411ms
+PAW: 43.746ms
+Collision counts - Naive: 68050, Spatial: 68050, PAW: 2736
+
+ ✓ src/__tests__/geometry/vectors/scalar-operations.test.ts > VectorOps - Scalar Operations > multiply > should multiply vector by scalar 3ms
+ ✓ src/__tests__/geometry/vectors/scalar-operations.test.ts > VectorOps - Scalar Operations > divide > should divide vector by scalar 0ms
+ ✓ src/__tests__/geometry/vectors/scalar-operations.test.ts > VectorOps - Scalar Operations > divide > should throw error when dividing by zero 2ms
+ ✓ src/__tests__/geometry/shapes/circle-basic-operations.test.ts > CircleOps - Basic Operations > create > should create a circle with center and radius 11ms
+ ✓ src/__tests__/geometry/shapes/circle-basic-operations.test.ts > CircleOps - Basic Operations > area > should calculate area correctly 1ms
+ ✓ src/__tests__/geometry/shapes/circle-basic-operations.test.ts > CircleOps - Basic Operations > area > should calculate area for zero radius 0ms
+ ✓ src/__tests__/geometry/shapes/circle-basic-operations.test.ts > CircleOps - Basic Operations > circumference > should calculate circumference correctly 0ms
+ ✓ src/__tests__/geometry/shapes/circle-basic-operations.test.ts > CircleOps - Basic Operations > circumference > should calculate circumference for zero radius 1ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBArea > should calculate area correctly 8ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBArea > should handle zero dimensions 0ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBArea > should handle zero width 0ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBArea > should handle zero height 0ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBArea > should handle negative dimensions 1ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBArea > should handle floating point dimensions 3ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBArea > should handle very large dimensions 1ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBArea > should handle very small dimensions 0ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBPerimeter > should calculate perimeter correctly 1ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBPerimeter > should handle zero dimensions 0ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBPerimeter > should handle zero width 0ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBPerimeter > should handle zero height 0ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBPerimeter > should handle negative dimensions 0ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBPerimeter > should handle floating point dimensions 0ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBPerimeter > should handle square AABB 0ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBPerimeter > should handle very large dimensions 3ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBPerimeter > should handle very small dimensions 0ms
+ ✓ src/__tests__/geometry/collision/aabb-utils.test.ts > AABB Utils > getAABBPerimeter > should handle rectangular AABB with different aspect ratios 0ms
+ ✓ src/__tests__/geometry/shapes/rectangle-algorithms.test.ts > RectangleOps Integration > basic operations integration > should create and manipulate rectangles using basic operations 5ms
+ ✓ src/__tests__/geometry/shapes/rectangle-algorithms.test.ts > RectangleOps Integration > advanced operations integration > should perform complex geometric operations 4ms
+ ✓ src/__tests__/geometry/shapes/rectangle-algorithms.test.ts > RectangleOps Integration > transformation chain > should chain multiple transformations 1ms
+ ✓ src/__tests__/geometry/shapes/rectangle-algorithms.test.ts > RectangleOps Integration > point containment with transformations > should maintain point containment after transformations 0ms
+ ✓ src/__tests__/performance/memory-pool.test.ts > MemoryPool > should create objects from pool 4ms
+ ✓ src/__tests__/performance/memory-pool.test.ts > MemoryPool > should reuse objects from pool 1ms
+ ✓ src/__tests__/performance/memory-pool.test.ts > MemoryPool > should track statistics 0ms
+ ✓ src/__tests__/performance/memory-pool.test.ts > MemoryPool > should respect max size 1ms
+ ✓ src/__tests__/performance/memory-pool.test.ts > Memory Pool Utils > should create spatial object pool 1ms
+ ✓ src/__tests__/performance/memory-pool.test.ts > Memory Pool Utils > should create AABB pool 1ms
+ ✓ src/__tests__/performance/memory-pool.test.ts > Memory Pool Utils > should manage multiple pools 2ms
+stdout | src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Clustered Data Performance > should handle clustered data efficiently
+Clustered dataset results:
+Naive: 67.432ms
+PAW: 14.902ms
+
+ × src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Large Dataset Performance (1000+ objects) > should significantly outperform naive for large datasets 7190ms
+   → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ✓ src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Clustered Data Performance > should handle clustered data efficiently 1108ms
+ ✓ src/__tests__/performance/memory.test.ts > MemoryMonitor > measure > should measure memory usage 4ms
+ ✓ src/__tests__/performance/memory.test.ts > MemoryMonitor > measure > should track memory usage over time 2ms
+ ✓ src/__tests__/performance/memory.test.ts > MemoryMonitor > getDelta > should return 0 for single measurement 0ms
+ ✓ src/__tests__/performance/memory.test.ts > MemoryMonitor > getDelta > should calculate delta between measurements 0ms
+ ✓ src/__tests__/performance/memory.test.ts > MemoryMonitor > getAverageUsage > should return 0 for no measurements 1ms
+ ✓ src/__tests__/performance/memory.test.ts > MemoryMonitor > getAverageUsage > should calculate average usage 0ms
+ ✓ src/__tests__/performance/memory.test.ts > MemoryMonitor > clear > should clear measurements 0ms
+stdout | src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Sequential Data Performance > should handle sequential data efficiently
+Sequential dataset results:
+Naive: 8.044ms
+PAW: 1.547ms
+
+ ✓ src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Sequential Data Performance > should handle sequential data efficiently 220ms
+stdout | src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Memory Pooling Effectiveness > should reduce memory allocation overhead
+Memory pooling results:
+No pooling: 3.675ms
+With pooling: 3.750ms
+
+ ✓ src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Memory Pooling Effectiveness > should reduce memory allocation overhead 187ms
+stdout | src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Algorithm Selection Accuracy > should select appropriate algorithms for different workloads
+Algorithm selection results:
+Small dataset stats: {
+  totalQueries: [33m1[39m,
+  averageExecutionTime: [33m0.07291900000018359[39m,
+  averageMemoryUsage: [33m0[39m,
+  algorithmUsage: { naive: [33m1[39m, spatial: [33m1[39m, optimized: [33m0[39m },
+  memoryPoolStats: {
+    totalAllocations: [33m1[39m,
+    totalDeallocations: [33m1[39m,
+    poolHits: [33m1[39m,
+    poolMisses: [33m0[39m,
+    memorySaved: [33m1472[39m,
+    averageAllocationTime: [33m0.0036599999984900933[39m,
+    peakPoolUsage: [33m1[39m,
+    currentPoolUsage: [33m1[39m,
+    hitRate: [33m100[39m,
+    allocationReduction: [33m100[39m
+  },
+  performanceHistory: []
+}
+Large dataset stats: {
+  totalQueries: [33m2[39m,
+  averageExecutionTime: [33m9.647673000000395[39m,
+  averageMemoryUsage: [33m0[39m,
+  algorithmUsage: { naive: [33m1[39m, spatial: [33m1[39m, optimized: [33m0[39m },
+  memoryPoolStats: {
+    totalAllocations: [33m1[39m,
+    totalDeallocations: [33m1[39m,
+    poolHits: [33m1[39m,
+    poolMisses: [33m0[39m,
+    memorySaved: [33m1472[39m,
+    averageAllocationTime: [33m0.0036599999984900933[39m,
+    peakPoolUsage: [33m1[39m,
+    currentPoolUsage: [33m1[39m,
+    hitRate: [33m100[39m,
+    allocationReduction: [33m100[39m
+  },
+  performanceHistory: []
+}
+
+ ✓ src/__tests__/geometry/vectors/mathematical-operations.test.ts > VectorOps - Mathematical Operations > dot > should calculate dot product 3ms
+ ✓ src/__tests__/geometry/vectors/mathematical-operations.test.ts > VectorOps - Mathematical Operations > dot > should return 0 for perpendicular vectors 1ms
+ ✓ src/__tests__/geometry/vectors/mathematical-operations.test.ts > VectorOps - Mathematical Operations > cross > should calculate cross product 1ms
+ ✓ src/__tests__/geometry/vectors/mathematical-operations.test.ts > VectorOps - Mathematical Operations > magnitude > should calculate vector magnitude 0ms
+ ✓ src/__tests__/geometry/vectors/mathematical-operations.test.ts > VectorOps - Mathematical Operations > magnitude > should return 0 for zero vector 0ms
+ ✓ src/__tests__/geometry/vectors/mathematical-operations.test.ts > VectorOps - Mathematical Operations > magnitudeSquared > should calculate squared magnitude 1ms
+stdout | src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Performance Monitoring > should track performance metrics accurately
+Performance monitoring results:
+Stats: {
+  totalQueries: [33m10[39m,
+  averageExecutionTime: [33m6.823079200000393[39m,
+  averageMemoryUsage: [33m0[39m,
+  algorithmUsage: { naive: [33m0[39m, spatial: [33m10[39m, optimized: [33m0[39m },
+  memoryPoolStats: {
+    totalAllocations: [33m0[39m,
+    totalDeallocations: [33m0[39m,
+    poolHits: [33m0[39m,
+    poolMisses: [33m0[39m,
+    memorySaved: [33m0[39m,
+    averageAllocationTime: [33m0[39m,
+    peakPoolUsage: [33m0[39m,
+    currentPoolUsage: [33m0[39m,
+    hitRate: [33m0[39m,
+    allocationReduction: [33m0[39m
+  },
+  performanceHistory: []
+}
+Report: {
+  summary: {
+    totalQueries: [33m10[39m,
+    averageExecutionTime: [33m6.823079200000393[39m,
+    averageMemoryUsage: [33m0[39m,
+    hitRate: [33m0[39m,
+    isDegraded: [33mtrue[39m
+  },
+  algorithmUsage: { naive: [33m0[39m, spatial: [33m10[39m, optimized: [33m0[39m },
+  memoryPool: {
+    totalAllocations: [33m0[39m,
+    totalDeallocations: [33m0[39m,
+    poolHits: [33m0[39m,
+    poolMisses: [33m0[39m,
+    memorySaved: [33m0[39m,
+    averageAllocationTime: [33m0[39m,
+    peakPoolUsage: [33m0[39m,
+    currentPoolUsage: [33m0[39m,
+    hitRate: [33m0[39m,
+    allocationReduction: [33m0[39m
+  },
+  recommendations: [
+    {
+      type: [32m'pool_size'[39m,
+      description: [32m'Low pool hit rate detected. Consider increasing pool sizes.'[39m,
+      impact: [32m'high'[39m,
+      implementation: [32m'Increase spatialHashPoolSize and collisionArrayPoolSize in config'[39m
+    },
+    {
+      type: [32m'object_lifecycle'[39m,
+      description: [32m'Allocation reduction below optimal. Check object lifecycle management.'[39m,
+      impact: [32m'high'[39m,
+      implementation: [32m'Ensure proper returnToPool() calls and object reuse patterns'[39m
+    }
+  ]
+}
+
+stdout | src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Adaptive Behavior > should adapt to changing workload patterns
+Adaptive behavior results:
+Final stats: {
+  totalQueries: [33m15[39m,
+  averageExecutionTime: [33m4.278940866666622[39m,
+  averageMemoryUsage: [33m0[39m,
+  algorithmUsage: { naive: [33m10[39m, spatial: [33m5[39m, optimized: [33m0[39m },
+  memoryPoolStats: {
+    totalAllocations: [33m10[39m,
+    totalDeallocations: [33m10[39m,
+    poolHits: [33m10[39m,
+    poolMisses: [33m0[39m,
+    memorySaved: [33m14720[39m,
+    averageAllocationTime: [33m0.001823800000238407[39m,
+    peakPoolUsage: [33m1[39m,
+    currentPoolUsage: [33m1[39m,
+    hitRate: [33m100[39m,
+    allocationReduction: [33m100[39m
+  },
+  performanceHistory: []
+}
+Recommendations: []
+
+ ✓ src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Algorithm Selection Accuracy > should select appropriate algorithms for different workloads 24ms
+ ✓ src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Performance Monitoring > should track performance metrics accurately 73ms
+ ✓ src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Adaptive Behavior > should adapt to changing workload patterns 68ms
+ ✓ src/__tests__/geometry/collision/aabb-collision.test.ts > AABB Collision Detection > checkCollision > should detect collision between overlapping AABBs 6ms
+ ✓ src/__tests__/geometry/collision/aabb-collision.test.ts > AABB Collision Detection > checkCollision > should not detect collision between non-overlapping AABBs 1ms
+ ✓ src/__tests__/geometry/collision/aabb-collision.test.ts > AABB Collision Detection > checkCollision > should detect collision when AABBs are touching 0ms
+ ✓ src/__tests__/geometry/collision/aabb-collision.test.ts > AABB Collision Detection > checkCollision > should handle point AABBs (zero width/height) 0ms
+ ✓ src/__tests__/geometry/collision/aabb-collision.test.ts > AABB Collision Detection > checkCollision > should handle identical AABBs 1ms
+ ✓ src/__tests__/geometry/collision/aabb-collision.test.ts > AABB Collision Detection > checkCollision > should calculate distance between centers correctly 0ms
+ ✓ src/__tests__/geometry/collision/aabb-collision.test.ts > AABB Collision Detection > checkCollision > should handle edge case with negative coordinates 0ms
+ ✓ src/__tests__/geometry/collision/aabb-collision.test.ts > AABB Collision Detection > checkCollision > should handle very small AABBs 0ms
+ ✓ src/__tests__/geometry/transformations/transform-basic.test.ts > TransformOps - Basic Operations > identity > should create identity transform 4ms
+ ✓ src/__tests__/geometry/transformations/transform-basic.test.ts > TransformOps - Basic Operations > translate > should create translation transform 1ms
+ ✓ src/__tests__/geometry/transformations/transform-basic.test.ts > TransformOps - Basic Operations > translate > should work with negative values 0ms
+ ✓ src/__tests__/geometry/transformations/transform-basic.test.ts > TransformOps - Basic Operations > scale > should create uniform scale transform 1ms
+ ✓ src/__tests__/geometry/transformations/transform-basic.test.ts > TransformOps - Basic Operations > scale > should create non-uniform scale transform 1ms
+ ✓ src/__tests__/geometry/transformations/transform-basic.test.ts > TransformOps - Basic Operations > scale > should work with fractional scale 0ms
+ ✓ src/__tests__/geometry/transformations/transform-basic.test.ts > TransformOps - Basic Operations > rotate > should create rotation transform 1ms
+ ✓ src/__tests__/geometry/transformations/transform-basic.test.ts > TransformOps - Basic Operations > rotate > should work with negative rotation 0ms
+ ✓ src/__tests__/geometry/shapes/circle-geometric-operations.test.ts > CircleOps - Geometric Operations > containsPoint > should return true for point at center 11ms
+ ✓ src/__tests__/geometry/shapes/circle-geometric-operations.test.ts > CircleOps - Geometric Operations > containsPoint > should return true for point inside circle 1ms
+ ✓ src/__tests__/geometry/shapes/circle-geometric-operations.test.ts > CircleOps - Geometric Operations > containsPoint > should return true for point on circle edge 0ms
+ ✓ src/__tests__/geometry/shapes/circle-geometric-operations.test.ts > CircleOps - Geometric Operations > containsPoint > should return false for point outside circle 0ms
+ ✓ src/__tests__/geometry/shapes/circle-geometric-operations.test.ts > CircleOps - Geometric Operations > containsPoint > should work with offset center 0ms
+ ✓ src/__tests__/geometry/shapes/circle-geometric-operations.test.ts > CircleOps - Geometric Operations > intersects > should return true for overlapping circles 0ms
+ ✓ src/__tests__/geometry/shapes/circle-geometric-operations.test.ts > CircleOps - Geometric Operations > intersects > should return true for touching circles 0ms
+ ✓ src/__tests__/geometry/shapes/circle-geometric-operations.test.ts > CircleOps - Geometric Operations > intersects > should return false for non-overlapping circles 0ms
+ ✓ src/__tests__/geometry/shapes/circle-geometric-operations.test.ts > CircleOps - Geometric Operations > intersects > should return true for identical circles 1ms
+ ✓ src/__tests__/geometry/shapes/circle-geometric-operations.test.ts > CircleOps - Geometric Operations > intersects > should work with different sized circles 0ms
+ ✓ src/__tests__/union-find/union-find-batch-operations.test.ts > BatchUnionFind > should perform batch union operations 5ms
+ ✓ src/__tests__/union-find/union-find-batch-operations.test.ts > BatchUnionFind > should perform batch find operations 1ms
+ ✓ src/__tests__/union-find/union-find-batch-operations.test.ts > BatchUnionFind > should perform batch connected checks 0ms
+ ✓ src/__tests__/union-find/union-find-batch-operations.test.ts > BatchUnionFind > should handle mixed batch operations 1ms
+ ✓ src/__tests__/union-find/union-find-batch-operations.test.ts > BatchUnionFind > should track batch statistics 0ms
+ ✓ src/__tests__/union-find/union-find-batch-operations.test.ts > BatchUnionFind > should use caching in optimized batch union 1ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.basic.test.ts > PointOps - Basic Operations > create > should create a point with given coordinates 7ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.basic.test.ts > PointOps - Basic Operations > add > should add two points correctly 3ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.basic.test.ts > PointOps - Basic Operations > subtract > should subtract two points correctly 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.basic.test.ts > PointOps - Basic Operations > multiply > should multiply point by scalar correctly 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.basic.test.ts > PointOps - Basic Operations > divide > should divide point by scalar correctly 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.basic.test.ts > PointOps - Basic Operations > divide > should throw error when dividing by zero 2ms
+ ✓ src/__tests__/geometry/transformations/transform-apply.test.ts > TransformOps - Apply Operations > applyToPoint > should apply identity transform to point 4ms
+ ✓ src/__tests__/geometry/transformations/transform-apply.test.ts > TransformOps - Apply Operations > applyToPoint > should apply translation to point 0ms
+ ✓ src/__tests__/geometry/transformations/transform-apply.test.ts > TransformOps - Apply Operations > applyToPoint > should apply scale to point 0ms
+ ✓ src/__tests__/geometry/transformations/transform-apply.test.ts > TransformOps - Apply Operations > applyToPoint > should apply rotation to point 0ms
+ ✓ src/__tests__/geometry/transformations/transform-apply.test.ts > TransformOps - Apply Operations > applyToPoint > should apply combined transform to point 2ms
+ ✓ src/__tests__/geometry/transformations/transform-apply.test.ts > TransformOps - Apply Operations > applyToPoint > should handle point at origin 1ms
+ ✓ src/__tests__/geometry/transformations/transform-apply.test.ts > TransformOps - Apply Operations > applyToRectangle > should apply identity transform to rectangle 1ms
+ ✓ src/__tests__/geometry/transformations/transform-apply.test.ts > TransformOps - Apply Operations > applyToRectangle > should apply translation to rectangle 0ms
+ ✓ src/__tests__/geometry/transformations/transform-apply.test.ts > TransformOps - Apply Operations > applyToRectangle > should apply scale to rectangle 0ms
+ ✓ src/__tests__/geometry/transformations/transform-apply.test.ts > TransformOps - Apply Operations > applyToRectangle > should apply rotation to rectangle 0ms
+ ✓ src/__tests__/geometry/transformations/transform-apply.test.ts > TransformOps - Apply Operations > applyToRectangle > should apply combined transform to rectangle 0ms
+ ✓ src/__tests__/geometry/transformations/transform-apply.test.ts > TransformOps - Apply Operations > applyToRectangle > should handle zero-size rectangle 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.geometry.test.ts > PointOps - Geometry Operations > distance > should calculate distance between two points 3ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.geometry.test.ts > PointOps - Geometry Operations > distance > should return 0 for same points 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.geometry.test.ts > PointOps - Geometry Operations > distanceSquared > should calculate squared distance between two points 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.geometry.test.ts > PointOps - Geometry Operations > midpoint > should calculate midpoint between two points 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.geometry.test.ts > PointOps - Geometry Operations > lerp > should interpolate between two points 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.geometry.test.ts > PointOps - Geometry Operations > lerp > should return first point at t=0 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.geometry.test.ts > PointOps - Geometry Operations > lerp > should return second point at t=1 0ms
+ ✓ src/__tests__/geometry/transformations/transform-combine.test.ts > TransformOps - Combine Operations > combine > should combine two identity transforms 4ms
+ ✓ src/__tests__/geometry/transformations/transform-combine.test.ts > TransformOps - Combine Operations > combine > should combine translation and scale 1ms
+ ✓ src/__tests__/geometry/transformations/transform-combine.test.ts > TransformOps - Combine Operations > combine > should combine rotation and translation 2ms
+ ✓ src/__tests__/geometry/transformations/transform-combine.test.ts > TransformOps - Combine Operations > combine > should combine scale and rotation 0ms
+ ✓ src/__tests__/geometry/transformations/transform-combine.test.ts > TransformOps - Combine Operations > combine > should handle complex combination 1ms
+ ✓ src/__tests__/geometry/collision/intersection-aabb.test.ts > intersectionAABB > should return intersection of overlapping AABBs 14ms
+ ✓ src/__tests__/geometry/collision/intersection-aabb.test.ts > intersectionAABB > should return null for non-overlapping AABBs 2ms
+ ✓ src/__tests__/geometry/collision/intersection-aabb.test.ts > intersectionAABB > should return null for touching AABBs 0ms
+ ✓ src/__tests__/geometry/collision/intersection-aabb.test.ts > intersectionAABB > should handle identical AABBs 0ms
+ ✓ src/__tests__/geometry/collision/intersection-aabb.test.ts > intersectionAABB > should handle nested AABBs 1ms
+ ✓ src/__tests__/performance/budget-setup.test.ts > PerformanceBudgetChecker - Setup > setBudget > should set a performance budget 12ms
+ ✓ src/__tests__/performance/budget-setup.test.ts > PerformanceBudgetChecker - Setup > setBudget > should allow multiple budgets with different names 3ms
+ ✓ src/__tests__/performance/budget-setup.test.ts > PerformanceBudgetChecker - Setup > setBudget > should overwrite existing budget with same name 1ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-spatial.test.ts > PolygonOps - Spatial Operations > containsPoint > should return true for point inside triangle 3ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-spatial.test.ts > PolygonOps - Spatial Operations > containsPoint > should return false for point outside triangle 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-spatial.test.ts > PolygonOps - Spatial Operations > containsPoint > should return true for point inside square 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-spatial.test.ts > PolygonOps - Spatial Operations > containsPoint > should return false for point outside square 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-spatial.test.ts > PolygonOps - Spatial Operations > containsPoint > should return false for polygon with less than 3 points 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-spatial.test.ts > PolygonOps - Spatial Operations > containsPoint > should handle point on polygon edge 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-spatial.test.ts > PolygonOps - Spatial Operations > containsPoint > should handle point at polygon vertex 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-spatial.test.ts > PolygonOps - Spatial Operations > boundingBox > should calculate triangle bounding box correctly 1ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-spatial.test.ts > PolygonOps - Spatial Operations > boundingBox > should calculate square bounding box correctly 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-spatial.test.ts > PolygonOps - Spatial Operations > boundingBox > should return zero box for empty polygon 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-spatial.test.ts > PolygonOps - Spatial Operations > boundingBox > should handle polygon with negative coordinates 0ms
+ ✓ src/__tests__/geometry/vectors/geometric-operations.test.ts > VectorOps - Geometric Operations > normalize > should normalize a vector 4ms
+ ✓ src/__tests__/geometry/vectors/geometric-operations.test.ts > VectorOps - Geometric Operations > normalize > should return zero vector when normalizing zero vector 1ms
+ ✓ src/__tests__/geometry/vectors/geometric-operations.test.ts > VectorOps - Geometric Operations > angle > should calculate angle of a vector 0ms
+ ✓ src/__tests__/geometry/vectors/geometric-operations.test.ts > VectorOps - Geometric Operations > angle > should calculate angle of a vector pointing up 0ms
+ ✓ src/__tests__/geometry/vectors/geometric-operations.test.ts > VectorOps - Geometric Operations > angleBetween > should calculate angle between vectors 0ms
+ ✓ src/__tests__/geometry/vectors/geometric-operations.test.ts > VectorOps - Geometric Operations > angleBetween > should return 0 for parallel vectors 3ms
+ ✓ src/__tests__/geometry/vectors/geometric-operations.test.ts > VectorOps - Geometric Operations > rotate > should rotate vector by angle 4ms
+ ✓ src/__tests__/geometry/vectors/geometric-operations.test.ts > VectorOps - Geometric Operations > rotate > should rotate vector by negative angle 0ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-creation.test.ts > PolygonOps - Creation > create > should create a polygon with copied points 10ms
+ ✓ src/__tests__/geometry/shapes/polygon-algorithms-creation.test.ts > PolygonOps - Creation > create > should handle empty point array 1ms
+ ✓ src/__tests__/geometry/vectors/basic-operations.test.ts > VectorOps - Basic Operations > create > should create a vector with given components 4ms
+ ✓ src/__tests__/geometry/vectors/basic-operations.test.ts > VectorOps - Basic Operations > fromPoints > should create vector from two points 1ms
+ ✓ src/__tests__/geometry/vectors/basic-operations.test.ts > VectorOps - Basic Operations > add > should add two vectors 0ms
+ ✓ src/__tests__/geometry/vectors/basic-operations.test.ts > VectorOps - Basic Operations > subtract > should subtract two vectors 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.utility.test.ts > PointOps - Utility Operations > equals > should return true for equal points 2ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.utility.test.ts > PointOps - Utility Operations > equals > should return false for different points 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.utility.test.ts > PointOps - Utility Operations > equals > should handle floating point precision 0ms
+ ✓ src/__tests__/geometry/shapes/point-algorithms.utility.test.ts > PointOps - Utility Operations > clone > should create a copy of the point 1ms
+ ✓ src/__tests__/geometry/collision/are-aabbs-touching.test.ts > areAABBsTouching > should return true for AABBs touching on horizontal edge 3ms
+ ✓ src/__tests__/geometry/collision/are-aabbs-touching.test.ts > areAABBsTouching > should return true for AABBs touching on vertical edge 0ms
+ ✓ src/__tests__/geometry/collision/are-aabbs-touching.test.ts > areAABBsTouching > should return false for overlapping AABBs 0ms
+ ✓ src/__tests__/geometry/collision/are-aabbs-touching.test.ts > areAABBsTouching > should return false for AABBs with gap 0ms
+ ✓ src/__tests__/geometry/collision/are-aabbs-touching.test.ts > areAABBsTouching > should return false for identical AABBs 0ms
+ ✓ src/__tests__/geometry/collision/are-aabbs-touching.test.ts > areAABBsTouching > should handle corner touching 0ms
+ ✓ src/__tests__/geometry/collision/are-aabbs-touching.test.ts > areAABBsTouching > should handle T-shaped touching 0ms
+ ✓ src/__tests__/geometry/collision/point-in-aabb.test.ts > pointInAABB > should return true for point inside AABB 3ms
+ ✓ src/__tests__/geometry/collision/point-in-aabb.test.ts > pointInAABB > should return false for point outside AABB 0ms
+ ✓ src/__tests__/geometry/collision/point-in-aabb.test.ts > pointInAABB > should handle edge cases 0ms
+ ✓ src/__tests__/geometry/collision/contains-aabb.test.ts > containsAABB > should return true when container fully contains contained AABB 3ms
+ ✓ src/__tests__/geometry/collision/contains-aabb.test.ts > containsAABB > should return true for identical AABBs 0ms
+ ✓ src/__tests__/geometry/collision/contains-aabb.test.ts > containsAABB > should return false when AABBs do not overlap 0ms
+ ✓ src/__tests__/geometry/collision/contains-aabb.test.ts > containsAABB > should return false when contained AABB extends outside container 0ms
+ ✓ src/__tests__/geometry/collision/contains-aabb.test.ts > containsAABB > should return false when contained AABB touches container edge 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/__tests__/paw-optimization-benchmark.test.ts > PAW Optimization Benchmark > Large Dataset Performance (1000+ objects) > should significantly outperform naive for large datasets
+Error: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ src/__tests__/paw-optimization-benchmark.test.ts:195:5
+    193| 
+    194|   describe("Large Dataset Performance (1000+ objects)", () => {
+    195|     it("should significantly outperform naive for large datasets", () …
+       |     ^
+    196|       const largeAABBs = generateRandomAABBs(1000);
+    197|       
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 61 passed (62)
+      Tests  1 failed | 623 passed (624)
+   Start at  22:45:29
+   Duration  14.97s (transform 2.27s, setup 0ms, collect 5.08s, tests 11.64s, environment 34.41s, prepare 13.38s)
+
