@@ -1402,8 +1402,8 @@ This coordinate system is commonly used in computer graphics and UI frameworks, 
 A point $P$ in 2D space is defined as $P = (x, y)$ where $x, y \in \mathbb{R}$.
 
 **Distance Formula**:
-The Euclidean distance between two points $P\_1 = (x\_1, y\_1)$ and $P\_2 = (x\_2, y\_2)$ is:
-$$d = \sqrt{(x\_2 - x\_1)^2 + (y\_2 - y\_1)^2}$$
+The Euclidean distance between two points $P_1 = (x_1, y_1)$ and $P_2 = (x_2, y_2)$ is:
+$$d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$$
 
 This formula is derived from the Pythagorean theorem and represents the straight-line distance between two points. It's fundamental for:
 
@@ -1412,11 +1412,11 @@ This formula is derived from the Pythagorean theorem and represents the straight
 - **Spatial Queries**: Finding nearest neighbors and proximity searches
 - **Physics Simulations**: Calculating forces and interactions between objects
 
-**Performance Optimization**: For distance comparisons (not exact distance), we can avoid the expensive square root operation by comparing squared distances: $d^2 = (x\_2 - x\_1)^2 + (y\_2 - y\_1)^2$.
+**Performance Optimization**: For distance comparisons (not exact distance), we can avoid the expensive square root operation by comparing squared distances: $d^2 = (x_2 - x_1)^2 + (y_2 - y_1)^2$.
 
 **Linear Interpolation (Lerp)**:
-Given two points $P\_1$ and $P\_2$, and a parameter `$t \in [0, 1]$`:
-$$P(t) = P\_1 + t \cdot (P\_2 - P\_1) = (x\_1 + t(x\_2 - x\_1), y\_1 + t(y\_2 - y\_1))$$
+Given two points $P_1$ and $P_2$, and a parameter `$t \in [0, 1]$`:
+$$P(t) = P_1 + t \cdot (P_2 - P_1) = (x_1 + t(x_2 - x_1), y_1 + t(y_2 - y_1))$$
 
 Linear interpolation is used for smooth transitions and animations. It's essential for:
 
@@ -1426,11 +1426,11 @@ Linear interpolation is used for smooth transitions and animations. It's essenti
 - **Value Smoothing**: Reducing jitter in sensor data or user input
 - **Path Generation**: Creating smooth paths between waypoints
 
-**Parameter Behavior**: When $t = 0$, we get $P\_1$; when $t = 1$, we get $P\_2$; and when $t = 0.5$, we get the midpoint. Values outside `$[0, 1]$` extrapolate beyond the original points.
+**Parameter Behavior**: When $t = 0$, we get $P_1$; when $t = 1$, we get $P_2$; and when $t = 0.5$, we get the midpoint. Values outside `$[0, 1]$` extrapolate beyond the original points.
 
 **Midpoint Calculation**:
-The midpoint $M$ between two points $P\_1$ and $P\_2$ is:
-$$M = \left(\frac{x\_1 + x\_2}{2}, \frac{y\_1 + y\_2}{2}\right)$$
+The midpoint $M$ between two points $P_1$ and $P_2$ is:
+$$M = \left(\frac{x_1 + x_2}{2}, \frac{y_1 + y_2}{2}\right)$$
 
 This is a special case of linear interpolation where $t = 0.5$. The midpoint is used for:
 
@@ -1442,14 +1442,14 @@ This is a special case of linear interpolation where $t = 0.5$. The midpoint is 
 #### Vector Mathematics
 
 **Vector Definition**:
-A 2D vector $\vec{v}$ is defined as $\vec{v} = (v\_x, v\_y)$ where $v\_x, v\_y \in \mathbb{R}$.
+A 2D vector $\vec{v}$ is defined as $\vec{v} = (v_x, v_y)$ where $v_x, v_y \in \mathbb{R}$.
 
 Vectors represent both direction and magnitude in 2D space. They're essential for representing movement, forces, and geometric transformations in computer graphics and physics simulations.
 
 **Vector Operations**:
 
 **Dot Product**:
-$$\vec{a} \cdot \vec{b} = a\_x \cdot b\_x + a\_y \cdot b\_y$$
+$$\vec{a} \cdot \vec{b} = a_x \cdot b_x + a_y \cdot b_y$$
 
 The dot product measures the similarity between two vectors and is used for:
 
@@ -1460,7 +1460,7 @@ The dot product measures the similarity between two vectors and is used for:
 - **Collision Response**: Determining bounce directions
 
 **Cross Product** (2D):
-$$\vec{a} \times \vec{b} = a\_x \cdot b\_y - a\_y \cdot b\_x$$
+$$\vec{a} \times \vec{b} = a_x \cdot b_y - a_y \cdot b_x$$
 
 The 2D cross product returns a scalar representing the signed area of the parallelogram formed by the two vectors:
 
@@ -1470,7 +1470,7 @@ The 2D cross product returns a scalar representing the signed area of the parall
 - **Winding Order**: Determining polygon orientation
 
 **Vector Magnitude**:
-$$|\vec{a}| = \sqrt{a\_x^2 + a\_y^2}$$
+$$|\vec{a}| = \sqrt{a_x^2 + a_y^2}$$
 
 The magnitude represents the length of the vector and is used for:
 
@@ -1480,7 +1480,7 @@ The magnitude represents the length of the vector and is used for:
 - **Normalization**: Creating unit vectors
 
 **Vector Normalization**:
-$$\hat{a} = \frac{\vec{a}}{|\vec{a}|} = \left(\frac{a\_x}{|\vec{a}|}, \frac{a\_y}{|\vec{a}|}\right)$$
+$$\hat{a} = \frac{\vec{a}}{|\vec{a}|} = \left(\frac{a_x}{|\vec{a}|}, \frac{a_y}{|\vec{a}|}\right)$$
 
 Normalization creates a unit vector (magnitude = 1) that preserves direction:
 
@@ -1490,8 +1490,8 @@ Normalization creates a unit vector (magnitude = 1) that preserves direction:
 - **Camera Systems**: Normalized forward/up/right vectors
 
 **Vector Addition and Subtraction**:
-$$\vec{a} + \vec{b} = (a\_x + b\_x, a\_y + b\_y)$$
-$$\vec{a} - \vec{b} = (a\_x - b\_x, a\_y - b\_y)$$
+$$\vec{a} + \vec{b} = (a_x + b_x, a_y + b_y)$$
+$$\vec{a} - \vec{b} = (a_x - b_x, a_y - b_y)$$
 
 Vector addition combines forces or movements, while subtraction finds the vector from one point to another:
 
@@ -1501,7 +1501,7 @@ Vector addition combines forces or movements, while subtraction finds the vector
 - **Physics Simulations**: Computing net forces and accelerations
 
 **Scalar Multiplication**:
-$$k \cdot \vec{a} = (k \cdot a\_x, k \cdot a\_y)$$
+$$k \cdot \vec{a} = (k \cdot a_x, k \cdot a_y)$$
 
 Scalar multiplication scales the vector's magnitude while preserving its direction:
 
