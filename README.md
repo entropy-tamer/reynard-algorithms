@@ -484,8 +484,8 @@ $$a\_1 < b\_2 \land a\_2 < b\_1$$
 
 For AABBs:
 
-- X-axis intervals: `$[x\_1, x\_1 + w\_1]$` and `$[x\_2, x\_2 + w\_2]$`
-- Y-axis intervals: `$[y\_1, y\_1 + h\_1]$` and `$[y\_2, y\_2 + h\_2]$`
+- X-axis intervals: `$[x_1, x_1 + w_1]$` and `$[x_2, x_2 + w_2]$`
+- Y-axis intervals: `$[y_1, y_1 + h_1]$` and `$[y_2, y_2 + h_2]$`
 
 #### Overlap Calculation
 
