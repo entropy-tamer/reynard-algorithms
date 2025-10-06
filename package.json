@@ -1,0 +1,62 @@
+{
+  "name": "reynard-algorithms",
+  "version": "0.3.0",
+  "description": "Algorithm implementations and data structures",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build && tsc src/index.ts --declaration --declarationMap --emitDeclarationOnly --outDir dist --skipLibCheck",
+    "build:types": "tsc -p tsconfig.json --emitDeclarationOnly --skipLibCheck",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:coverage:check": "vitest run --coverage --reporter=verbose",
+    "typecheck": "tsc --noEmit --skipLibCheck",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "algorithms",
+    "data-structures",
+    "typescript"
+  ],
+  "author": "Balazs Horvath",
+  "license": "MIT",
+  "dependencies": {
+    "reynard-i18n": "^0.39.0",
+    "solid-js": "1.9.9"
+  },
+  "devDependencies": {
+    "@types/node": "24.6.1",
+    "@vitest/coverage-v8": "3.2.4",
+    "@vitest/ui": "3.2.4",
+    "happy-dom": "19.0.2",
+    "reynard-testing": "^0.39.0",
+    "typescript": "5.9.3",
+    "vite": "7.1.8",
+    "vite-plugin-solid": "2.11.8",
+    "vitest": "3.2.4"
+  },
+  "peerDependencies": {
+    "solid-js": "1.9.9"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/RuneClaw17/reynard-algorithms",
+  "bugs": "https://github.com/RuneClaw17/reynard-algorithms/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RuneClaw17/reynard-algorithms.git"
+  }
+}
