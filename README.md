@@ -490,15 +490,20 @@ For AABBs:
 #### Overlap Calculation
 
 **Overlap Dimensions**:
-$$\text{overlap}\_x = \max(0, \min(x\_1 + w\_1, x\_2 + w\_2) - \max(x\_1, x\_2))$$
-$$\text{overlap}\_y = \max(0, \min(y\_1 + h\_1, y\_2 + h\_2) - \max(y\_1, y\_2))$$
+
+$$
+\begin{aligned}
+\text{overlap}\_x &= \max\!\left(0,\, \min(x\_1 + w\_1,\, x\_2 + w\_2) - \max(x\_1,\, x\_2)\right) \\
+\text{overlap}\_y &= \max\!\left(0,\, \min(y\_1 + h\_1,\, y\_2 + h\_2) - \max(y\_1,\, y\_2)\right)
+\end{aligned}
+$$
 
 **Overlap Area**:
-$$\text{overlap\_area} = \text{overlap}\_x \times \text{overlap}\_y$$
+$$\text{overlap}\_{\text{area}} = \text{overlap}\_x \cdot \text{overlap}\_y$$
 
 **Mathematical Derivation**:
 The overlap region is the intersection of two rectangles:
-$$\text{overlap\_region} = \text{rectangle intersection}$$
+$$\text{overlap}\_{\text{region}} = \text{rectangle intersection}$$
 
 If $\max(x\_1, x\_2) < \min(x\_1 + w\_1, x\_2 + w\_2)$ and $\max(y\_1, y\_2) < \min(y\_1 + h\_1, y\_2 + h\_2)$, then there's a valid overlap.
 
