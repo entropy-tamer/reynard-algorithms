@@ -607,8 +607,8 @@ export class SegmentTree<T> {
     }
     
     // If current node's range partially overlaps query range
-    const leftResult = this.queryRecursive(node.left, start, end, nodesVisited);
-    const rightResult = this.queryRecursive(node.right, start, end, nodesVisited);
+    const leftResult = this.queryRecursive(node.left || null, start, end, nodesVisited);
+    const rightResult = this.queryRecursive(node.right || null, start, end, nodesVisited);
     
     return this.config.aggregationFunction!(leftResult, rightResult);
   }
