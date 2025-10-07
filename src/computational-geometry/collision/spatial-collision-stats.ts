@@ -4,7 +4,7 @@
  * Statistics tracking and configuration management
  * for the spatial collision optimizer.
  *
- * @module algorithms/geometry/collision/spatialCollisionStats
+ * @module algorithms/computational-geometry/collision/spatialCollisionStats
  */
 
 export interface SpatialCollisionConfig {

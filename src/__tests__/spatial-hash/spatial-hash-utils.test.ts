@@ -3,8 +3,8 @@ import {
   createOptimizedSpatialHash,
   calculateOptimalCellSize,
   estimateMemoryUsage,
-} from "../../spatial-hash/spatial-hash-utils";
-import type { SpatialObject } from "../../spatial-hash/spatial-hash-types";
+} from "../../spatial-structures/spatial-hash/spatial-structures/spatial-hash-utils";
+import type { SpatialObject } from "../../spatial-structures/spatial-hash/spatial-structures/spatial-hash-types";
 
 describe("Spatial Hash Utils", () => {
   const createSpatialObject = (x: number, y: number, width: number = 0, height: number = 0): SpatialObject => ({

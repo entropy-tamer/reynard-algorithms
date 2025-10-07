@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { UnionFind, detectCycle, findConnectedComponents } from "../../union-find";
+import { UnionFind, detectCycle, findConnectedComponents } from "../../data-structures/union-find";
 
 describe("UnionFind", () => {
   it("should create a UnionFind with correct initial state", () => {

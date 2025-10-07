@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
-import type { UnionFindNode, UnionFindStats } from "../../union-find/union-find-types";
+import type { UnionFindNode, UnionFindStats } from "../../data-structures/union-find/data-structures/union-find-types";
 
 describe("Union-Find Types", () => {
   describe("UnionFindNode", () => {
-    it("should define union-find node structure", () => {
+    it("should define data-structures/union-find node structure", () => {
       const node: UnionFindNode = {
         parent: 5,
         rank: 2,

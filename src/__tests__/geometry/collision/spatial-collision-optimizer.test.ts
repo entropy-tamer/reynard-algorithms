@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { SpatialCollisionOptimizer, AABB } from "../../../geometry/collision/spatial-collision-optimizer";
+import { SpatialCollisionOptimizer, AABB } from "../../../computational-geometry/collision/spatial-collision-optimizer";
 
 describe("SpatialCollisionOptimizer", () => {
   let optimizer: SpatialCollisionOptimizer;

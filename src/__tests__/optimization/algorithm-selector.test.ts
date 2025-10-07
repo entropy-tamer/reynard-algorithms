@@ -154,7 +154,7 @@ describe("AlgorithmSelector", () => {
   });
 
   describe("selectUnionFindAlgorithm", () => {
-    it("should select standard union-find for small datasets", () => {
+    it("should select standard data-structures/union-find for small datasets", () => {
       const smallWorkload: WorkloadCharacteristics = {
         objectCount: 50,
         spatialDensity: 0.2,
@@ -165,12 +165,12 @@ describe("AlgorithmSelector", () => {
 
       const selection = selector.selectUnionFindAlgorithm(smallWorkload);
 
-      expect(selection.algorithm).toBe("union-find");
+      expect(selection.algorithm).toBe("data-structures/union-find");
       expect(selection.confidence).toBe(0.9);
       expect(selection.reasoning).toContain("Small dataset size optimal for standard Union-Find");
     });
 
-    it("should select batch union-find for large datasets", () => {
+    it("should select batch data-structures/union-find for large datasets", () => {
       const largeWorkload: WorkloadCharacteristics = {
         objectCount: 500,
         spatialDensity: 0.4,
@@ -181,7 +181,7 @@ describe("AlgorithmSelector", () => {
 
       const selection = selector.selectUnionFindAlgorithm(largeWorkload);
 
-      expect(selection.algorithm).toBe("batch-union-find");
+      expect(selection.algorithm).toBe("batch-data-structures/union-find");
       expect(selection.confidence).toBe(0.9);
       expect(selection.reasoning).toContain("Large dataset benefits from batch operations");
     });
@@ -197,7 +197,7 @@ describe("AlgorithmSelector", () => {
 
       const selection = selector.selectUnionFindAlgorithm(thresholdWorkload);
 
-      expect(selection.algorithm).toBeOneOf(["union-find", "batch-union-find"]);
+      expect(selection.algorithm).toBeOneOf(["data-structures/union-find", "batch-data-structures/union-find"]);
       expect(selection.confidence).toBe(0.9);
     });
   });

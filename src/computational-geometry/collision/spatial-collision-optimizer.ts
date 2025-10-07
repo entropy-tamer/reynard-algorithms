@@ -5,10 +5,10 @@
  * to optimize collision queries and reduce computational complexity
  * from O(n²) to O(n) average case.
  *
- * @module algorithms/geometry/collision/spatialCollisionOptimizer
+ * @module algorithms/computational-geometry/collision/spatialCollisionOptimizer
  */
 
-import { SpatialHash } from "../../spatial-hash/spatial-hash-core";
+import { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-hash-core";
 import type { AABB, CollisionResult } from "./aabb-types";
 import type { CollisionObjectData } from "../../types/spatial-types";
 import {

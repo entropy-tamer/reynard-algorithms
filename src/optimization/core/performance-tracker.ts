@@ -28,7 +28,7 @@ export class PerformanceTracker {
   /**
    * Record algorithm selection for learning
    */
-  recordSelection(selection: AlgorithmSelection, workload: WorkloadCharacteristics): void {
+  recordSelection(selection: AlgorithmSelection, _workload: WorkloadCharacteristics): void {
     this.selectionStats.totalSelections++;
     this.selectionStats.averageConfidence =
       (this.selectionStats.averageConfidence * (this.selectionStats.totalSelections - 1) + selection.confidence) /
@@ -53,7 +53,7 @@ export class PerformanceTracker {
   /**
    * Update selection statistics
    */
-  private updateSelectionStats(result: PerformanceRecord): void {
+  private updateSelectionStats(_result: PerformanceRecord): void {
     // This would be implemented to track whether the selection was correct
     // based on actual performance vs expected performance
   }

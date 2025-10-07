@@ -6,7 +6,7 @@
  * @module algorithms/performance/memory
  */
 
-import type { ExtendedPerformance, PerformanceMemoryInfo } from "../types/performance-types";
+import type { ExtendedPerformance } from "../types/performance-types";
 
 /**
  * Memory usage monitor
@@ -52,7 +52,7 @@ export class MemoryLeakDetector {
     count: number;
   }> = [];
   private objectCount = 0;
-  private lastSnapshot = 0;
+  // private lastSnapshot = 0;
 
   takeSnapshot(): void {
     const now = Date.now();
@@ -69,7 +69,7 @@ export class MemoryLeakDetector {
       this.snapshots.shift();
     }
 
-    this.lastSnapshot = now;
+    // this.lastSnapshot = now;
   }
 
   detectLeak(): { isLeaking: boolean; growthRate: number; confidence: number } {

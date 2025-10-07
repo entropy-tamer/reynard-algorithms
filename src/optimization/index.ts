@@ -27,6 +27,6 @@ export {
 // Legacy optimizations removed - use OptimizedCollisionAdapter instead
 
 // Re-export types for convenience
-export type { AABB, CollisionPair, CollisionResult } from "../geometry/collision/aabb-types";
-// export type { SpatialHash } from "../spatial-hash/spatial-hash-core"; // Removed to avoid overriding class export
-export { UnionFind } from "../union-find/union-find-core";
+export type { AABB, CollisionPair, CollisionResult } from "../computational-geometry/collision/aabb-types";
+// export type { SpatialHash } from "../spatial-structures/spatial-hash/spatial-structures/spatial-hash-core"; // Removed to avoid overriding class export
+export { UnionFind } from "../data-structures/union-find/union-find-core";

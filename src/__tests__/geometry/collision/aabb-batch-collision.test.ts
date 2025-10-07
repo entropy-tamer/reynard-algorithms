@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   batchCollisionDetection,
   batchCollisionWithSpatialHash,
-} from "../../../geometry/collision/aabb-batch-collision";
-import type { AABB, AABBSpatialHashConfig } from "../../../geometry/collision/aabb-types";
+} from "../../../computational-geometry/collision/aabb-batch-collision";
+import type { AABB, AABBSpatialHashConfig } from "../../../computational-geometry/collision/aabb-types";
 
 // Test helper functions
 const createAABB = (x: number, y: number, width: number, height: number): AABB => ({

@@ -6,7 +6,7 @@ import {
   executeSpatialCollisionDetection,
   executeOptimizedCollisionDetection,
 } from "../../../optimization/adapters/collision-algorithms";
-import type { AABB } from "../../../geometry/collision/aabb-types";
+import type { AABB } from "../../../computational-geometry/collision/aabb-types";
 
 describe("Collision Algorithms", () => {
   describe("checkCollision", () => {

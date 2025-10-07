@@ -4,12 +4,12 @@
  * Core collision detection algorithms and utilities
  * for the spatial collision optimizer.
  *
- * @module algorithms/geometry/collision/collisionDetectionCore
+ * @module algorithms/computational-geometry/collision/collisionDetectionCore
  */
 
 import type { AABB, CollisionResult } from "./aabb-types";
 import { checkCollision } from "./aabb-collision";
-import type { SpatialHash } from "../../spatial-hash/spatial-hash-core";
+import type { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-hash-core";
 import type { CollisionObjectData } from "../../types/spatial-types";
 
 export interface CollisionPair {

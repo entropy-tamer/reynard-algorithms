@@ -4,7 +4,7 @@ import type {
   SpatialHashStats,
   SpatialObject,
   QueryResult,
-} from "../../spatial-hash/spatial-hash-types";
+} from "../../spatial-structures/spatial-hash/spatial-structures/spatial-hash-types";
 
 describe("Spatial Hash Types", () => {
   describe("SpatialHashConfig interface", () => {

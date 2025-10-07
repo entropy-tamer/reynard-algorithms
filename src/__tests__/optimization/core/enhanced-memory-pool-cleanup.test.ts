@@ -36,8 +36,8 @@ describe("Enhanced Memory Pool Cleanup Coverage", () => {
       expect(stats).toBeDefined();
     });
 
-    it("should clean up unused union-find pools after maxIdleTime", () => {
-      // Get a union-find and mark it as unused
+    it("should clean up unused data-structures/union-find pools after maxIdleTime", () => {
+      // Get a data-structures/union-find and mark it as unused
       const unionFind = memoryPool.getUnionFind();
 
       // Manually mark as unused and set old lastUsed time

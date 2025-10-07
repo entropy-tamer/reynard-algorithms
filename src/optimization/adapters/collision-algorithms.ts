@@ -7,9 +7,9 @@
  * @module algorithms/optimization/collisionAlgorithms
  */
 
-import type { AABB, CollisionPair, CollisionResult } from "../../geometry/collision/aabb-types";
+import type { AABB, CollisionPair, CollisionResult } from "../../computational-computational-geometry/collision/aabb-types";
 import type { CollisionObjectData } from "../../types/spatial-types";
-import { SpatialHash } from "../../spatial-hash/spatial-hash-core";
+// import { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-structures/spatial-hash-core";
 import { EnhancedMemoryPool } from "../core/enhanced-memory-pool";
 
 /**
@@ -53,7 +53,7 @@ export function createCollisionResult(a: AABB, b: AABB): CollisionResult {
       width: overlapX,
       height: overlapY,
     },
-    overlapArea: overlapX * overlapY,
+    overlapArea,
   };
 }
 

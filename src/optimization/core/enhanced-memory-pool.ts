@@ -7,9 +7,9 @@
  * @module algorithms/optimization/enhancedMemoryPool
  */
 
-import type { CollisionPair } from "../../geometry/collision/aabb-types";
-import { SpatialHash } from "../../spatial-hash/spatial-hash-core";
-import { UnionFind } from "../../union-find/union-find-core";
+import type { CollisionPair } from "../../computational-geometry/collision/aabb-types";
+import { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-hash-core";
+import { UnionFind } from "../../data-structures/union-find/union-find-core";
 
 export interface MemoryPoolConfig {
   spatialHashPoolSize: number;
@@ -114,7 +114,7 @@ export class EnhancedMemoryPool {
       });
     }
 
-    // Initialize union-find pool with common sizes
+    // Initialize data-structures/union-find pool with common sizes
     const commonSizes = [10, 25, 50, 100, 200, 500];
     for (const size of commonSizes) {
       for (let i = 0; i < Math.ceil(this.config.unionFindPoolSize / commonSizes.length); i++) {
@@ -191,7 +191,7 @@ export class EnhancedMemoryPool {
   }
 
   /**
-   * Get a pooled union-find instance
+   * Get a pooled data-structures/union-find instance
    */
   getUnionFind(size: number): UnionFind {
     const startTime = performance.now();
@@ -206,7 +206,7 @@ export class EnhancedMemoryPool {
       pooled.allocationCount++;
       this.stats.poolHits++;
 
-      // Reset union-find state
+      // Reset data-structures/union-find state
       pooled.object = new UnionFind(size);
 
       this.updateStats(startTime, true);
@@ -327,7 +327,7 @@ export class EnhancedMemoryPool {
   }
 
   /**
-   * Return a union-find to the pool
+   * Return a data-structures/union-find to the pool
    */
   returnUnionFind(unionFind: UnionFind): void {
     const pooled = this.unionFindPool.find(p => p.object === unionFind);
@@ -555,7 +555,7 @@ export class EnhancedMemoryPool {
       return true;
     });
 
-    // Clean up unused union-find pools
+    // Clean up unused data-structures/union-find pools
     this.unionFindPool = this.unionFindPool.filter(p => {
       if (!p.isInUse && now - p.lastUsed > maxIdleTime) {
         return false;

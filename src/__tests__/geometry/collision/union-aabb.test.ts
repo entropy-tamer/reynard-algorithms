@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { unionAABB } from "../../../geometry/collision/aabb-operations";
+import { unionAABB } from "../../../computational-geometry/collision/aabb-operations";
 import type { AABB } from "../../aabb-types";
 
 // Helper function for creating AABB test objects

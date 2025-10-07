@@ -14,11 +14,11 @@ import {
   OptimizedCollisionAdapter,
   type OptimizedCollisionConfig,
 } from "./optimization/adapters/optimized-collision-adapter";
-import { AlgorithmSelector } from "./optimization/core/algorithm-selector";
-import type { WorkloadCharacteristics } from "./optimization/core/algorithm-selector-types";
-import { EnhancedMemoryPool, type MemoryPoolConfig } from "./optimization/core/enhanced-memory-pool";
-import { checkCollision } from "./geometry/collision/aabb-collision";
-import type { AABB, CollisionPair } from "./geometry/collision/aabb-types";
+// import { AlgorithmSelector } from "./optimization/core/algorithm-selector";
+// import type { WorkloadCharacteristics } from "./optimization/core/algorithm-selector-types";
+// import { EnhancedMemoryPool } from "./optimization/core/enhanced-memory-pool";
+import { checkCollision } from "./computational-geometry/collision/aabb-collision";
+import type { AABB, CollisionPair } from "./computational-geometry/collision/aabb-types";
 
 // Global optimization configuration
 let globalOptimizationConfig: OptimizedCollisionConfig = {
@@ -35,8 +35,8 @@ let globalOptimizationConfig: OptimizedCollisionConfig = {
 
 // Global instances
 let globalCollisionAdapter: OptimizedCollisionAdapter | null = null;
-let globalMemoryPool: EnhancedMemoryPool | null = null;
-let globalAlgorithmSelector: AlgorithmSelector | null = null;
+// let globalMemoryPool: EnhancedMemoryPool | null = null;
+// let globalAlgorithmSelector: AlgorithmSelector | null = null;
 
 /**
  * Configure the global optimization settings
@@ -64,22 +64,22 @@ function getGlobalCollisionAdapter(): OptimizedCollisionAdapter {
 /**
  * Get the global memory pool instance
  */
-function getGlobalMemoryPool(): EnhancedMemoryPool {
-  if (!globalMemoryPool) {
-    globalMemoryPool = new EnhancedMemoryPool();
-  }
-  return globalMemoryPool;
-}
+// function getGlobalMemoryPool(): EnhancedMemoryPool {
+//   if (!globalMemoryPool) {
+//     globalMemoryPool = new EnhancedMemoryPool();
+//   }
+//   return globalMemoryPool;
+// }
 
 /**
  * Get the global algorithm selector instance
  */
-function getGlobalAlgorithmSelector(): AlgorithmSelector {
-  if (!globalAlgorithmSelector) {
-    globalAlgorithmSelector = new AlgorithmSelector();
-  }
-  return globalAlgorithmSelector;
-}
+// function getGlobalAlgorithmSelector(): AlgorithmSelector {
+//   if (!globalAlgorithmSelector) {
+//     globalAlgorithmSelector = new AlgorithmSelector();
+//   }
+//   return globalAlgorithmSelector;
+// }
 
 /**
  * Detect collisions with automatic algorithm selection and optimization
@@ -135,7 +135,7 @@ export function performSpatialQuery<T extends SpatialDataType>(
   return nearby;
 }
 
-// findConnectedComponents is exported from the union-find module
+// findConnectedComponents is exported from the data-structures/union-find module
 
 // checkCollision is exported from the geometry module
 

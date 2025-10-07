@@ -6,8 +6,8 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { checkCollision } from "../../geometry/collision/aabb-collision";
-import type { AABB } from "../../geometry/collision/aabb-types";
+import { checkCollision } from "../../computational-geometry/collision/aabb-collision";
+import type { AABB } from "../../computational-geometry/collision/aabb-types";
 import { AlgorithmSelector, EnhancedMemoryPool as MemoryPool } from "../../optimization";
 import {
   OptimizationConfig,
@@ -17,7 +17,7 @@ import {
   detectCollisions,
   performSpatialQuery,
 } from "../../optimized";
-import { findConnectedComponents } from "../../union-find";
+import { findConnectedComponents } from "../../data-structures/union-find";
 
 describe("Optimized Algorithms API", () => {
   beforeEach(() => {

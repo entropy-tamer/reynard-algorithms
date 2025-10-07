@@ -9,9 +9,9 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { detectCollisions, PerformanceMonitor, configureOptimization, cleanup } from "../optimized";
-import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../geometry/collision";
+import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../computational-geometry/collision";
 import { PerformanceTimer } from "../performance/timer";
-import type { AABB, CollisionPair } from "../geometry/collision/aabb-types";
+import type { AABB, CollisionPair } from "../computational-geometry/collision/aabb-types";
 
 // Test data generators
 function generateRandomAABBs(count: number, worldSize: number = 1000): AABB[] {
@@ -147,7 +147,7 @@ describe("PAW Optimization Benchmark", () => {
         aabbs => batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }),
         mediumAABBs,
         20,
-        "spatial-hash"
+        "spatial-structures/spatial-hash"
       );
 
       const pawResult = benchmarkAlgorithm(detectCollisions, mediumAABBs, 20, "PAW-optimized");
@@ -180,7 +180,7 @@ describe("PAW Optimization Benchmark", () => {
         aabbs => batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }),
         largeAABBs,
         3, // Reduced from 5 to 3
-        "spatial-hash"
+        "spatial-structures/spatial-hash"
       );
 
       const pawResult = benchmarkAlgorithm(

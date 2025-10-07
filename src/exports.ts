@@ -8,17 +8,77 @@
 // ============================================================================
 
 // Union-Find data structure
-export { UnionFind } from "./union-find/union-find-core";
-export type { UnionFindStats, UnionFindNode } from "./union-find/union-find-types";
+export { UnionFind } from "./data-structures/union-find/union-find-core";
+export type { UnionFindStats, UnionFindNode } from "./data-structures/union-find/union-find-types";
 
 // Spatial Hash data structure
-export { SpatialHash } from "./spatial-hash/spatial-hash-core";
+export { SpatialHash } from "./spatial-structures/spatial-hash/spatial-hash-core";
 export type {
   SpatialHashConfig,
   SpatialHashStats,
   SpatialObject,
   QueryResult,
-} from "./spatial-hash/spatial-hash-types";
+} from "./spatial-structures/spatial-hash/spatial-hash-types";
+
+// Priority Queue / Binary Heap
+export { PriorityQueue } from "./data-structures/priority-queue";
+export type {
+  PriorityQueueNode,
+  PriorityQueueConfig,
+  PriorityQueueStats,
+  PriorityQueueComparator,
+  PriorityQueueOptions,
+  PriorityQueuePeekResult,
+  PriorityQueueBatchResult,
+  PriorityQueueEvent,
+  PriorityQueueEventType,
+  PriorityQueueEventHandler,
+  PriorityQueueIteratorResult,
+} from "./data-structures/priority-queue";
+
+// LRU Cache
+export { LRUCache } from "./data-structures/lru-cache";
+export type {
+  LRUCacheNode,
+  LRUCacheConfig,
+  LRUCacheStats,
+  LRUCacheEntry,
+  LRUCacheOptions,
+  LRUCacheEvent,
+  LRUCacheEventType,
+  LRUCacheEventHandler,
+  LRUCacheIteratorResult,
+  LRUCacheBatchResult,
+  LRUCacheSnapshot,
+  LRUCachePerformanceMetrics,
+} from "./data-structures/lru-cache";
+
+// ============================================================================
+// SPATIAL STRUCTURES
+// ============================================================================
+
+// Quadtree
+export { Quadtree } from "./spatial-structures/quadtree";
+export type {
+  Point as QuadtreePoint,
+  Rectangle as QuadtreeRectangle,
+  QuadtreeData,
+  QuadtreeNode,
+  QuadtreeConfig,
+  QuadtreeStats,
+  QuadtreeQueryResult,
+  CircleQuery,
+  RectangleQuery,
+  PointQuery,
+  QuadtreeOptions,
+  QuadtreeEvent,
+  QuadtreeEventType,
+  QuadtreeEventHandler,
+  QuadtreeTraversalResult,
+  QuadtreeCollisionResult,
+  QuadtreeNearestNeighborResult,
+  QuadtreePerformanceMetrics,
+} from "./spatial-structures/quadtree";
 
 // ============================================================================
 // GEOMETRY OPERATIONS
@@ -56,7 +116,7 @@ export { PerformanceBudgetChecker } from "./performance/budget";
 // ============================================================================
 
 // Collision detection types and functions
-export type { AABB, CollisionPair, CollisionResult } from "./geometry/collision/aabb-types";
+export type { AABB, CollisionPair, CollisionResult } from "./computational-geometry/collision/aabb-types";
 export {
   checkCollision,
   batchCollisionDetection,
@@ -68,7 +128,7 @@ export {
   intersectionAABB,
   containsAABB,
   SpatialCollisionOptimizer,
-} from "./geometry/collision";
+} from "./computational-geometry/collision";
 
 // ============================================================================
 // OPTIMIZATION FRAMEWORK

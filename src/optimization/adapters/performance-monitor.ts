@@ -8,7 +8,7 @@
  */
 
 import type { MemoryPoolStats, OptimizationRecommendation } from "../core/enhanced-memory-pool";
-import type { AlgorithmSelector } from "../core/algorithm-selector";
+// import type { AlgorithmSelector } from "../core/algorithm-selector";
 
 export interface PerformanceRecord {
   timestamp: number;

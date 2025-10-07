@@ -14,17 +14,17 @@ import {
   type MemoryPoolStats,
   type OptimizationRecommendation,
 } from "../core/enhanced-memory-pool";
-import type { AABB, CollisionPair } from "../../geometry/collision/aabb-types";
+import type { AABB, CollisionPair } from "../../computational-computational-geometry/collision/aabb-types";
 import {
-  executeNaiveCollisionDetection,
-  executeSpatialCollisionDetection,
-  executeOptimizedCollisionDetection,
+  // executeNaiveCollisionDetection,
+  // executeSpatialCollisionDetection,
+  // executeOptimizedCollisionDetection,
   createCollisionResult,
 } from "./collision-algorithms";
-import { analyzeWorkload } from "./workload-analyzer";
+// import { analyzeWorkload } from "./workload-analyzer";
 import { PerformanceMonitor, type CollisionPerformanceStats, type PerformanceReport } from "./performance-monitor";
 import type { CollisionObjectData } from "../../types/spatial-types";
-import { SpatialHash } from "../../spatial-hash/spatial-hash-core";
+import { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-structures/spatial-hash-core";
 
 export interface OptimizedCollisionConfig {
   enableMemoryPooling: boolean;
@@ -258,35 +258,35 @@ export class OptimizedCollisionAdapter {
     return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
   }
 
-  private executeAlgorithm(algorithm: string, aabbs: AABB[]): CollisionPair[] {
-    switch (algorithm) {
-      case "naive":
-        return executeNaiveCollisionDetection(aabbs);
-      case "spatial":
-        return executeSpatialCollisionDetection(aabbs, this.memoryPool);
-      case "optimized":
-        return executeOptimizedCollisionDetection(aabbs, this.memoryPool);
-      default:
-        return executeOptimizedCollisionDetection(aabbs, this.memoryPool);
-    }
-  }
+  // private executeAlgorithm(algorithm: string, aabbs: AABB[]): CollisionPair[] {
+  //   switch (algorithm) {
+  //     case "naive":
+  //       return executeNaiveCollisionDetection(aabbs);
+  //     case "spatial":
+  //       return executeSpatialCollisionDetection(aabbs, this.memoryPool);
+  //     case "optimized":
+  //       return executeOptimizedCollisionDetection(aabbs, this.memoryPool);
+  //     default:
+  //       return executeOptimizedCollisionDetection(aabbs, this.memoryPool);
+  //   }
+  // }
 
-  private updatePerformanceModel(algorithm: string, objectCount: number, startTime: number, memoryStart: number): void {
-    const executionTime = performance.now() - startTime;
-    const memoryUsage = this.performanceMonitor.getCurrentMemoryUsage() - memoryStart;
-    const hitRate = this.memoryPool.getStatistics().hitRate;
-    this.algorithmSelector.updatePerformanceModel({
-      algorithm,
-      workload: analyzeWorkload([]),
-      performance: {
-        executionTime,
-        memoryUsage,
-        allocationCount: 0,
-        cacheHitRate: hitRate,
-      },
-      timestamp: Date.now(),
-    });
-  }
+  // private updatePerformanceModel(algorithm: string, objectCount: number, startTime: number, memoryStart: number): void {
+  //   const executionTime = performance.now() - startTime;
+  //   const memoryUsage = this.performanceMonitor.getCurrentMemoryUsage() - memoryStart;
+  //   const hitRate = this.memoryPool.getStatistics().hitRate;
+  //   this.algorithmSelector.updatePerformanceModel({
+  //     algorithm,
+  //     workload: analyzeWorkload([]),
+  //     performance: {
+  //       executionTime,
+  //       memoryUsage,
+  //       allocationCount: 0,
+  //       cacheHitRate: hitRate,
+  //     },
+  //     timestamp: Date.now(),
+  //   });
+  // }
 
   getPerformanceStats(): CollisionPerformanceStats {
     return this.performanceMonitor.getPerformanceStats();

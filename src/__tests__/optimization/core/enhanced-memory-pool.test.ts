@@ -40,7 +40,7 @@ describe("EnhancedMemoryPool", () => {
       expect(stats.poolHits).toBeGreaterThan(0);
     });
 
-    it("should get and return union-find pools", () => {
+    it("should get and return data-structures/union-find pools", () => {
       const unionFind = memoryPool.getUnionFind(10);
       expect(unionFind).toBeDefined();
 

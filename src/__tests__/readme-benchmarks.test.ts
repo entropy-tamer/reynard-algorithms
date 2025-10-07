@@ -9,13 +9,13 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { detectCollisions, PerformanceMonitor, configureOptimization, cleanup } from "../optimized";
-import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../geometry/collision";
+import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../computational-geometry/collision";
 import { EnhancedMemoryPool } from "../optimization/core/enhanced-memory-pool";
 import { PerformanceTimer } from "../performance/timer";
-import { SpatialHash } from "../spatial-hash/spatial-hash-core";
-import { UnionFind } from "../union-find/union-find-core";
+import { SpatialHash } from "../spatial-structures/spatial-hash/spatial-structures/spatial-hash-core";
+import { UnionFind } from "../data-structures/union-find/data-structures/union-find-core";
 import { AlgorithmSelector, type WorkloadCharacteristics } from "../optimization/core/algorithm-selector";
-import type { AABB, CollisionPair } from "../geometry/collision/aabb-types";
+import type { AABB, CollisionPair } from "../computational-geometry/collision/aabb-types";
 
 // Deterministic RNG and test data generators
 function createSeededRng(seed: number): () => number {
@@ -394,7 +394,7 @@ describe("README Performance Validation Benchmarks", () => {
             result,
           })),
         degenerateAABBs,
-        "spatial-hash",
+        "spatial-structures/spatial-hash",
         "degenerate-spatial",
         samples,
         iterations
@@ -437,7 +437,7 @@ describe("README Performance Validation Benchmarks", () => {
             result,
           })),
         denseAABBs,
-        "spatial-hash",
+        "spatial-structures/spatial-hash",
         "dense-overlap",
         samples,
         iterations
@@ -491,7 +491,7 @@ describe("README Performance Validation Benchmarks", () => {
             result,
           })),
         uniformAABBs,
-        "spatial-hash",
+        "spatial-structures/spatial-hash",
         "uniform",
         samples,
         iterations
@@ -505,7 +505,7 @@ describe("README Performance Validation Benchmarks", () => {
             result,
           })),
         clusteredAABBs,
-        "spatial-hash",
+        "spatial-structures/spatial-hash",
         "clustered",
         samples,
         iterations

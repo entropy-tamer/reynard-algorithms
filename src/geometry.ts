@@ -41,4 +41,4 @@ export {
   intersectionAABB,
   containsAABB,
   SpatialCollisionOptimizer,
-} from "./geometry/collision";
+} from "./computational-geometry/collision";

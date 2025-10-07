@@ -11,7 +11,7 @@
  * - Memory-efficient collision queries
  * - Type-safe collision operations
  *
- * @module algorithms/geometry/collision
+ * @module algorithms/computational-geometry/collision
  */
 
 // Export AABB types
@@ -27,7 +27,7 @@ export * from "./aabb-collision";
 export * from "./aabb-utils";
 
 // Export AABB spatial hash
-export * from "./aabb-spatial-hash";
+export { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-hash-core";
 
 // Export AABB batch collision
 export * from "./aabb-batch-collision";

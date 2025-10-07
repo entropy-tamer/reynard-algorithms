@@ -7,7 +7,7 @@ import {
   OptimizationConfig,
   cleanup,
 } from "../optimized";
-import type { AABB } from "../geometry/collision/aabb-types";
+import type { AABB } from "../computational-geometry/collision/aabb-types";
 
 describe("Optimized Algorithms API", () => {
   beforeEach(() => {

@@ -8,7 +8,7 @@
  */
 
 import type { AABB, AABBSpatialHashConfig, CollisionResult } from "./aabb-types";
-import { SpatialHash } from "./aabb-spatial-hash";
+import { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-hash-core";
 import { checkCollision } from "./aabb-collision";
 
 /**

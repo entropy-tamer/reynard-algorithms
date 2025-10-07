@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { getAABBArea, getAABBPerimeter } from "../../../geometry/collision/aabb-utils";
-import type { AABB } from "../../../geometry/collision/aabb-types";
+import { getAABBArea, getAABBPerimeter } from "../../../computational-geometry/collision/aabb-utils";
+import type { AABB } from "../../../computational-geometry/collision/aabb-types";
 
 describe("AABB Utils", () => {
   const createAABB = (x: number, y: number, width: number, height: number): AABB => ({

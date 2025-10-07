@@ -21,7 +21,7 @@ export class UnionFindSelector {
     // For small datasets, use standard Union-Find
     if (objectCount < 100) {
       return {
-        algorithm: "union-find",
+        algorithm: "data-structures/union-find",
         confidence: 0.9,
         expectedPerformance: {
           executionTime: objectCount * Math.log(objectCount) * 0.001,
@@ -37,7 +37,7 @@ export class UnionFindSelector {
 
     // For larger datasets, use batch Union-Find
     return {
-      algorithm: "batch-union-find",
+      algorithm: "batch-data-structures/union-find",
       confidence: 0.9,
       expectedPerformance: {
         executionTime: objectCount * Math.log(objectCount) * 0.0005,

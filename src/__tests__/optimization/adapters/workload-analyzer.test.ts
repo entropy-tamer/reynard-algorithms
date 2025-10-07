@@ -9,7 +9,7 @@ import {
   calculateSpatialDensity,
   analyzeQueryPattern,
 } from "../../../optimization/adapters/workload-analyzer";
-import type { AABB } from "../../../geometry/collision/aabb-types";
+import type { AABB } from "../../../computational-geometry/collision/aabb-types";
 
 describe("WorkloadAnalyzer", () => {
   describe("calculateSpatialDensity", () => {

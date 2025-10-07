@@ -17,7 +17,7 @@ export class RecommendationGenerator {
    */
   generateRecommendations(
     workload: WorkloadCharacteristics,
-    complexity: ComplexityAnalysis,
+    _complexity: ComplexityAnalysis,
     memoryPressure: MemoryPressureAnalysis
   ): string[] {
     const recommendations: string[] = [];

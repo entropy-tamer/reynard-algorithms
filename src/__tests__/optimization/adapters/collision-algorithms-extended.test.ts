@@ -8,7 +8,7 @@ import {
   executeOptimizedCollisionDetection,
 } from "../../../optimization/adapters/collision-algorithms";
 import { EnhancedMemoryPool } from "../../../optimization/core/enhanced-memory-pool";
-import type { AABB } from "../../../geometry/collision/aabb-types";
+import type { AABB } from "../../../computational-geometry/collision/aabb-types";
 
 describe("Collision Algorithms Extended Coverage", () => {
   let memoryPool: EnhancedMemoryPool;

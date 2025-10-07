@@ -30,4 +30,4 @@ export { getAABBArea, getAABBPerimeter } from "./aabb-utils";
 export { batchCollisionDetection, batchCollisionWithSpatialHash } from "./aabb-batch-collision";
 
 // Spatial hashing
-export { SpatialHash } from "./aabb-spatial-hash";
+export { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-hash-core";

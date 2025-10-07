@@ -29,7 +29,6 @@ performance monitoring. Built with the PAW optimization framework for maximum ef
       - [Implementation: From Mathematical Model to Code](#implementation-from-mathematical-model-to-code)
       - [Union-Find Algorithm Execution Example](#union-find-algorithm-execution-example)
       - [Time Complexity Analysis](#time-complexity-analysis)
-      - [Union-Find Algorithm Workflow](#union-find-algorithm-workflow)
       - [Code Implementation Details](#code-implementation-details)
       - [Union-Find Performance Analysis](#union-find-performance-analysis)
     - [💥 AABB Collision Detection](#-aabb-collision-detection)
@@ -38,9 +37,7 @@ performance monitoring. Built with the PAW optimization framework for maximum ef
       - [Overlap Calculation](#overlap-calculation)
       - [Distance Calculations](#distance-calculations)
       - [Implementation: Mathematical Formulation to Code](#implementation-mathematical-formulation-to-code)
-      - [Collision Condition: Mathematical Foundation](#collision-condition-mathematical-foundation)
       - [AABB Algorithm Execution Example](#aabb-algorithm-execution-example)
-      - [AABB Algorithm Workflow](#aabb-algorithm-workflow)
       - [AABB Performance Analysis](#aabb-performance-analysis)
     - [🗺️ Spatial Hashing](#️-spatial-hashing)
       - [Spatial Hashing Mathematical Theory](#spatial-hashing-mathematical-theory)
@@ -49,76 +46,32 @@ performance monitoring. Built with the PAW optimization framework for maximum ef
       - [Implementation: Mathematical Model to Code](#implementation-mathematical-model-to-code)
       - [Spatial Hashing Algorithm Execution Example](#spatial-hashing-algorithm-execution-example)
       - [Spatial Hash Implementation Details](#spatial-hash-implementation-details)
-      - [Spatial Hashing Algorithm Workflow](#spatial-hashing-algorithm-workflow)
       - [Spatial Hashing Performance Analysis](#spatial-hashing-performance-analysis)
     - [🔧 PAW Optimization Framework](#-paw-optimization-framework)
-      - [Framework Overview](#framework-overview)
-      - [Mathematical Model](#mathematical-model)
-      - [Algorithm Selection Criteria](#algorithm-selection-criteria)
-        - [1. Object Count Thresholds](#1-object-count-thresholds)
-        - [2. Spatial Density Analysis](#2-spatial-density-analysis)
-        - [3. Memory Pressure Calculation](#3-memory-pressure-calculation)
-        - [4. Update Frequency Analysis](#4-update-frequency-analysis)
-      - [Optimization Workflow](#optimization-workflow)
-      - [PAW Advanced Features](#paw-advanced-features)
-        - [Heuristic Learning Engine](#heuristic-learning-engine)
-        - [Memory Pooling System](#memory-pooling-system)
-        - [Real-time Performance Monitoring](#real-time-performance-monitoring)
-      - [Performance Benchmarks](#performance-benchmarks)
-        - [Core Framework Performance](#core-framework-performance)
-        - [Algorithm Selection Accuracy](#algorithm-selection-accuracy)
-        - [Memory Management Performance](#memory-management-performance)
-        - [Scalability Metrics (Measured Performance)](#scalability-metrics-measured-performance)
-      - [Integration and Usage](#integration-and-usage)
-      - [Overhead Analysis and Performance Trade-offs](#overhead-analysis-and-performance-trade-offs)
-        - [Performance Benefits by Dataset Size](#performance-benefits-by-dataset-size)
-        - [Overhead Components](#overhead-components)
-        - [When PAW Overhead Exceeds Benefits](#when-paw-overhead-exceeds-benefits)
-        - [Performance Optimization Recommendations](#performance-optimization-recommendations)
-        - [Real-world Performance Impact](#real-world-performance-impact)
-    - [PAW Performance Trade-offs](#paw-performance-trade-offs)
-      - [When PAW Helps (Net Performance Gain)](#when-paw-helps-net-performance-gain)
-      - [When PAW May Not Help](#when-paw-may-not-help)
-      - [Benchmark Results by Dataset Size](#benchmark-results-by-dataset-size)
-      - [Opting Out of PAW](#opting-out-of-paw)
+      - [How PAW Works](#how-paw-works)
+      - [Performance Results](#performance-results)
+      - [Usage](#usage)
     - [📐 Geometry Operations](#-geometry-operations)
       - [Geometry Mathematical Theory](#geometry-mathematical-theory)
       - [Vector Mathematics](#vector-mathematics)
       - [Circle Mathematics](#circle-mathematics)
       - [Polygon Mathematics](#polygon-mathematics)
+      - [Practical Usage Examples](#practical-usage-examples)
       - [Geometry Algorithm Implementation](#geometry-algorithm-implementation)
-      - [Geometry Algorithm Workflow](#geometry-algorithm-workflow)
       - [Geometry Performance Analysis](#geometry-performance-analysis)
     - [Pathological Case Stress Tests](#pathological-case-stress-tests)
       - [Degenerate Spatial Hash Cases](#degenerate-spatial-hash-cases)
       - [Dense AABB Overlap Cases](#dense-aabb-overlap-cases)
       - [Performance Under Stress](#performance-under-stress)
-  - [API Reference](#api-reference)
-    - [Optimized Algorithms](#optimized-algorithms)
-    - [🔧 PAW Optimization Framework API](#-paw-optimization-framework-api)
-    - [Union-Find Algorithm](#union-find-algorithm)
-    - [AABB Collision Detection](#aabb-collision-detection)
-    - [Spatial Hashing](#spatial-hashing)
-    - [⚡ Performance Utilities](#-performance-utilities)
-    - [📐 Geometry Operations API](#-geometry-operations-api)
   - [Performance Analysis \& Benchmarks](#performance-analysis--benchmarks)
     - [Comprehensive Performance Testing](#comprehensive-performance-testing)
     - [Benchmark Methodology](#benchmark-methodology)
     - [🚀 Performance Summary](#-performance-summary)
     - [📊 Detailed Performance Benchmarks](#-detailed-performance-benchmarks)
-      - [Union-Find Algorithm Performance](#union-find-algorithm-performance)
-      - [AABB Collision Detection Performance](#aabb-collision-detection-performance)
-      - [Spatial Hashing Performance](#spatial-hashing-performance)
-      - [PAW Optimization Framework Performance](#paw-optimization-framework-performance)
-      - [Geometry Operations Performance](#geometry-operations-performance)
-    - [🔧 Performance Optimization Techniques](#-performance-optimization-techniques)
-      - [Memory Pooling Benefits](#memory-pooling-benefits)
-      - [Algorithm Selection Optimization](#algorithm-selection-optimization)
-    - [📈 Performance Monitoring](#-performance-monitoring)
-      - [Real-time Performance Tracking](#real-time-performance-tracking)
+      - [Core Algorithm Performance](#core-algorithm-performance)
+      - [Batch Performance Comparison](#batch-performance-comparison)
+      - [PAW Framework Performance](#paw-framework-performance)
     - [🎯 Performance Best Practices](#-performance-best-practices)
-      - [Optimization Guidelines](#optimization-guidelines)
-      - [Performance Budgets](#performance-budgets)
     - [Concurrency and Thread Safety](#concurrency-and-thread-safety)
       - [Thread Safety Status](#thread-safety-status)
       - [Web Worker Integration Patterns](#web-worker-integration-patterns)
@@ -360,57 +313,13 @@ console.log(uf.connected(0, 3)); // false - element 3 has root 3
 
 #### Time Complexity Analysis
 
-**Inverse Ackermann Function**:
-The inverse Ackermann function $\alpha(n)$ is defined as:
-$$\alpha(n) = \min\{k : A(k, \lfloor n/2 \rfloor) \geq \log n\}$$
+**Amortized Performance**:
 
-Where $A(k, n)$ is the Ackermann function:
+- **Find**: $O(\alpha(n))$ amortized where $\alpha(n) \leq 4$ for all practical inputs
+- **Union**: $O(\alpha(n))$ amortized
+- **Connected**: $O(\alpha(n))$ amortized
 
-- $A(0, n) = n + 1$
-- $A(k+1, 0) = A(k, 1)$
-- $A(k+1, n+1) = A(k, A(k+1, n))$
-
-**Practical Implications**:
-
-- For any practical value of $n$ (up to $2^{65536}$), $\alpha(n) \leq 4$
-- This makes Union-Find operations effectively constant time in practice
-- While theoretically superior to $O(\log n)$, the practical difference is negligible for most applications
-
-**Amortized Analysis**:
-Using the potential method, we can show that the amortized cost per operation is $O(\alpha(n))$.
-
-**Potential Method Explanation**:
-The potential method assigns a potential function $\Phi$ to the data structure state. For Union-Find:
-
-- **Potential Function**: $\Phi = \sum_{i=1}^{n} \text{rank}(i)$
-- **Amortized Cost**: $\hat{c}_i = c_i + \Phi(D_i) - \Phi(D_{i-1})$
-- **Key Insight**: Path compression reduces potential, making expensive operations "pay" for future cheap operations
-
-#### Union-Find Algorithm Workflow
-
-```mermaid
-graph TD
-    A[Union-Find Operations] --> B[Find Operation]
-    A --> C[Union Operation]
-
-    B --> D[Check if parent == self]
-    D -->|Yes| E[Return self as root]
-    D -->|No| F[Recursively find parent]
-    F --> G[Apply path compression]
-    G --> H[Return root]
-
-    C --> I[Find root of x]
-    C --> J[Find root of y]
-    I --> K[Compare ranks]
-    J --> K
-    K -->|"rank[x] < rank[y]"| L["Set parent[x] = y"]
-    K -->|"rank[x] > rank[y]"| M["Set parent[y] = x"]
-    K -->|"rank[x] == rank[y]"| N["Set parent[y] = x, rank[x]++"]
-
-    L --> O[Union Complete]
-    M --> O
-    N --> O
-```
+**Practical Impact**: Union-Find operations are effectively constant time in practice. The inverse Ackermann function $\alpha(n)$ grows so slowly that for any realistic dataset size, it's essentially constant.
 
 #### Code Implementation Details
 
@@ -614,83 +523,23 @@ function checkCollision(a: AABB, b: AABB): CollisionResult {
 - `Math.max(a.x, b.x)` implements $\max(x_1, x_2)$
 - The collision condition `overlapX > 0 && overlapY > 0` directly implements the mathematical requirement for overlap on both axes
 
-#### Collision Condition: Mathematical Foundation
-
-The condition `overlapX > 0 && overlapY > 0` implements a fundamental geometric principle: **two rectangles collide if and only if they overlap on both axes**. This is because rectangles are 2D objects that must share a 2D region for a true collision.
-
-**Mathematical Reasoning**:
-
-1. **Rectangle Definition**: A rectangle is defined by two intervals: $[x_{\min}, x_{\max}]$ and $[y_{\min}, y_{\max}]$
-2. **Intersection Requirement**: Two rectangles overlap if their intersection is non-empty
-3. **2D Intersection**: The intersection of two rectangles requires valid intervals on both axes:
-   - X-interval: $[\max(x_1, x_2), \min(x_1 + w_1, x_2 + w_2)]$
-   - Y-interval: $[\max(y_1, y_2), \min(y_1 + h_1, y_2 + h_2)]$
-4. **Validity Condition**: An interval $[a,b]$ is valid if and only if $a < b$ (positive length)
-5. **Collision Logic**: Therefore, collision occurs if and only if both X and Y overlaps are positive
-
-**Why Both Axes Must Overlap**:
-
-- **Only X-axis overlap**: Rectangles are side-by-side (no collision)
-- **Only Y-axis overlap**: Rectangles are stacked vertically (no collision)
-- **Both axes overlap**: Rectangles share a 2D region (collision!)
-
-**Practical Verification**:
-
-```typescript
-// Scenario 1: Both axes overlap (COLLISION)
-const boxA = { x: 0, y: 0, width: 100, height: 100 };
-const boxB = { x: 50, y: 50, width: 100, height: 100 };
-// X-axis: [0,100] ∩ [50,150] = [50,100] (overlap = 50)
-// Y-axis: [0,100] ∩ [50,150] = [50,100] (overlap = 50)
-// Result: overlapX > 0 && overlapY > 0 = true (COLLISION)
-
-// Scenario 2: Only X-axis overlaps (NO COLLISION)
-const boxC = { x: 0, y: 0, width: 100, height: 100 };
-const boxD = { x: 50, y: 150, width: 100, height: 100 };
-// X-axis: [0,100] ∩ [50,150] = [50,100] (overlap = 50)
-// Y-axis: [0,100] ∩ [150,250] = ∅ (no overlap)
-// Result: overlapX > 0 && overlapY > 0 = false (NO COLLISION)
-```
-
-The `&&` operator ensures we only detect true 2D collisions, not just 1D projections that happen to overlap.
-
 #### AABB Algorithm Execution Example
 
-Demonstrating the mathematical formulation in practice:
-
 ```typescript
-// Define two AABBs following the mathematical model
+// Define two AABBs
 const boxA: AABB = { x: 0, y: 0, width: 100, height: 100 };
 const boxB: AABB = { x: 50, y: 50, width: 100, height: 100 };
-// Box A: top-left at (0,0), extends to (100,100)
-// Box B: top-left at (50,50), extends to (150,150)
 
-// Mathematical calculation of overlap
-// X-axis: min(0+100, 50+100) - max(0, 50) = min(100, 150) - max(0, 50) = 100 - 50 = 50
-// Y-axis: min(0+100, 50+100) - max(0, 50) = min(100, 150) - max(0, 50) = 100 - 50 = 50
-// This calculates the overlap region on both axes
+// Calculate overlap on both axes
+// X-axis: min(0+100, 50+100) - max(0, 50) = 100 - 50 = 50
+// Y-axis: min(0+100, 50+100) - max(0, 50) = 100 - 50 = 50
 
 const result = checkCollision(boxA, boxB);
 console.log(result.colliding); // true - overlap on both axes
 console.log(result.overlapArea); // 2500 - 50 × 50 overlap area
-// The collision function returns detailed information about the overlap
 ```
 
-**Code Explanation**:
-
-1. **AABB Definition**: Each box is defined by its top-left corner (x,y) and dimensions (width, height)
-2. **Overlap Calculation**: The algorithm calculates overlap on both X and Y axes using interval intersection
-3. **Collision Detection**: `checkCollision()` returns a result object with collision status and overlap details
-4. **Mathematical Implementation**: The code directly implements the mathematical formulas for interval overlap
-
-**Step-by-Step Process**:
-
-- **Step 1**: Calculate X-axis overlap using `min(right1, right2) - max(left1, left2)`
-- **Step 2**: Calculate Y-axis overlap using the same formula for vertical intervals
-- **Step 3**: Check if both overlaps are positive (collision condition)
-- **Step 4**: Calculate overlap area as the product of X and Y overlaps
-
-**Mathematical Verification**: The result confirms the mathematical analysis - both AABBs overlap on the x-axis (interval [0,100] ∩ [50,150] = [50,100]) and y-axis (interval [0,100] ∩ [50,150] = [50,100]), resulting in a 50×50 overlap region with area 2500.
+**Key Insight**: Two rectangles collide if and only if they overlap on both axes. The `&&` operator ensures we detect true 2D collisions, not just 1D projections.
 
 **Batch Collision Detection**:
 
@@ -770,30 +619,6 @@ function getAABBCells(aabb: AABB, cellSize: number): string[] {
 
   return cells;
 }
-```
-
-#### AABB Algorithm Workflow
-
-```mermaid
-graph TD
-    A[AABB Collision Detection] --> B[Input: AABB A, AABB B]
-    B --> C[Calculate X-axis overlap]
-    B --> D[Calculate Y-axis overlap]
-
-    C --> E["overlapX = max(0, min(A.right, B.right) - max(A.left, B.left))"]
-    D --> F["overlapY = max(0, min(A.bottom, B.bottom) - max(A.top, B.top))"]
-
-    E --> G[Check collision condition]
-    F --> G
-    G --> H["collision = overlapX > 0 AND overlapY > 0"]
-
-    H -->|True| I[Calculate overlap area]
-    H -->|False| J[No collision]
-
-    I --> K["overlapArea = overlapX × overlapY"]
-    K --> L[Calculate center distance]
-    L --> M[Return collision result]
-    J --> M
 ```
 
 #### AABB Performance Analysis
@@ -1298,30 +1123,6 @@ function calculateOptimalCellSize(objects: SpatialObject[]): number {
 - **Too large cells**: Few objects per cell, reducing the benefit of spatial partitioning
 - **Optimal size**: 2-4 times the average object size provides the best balance`
 
-#### Spatial Hashing Algorithm Workflow
-
-```mermaid
-graph TD
-    A[Spatial Hash Operations] --> B[Insert Object]
-    A --> C[Query Objects]
-    A --> D[Remove Object]
-
-    B --> E[Calculate object cells]
-    E --> F[Hash cell coordinates]
-    F --> G[Store object in cells]
-    G --> H[Update object-to-cells mapping]
-
-    C --> I[Calculate query cells]
-    I --> J[Hash query cell coordinates]
-    J --> K[Retrieve objects from cells]
-    K --> L[Filter objects by query bounds]
-    L --> M[Return filtered results]
-
-    D --> N[Get object's cells]
-    N --> O[Remove from each cell]
-    O --> P[Clear object-to-cells mapping]
-```
-
 #### Spatial Hashing Performance Analysis
 
 **Time Complexity**:
@@ -1346,318 +1147,27 @@ graph TD
 
 ### 🔧 PAW Optimization Framework
 
-The **Performance-Aware Workload (PAW)** optimization framework is the core intelligence engine of the reynard-algorithms package. It provides adaptive algorithm selection, intelligent memory management, and real-time performance optimization based on workload characteristics and historical performance data.
+The **Performance-Aware Workload (PAW)** optimization framework automatically selects the most efficient algorithm based on your data characteristics. It uses simple rule-based heuristics to choose between naive, spatial partitioning, and optimized algorithms.
 
-#### Framework Overview
+#### How PAW Works
 
-PAW operates as a meta-optimization layer that sits above all algorithmic implementations, continuously analyzing workload patterns and automatically selecting the most efficient algorithm for each specific scenario. This eliminates the need for manual algorithm selection and ensures optimal performance across diverse use cases.
+PAW analyzes your workload and applies these selection rules:
 
-**Key Capabilities**:
+**Object Count Thresholds**:
 
-- **Adaptive Algorithm Selection**: Automatically chooses optimal algorithms based on real-time workload analysis
-- **Intelligent Memory Pooling**: Enhanced memory management with measured performance improvements (see benchmarks)
-- **Heuristic Learning**: Uses rule-based heuristics with performance feedback to improve future selections
-- **Real-time Monitoring**: Comprehensive performance tracking with sub-millisecond precision
-- **Workload Profiling**: Deep analysis of spatial distribution, update patterns, and resource utilization
+- **< 100 objects**: Naive algorithms (overhead exceeds benefits)
+- **100-1000 objects**: Spatial partitioning (significant performance gains)
+- **> 1000 objects**: Advanced optimization with memory pooling
 
-#### Mathematical Model
+**Additional Factors**:
 
-The framework uses a heuristic-based decision model that considers multiple performance factors:
+- **Spatial Density**: Clustered objects benefit more from spatial partitioning
+- **Update Frequency**: Frequently changing objects use different optimization strategies
+- **Memory Pressure**: High memory usage triggers aggressive cleanup and pooling
 
-$$\text{Performance} = f(\text{objectCount}, \text{spatialDensity}, \text{updateFrequency}, \text{memoryPressure}, \text{cacheEfficiency})$$
+#### Performance Results
 
-**Note**: The formulas shown are conceptual models that guide the heuristic implementation, not literal compiled code. The actual implementation uses simpler weighted averages and rule-based decision trees.
-
-Where each factor is weighted based on historical performance data using heuristic weighting:
-
-$$w_i = \frac{1}{\sigma_i^2} \cdot \frac{1}{\sum_{j=1}^{n} \frac{1}{\sigma_j^2}}$$
-
-**Factor Definitions**:
-
-- **Object Count** ($n$): Total number of objects in the current operation
-- **Spatial Density** ($\rho$): Distribution concentration of objects in space
-- **Update Frequency** ($f$): Rate of object state changes per second
-- **Memory Pressure** ($p$): Current memory utilization ratio
-- **Cache Efficiency** ($c$): CPU cache hit rate for data access patterns
-
-#### Algorithm Selection Criteria
-
-The framework employs a rule-based heuristic decision tree that considers multiple dimensions:
-
-##### 1. Object Count Thresholds
-
-**Small Scale** ($n < 100$):
-
-- **Algorithm**: Naive/brute force approach
-- **Rationale**: Overhead of complex algorithms exceeds benefits
-- **Memory Strategy**: Direct allocation with minimal pooling
-- **Use Cases**: Small games, simple simulations, prototyping
-
-**Medium Scale** ($100 \leq n < 1000$):
-
-- **Algorithm**: Spatial partitioning with basic optimization
-- **Rationale**: Spatial structures provide significant benefits
-- **Memory Strategy**: Moderate pooling with spatial indexing
-- **Use Cases**: Medium games, interactive applications, moderate simulations
-
-**Large Scale** ($n \geq 1000$):
-
-- **Algorithm**: Advanced optimization with memory pooling
-- **Rationale**: Complex algorithms provide substantial performance gains
-- **Memory Strategy**: Aggressive pooling with predictive allocation
-- **Use Cases**: Large-scale simulations, complex games, data processing
-
-##### 2. Spatial Density Analysis
-
-The framework calculates spatial density using a sophisticated formula:
-
-$$\text{density} = \frac{\text{objectsInQueryArea}}{\text{totalObjects}} \times \frac{\text{totalArea}}{\text{queryArea}} \times \text{clusteringFactor}$$
-
-Where the clustering factor accounts for non-uniform distributions:
-
-$$\text{clusteringFactor} = 1 + \frac{\text{varianceInDistribution}}{\text{meanDistribution}}$$
-
-**Density Categories**:
-
-- **Low Density** ($\rho < 0.1$): Sparse distribution, spatial structures less beneficial
-- **Medium Density** ($0.1 \leq \rho < 0.5$): Balanced distribution, moderate spatial optimization
-- **High Density** ($\rho \geq 0.5$): Dense clustering, aggressive spatial optimization required
-
-##### 3. Memory Pressure Calculation
-
-Dynamic memory pressure assessment:
-
-$$\text{memoryPressure} = \frac{\text{currentMemoryUsage}}{\text{availableMemory}} \times \text{growthRate} \times \text{fragmentationFactor}$$
-
-**Pressure Levels**:
-
-- **Low Pressure** ($p < 0.3$): Standard memory allocation strategies
-- **Medium Pressure** ($0.3 \leq p < 0.7$): Increased pooling and cleanup frequency
-- **High Pressure** ($p \geq 0.7$): Aggressive memory management and garbage collection
-
-##### 4. Update Frequency Analysis
-
-The framework tracks update patterns to optimize for temporal locality:
-
-$$\text{updateFrequency} = \frac{\text{objectsUpdated}}{\text{totalObjects}} \times \frac{1}{\text{timeWindow}}$$
-
-**Update Patterns**:
-
-- **Static** ($f < 0.1$): Objects rarely change, caching strategies optimal
-- **Dynamic** ($0.1 \leq f < 0.5$): Moderate updates, balanced optimization
-- **Highly Dynamic** ($f \geq 0.5$): Frequent updates, real-time optimization required
-
-#### Optimization Workflow
-
-```mermaid
-graph TD
-    A[PAW Optimization Framework] --> B[Workload Analysis Engine]
-    B --> C[Performance Metrics Calculator]
-    C --> D[Memory Pressure Assessor]
-    D --> E[Algorithm Selection Engine]
-
-    B --> F[Object Count Analyzer]
-    B --> G[Spatial Distribution Profiler]
-    B --> H[Update Frequency Tracker]
-    B --> I[Cache Efficiency Monitor]
-
-    F --> J[Count Objects & Classify Scale]
-    G --> K[Calculate Spatial Density & Clustering]
-    H --> L[Measure Update Rate & Patterns]
-    I --> M[Track Cache Hit Rates]
-
-    J --> N[Complexity Score Calculator]
-    K --> N
-    L --> N
-    M --> N
-
-    N --> O[Algorithm Selection Matrix]
-    O --> P[Naive Algorithm]
-    O --> Q[Spatial Partitioning]
-    O --> R[Advanced Optimization]
-
-    P --> S[Execute with Basic Monitoring]
-    Q --> T[Execute with Spatial Monitoring]
-    R --> U[Execute with Full Monitoring]
-
-    S --> V[Performance Data Collector]
-    T --> V
-    U --> V
-
-    V --> W[Adaptive Learning Engine]
-    W --> X[Update Performance Models]
-    X --> Y[Refine Selection Criteria]
-    Y --> Z[Optimize for Future Operations]
-```
-
-#### PAW Advanced Features
-
-##### Heuristic Learning Engine
-
-PAW continuously adapts from execution patterns to improve future algorithm selections:
-
-**Learning Components**:
-
-- **Performance History**: Maintains rolling window of 1000 operations
-- **Pattern Recognition**: Identifies recurring workload characteristics
-- **Heuristic Models**: Uses rule-based decision trees to predict optimal algorithms
-- **Feedback Loop**: Incorporates actual performance results into future decisions
-
-**Adaptation Rate**: 0.1 (10% weight for new performance data)
-**History Window**: 1000 operations for performance model updates
-**Selection Accuracy**: 95% optimal algorithm selection rate
-
-**Note**: PAW uses rule-based heuristics with performance feedback, not machine learning models.
-
-##### Memory Pooling System
-
-Enhanced memory management with intelligent pooling strategies:
-
-**Pool Types**:
-
-- **Object Pools**: Pre-allocated object instances for frequent creation/destruction
-- **Spatial Pools**: Memory pools optimized for spatial data structures
-- **Temporary Pools**: Short-lived allocations for intermediate calculations
-- **Persistent Pools**: Long-term allocations for stable data structures
-
-**Performance Benefits** (measured on Intel i5-1135G7 @ 2.40GHz, Node.js v24.9.0):
-
-- **Allocation Speed**: Variable performance - pooling can introduce overhead for small allocations due to pool management
-- **Memory Efficiency**: 100% pool hit rate in optimized scenarios with proper object lifecycle management
-- **Garbage Collection**: Reduces GC pressure through object reuse when pools are properly utilized
-- **Cache Locality**: Improved cache hit rates through object reuse patterns
-
-**Important**: Memory pooling performance is workload-dependent. For small, infrequent allocations, standard allocation may be faster due to pool management overhead. Pooling provides benefits primarily for high-frequency allocation patterns with proper object lifecycle management.
-
-##### Real-time Performance Monitoring
-
-Comprehensive performance tracking with sub-millisecond precision:
-
-**Monitoring Metrics**:
-
-- **Execution Time**: Precise timing of algorithm execution
-- **Memory Usage**: Real-time memory consumption tracking
-- **Cache Performance**: CPU cache hit/miss ratios
-- **Throughput**: Operations per second measurements
-- **Resource Utilization**: CPU and memory efficiency metrics
-
-**Monitoring Frequency**: Continuous monitoring with 1ms sampling rate
-**Data Retention**: 24-hour rolling window with hourly aggregation
-**Alert Thresholds**: Configurable performance degradation alerts
-
-#### Performance Benchmarks
-
-Comprehensive performance measurements across different workload scenarios:
-
-##### Core Framework Performance
-
-- **Workload Analysis**: ~0.01ms (100,000 analyses/second)
-- **Algorithm Selection**: ~0.001ms (1,000,000 selections/second)
-- **Memory Pool Allocation**: ~0.0001ms (10,000,000 allocations/second)
-- **Performance Monitoring**: ~0.0005ms (2,000,000 measurements/second)
-
-##### Algorithm Selection Accuracy
-
-- **Optimal Selection Rate**: 95% across diverse workloads
-- **Performance Improvement**: 40-80% faster than naive selection
-- **Memory Efficiency**: 15% reduction in memory usage through intelligent pooling
-- **Adaptation Speed**: <10 operations to adapt to new workload patterns
-
-##### Memory Management Performance
-
-- **Pool Allocation**: Variable performance - can be slower for small allocations due to pool management overhead
-- **Memory Efficiency**: Variable pool hit rates depending on object lifecycle patterns and pool configuration
-- **Garbage Collection**: Reduces GC pressure through object reuse when pools are properly utilized
-- **Cache Locality**: Improved cache hit rates through object reuse patterns when pools are effectively used
-
-##### Scalability Metrics (Measured Performance)
-
-Based on comprehensive benchmarking (see `src/__\tests__/readme-benchmarks.test.ts`):
-
-- **Small Scale** (20-50 objects): 2.0-4.3x performance improvement
-- **Medium Scale** (100-200 objects): 10.5-14.2x performance improvement
-- **Large Scale** (500-1000 objects): 3.7-5.5x performance improvement
-- **Memory Overhead**: Minimal additional memory usage for framework
-- **Selection Overhead**: Negligible - PAW actually reduces total execution time
-
-#### Integration and Usage
-
-The PAW framework is automatically integrated into all algorithm modules and requires no manual configuration:
-
-```typescript
-import { detectCollisions, performSpatialQuery } from "reynard-algorithms";
-
-// PAW automatically selects optimal algorithms based on workload
-const collisions = detectCollisions(objects); // Automatically optimized
-const nearby = performSpatialQuery(queryPoint, radius); // Automatically optimized
-```
-
-The PAW framework provides automatic optimization where all algorithms automatically benefit from intelligent performance enhancements without any manual intervention. The system operates with zero configuration requirements, working seamlessly out of the box for immediate performance improvements. The transparent operation ensures that existing code automatically receives performance benefits without any code changes, while maintaining complete backward compatibility where all existing APIs remain unchanged.
-
-#### Overhead Analysis and Performance Trade-offs
-
-The PAW framework introduces minimal overhead while providing substantial performance benefits in most scenarios. Comprehensive benchmark testing reveals the following performance characteristics:
-
-##### Performance Benefits by Dataset Size
-
-**Small Datasets (n < 100)**: The PAW framework delivers exceptional performance improvements for small datasets, achieving 5.2x faster execution compared to naive algorithms. With only ~0.01ms of framework overhead, the net benefit provides significant performance improvement with minimal cost. For example, with 20 objects, PAW completes operations in 0.038ms compared to 0.196ms for naive algorithms.
-
-**Medium Datasets (100 ≤ n < 1000)**: Medium-sized datasets showcase the PAW framework's optimal performance characteristics, delivering 9.4x faster execution than naive algorithms. The framework maintains its minimal ~0.01ms overhead while providing excellent performance improvement. For instance, with 200 objects, PAW processes operations in 0.486ms compared to 4.552ms for naive implementations.
-
-**Large Datasets (n ≥ 1000)**: Large datasets present more complex performance characteristics for the PAW framework, with variable performance that can be up to 32% slower in worst-case scenarios. The overhead increases to ~0.01ms framework overhead plus algorithm selection cost, and the net benefit depends heavily on workload characteristics. For example, with 500 objects, PAW may take 27.203ms compared to 20.605ms for naive algorithms, highlighting the importance of workload analysis.
-
-##### Overhead Components
-
-**Framework Overhead Breakdown**: The PAW framework's overhead is distributed across several components, each optimized for maximum efficiency. Workload analysis consumes ~0.01ms per operation, capable of processing 100,000 analyses per second. Algorithm selection requires ~0.001ms, handling 1,000,000 selections per second. Memory pool management operates at ~0.0001ms, supporting 10,000,000 operations per second. Performance monitoring adds ~0.0005ms overhead, capable of 2,000,000 measurements per second. The total framework overhead amounts to approximately ~0.0116ms per operation.
-
-**Memory Pool Effectiveness**: The memory pooling system provides variable performance depending on workload characteristics. Pool hit rates depend on object lifecycle patterns and pool configuration. Allocation speed is consistently slower than standard allocation due to pool management overhead (4.2x slower in measured benchmarks). Memory savings are achieved through object reuse when pools are properly utilized, but the overhead typically outweighs benefits for most use cases.
-
-##### When PAW Overhead Exceeds Benefits
-
-PAW may introduce net overhead in specific scenarios:
-
-**Large Dataset Edge Cases**: PAW may introduce net overhead in specific scenarios involving very large datasets with 500+ objects where algorithm selection overhead becomes significant. Simple computational workloads where naive algorithms are already optimal may also experience overhead, as well as memory-constrained environments where framework overhead is proportionally large.
-
-**Mitigation Strategies**: The PAW framework includes several mitigation strategies to handle overhead scenarios. Adaptive thresholds allow PAW to automatically adjust selection criteria based on performance history. Built-in overhead monitoring provides detection of when framework overhead exceeds benefits. Fallback mechanisms enable automatic fallback to naive algorithms when overhead is detected. Configuration options allow users to disable specific PAW features for edge cases.
-
-##### Performance Optimization Recommendations
-
-**For Maximum Performance**: To achieve maximum performance with the PAW framework, enable memory pooling which provides 11% performance improvement. Use adaptive selection to automatically optimize for workload patterns. Monitor performance using built-in monitoring tools that help identify optimization opportunities. Configure thresholds to adjust algorithm selection thresholds for specific use cases.
-
-**For Minimal Overhead**: To minimize overhead, disable monitoring which reduces overhead by ~0.0005ms per operation. Use fixed algorithms to bypass algorithm selection for known optimal cases. Optimize pool sizes by configuring memory pools for specific workload patterns. Batch operations to group operations and amortize framework overhead across multiple computations.
-
-##### Real-world Performance Impact
-
-**Typical Application Scenarios**: The PAW framework delivers substantial performance improvements across various application domains. Games experience 5-9x performance improvement for collision detection operations. Simulations achieve 5-7x performance improvement for spatial queries. Data processing applications see 2-5x performance improvement for geometric operations. Interactive applications benefit from 3-6x performance improvement for real-time updates.
-
-**Memory Efficiency**: The PAW framework achieves exceptional memory efficiency through intelligent management strategies. Allocation reduction reaches 100% for pooled objects, eliminating memory allocation overhead. Memory fragmentation is reduced by 85% through intelligent pooling mechanisms. Garbage collection pressure decreases by 90%, significantly improving application responsiveness. Cache locality improves by 60%, enhancing overall system performance through better data access patterns.
-
-The PAW framework is designed to provide net performance benefits in the vast majority of real-world scenarios, with automatic fallback mechanisms to prevent performance degradation in edge cases.
-
-### PAW Performance Trade-offs
-
-PAW introduces minimal overhead and provides substantial performance benefits across most workloads.
-
-#### When PAW Helps (Net Performance Gain)
-
-✅ **Small datasets (20-50 objects)**: 2.0-4.3x faster than naive algorithms
-✅ **Medium datasets (100-200 objects)**: 10.5-14.2x faster than naive algorithms
-✅ **Large datasets (500-1000 objects)**: 3.7-5.5x faster than naive algorithms
-✅ **Repeated operations**: Amortizes selection overhead across multiple calls
-✅ **Variable workloads**: Adapts to changing dataset characteristics
-
-#### When PAW May Not Help
-
-⚠️ **Very small datasets (<20 objects)**: Minimal performance difference
-⚠️ **Simple uniform distributions**: Naive algorithms may already be optimal
-⚠️ **Single-use operations**: Selection overhead not amortized (though still beneficial)
-⚠️ **Memory-constrained environments**: Framework overhead proportionally large
-
-**Measured Overhead**: Negligible - PAW actually reduces total execution time through intelligent algorithm selection
-
-#### Benchmark Results by Dataset Size
-
-Based on comprehensive benchmarking (see `src/__\tests__/readme-benchmarks.test.ts`):
+**When PAW Helps** (Intel i5-1135G7 @ 2.40GHz, Node.js v24.9.0):
 
 | Objects | Naive (ms) | PAW (ms) | Improvement | Recommendation        |
 | ------- | ---------- | -------- | ----------- | --------------------- |
@@ -1668,24 +1178,39 @@ Based on comprehensive benchmarking (see `src/__\tests__/readme-benchmarks.test.
 | 500     | 10.339     | 1.900    | 5.44x       | PAW highly beneficial |
 | 1000    | 42.130     | 3.309    | 12.73x      | PAW highly beneficial |
 
-_\Benchmark methodology: Each test runs multiple iterations on Intel i5-1135G7 @ 2.40GHz with dataset characteristics documented in test file._
+**When PAW May Not Help**:
 
-#### Opting Out of PAW
+- **Very small datasets (<20 objects)**: Minimal performance difference
+- **Simple uniform distributions**: Naive algorithms may already be optimal
+- **Memory-constrained environments**: Framework overhead proportionally large
+
+**Memory Pooling Reality Check**:
+
+- **Standard Allocation**: 0.0155ms per object
+- **Pooled Allocation**: 0.0622ms per object (4.0x slower due to pool management overhead)
+- **Recommendation**: Memory pooling is only beneficial for high-frequency allocation patterns with proper object lifecycle management
+
+#### Usage
+
+PAW is automatically enabled and requires no configuration:
 
 ```typescript
-// Disable all optimizations globally
+import { detectCollisions, performSpatialQuery } from "reynard-algorithms";
+
+// PAW automatically selects optimal algorithms
+const collisions = detectCollisions(objects);
+const nearby = performSpatialQuery(queryPoint, radius);
+```
+
+**Disable PAW if needed**:
+
+```typescript
 import { configureOptimization } from "reynard-algorithms";
 configureOptimization({
   enableMemoryPooling: false,
   enableAlgorithmSelection: false,
   enablePerformanceMonitoring: false,
 });
-
-// Or use specific algorithms directly
-import {
-  batchCollisionDetection, // Naive O(n²)
-  batchCollisionWithSpatialHash, // Spatial hash O(n)
-} from "reynard-algorithms/geometry/collision";
 ```
 
 ### 📐 Geometry Operations
@@ -1711,12 +1236,7 @@ A point $P$ in 2D space is defined as $P = (x, y)$ where $x, y \in \mathbb{R}$.
 The Euclidean distance between two points $P_1 = (x_1, y_1)$ and $P_2 = (x_2, y_2)$ is:
 $$d = \sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2}$$
 
-This formula is derived from the Pythagorean theorem and represents the straight-line distance between two points. It's fundamental for:
-
-- **Collision Detection**: Determining if objects are close enough to collide
-- **Pathfinding**: Calculating distances in A\* and other pathfinding algorithms
-- **Spatial Queries**: Finding nearest neighbors and proximity searches
-- **Physics Simulations**: Calculating forces and interactions between objects
+This formula is derived from the Pythagorean theorem and represents the straight-line distance between two points.
 
 **Performance Optimization**: For distance comparisons (not exact distance), we can avoid the expensive square root operation by comparing squared distances: $d^2 = (x_2 - x_1)^2 + (y_2 - y_1)^2$.
 
@@ -1724,13 +1244,7 @@ This formula is derived from the Pythagorean theorem and represents the straight
 Given two points $P_1$ and $P_2$, and a parameter $t \in [0, 1]$:
 $$P(t) = P_1 + t \cdot (P_2 - P_1) = (x_1 + t(x_2 - x_1), y_1 + t(y_2 - y_1))$$
 
-Linear interpolation is used for smooth transitions and animations. It's essential for:
-
-- **Smooth Animations**: Moving objects between positions over time
-- **Easing Functions**: Creating natural motion curves (ease-in, ease-out)
-- **Color Blending**: Interpolating between colors for gradients
-- **Value Smoothing**: Reducing jitter in sensor data or user input
-- **Path Generation**: Creating smooth paths between waypoints
+Linear interpolation is used for smooth transitions and animations.
 
 **Parameter Behavior**: When $t = 0$, we get $P_1$; when $t = 1$, we get $P_2$; and when $t = 0.5$, we get the midpoint. Values outside $[0, 1]$ extrapolate beyond the original points.
 
@@ -1738,12 +1252,7 @@ Linear interpolation is used for smooth transitions and animations. It's essenti
 The midpoint $M$ between two points $P_1$ and $P_2$ is:
 $$M = \left(\frac{x_1 + x_2}{2}, \frac{y_1 + y_2}{2}\right)$$
 
-This is a special case of linear interpolation where $t = 0.5$. The midpoint is used for:
-
-- **Centering Objects**: Finding the center point between two objects
-- **Bisection**: Dividing line segments into equal parts
-- **Centroid Calculations**: Computing the center of mass for simple shapes
-- **UI Layout**: Centering elements between two reference points
+This is a special case of linear interpolation where $t = 0.5$.
 
 #### Vector Mathematics
 
@@ -1757,63 +1266,33 @@ Vectors represent both direction and magnitude in 2D space. They're essential fo
 **Dot Product**:
 $$\vec{a} \cdot \vec{b} = a_x \cdot b_x + a_y \cdot b_y$$
 
-The dot product measures the similarity between two vectors and is used for:
-
-- **Perpendicularity Test**: Vectors are perpendicular when dot product = 0
-- **Angle Calculation**: $\cos(\theta) = \frac{\vec{a} \cdot \vec{b}}{|\vec{a}||\vec{b}|}$
-- **Projection**: Projecting one vector onto another
-- **Lighting Calculations**: Computing diffuse lighting in 3D graphics
-- **Collision Response**: Determining bounce directions
+The dot product measures the similarity between two vectors.
 
 **Cross Product** (2D):
 $$\vec{a} \times \vec{b} = a_x \cdot b_y - a_y \cdot b_x$$
 
-The 2D cross product returns a scalar representing the signed area of the parallelogram formed by the two vectors:
-
-- **Orientation Test**: Determines if three points are clockwise or counterclockwise
-- **Area Calculation**: Computing triangle and polygon areas
-- **Normal Vectors**: Finding perpendicular vectors to lines
-- **Winding Order**: Determining polygon orientation
+The 2D cross product returns a scalar representing the signed area of the parallelogram formed by the two vectors.
 
 **Vector Magnitude**:
 $$|\vec{a}| = \sqrt{a_x^2 + a_y^2}$$
 
-The magnitude represents the length of the vector and is used for:
-
-- **Distance Calculations**: Computing distances between points
-- **Force Calculations**: Determining the strength of forces in physics
-- **Speed Calculations**: Computing object velocities
-- **Normalization**: Creating unit vectors
+The magnitude represents the length of the vector.
 
 **Vector Normalization**:
 $$\hat{a} = \frac{\vec{a}}{|\vec{a}|} = \left(\frac{a_x}{|\vec{a}|}, \frac{a_y}{|\vec{a}|}\right)$$
 
-Normalization creates a unit vector (magnitude = 1) that preserves direction:
-
-- **Direction Vectors**: Representing pure direction without magnitude
-- **Movement**: Normalized velocity vectors for consistent speed
-- **Lighting**: Normalized light direction vectors
-- **Camera Systems**: Normalized forward/up/right vectors
+Normalization creates a unit vector (magnitude = 1) that preserves direction.
 
 **Vector Addition and Subtraction**:
 $$\vec{a} + \vec{b} = (a_x + b_x, a_y + b_y)$$
 $$\vec{a} - \vec{b} = (a_x - b_x, a_y - b_y)$$
 
-Vector addition combines forces or movements, while subtraction finds the vector from one point to another:
-
-- **Force Combination**: Adding multiple forces acting on an object
-- **Movement**: Combining velocity vectors for complex motion
-- **Position Vectors**: Finding the vector from point A to point B
-- **Physics Simulations**: Computing net forces and accelerations
+Vector addition combines forces or movements, while subtraction finds the vector from one point to another.
 
 **Scalar Multiplication**:
 $$k \cdot \vec{a} = (k \cdot a_x, k \cdot a_y)$$
 
-Scalar multiplication scales the vector's magnitude while preserving its direction:
-
-- **Speed Adjustment**: Changing velocity magnitude without changing direction
-- **Force Scaling**: Applying force multipliers in physics simulations
-- **Animation**: Scaling movement vectors for different animation speeds
+Scalar multiplication scales the vector's magnitude while preserving its direction.
 
 #### Circle Mathematics
 
@@ -1825,22 +1304,12 @@ Circles are fundamental shapes in computer graphics and game development, used f
 **Circle Area**:
 $$A = \pi \cdot r^2$$
 
-The area formula is essential for:
-
-- **Collision Detection**: Determining if circular objects overlap
-- **Coverage Calculations**: Computing how much area a circular object covers
-- **Physics Simulations**: Calculating mass and density for circular bodies
-- **Visual Effects**: Creating circular particle systems and explosions
+The area formula is essential for collision detection and physics calculations.
 
 **Circle Circumference**:
 $$C = 2\pi \cdot r$$
 
-The circumference is used for:
-
-- **Path Planning**: Calculating distances around circular obstacles
-- **Animation Timing**: Creating smooth circular motion animations
-- **UI Design**: Creating circular progress bars and loading indicators
-- **Geometric Calculations**: Computing perimeters of circular regions
+The circumference is used for path planning and animation timing.
 
 **Point-in-Circle Test**:
 A point $P = (x, y)$ is inside a circle with center $C = (c_x, c_y)$ and radius $r$ if:
@@ -1850,12 +1319,7 @@ where $d = \sqrt{(x - c_x)^2 + (y - c_y)^2}$ is the distance from $P$ to $C$.
 **Performance Optimization**: For collision detection, we can avoid the expensive square root by comparing squared distances:
 $$(x - c_x)^2 + (y - c_y)^2 \leq r^2$$
 
-This test is used for:
-
-- **Hit Detection**: Determining if a click or touch is within a circular button
-- **Collision Detection**: Checking if objects are within circular influence areas
-- **Spatial Queries**: Finding all points within a circular region
-- **Game Mechanics**: Detecting if players are within range of abilities or items
+This test is used for hit detection and spatial queries.
 
 #### Polygon Mathematics
 
@@ -1870,13 +1334,7 @@ $$A = \frac{1}{2}\left|\sum_{i=1}^{n} (x_i \cdot y_{i+1} - x_{i+1} \cdot y_i)\ri
 
 Where $x_{n+1} = x_1$ and $y_{n+1} = y_1$ (wrapping around).
 
-The Shoelace formula is named for its cross-multiplication pattern that resembles lacing shoes. It works for any simple polygon (non-self-intersecting) and is used for:
-
-- **Area Calculations**: Computing the area of complex polygonal shapes
-- **Collision Detection**: Determining if polygonal objects overlap
-- **Geographic Information Systems (GIS)**: Calculating land areas and regions
-- **Physics Simulations**: Computing mass and density for polygonal bodies
-- **Game Development**: Calculating hit areas for complex-shaped objects
+The Shoelace formula is named for its cross-multiplication pattern that resembles lacing shoes. It works for any simple polygon (non-self-intersecting).
 
 **Algorithm Explanation**: The formula works by summing the signed areas of trapezoids formed by each edge and the x-axis, then taking the absolute value to get the total area.
 
@@ -1887,13 +1345,7 @@ For a point $P = (x, y)$ and polygon with vertices $V$:
 2. Count intersections with polygon edges
 3. If count is odd, point is inside; if even, point is outside
 
-This algorithm is robust and handles edge cases like points on polygon boundaries. It's used for:
-
-- **Hit Detection**: Determining if a click is within a complex UI element
-- **Collision Detection**: Checking if objects are within polygonal regions
-- **Spatial Queries**: Finding all points within a polygonal area
-- **Game Mechanics**: Detecting if players are within complex-shaped zones
-- **Computer Graphics**: Determining which pixels to fill in polygon rendering
+This algorithm is robust and handles edge cases like points on polygon boundaries.
 
 **Mathematical Implementation**:
 For each edge from $(x_i, y_i)$ to $(x_{i+1}, y_{i+1})$:
@@ -1908,6 +1360,84 @@ For each edge from $(x_i, y_i)$ to $(x_{i+1}, y_{i+1})$:
 - Horizontal edges (no intersection)
 - Vertices at the same y-coordinate as the test point
 - Self-intersecting polygons (with modifications)
+
+#### Practical Usage Examples
+
+**Game Development - Collision Detection**:
+
+```typescript
+import { PointOps, CircleOps, PolygonOps } from "reynard-algorithms";
+
+// Player movement with collision detection
+const player = { x: 100, y: 100, radius: 20 };
+const obstacles = [
+  { center: { x: 200, y: 150 }, radius: 30 },
+  { center: { x: 300, y: 200 }, radius: 25 },
+];
+
+// Check if player collides with any obstacle
+function checkPlayerCollisions(player, obstacles) {
+  return obstacles.some(obstacle =>
+    CircleOps.intersectsCircle(player, player.radius, obstacle.center, obstacle.radius)
+  );
+}
+
+// Smooth player movement with interpolation
+function movePlayerTowards(target, current, speed) {
+  const distance = PointOps.distance(current, target);
+  if (distance < speed) return target;
+
+  const t = speed / distance;
+  return PointOps.lerp(current, target, t);
+}
+```
+
+**UI Development - Hit Testing**:
+
+```typescript
+// Complex UI element hit testing
+const button = {
+  center: { x: 100, y: 100 },
+  radius: 50,
+};
+
+const complexShape = [
+  { x: 0, y: 0 },
+  { x: 100, y: 0 },
+  { x: 100, y: 100 },
+  { x: 0, y: 100 },
+];
+
+// Check if click is within circular button
+function isButtonClicked(clickPoint, button) {
+  return CircleOps.containsPoint(button.center, button.radius, clickPoint);
+}
+
+// Check if click is within complex polygonal shape
+function isShapeClicked(clickPoint, vertices) {
+  return PolygonOps.containsPoint(vertices, clickPoint);
+}
+```
+
+**Animation and Interpolation**:
+
+```typescript
+// Smooth camera movement
+const camera = { x: 0, y: 0 };
+const target = { x: 1000, y: 500 };
+
+// Animate camera towards target over time
+function updateCamera(deltaTime) {
+  const speed = 200; // pixels per second
+  const distance = PointOps.distance(camera, target);
+
+  if (distance < 1) return; // Close enough
+
+  const t = (speed * deltaTime) / distance;
+  camera.x = PointOps.lerp(camera, target, t).x;
+  camera.y = PointOps.lerp(camera, target, t).y;
+}
+```
 
 #### Geometry Algorithm Implementation
 
@@ -2066,32 +1596,6 @@ export class PolygonOps {
 }
 ```
 
-#### Geometry Algorithm Workflow
-
-```mermaid
-graph TD
-    A[Geometry Operations] --> B[Point Operations]
-    A --> C[Vector Operations]
-    A --> D[Circle Operations]
-    A --> E[Polygon Operations]
-
-    B --> F[Distance Calculation]
-    B --> G[Linear Interpolation]
-    B --> H[Midpoint Calculation]
-
-    C --> I[Dot Product]
-    C --> J[Cross Product]
-    C --> K[Vector Normalization]
-
-    D --> L[Area Calculation]
-    D --> M[Circumference Calculation]
-    D --> N[Point-in-Circle Test]
-
-    E --> O[Polygon Area]
-    E --> P[Point-in-Polygon Test]
-    E --> Q[Bounding Box Calculation]
-```
-
 #### Geometry Performance Analysis
 
 **Time Complexity**:
@@ -2146,291 +1650,6 @@ Based on comprehensive stress testing (see `src/__\tests__/readme-benchmarks.tes
 
 _\See `src/__\tests__/readme-benchmarks.test.ts` for full stress test implementation and methodology_
 
-## API Reference
-
-### Optimized Algorithms
-
-The optimized algorithms module provides automatic algorithm selection, memory pooling, and
-performance monitoring for maximum efficiency.
-
-```typescript
-import {
-  detectCollisions,
-  performSpatialQuery,
-  PerformanceMonitor,
-  OptimizationConfig,
-  configureOptimization,
-  cleanup,
-} from "reynard-algorithms";
-
-// Automatic collision detection with optimization
-const aabbs = [
-  { x: 0, y: 0, width: 100, height: 100 },
-  { x: 50, y: 50, width: 100, height: 100 },
-];
-const collisions = detectCollisions(aabbs);
-
-// Performance monitoring
-const monitor = new PerformanceMonitor();
-const stats = monitor.getPerformanceStats();
-const recommendations = monitor.getOptimizationRecommendations();
-
-// Configuration management
-const config = new OptimizationConfig({
-  enableMemoryPooling: true,
-  enableAlgorithmSelection: true,
-  algorithmSelectionStrategy: "adaptive",
-});
-```
-
-### 🔧 PAW Optimization Framework API
-
-The PAW (Performance-Aware Workload) optimization framework provides intelligent algorithm selection and
-memory management.
-
-```typescript
-import {
-  AlgorithmSelector,
-  EnhancedMemoryPool,
-  OptimizedCollisionAdapter,
-  type WorkloadCharacteristics,
-  type MemoryPoolConfig,
-} from "reynard-algorithms";
-
-// Algorithm selection based on workload characteristics
-const selector = new AlgorithmSelector();
-const characteristics: WorkloadCharacteristics = {
-  objectCount: 1000,
-  spatialDistribution: "clustered",
-  updateFrequency: "high",
-};
-const optimalAlgorithm = selector.selectOptimalAlgorithm(characteristics);
-
-// Enhanced memory pooling
-const memoryPool = new EnhancedMemoryPool({
-  initialSize: 1024,
-  growthFactor: 2,
-  maxSize: 10240,
-});
-
-// Optimized collision adapter
-const adapter = new OptimizedCollisionAdapter({
-  enableMemoryPooling: true,
-  enableAlgorithmSelection: true,
-  performanceThresholds: {
-    maxExecutionTime: 16,
-    maxMemoryUsage: 50 * 1024 * 1024,
-    minHitRate: 90,
-  },
-});
-```
-
-### Union-Find Algorithm
-
-```typescript
-import { UnionFind, detectCycle, findConnectedComponents } from "reynard-algorithms";
-
-const uf = new UnionFind(10);
-uf.union(0, 1);
-uf.connected(0, 1); // true
-uf.getSetSize(0); // 2
-uf.getStats(); // Performance statistics
-
-// Utility functions
-const hasCycle = detectCycle([
-  [0, 1],
-  [1, 2],
-  [2, 0],
-]); // true
-const components = findConnectedComponents([
-  [0, 1],
-  [2, 3],
-]); // [[0, 1], [2, 3]]
-```
-
-### AABB Collision Detection
-
-```typescript
-import { checkCollision, batchCollisionDetection, AABB } from "reynard-algorithms";
-
-const aabb1: AABB = { x: 0, y: 0, width: 100, height: 100 };
-const aabb2: AABB = { x: 50, y: 50, width: 100, height: 100 };
-
-const result = checkCollision(aabb1, aabb2);
-console.log(result.colliding); // true
-console.log(result.overlapArea); // 2500
-
-// Batch collision detection
-const aabbs = [aabb1, aabb2, { x: 200, y: 200, width: 50, height: 50 }];
-const collisions = batchCollisionDetection(aabbs);
-```
-
-### Spatial Hashing
-
-```typescript
-import { SpatialHash, createOptimizedSpatialHash } from "reynard-algorithms";
-
-const spatialHash = new SpatialHash<{ name: string }>({
-  cellSize: 100,
-  maxObjectsPerCell: 50,
-});
-
-spatialHash.insert({
-  id: "1",
-  x: 50,
-  y: 50,
-  data: { name: "object1" },
-});
-
-const objectsInRect = spatialHash.queryRect(0, 0, 100, 100);
-const objectsInRadius = spatialHash.queryRadius(0, 0, 100);
-const nearest = spatialHash.findNearest(0, 0);
-```
-
-### ⚡ Performance Utilities
-
-Comprehensive performance monitoring and optimization toolkit with useful features.
-
-```typescript
-import {
-  // Core performance utilities
-  PerformanceTimer,
-  PerformanceBenchmark,
-  measureAsync,
-  measureSync,
-
-  // Memory monitoring
-  MemoryMonitor,
-  MemoryLeakDetector,
-
-  // Frame rate monitoring
-  FrameRateMonitor,
-
-  // Throttling and debouncing
-  throttle,
-  debounce,
-
-  // Performance budgets
-  PerformanceBudgetChecker,
-
-  // Memory pool optimizations
-  MemoryPoolCore,
-  MemoryPoolUtils,
-} from "reynard-algorithms";
-
-// High-precision performance timing
-const timer = new PerformanceTimer();
-timer.start();
-// ... perform operation
-const duration = timer.stop();
-
-// Memory monitoring and leak detection
-const monitor = new MemoryMonitor();
-const usage = monitor.measure();
-const leakDetector = new MemoryLeakDetector();
-const leaks = leakDetector.detectLeaks();
-
-// Frame rate monitoring
-const frameMonitor = new FrameRateMonitor();
-frameMonitor.start();
-const fps = frameMonitor.getCurrentFPS();
-
-// Advanced benchmarking
-const benchmark = new PerformanceBenchmark();
-const metrics = await benchmark.run(() => {
-  // Function to benchmark
-}, 10);
-
-// Performance budgets
-const budgetChecker = new PerformanceBudgetChecker({
-  maxExecutionTime: 16,
-  maxMemoryUsage: 50 * 1024 * 1024,
-});
-const isWithinBudget = budgetChecker.checkPerformance(metrics);
-
-// Throttling and debouncing
-const throttledFn = throttle(() => console.log("throttled"), 1000);
-const debouncedFn = debounce(() => console.log("debounced"), 500);
-```
-
-### 📐 Geometry Operations API
-
-Complete 2D geometry toolkit with collision detection, shape algorithms, and transformations.
-
-```typescript
-import {
-  // Collision detection
-  checkCollision,
-  batchCollisionDetection,
-  type AABB,
-  type CollisionPair,
-
-  // Shape algorithms
-  PointOps,
-  LineOps,
-  RectangleOps,
-  CircleOps,
-  PolygonOps,
-
-  // Vector operations
-  VectorOps,
-
-  // Transformations
-  TransformOps,
-
-  // Types
-  type Point,
-  type Vector,
-  type Line,
-  type Rectangle,
-  type Circle,
-  type Polygon,
-} from "reynard-algorithms";
-
-// AABB collision detection
-const aabb1: AABB = { x: 0, y: 0, width: 100, height: 100 };
-const aabb2: AABB = { x: 50, y: 50, width: 100, height: 100 };
-const collision = checkCollision(aabb1, aabb2);
-console.log(collision.colliding); // true
-console.log(collision.overlapArea); // 2500
-
-// Point operations
-const point1 = PointOps.create(0, 0);
-const point2 = PointOps.create(3, 4);
-const distance = PointOps.distance(point1, point2); // 5
-const midpoint = PointOps.midpoint(point1, point2); // { x: 1.5, y: 2 }
-
-// Vector operations
-const vector1 = VectorOps.create(1, 0);
-const vector2 = VectorOps.create(0, 1);
-const dot = VectorOps.dot(vector1, vector2); // 0
-const magnitude = VectorOps.magnitude(vector1); // 1
-
-// Rectangle operations
-const rect = RectangleOps.create(0, 0, 100, 50);
-const area = RectangleOps.area(rect); // 5000
-const center = RectangleOps.center(rect); // { x: 50, y: 25 }
-
-// Circle operations
-const circle = CircleOps.create(0, 0, 50);
-const circumference = CircleOps.circumference(circle); // ~314.16
-const intersects = CircleOps.intersects(circle, point1); // true
-
-// Polygon operations
-const polygon = PolygonOps.create([
-  { x: 0, y: 0 },
-  { x: 10, y: 0 },
-  { x: 10, y: 10 },
-  { x: 0, y: 10 },
-]);
-const polygonArea = PolygonOps.area(polygon); // 100
-const contains = PolygonOps.contains(polygon, { x: 5, y: 5 }); // true
-
-// Transform operations
-const transform = TransformOps.combine(TransformOps.translate(10, 20), TransformOps.scale(2, 2));
-const transformedPoint = TransformOps.applyToPoint(transform, point1);
-```
-
 ## Performance Analysis & Benchmarks
 
 ### Comprehensive Performance Testing
@@ -2466,229 +1685,59 @@ Our algorithms have been rigorously tested across various workloads and scenario
 
 ### 📊 Detailed Performance Benchmarks
 
-#### Union-Find Algorithm Performance
+**Test Environment**: Intel i5-1135G7 @ 2.40GHz, Node.js v24.9.0, Arch Linux
 
-**Operation Performance**:
+#### Core Algorithm Performance
 
-- **Find Operation**: 0.001ms average (1,000,000 ops/sec)
-- **Union Operation**: 0.002ms average (500,000 ops/sec)
-- **Connected Check**: 0.001ms average (1,000,000 ops/sec)
-- **Set Size Query**: 0.005ms average (200,000 ops/sec)
+| Algorithm    | Operation    | Time (ms)    | Operations/sec   | Memory/op |
+| ------------ | ------------ | ------------ | ---------------- | --------- |
+| Union-Find   | Find         | 0.001        | 1,000,000        | 24 bytes  |
+| Union-Find   | Union        | 0.002        | 500,000          | 24 bytes  |
+| AABB         | Single Check | 0.0001       | 10,000,000       | 32 bytes  |
+| AABB         | With Overlap | 0.0002       | 5,000,000        | 32 bytes  |
+| Spatial Hash | Insert       | 0.0002       | 5,000,000        | 40 bytes  |
+| Spatial Hash | Query        | 0.001        | 1,000,000        | 40 bytes  |
+| Point Ops    | Distance     | 0.0001       | 10,000,000       | 16 bytes  |
+| Vector Ops   | Dot Product  | 0.0001       | 10,000,000       | 16 bytes  |
+| Circle Ops   | Area         | 0.0002       | 5,000,000        | 24 bytes  |
+| Polygon Ops  | Area         | 0.001/vertex | 1,000,000/vertex | 8n bytes  |
 
-**Memory Efficiency**:
+#### Batch Performance Comparison
 
-- **Per Element**: 24 bytes (parent: 8 bytes, rank: 8 bytes, overhead: 8 bytes)
-- **Path Compression**: 99.7% reduction in average path length
-- **Memory Pooling**: 15% reduction in allocation overhead
+| Objects | Naive (ms) | Spatial Hash (ms) | Speedup |
+| ------- | ---------- | ----------------- | ------- |
+| 100     | 0.5        | 0.1               | 5x      |
+| 1,000   | 50         | 2.5               | 20x     |
+| 10,000  | 5,000      | 25                | 200x    |
+| 100,000 | 500,000    | 250               | 2,000x  |
 
-**Scalability Analysis**:
+#### PAW Framework Performance
 
-```text
-Elements    | Find (ms) | Union (ms) | Memory (MB)
-------------|-----------|------------|------------
-1,000       | 0.001     | 0.002      | 0.024
-10,000      | 0.001     | 0.002      | 0.24
-100,000     | 0.001     | 0.002      | 2.4
-1,000,000   | 0.001     | 0.002      | 24
-10,000,000  | 0.001     | 0.002      | 240
-```
-
-#### AABB Collision Detection Performance
-
-**Single Collision Performance**:
-
-- **Basic Check**: 0.0001ms (10,000,000 checks/sec)
-- **With Overlap**: 0.0002ms (5,000,000 checks/sec)
-- **With Distance**: 0.0003ms (3,333,333 checks/sec)
-
-**Batch Collision Performance**:
-
-```text
-Objects     | Naive (ms) | Spatial (ms) | Speedup
-------------|------------|--------------|--------
-100         | 0.5        | 0.1          | 5x
-1,000       | 50         | 2.5          | 20x
-10,000      | 5,000      | 25           | 200x
-100,000     | 500,000    | 250          | 2,000x
-```
-
-**Memory Usage**:
-
-- **Per AABB**: 32 bytes (x: 8, y: 8, width: 8, height: 8)
-- **Spatial Hash Overhead**: 40 bytes per object
-- **Batch Processing**: 95% reduction in collision checks
-
-#### Spatial Hashing Performance
-
-**Operation Performance**:
-
-- **Insert**: 0.0002ms (5,000,000 inserts/sec)
-- **Query**: 0.001ms (1,000,000 queries/sec)
-- **Remove**: 0.0003ms (3,333,333 removes/sec)
-- **Update**: 0.0005ms (2,000,000 updates/sec)
-
-**Query Efficiency**:
-
-```text
-Query Size  | Objects Found | Time (ms) | Efficiency
-------------|---------------|-----------|-----------
-10x10       | 5             | 0.001     | 99.9%
-100x100     | 50            | 0.005     | 99.5%
-1000x1000   | 500           | 0.05      | 95%
-10000x10000 | 5000          | 0.5       | 90%
-```
-
-**Memory Analysis**:
-
-- **Base Object**: 32 bytes
-- **Cell Mapping**: 8 bytes per cell
-- **Hash Table**: 16 bytes per entry
-- **Total Overhead**: ~40 bytes per object
-
-#### PAW Optimization Framework Performance
-
-**Workload Analysis Performance (median-of-N)**:
-
-- **Selection-only latency**: ~0.000821ms (seeded workload)
-- **Combined (selection + algorithm, 100 objs)**: ~0.0317ms
-- **Algorithm-only baseline (100 objs)**: ~0.3061ms
-- **Net overhead (combined - alg)**: -0.2744ms (-89.66%)
-
-**Optimization Effectiveness**:
-
-```text
-Workload Type    | Naive (ms) | Optimized (ms) | Improvement
------------------|------------|----------------|------------
-Small (n<100)    | 0.1        | 0.1            | 0%
-Medium (n<1000)  | 10         | 2              | 80%
-Large (n<10000)  | 1000       | 50             | 95%
-Huge (n<100000)  | 100000     | 500            | 99.5%
-```
-
-#### Geometry Operations Performance
-
-**Point Operations**:
-
-- **Distance**: 0.0001ms (10,000,000 ops/sec)
-- **Midpoint**: 0.0001ms (10,000,000 ops/sec)
-- **Lerp**: 0.0001ms (10,000,000 ops/sec)
-- **Add/Subtract**: 0.0001ms (10,000,000 ops/sec)
-
-**Vector Operations**:
-
-- **Dot Product**: 0.0001ms (10,000,000 ops/sec)
-- **Cross Product**: 0.0001ms (10,000,000 ops/sec)
-- **Magnitude**: 0.0001ms (10,000,000 ops/sec)
-- **Normalize**: 0.0002ms (5,000,000 ops/sec)
-
-**Circle Operations**:
-
-- **Area**: 0.0002ms (5,000,000 ops/sec)
-- **Circumference**: 0.0002ms (5,000,000 ops/sec)
-- **Point-in-Circle**: 0.0002ms (5,000,000 ops/sec)
-- **Circle Intersection**: 0.0003ms (3,333,333 ops/sec)
-
-**Polygon Operations**:
-
-- **Area (Shoelace)**: 0.001ms per vertex (1,000,000 ops/sec)
-- **Point-in-Polygon**: 0.001ms per vertex (1,000,000 ops/sec)
-- **Bounding Box**: 0.0005ms per vertex (2,000,000 ops/sec)
-- **Convex Hull**: 0.01ms per vertex (100,000 ops/sec)
-
-### 🔧 Performance Optimization Techniques
-
-#### Memory Pooling Benefits
-
-Our enhanced memory pooling system provides significant performance improvements:
-
-**Allocation Performance** (median-of-N, deterministic datasets; Intel i5-1135G7 @ 2.40GHz, Node.js v24.9.0):
-
-- **Standard Allocation**: 0.0155ms per object
-- **Pooled Allocation**: 0.0622ms per object
-- **Performance Impact**: Pooling introduces ~4.0x overhead for small allocations due to pool management
-
-**Memory Efficiency**:
-
-- **Pool Hit Rate**: Variable - depends on object lifecycle patterns and pool configuration
-- **GC Pressure**: Reduces GC pressure through object reuse when pools are properly utilized
-- **Cache Locality**: Improved cache hit rates through object reuse patterns
-
-**Important**: Memory pooling performance is workload-dependent. For small, infrequent allocations, standard allocation is consistently faster due to pool management overhead (4.2x slower in measured benchmarks). Pooling provides benefits primarily for high-frequency allocation patterns with proper object lifecycle management, but the overhead typically outweighs benefits for most use cases.
-
-#### Algorithm Selection Optimization
-
-The PAW framework automatically selects optimal algorithms based on workload characteristics:
-
-**Selection Criteria**:
-
-- **Object Count**: Primary factor for algorithm selection
-- **Spatial Density**: Determines spatial partitioning effectiveness
-- **Update Frequency**: Influences caching and optimization strategies
-- **Memory Pressure**: Adjusts memory pooling and cleanup frequency
-
-**Adaptive Performance**:
-
-- **Adaptation Rate**: 0.1 (10% weight for new performance data)
-- **History Window**: 1000 operations for performance model updates
-- **Selection Accuracy**: 95% optimal algorithm selection rate
-
-**Note**: These are rule-based heuristics with performance feedback, not machine learning models.
-
-### 📈 Performance Monitoring
-
-#### Real-time Performance Tracking
-
-Our performance monitoring system provides comprehensive metrics:
-
-**Timing Precision**:
-
-- **Resolution**: Microsecond precision using `performance.now()`
-- **Overhead**: <0.001ms per measurement
-- **Accuracy**: ±0.0001ms measurement accuracy
-
-**Memory Monitoring**:
-
-- **Usage Tracking**: Real-time memory usage monitoring
-- **Leak Detection**: Automatic memory leak detection with 95% accuracy
-- **Pressure Assessment**: Dynamic memory pressure calculation
-
-**Frame Rate Monitoring**:
-
-- **FPS Tracking**: Real-time frame rate monitoring
-- **Drop Detection**: Automatic frame drop detection
-- **Performance Budgets**: Configurable performance budgets with warnings
+| Objects | Naive (ms) | PAW (ms) | Improvement |
+| ------- | ---------- | -------- | ----------- |
+| 20      | 0.064      | 0.010    | 6.66x       |
+| 50      | 0.127      | 0.018    | 7.18x       |
+| 100     | 0.496      | 0.045    | 10.92x      |
+| 200     | 2.129      | 0.172    | 12.36x      |
+| 500     | 10.339     | 1.900    | 5.44x       |
+| 1000    | 42.130     | 3.309    | 12.73x      |
 
 ### 🎯 Performance Best Practices
 
-#### Optimization Guidelines
+**Recommended Performance Budgets**:
 
-1. **Algorithm Selection**: Use the PAW framework for automatic optimization
-2. **Memory Pooling**: Enable memory pooling for high-frequency operations
-3. **Batch Processing**: Use batch operations for multiple similar computations
-4. **Spatial Partitioning**: Use spatial hashing for large object sets
-5. **Performance Monitoring**: Monitor performance metrics in production
+| Use Case              | Frame Time | Memory Usage | CPU Usage |
+| --------------------- | ---------- | ------------ | --------- |
+| Real-time (60 FPS)    | <16.67ms   | <50MB        | <80%      |
+| Interactive (30 FPS)  | <33.33ms   | <100MB       | <60%      |
+| Background Processing | <100ms     | <500MB       | <40%      |
 
-#### Performance Budgets
+**Optimization Guidelines**:
 
-Recommended performance budgets for different use cases:
-
-**Real-time Applications (60 FPS)**:
-
-- **Frame Time**: <16.67ms per frame
-- **Memory Usage**: <50MB per operation
-- **CPU Usage**: <80% per frame
-
-**Interactive Applications (30 FPS)**:
-
-- **Frame Time**: <33.33ms per frame
-- **Memory Usage**: <100MB per operation
-- **CPU Usage**: <60% per frame
-
-**Background Processing**:
-
-- **Operation Time**: <100ms per operation
-- **Memory Usage**: <500MB per operation
-- **CPU Usage**: <40% sustained
+1. **Use PAW Framework**: Automatic algorithm selection for optimal performance
+2. **Batch Operations**: Group similar computations for better efficiency
+3. **Spatial Partitioning**: Use spatial hashing for large object sets (>100 objects)
+4. **Monitor Performance**: Track metrics in production to identify bottlenecks
 
 ### Concurrency and Thread Safety
 
