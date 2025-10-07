@@ -4,7 +4,7 @@
  * @module algorithms/spatialHashTypes
  */
 
-import type { SpatialDataType } from "../types/spatial-types";
+import type { SpatialDataType } from "../../types/spatial-types";
 
 export interface SpatialHashConfig {
   cellSize: number;

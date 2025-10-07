@@ -6,7 +6,7 @@
 
 import { SpatialObject } from "./spatial-hash-types";
 import { SpatialHash } from "./spatial-hash-core";
-import type { SpatialDataType } from "../types/spatial-types";
+import type { SpatialDataType } from "../../types/spatial-types";
 
 /**
  * Utility function to create a spatial hash optimized for a specific use case

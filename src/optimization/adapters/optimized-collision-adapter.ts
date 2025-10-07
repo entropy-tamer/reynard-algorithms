@@ -14,7 +14,7 @@ import {
   type MemoryPoolStats,
   type OptimizationRecommendation,
 } from "../core/enhanced-memory-pool";
-import type { AABB, CollisionPair } from "../../computational-computational-geometry/collision/aabb-types";
+import type { AABB, CollisionPair } from "../../computational-geometry/collision/aabb-types";
 import {
   // executeNaiveCollisionDetection,
   // executeSpatialCollisionDetection,
@@ -24,7 +24,7 @@ import {
 // import { analyzeWorkload } from "./workload-analyzer";
 import { PerformanceMonitor, type CollisionPerformanceStats, type PerformanceReport } from "./performance-monitor";
 import type { CollisionObjectData } from "../../types/spatial-types";
-import { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-structures/spatial-hash-core";
+import { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-hash-core";
 
 export interface OptimizedCollisionConfig {
   enableMemoryPooling: boolean;

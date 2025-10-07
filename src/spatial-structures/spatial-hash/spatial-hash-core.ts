@@ -9,7 +9,7 @@
 
 import { SpatialHashConfig, SpatialHashStats, SpatialObject, QueryResult } from "./spatial-hash-types";
 import { estimateMemoryUsage } from "./spatial-hash-utils";
-import type { SpatialDataType } from "../types/spatial-types";
+import type { SpatialDataType } from "../../types/spatial-types";
 
 export class SpatialHash<T extends SpatialDataType = SpatialDataType> {
   private cells = new Map<string, Array<SpatialObject<T>>>();
