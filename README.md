@@ -26,7 +26,8 @@ performance monitoring. Built with the PAW optimization framework for maximum ef
   - [Core Algorithms](#core-algorithms)
     - [🔗 Union-Find Algorithm](#-union-find-algorithm)
       - [Union-Find Mathematical Theory](#union-find-mathematical-theory)
-      - [Union-Find Algorithm Implementation](#union-find-algorithm-implementation)
+      - [Implementation: From Mathematical Model to Code](#implementation-from-mathematical-model-to-code)
+      - [Union-Find Algorithm Execution Example](#union-find-algorithm-execution-example)
       - [Time Complexity Analysis](#time-complexity-analysis)
       - [Union-Find Algorithm Workflow](#union-find-algorithm-workflow)
       - [Code Implementation Details](#code-implementation-details)
@@ -36,14 +37,18 @@ performance monitoring. Built with the PAW optimization framework for maximum ef
       - [Collision Detection Mathematics](#collision-detection-mathematics)
       - [Overlap Calculation](#overlap-calculation)
       - [Distance Calculations](#distance-calculations)
-      - [AABB Algorithm Implementation](#aabb-algorithm-implementation)
+      - [Implementation: Mathematical Formulation to Code](#implementation-mathematical-formulation-to-code)
+      - [Collision Condition: Mathematical Foundation](#collision-condition-mathematical-foundation)
+      - [AABB Algorithm Execution Example](#aabb-algorithm-execution-example)
       - [AABB Algorithm Workflow](#aabb-algorithm-workflow)
       - [AABB Performance Analysis](#aabb-performance-analysis)
     - [🗺️ Spatial Hashing](#️-spatial-hashing)
       - [Spatial Hashing Mathematical Theory](#spatial-hashing-mathematical-theory)
       - [Optimal Cell Size Analysis](#optimal-cell-size-analysis)
       - [Mathematical Analysis of Operations](#mathematical-analysis-of-operations)
-      - [Spatial Hashing Algorithm Implementation](#spatial-hashing-algorithm-implementation)
+      - [Implementation: Mathematical Model to Code](#implementation-mathematical-model-to-code)
+      - [Spatial Hashing Algorithm Execution Example](#spatial-hashing-algorithm-execution-example)
+      - [Spatial Hash Implementation Details](#spatial-hash-implementation-details)
       - [Spatial Hashing Algorithm Workflow](#spatial-hashing-algorithm-workflow)
       - [Spatial Hashing Performance Analysis](#spatial-hashing-performance-analysis)
     - [🔧 PAW Optimization Framework](#-paw-optimization-framework)
@@ -98,6 +103,7 @@ performance monitoring. Built with the PAW optimization framework for maximum ef
     - [📐 Geometry Operations API](#-geometry-operations-api)
   - [Performance Analysis \& Benchmarks](#performance-analysis--benchmarks)
     - [Comprehensive Performance Testing](#comprehensive-performance-testing)
+    - [Benchmark Methodology](#benchmark-methodology)
     - [🚀 Performance Summary](#-performance-summary)
     - [📊 Detailed Performance Benchmarks](#-detailed-performance-benchmarks)
       - [Union-Find Algorithm Performance](#union-find-algorithm-performance)
@@ -257,9 +263,11 @@ The Union-Find (Disjoint Set Union) data structure is a fundamental algorithm fo
 2. **Partition Property**: Union operations maintain the partition property
 3. **Representative Uniqueness**: Each subset has exactly one representative
 
-#### Union-Find Algorithm Implementation
+#### Implementation: From Mathematical Model to Code
 
-**Data Structure**:
+The mathematical model translates directly to our data structure design:
+
+**Data Structure Implementation**:
 
 ```typescript
 interface UnionFindNode {
@@ -268,7 +276,9 @@ interface UnionFindNode {
 }
 ```
 
-**Find Operation with Path Compression**:
+This interface directly implements the mathematical concept where each element has a parent pointer and rank for optimization.
+
+**Find Operation: Path Compression in Practice**:
 
 ```typescript
 find(x: number): number {
@@ -280,13 +290,11 @@ find(x: number): number {
 }
 ```
 
-**Mathematical Analysis of Path Compression**:
+**Mathematical Analysis**: The path compression optimization transforms the tree structure during traversal. Without compression, tree height can be $O(n)$ in the worst case. With compression, the amortized cost becomes $O(\alpha(n))$ where $\alpha$ is the inverse Ackermann function.
 
-- **Without Path Compression**: Tree height can be $O(n)$ in worst case
-- **With Path Compression**: Tree height becomes $O(\alpha(n))$ where $\alpha$ is the inverse Ackermann function
-- **Amortized Cost**: Each find operation takes $O(\alpha(n))$ time
+**Code-Math Connection**: The recursive call `this.find(this.nodes[x].parent)` implements the mathematical property that all nodes in a path should point directly to the root, reducing future traversal costs.
 
-**Union Operation with Union by Rank**:
+**Union Operation: Union by Rank Implementation**:
 
 ```typescript
 union(x: number, y: number): boolean {
@@ -309,11 +317,46 @@ union(x: number, y: number): boolean {
 }
 ```
 
-**Mathematical Analysis of Union by Rank**:
+The union by rank heuristic maintains the mathematical property that rank is an upper bound on tree height. This ensures logarithmic height bounds and optimal performance.
 
-- **Rank Property**: Rank of a node is an upper bound on the height of the subtree rooted at that node
-- **Rank Growth**: Rank only increases when two trees of equal rank are merged
-- **Height Bound**: Without path compression, height is bounded by $\log n$
+The conditional logic `if (this.nodes[rootX].rank < this.nodes[rootY].rank)` directly implements the mathematical principle of attaching smaller trees to larger ones, preserving the rank property and maintaining logarithmic height bounds.
+
+#### Union-Find Algorithm Execution Example
+
+The following demonstrates how the mathematical model translates to actual execution:
+
+```typescript
+// Initialize Union-Find with 5 elements
+const uf = new UnionFind(5);
+// Initial state: [0,1,2,3,4] - each element is its own root
+// This creates 5 disjoint sets: {0}, {1}, {2}, {3}, {4}
+
+// Union operations following the mathematical model
+uf.union(0, 1); // Merge sets {0} and {1} → {0,1}
+// State: [0,0,2,3,4] - element 1 now points to root 0
+// The union operation finds the root of both elements and connects them
+
+uf.union(1, 2); // Merge sets {0,1} and {2} → {0,1,2}
+// State: [0,0,0,3,4] - element 2 now points to root 0
+// Since 1 is already connected to 0, this connects 2 to the same root
+
+// Find operations demonstrate path compression
+console.log(uf.connected(0, 2)); // true - both elements have root 0
+// The connected operation checks if two elements are in the same set
+// by finding their roots and comparing them
+
+console.log(uf.connected(0, 3)); // false - element 3 has root 3
+// Elements 0 and 3 are in different sets, so they're not connected
+```
+
+**Code Explanation**:
+
+1. **Initialization**: `new UnionFind(5)` creates 5 separate sets, each element being its own parent
+2. **Union Operation**: `uf.union(0, 1)` merges two sets by making one root point to the other
+3. **Path Compression**: When finding roots, the algorithm flattens the tree structure for future efficiency
+4. **Connected Check**: `uf.connected(x, y)` determines if two elements are in the same set by comparing their roots
+
+**Mathematical Verification**: The connectedness relation maintains the equivalence property - elements 0, 1, and 2 form an equivalence class with representative 0, while elements 3 and 4 remain in separate singleton sets.
 
 #### Time Complexity Analysis
 
@@ -523,64 +566,131 @@ $$c_{2x} = x_2 + \frac{w_2}{2}, \quad c_{2y} = y_2 + \frac{h_2}{2}$$
 If AABBs don't overlap, the minimum distance is:
 $$d_{\min} = \max(0, \max(x_1, x_2) - \min(x_1 + w_1, x_2 + w_2)) + \max(0, \max(y_1, y_2) - \min(y_1 + h_1, y_2 + h_2))$$
 
-#### AABB Algorithm Implementation
+#### Implementation: Mathematical Formulation to Code
 
-**Core Collision Detection Function**:
+The mathematical collision detection formulas translate directly to the implementation:
+
+**Data Structure Definition**:
 
 ```typescript
 interface AABB {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+  x: number; // Left edge coordinate
+  y: number; // Top edge coordinate
+  width: number; // Extent along x-axis
+  height: number; // Extent along y-axis
 }
+```
 
-interface CollisionResult {
-  colliding: boolean;
-  overlap: AABB | null;
-  overlapArea: number;
-  distance: number;
-}
+This structure directly represents the mathematical definition $A = (x, y, w, h)$ where $(x,y)$ is the top-left corner and $w, h$ are the dimensions.
 
+**Collision Detection Implementation**:
+
+```typescript
 function checkCollision(a: AABB, b: AABB): CollisionResult {
-  // Calculate overlap on x-axis
+  // Mathematical overlap calculation: max(0, min(right1, right2) - max(left1, left2))
   const overlapX = Math.max(0, Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x));
-
-  // Calculate overlap on y-axis
   const overlapY = Math.max(0, Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y));
 
-  // Check collision condition
+  // Collision condition: overlap on both axes
   const colliding = overlapX > 0 && overlapY > 0;
 
-  // Calculate overlap area
+  // Overlap area calculation: A_overlap = overlapX × overlapY
   const overlapArea = overlapX * overlapY;
 
-  // Calculate distance between centers
+  // Center-to-center distance: d = √((cx₂ - cx₁)² + (cy₂ - cy₁)²)
   const centerAX = a.x + a.width / 2;
   const centerAY = a.y + a.height / 2;
   const centerBX = b.x + b.width / 2;
   const centerBY = b.y + b.height / 2;
   const distance = Math.sqrt((centerBX - centerAX) ** 2 + (centerBY - centerAY) ** 2);
 
-  // Create overlap AABB if colliding
-  let overlap: AABB | null = null;
-  if (colliding) {
-    overlap = {
-      x: Math.max(a.x, b.x),
-      y: Math.max(a.y, b.y),
-      width: overlapX,
-      height: overlapY,
-    };
-  }
-
-  return {
-    colliding,
-    overlap,
-    overlapArea,
-    distance,
-  };
+  return { colliding, overlapArea, distance };
 }
 ```
+
+**Mathematical-Code Correspondence**:
+
+- `Math.min(a.x + a.width, b.x + b.width)` implements $\min(x_1 + w_1, x_2 + w_2)$
+- `Math.max(a.x, b.x)` implements $\max(x_1, x_2)$
+- The collision condition `overlapX > 0 && overlapY > 0` directly implements the mathematical requirement for overlap on both axes
+
+#### Collision Condition: Mathematical Foundation
+
+The condition `overlapX > 0 && overlapY > 0` implements a fundamental geometric principle: **two rectangles collide if and only if they overlap on both axes**. This is because rectangles are 2D objects that must share a 2D region for a true collision.
+
+**Mathematical Reasoning**:
+
+1. **Rectangle Definition**: A rectangle is defined by two intervals: $[x_{\min}, x_{\max}]$ and $[y_{\min}, y_{\max}]$
+2. **Intersection Requirement**: Two rectangles overlap if their intersection is non-empty
+3. **2D Intersection**: The intersection of two rectangles requires valid intervals on both axes:
+   - X-interval: $[\max(x_1, x_2), \min(x_1 + w_1, x_2 + w_2)]$
+   - Y-interval: $[\max(y_1, y_2), \min(y_1 + h_1, y_2 + h_2)]$
+4. **Validity Condition**: An interval $[a,b]$ is valid if and only if $a < b$ (positive length)
+5. **Collision Logic**: Therefore, collision occurs if and only if both X and Y overlaps are positive
+
+**Why Both Axes Must Overlap**:
+
+- **Only X-axis overlap**: Rectangles are side-by-side (no collision)
+- **Only Y-axis overlap**: Rectangles are stacked vertically (no collision)
+- **Both axes overlap**: Rectangles share a 2D region (collision!)
+
+**Practical Verification**:
+
+```typescript
+// Scenario 1: Both axes overlap (COLLISION)
+const boxA = { x: 0, y: 0, width: 100, height: 100 };
+const boxB = { x: 50, y: 50, width: 100, height: 100 };
+// X-axis: [0,100] ∩ [50,150] = [50,100] (overlap = 50)
+// Y-axis: [0,100] ∩ [50,150] = [50,100] (overlap = 50)
+// Result: overlapX > 0 && overlapY > 0 = true (COLLISION)
+
+// Scenario 2: Only X-axis overlaps (NO COLLISION)
+const boxC = { x: 0, y: 0, width: 100, height: 100 };
+const boxD = { x: 50, y: 150, width: 100, height: 100 };
+// X-axis: [0,100] ∩ [50,150] = [50,100] (overlap = 50)
+// Y-axis: [0,100] ∩ [150,250] = ∅ (no overlap)
+// Result: overlapX > 0 && overlapY > 0 = false (NO COLLISION)
+```
+
+The `&&` operator ensures we only detect true 2D collisions, not just 1D projections that happen to overlap.
+
+#### AABB Algorithm Execution Example
+
+Demonstrating the mathematical formulation in practice:
+
+```typescript
+// Define two AABBs following the mathematical model
+const boxA: AABB = { x: 0, y: 0, width: 100, height: 100 };
+const boxB: AABB = { x: 50, y: 50, width: 100, height: 100 };
+// Box A: top-left at (0,0), extends to (100,100)
+// Box B: top-left at (50,50), extends to (150,150)
+
+// Mathematical calculation of overlap
+// X-axis: min(0+100, 50+100) - max(0, 50) = min(100, 150) - max(0, 50) = 100 - 50 = 50
+// Y-axis: min(0+100, 50+100) - max(0, 50) = min(100, 150) - max(0, 50) = 100 - 50 = 50
+// This calculates the overlap region on both axes
+
+const result = checkCollision(boxA, boxB);
+console.log(result.colliding); // true - overlap on both axes
+console.log(result.overlapArea); // 2500 - 50 × 50 overlap area
+// The collision function returns detailed information about the overlap
+```
+
+**Code Explanation**:
+
+1. **AABB Definition**: Each box is defined by its top-left corner (x,y) and dimensions (width, height)
+2. **Overlap Calculation**: The algorithm calculates overlap on both X and Y axes using interval intersection
+3. **Collision Detection**: `checkCollision()` returns a result object with collision status and overlap details
+4. **Mathematical Implementation**: The code directly implements the mathematical formulas for interval overlap
+
+**Step-by-Step Process**:
+
+- **Step 1**: Calculate X-axis overlap using `min(right1, right2) - max(left1, left2)`
+- **Step 2**: Calculate Y-axis overlap using the same formula for vertical intervals
+- **Step 3**: Check if both overlaps are positive (collision condition)
+- **Step 4**: Calculate overlap area as the product of X and Y overlaps
+
+**Mathematical Verification**: The result confirms the mathematical analysis - both AABBs overlap on the x-axis (interval [0,100] ∩ [50,150] = [50,100]) and y-axis (interval [0,100] ∩ [50,150] = [50,100]), resulting in a 50×50 overlap region with area 2500.
 
 **Batch Collision Detection**:
 
@@ -772,45 +882,46 @@ This ensures most objects fit in 1-4 cells.
 - **Cell Mapping**: $O(n)$ space for object-to-cells mapping
 - **Total Space**: $O(n)$ linear in number of objects
 
-#### Spatial Hashing Algorithm Implementation
+#### Implementation: Mathematical Model to Code
 
-**Core Spatial Hash Class**:
+The spatial hashing mathematical model translates directly to the implementation:
+
+**Data Structure Implementation**:
 
 ```typescript
 interface SpatialObject {
   id: string | number;
-  x: number;
+  x: number; // Position coordinates
   y: number;
-  width?: number;
+  width?: number; // Optional dimensions for AABB objects
   height?: number;
   data?: any;
 }
 
 interface SpatialHashConfig {
-  cellSize: number;
+  cellSize: number; // Grid cell size parameter
   maxObjectsPerCell: number;
   enableAutoResize: boolean;
   resizeThreshold: number;
   cleanupInterval: number;
 }
+```
 
+**Core Spatial Hash Implementation**:
+
+```typescript
 export class SpatialHash<T = any> {
   private cells = new Map<string, Array<SpatialObject & { data: T }>>();
   private objectToCells = new Map<string | number, Set<string>>();
   private config: SpatialHashConfig;
-  private stats = {
-    queryCount: 0,
-    insertCount: 0,
-    removeCount: 0,
-  };
 
   constructor(config: Partial<SpatialHashConfig> = {}) {
     this.config = {
-      cellSize: 100,
+      cellSize: 100,        // Default cell size
       maxObjectsPerCell: 50,
       enableAutoResize: true,
       resizeThreshold: 0.8,
-      cleanupInterval: 60000, // 1 minute
+      cleanupInterval: 60000,
       ...config,
     };
   }
@@ -831,145 +942,328 @@ export class SpatialHash<T = any> {
     this.checkAutoResize();
     this.checkCleanup();
   }
+```
 
-  queryRect(x: number, y: number, width: number, height: number): Array<SpatialObject & { data: T }> {
-    const cellKeys = this.getRectCells(x, y, width, height);
-    const results = new Map<string | number, SpatialObject & { data: T }>();
+**Mathematical Operations Implementation**:
 
-    for (const cellKey of Array.from(cellKeys)) {
-      const cell = this.cells.get(cellKey);
-      if (cell) {
-        for (const obj of cell) {
-          if (this.isObjectInRect(obj, x, y, width, height) && obj.data !== undefined) {
-            results.set(obj.id, obj as SpatialObject & { data: T });
-          }
+The core mathematical operations translate directly to code:
+
+```typescript
+private getRectCells(x: number, y: number, width: number, height: number): Set<string> {
+  // Mathematical cell mapping: cell_x = floor(x / cellSize)
+  const minCellX = Math.floor(x / this.config.cellSize);
+  const maxCellX = Math.floor((x + width) / this.config.cellSize);
+  const minCellY = Math.floor(y / this.config.cellSize);
+  const maxCellY = Math.floor((y + height) / this.config.cellSize);
+
+  const cellKeys = new Set<string>();
+  for (let cellX = minCellX; cellX <= maxCellX; cellX++) {
+    for (let cellY = minCellY; cellY <= maxCellY; cellY++) {
+      // Hash function: hash(x,y) = x * p + y (where p is a large prime)
+      cellKeys.add(`${cellX},${cellY}`);
+    }
+  }
+  return cellKeys;
+}
+```
+
+**Mathematical-Code Correspondence**:
+
+- `Math.floor(x / this.config.cellSize)` implements $\lfloor \frac{x}{s} \rfloor$ for cell coordinate calculation
+- The nested loops implement the mathematical requirement to map objects spanning multiple cells
+- The string concatenation `${cellX},${cellY}` implements the hash function for 2D-to-1D mapping
+
+#### Spatial Hashing Algorithm Execution Example
+
+Demonstrating the mathematical spatial partitioning in practice:
+
+```typescript
+// Initialize spatial hash with cell size 100
+const spatialHash = new SpatialHash({ cellSize: 100 });
+// This creates a grid where each cell is 100×100 units
+// Cell coordinates are calculated using floor(x/100), floor(y/100)
+
+// Insert objects following the mathematical model
+spatialHash.insert({ id: 1, x: 50, y: 50, data: "object1" }); // Cell (0,0)
+// Object 1: floor(50/100) = 0, floor(50/100) = 0 → cell (0,0)
+
+spatialHash.insert({ id: 2, x: 150, y: 50, data: "object2" }); // Cell (1,0)
+// Object 2: floor(150/100) = 1, floor(50/100) = 0 → cell (1,0)
+
+spatialHash.insert({ id: 3, x: 50, y: 150, data: "object3" }); // Cell (0,1)
+// Object 3: floor(50/100) = 0, floor(150/100) = 1 → cell (0,1)
+
+// Query demonstrates mathematical cell mapping
+const results = spatialHash.queryRect(0, 0, 200, 200);
+// Mathematical analysis: query spans cells (0,0), (1,0), (0,1), (1,1)
+// Query rectangle: floor(0/100) to floor(200/100) = 0 to 1 on both axes
+// Objects 1, 2, 3 are found in their respective cells
+```
+
+**Code Explanation**:
+
+1. **Spatial Hash Initialization**: Creates a grid with specified cell size (100×100 units)
+2. **Object Insertion**: Each object is placed in cells based on its position using the floor division formula
+3. **Cell Mapping**: Objects are mapped to cells using `floor(x/cellSize), floor(y/cellSize)`
+4. **Query Operation**: Retrieves objects from cells that intersect with the query rectangle
+
+**Step-by-Step Process**:
+
+- **Step 1**: Calculate which cells each object belongs to using mathematical cell mapping
+- **Step 2**: Store objects in their respective cells in the hash table
+- **Step 3**: For queries, determine which cells intersect with the query region
+- **Step 4**: Retrieve and return all objects from intersecting cells
+
+**Mathematical Verification**: The cell mapping follows the formula $\text{cell}_x = \lfloor \frac{x}{100} \rfloor$:
+
+- Object 1 at (50,50) → cell (0,0)
+- Object 2 at (150,50) → cell (1,0)
+- Object 3 at (50,150) → cell (0,1)
+
+The query rectangle (0,0,200,200) spans cells (0,0) through (1,1), correctly retrieving all three objects.
+
+#### Spatial Hash Implementation Details
+
+The following code shows the actual implementation of the spatial hashing methods used in the example above:
+
+**Query Rectangle Method**:
+
+```typescript
+queryRect(x: number, y: number, width: number, height: number): Array<SpatialObject & { data: T }> {
+  // Step 1: Get all cell keys that intersect with the query rectangle
+  const cellKeys = this.getRectCells(x, y, width, height);
+  // Step 2: Create a map to store unique results (avoid duplicates)
+  const results = new Map<string | number, SpatialObject & { data: T }>();
+
+  // Step 3: Iterate through each intersecting cell
+  for (const cellKey of Array.from(cellKeys)) {
+    const cell = this.cells.get(cellKey);
+    if (cell) {
+      // Step 4: Check each object in the cell
+      for (const obj of cell) {
+        // Step 5: Verify object is actually within query bounds and has data
+        if (this.isObjectInRect(obj, x, y, width, height) && obj.data !== undefined) {
+          results.set(obj.id, obj as SpatialObject & { data: T });
         }
       }
     }
-
-    this.stats.queryCount++;
-    return Array.from(results.values());
   }
 
-  queryRadius(centerX: number, centerY: number, radius: number): Array<QueryResult<T>> {
-    const cellKeys = this.getRadiusCells(centerX, centerY, radius);
-    const results: Array<QueryResult<T>> = [];
+  // Step 6: Update statistics and return results
+  this.stats.queryCount++;
+  return Array.from(results.values());
+}
+```
 
-    for (const cellKey of Array.from(cellKeys)) {
-      const cell = this.cells.get(cellKey);
-      if (cell) {
-        for (const obj of cell) {
-          const distance = this.getDistance(centerX, centerY, obj.x, obj.y);
-          if (distance <= radius) {
-            results.push({
-              object: obj,
-              distance,
-              cellKey,
-            });
-          }
+**What this method does**:
+
+1. **Cell Discovery**: Finds all grid cells that intersect with the query rectangle
+2. **Object Collection**: Retrieves objects from those cells
+3. **Precise Filtering**: Ensures objects are actually within the query bounds (not just in intersecting cells)
+4. **Deduplication**: Uses a Map to avoid returning the same object multiple times
+5. **Statistics**: Tracks query performance for optimization
+
+**Query Radius Method**:
+
+```typescript
+queryRadius(centerX: number, centerY: number, radius: number): Array<QueryResult<T>> {
+  // Step 1: Get all cell keys that intersect with the circular query area
+  const cellKeys = this.getRadiusCells(centerX, centerY, radius);
+  const results: Array<QueryResult<T>> = [];
+
+  // Step 2: Iterate through each intersecting cell
+  for (const cellKey of Array.from(cellKeys)) {
+    const cell = this.cells.get(cellKey);
+    if (cell) {
+      // Step 3: Check each object in the cell
+      for (const obj of cell) {
+        // Step 4: Calculate exact distance from center to object
+        const distance = this.getDistance(centerX, centerY, obj.x, obj.y);
+        // Step 5: Include object if within radius
+        if (distance <= radius) {
+          results.push({
+            object: obj,
+            distance,
+            cellKey,
+          });
         }
       }
     }
-
-    this.stats.queryCount++;
-    return results.sort((a, b) => a.distance - b.distance);
   }
 
-  private getObjectCells(object: SpatialObject): Set<string> {
-    const width = object.width || 0;
-    const height = object.height || 0;
-    return this.getRectCells(object.x, object.y, width, height);
-  }
+  // Step 6: Sort by distance (closest first) and return
+  this.stats.queryCount++;
+  return results.sort((a, b) => a.distance - b.distance);
+}
+```
 
-  private getRectCells(x: number, y: number, width: number, height: number): Set<string> {
-    const minCellX = Math.floor(x / this.config.cellSize);
-    const maxCellX = Math.floor((x + width) / this.config.cellSize);
-    const minCellY = Math.floor(y / this.config.cellSize);
-    const maxCellY = Math.floor((y + height) / this.config.cellSize);
+**What this method does**:
 
-    const cellKeys = new Set<string>();
-    for (let cellX = minCellX; cellX <= maxCellX; cellX++) {
-      for (let cellY = minCellY; cellY <= maxCellY; cellY++) {
-        cellKeys.add(`${cellX},${cellY}`);
-      }
-    }
-    return cellKeys;
-  }
+1. **Cell Discovery**: Finds cells that intersect with the circular query area
+2. **Distance Calculation**: Computes exact distance from query center to each object
+3. **Radius Filtering**: Only includes objects within the specified radius
+4. **Distance Sorting**: Returns results sorted by distance (nearest first)
+5. **Rich Results**: Returns objects with distance and cell information
 
-  private getRadiusCells(centerX: number, centerY: number, radius: number): Set<string> {
-    const minCellX = Math.floor((centerX - radius) / this.config.cellSize);
-    const maxCellX = Math.floor((centerX + radius) / this.config.cellSize);
-    const minCellY = Math.floor((centerY - radius) / this.config.cellSize);
-    const maxCellY = Math.floor((centerY + radius) / this.config.cellSize);
+**Helper Methods**:
 
-    const cellKeys = new Set<string>();
-    for (let cellX = minCellX; cellX <= maxCellX; cellX++) {
-      for (let cellY = minCellY; cellY <= maxCellY; cellY++) {
-        cellKeys.add(`${cellX},${cellY}`);
-      }
-    }
-    return cellKeys;
-  }
+**Get Object Cells Method**:
 
-  private isObjectInRect(
-    object: SpatialObject,
-    rectX: number,
-    rectY: number,
-    rectWidth: number,
-    rectHeight: number
-  ): boolean {
-    const objWidth = object.width || 0;
-    const objHeight = object.height || 0;
+```typescript
+private getObjectCells(object: SpatialObject): Set<string> {
+  // Handle objects with or without dimensions (points vs rectangles)
+  const width = object.width || 0;
+  const height = object.height || 0;
+  // Delegate to the general rectangle cell calculation
+  return this.getRectCells(object.x, object.y, width, height);
+}
+```
 
-    return (
-      object.x < rectX + rectWidth &&
-      object.x + objWidth > rectX &&
-      object.y < rectY + rectHeight &&
-      object.y + objHeight > rectY
-    );
-  }
+**Purpose**: Determines which cells an object occupies, handling both point objects (width=0, height=0) and rectangular objects.
 
-  private getDistance(x1: number, y1: number, x2: number, y2: number): number {
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    return Math.sqrt(dx * dx + dy * dy);
-  }
+**Get Rectangle Cells Method**:
 
-  private checkAutoResize(): void {
-    if (!this.config.enableAutoResize) return;
+```typescript
+private getRectCells(x: number, y: number, width: number, height: number): Set<string> {
+  // Calculate cell boundaries using floor division
+  const minCellX = Math.floor(x / this.config.cellSize);
+  const maxCellX = Math.floor((x + width) / this.config.cellSize);
+  const minCellY = Math.floor(y / this.config.cellSize);
+  const maxCellY = Math.floor((y + height) / this.config.cellSize);
 
-    const stats = this.getStats();
-    const loadFactor = stats.averageObjectsPerCell / this.config.maxObjectsPerCell;
-
-    if (loadFactor > this.config.resizeThreshold) {
-      const newCellSize = this.config.cellSize * 1.5;
-      this.resize(newCellSize);
+  // Generate all cell keys that the rectangle intersects
+  const cellKeys = new Set<string>();
+  for (let cellX = minCellX; cellX <= maxCellX; cellX++) {
+    for (let cellY = minCellY; cellY <= maxCellY; cellY++) {
+      // Create unique cell identifier
+      cellKeys.add(`${cellX},${cellY}`);
     }
   }
+  return cellKeys;
+}
+```
 
-  private checkCleanup(): void {
-    const now = Date.now();
-    if (now - this.lastCleanup > this.config.cleanupInterval) {
-      this.cleanup();
-      this.lastCleanup = now;
+**Purpose**: Implements the mathematical cell mapping formula $\text{cell}_x = \lfloor \frac{x}{s} \rfloor$ to determine which cells a rectangle intersects. This is the core of spatial hashing.
+
+**Get Radius Cells Method**:
+
+```typescript
+private getRadiusCells(centerX: number, centerY: number, radius: number): Set<string> {
+  // Calculate bounding box of the circular query area
+  const minCellX = Math.floor((centerX - radius) / this.config.cellSize);
+  const maxCellX = Math.floor((centerX + radius) / this.config.cellSize);
+  const minCellY = Math.floor((centerY - radius) / this.config.cellSize);
+  const maxCellY = Math.floor((centerY + radius) / this.config.cellSize);
+
+  // Generate all cell keys in the bounding box
+  const cellKeys = new Set<string>();
+  for (let cellX = minCellX; cellX <= maxCellX; cellX++) {
+    for (let cellY = minCellY; cellY <= maxCellY; cellY++) {
+      cellKeys.add(`${cellX},${cellY}`);
     }
   }
+  return cellKeys;
+}
+```
 
-  private cleanup(): void {
-    // Remove empty cells
-    for (const [cellKey, cell] of Array.from(this.cells.entries())) {
-      if (cell.length === 0) {
-        this.cells.delete(cellKey);
-      }
+**Purpose**: Finds all cells that might contain objects within a circular radius. Uses a bounding box approach for efficiency - we check all cells in the square that contains the circle, then filter by exact distance later.
+
+**Object in Rectangle Check Method**:
+
+```typescript
+private isObjectInRect(
+  object: SpatialObject,
+  rectX: number,
+  rectY: number,
+  rectWidth: number,
+  rectHeight: number
+): boolean {
+  // Handle objects with or without dimensions
+  const objWidth = object.width || 0;
+  const objHeight = object.height || 0;
+
+  // AABB collision detection between object and query rectangle
+  return (
+    object.x < rectX + rectWidth &&
+    object.x + objWidth > rectX &&
+    object.y < rectY + rectHeight &&
+    object.y + objHeight > rectY
+  );
+}
+```
+
+**Purpose**: Performs precise AABB collision detection to verify that an object is actually within the query rectangle. This is necessary because objects might be in cells that intersect the query area but not actually within the query bounds.
+
+**Distance Calculation Method**:
+
+```typescript
+private getDistance(x1: number, y1: number, x2: number, y2: number): number {
+  // Calculate differences in x and y coordinates
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  // Apply Pythagorean theorem: distance = √(dx² + dy²)
+  return Math.sqrt(dx * dx + dy * dy);
+}
+```
+
+**Purpose**: Implements the Euclidean distance formula $d = \sqrt{(x_2-x_1)^2 + (y_2-y_1)^2}$ to calculate the exact distance between two points. Used for precise radius queries.
+
+**Auto-Resize Check Method**:
+
+```typescript
+private checkAutoResize(): void {
+  // Skip if auto-resize is disabled
+  if (!this.config.enableAutoResize) return;
+
+  // Calculate current load factor (objects per cell)
+  const stats = this.getStats();
+  const loadFactor = stats.averageObjectsPerCell / this.config.maxObjectsPerCell;
+
+  // Resize if load factor exceeds threshold
+  if (loadFactor > this.config.resizeThreshold) {
+    const newCellSize = this.config.cellSize * 1.5;
+    this.resize(newCellSize);
+  }
+}
+```
+
+**Purpose**: Monitors spatial hash performance and automatically increases cell size when cells become too crowded, maintaining optimal query performance.
+
+**Cleanup Check Method**:
+
+```typescript
+private checkCleanup(): void {
+  const now = Date.now();
+  // Perform cleanup at regular intervals to free memory
+  if (now - this.lastCleanup > this.config.cleanupInterval) {
+    this.cleanup();
+    this.lastCleanup = now;
+  }
+}
+```
+
+**Purpose**: Schedules periodic cleanup operations to remove empty cells and free memory, preventing memory leaks in long-running applications.
+
+**Cleanup Method**:
+
+```typescript
+private cleanup(): void {
+  // Remove empty cells to free memory
+  for (const [cellKey, cell] of Array.from(this.cells.entries())) {
+    if (cell.length === 0) {
+      this.cells.delete(cellKey);
     }
   }
 }
 ```
 
+**Purpose**: Removes empty cells from the spatial hash to free memory and maintain efficient storage. This prevents the hash table from growing indefinitely with unused cells.
+
 **Optimal Cell Size Calculation**:
 
 ```typescript
 function calculateOptimalCellSize(objects: SpatialObject[]): number {
+  // Return default size if no objects provided
   if (objects.length === 0) return 100; // Default size
 
   // Calculate average object dimensions
@@ -979,18 +1273,30 @@ function calculateOptimalCellSize(objects: SpatialObject[]): number {
   for (const obj of objects) {
     const width = obj.width || 0;
     const height = obj.height || 0;
+    // Only count objects with valid dimensions
     if (width > 0 && height > 0) {
       totalArea += width * height;
       objectCount++;
     }
   }
 
+  // Return default if no valid objects found
   if (objectCount === 0) return 100;
 
+  // Calculate average object size and derive optimal cell size
   const averageObjectSize = Math.sqrt(totalArea / objectCount);
+  // Optimal cell size is typically 2-4 times the average object size
   return Math.max(50, Math.min(500, averageObjectSize / 2));
 }
 ```
+
+**Purpose**: Automatically calculates the optimal cell size for spatial hashing based on your object distribution. This ensures efficient performance by balancing cell granularity with query overhead.
+
+**Mathematical Reasoning**:
+
+- **Too small cells**: Many objects span multiple cells, increasing storage overhead
+- **Too large cells**: Few objects per cell, reducing the benefit of spatial partitioning
+- **Optimal size**: 2-4 times the average object size provides the best balance`
 
 #### Spatial Hashing Algorithm Workflow
 
@@ -1355,12 +1661,12 @@ Based on comprehensive benchmarking (see `src/__\tests__/readme-benchmarks.test.
 
 | Objects | Naive (ms) | PAW (ms) | Improvement | Recommendation        |
 | ------- | ---------- | -------- | ----------- | --------------------- |
-| 20      | 0.087      | 0.014    | 6.28x       | PAW highly beneficial |
-| 50      | 0.138      | 0.043    | 3.19x       | PAW highly beneficial |
-| 100     | 0.582      | 0.043    | 13.44x      | PAW highly beneficial |
-| 200     | 2.367      | 0.240    | 9.86x       | PAW highly beneficial |
-| 500     | 13.715     | 5.300    | 2.59x       | PAW highly beneficial |
-| 1000    | 88.805     | 7.302    | 12.16x      | PAW highly beneficial |
+| 20      | 0.064      | 0.010    | 6.66x       | PAW highly beneficial |
+| 50      | 0.127      | 0.018    | 7.18x       | PAW highly beneficial |
+| 100     | 0.496      | 0.045    | 10.92x      | PAW highly beneficial |
+| 200     | 2.129      | 0.172    | 12.36x      | PAW highly beneficial |
+| 500     | 10.339     | 1.900    | 5.44x       | PAW highly beneficial |
+| 1000    | 42.130     | 3.309    | 12.73x      | PAW highly beneficial |
 
 _\Benchmark methodology: Each test runs multiple iterations on Intel i5-1135G7 @ 2.40GHz with dataset characteristics documented in test file._
 
@@ -1415,7 +1721,7 @@ This formula is derived from the Pythagorean theorem and represents the straight
 **Performance Optimization**: For distance comparisons (not exact distance), we can avoid the expensive square root operation by comparing squared distances: $d^2 = (x_2 - x_1)^2 + (y_2 - y_1)^2$.
 
 **Linear Interpolation (Lerp)**:
-Given two points $P_1$ and $P_2$, and a parameter `$t \in [0, 1]$`:
+Given two points $P_1$ and $P_2$, and a parameter $t \in [0, 1]$:
 $$P(t) = P_1 + t \cdot (P_2 - P_1) = (x_1 + t(x_2 - x_1), y_1 + t(y_2 - y_1))$$
 
 Linear interpolation is used for smooth transitions and animations. It's essential for:
@@ -1426,7 +1732,7 @@ Linear interpolation is used for smooth transitions and animations. It's essenti
 - **Value Smoothing**: Reducing jitter in sensor data or user input
 - **Path Generation**: Creating smooth paths between waypoints
 
-**Parameter Behavior**: When $t = 0$, we get $P_1$; when $t = 1$, we get $P_2$; and when $t = 0.5$, we get the midpoint. Values outside `$[0, 1]$` extrapolate beyond the original points.
+**Parameter Behavior**: When $t = 0$, we get $P_1$; when $t = 1$, we get $P_2$; and when $t = 0.5$, we get the midpoint. Values outside $[0, 1]$ extrapolate beyond the original points.
 
 **Midpoint Calculation**:
 The midpoint $M$ between two points $P_1$ and $P_2$ is:
@@ -1827,18 +2133,16 @@ Based on comprehensive stress testing (see `src/__\tests__/readme-benchmarks.tes
 
 | Stress Case            | Naive (ms) | Spatial Hash (ms) | Performance Impact | Winner       |
 | ---------------------- | ---------- | ----------------- | ------------------ | ------------ |
-| Degenerate spatial     | 1.711      | 1.762             | Spatial 3% slower  | Naive        |
-| Dense overlap          | 1.896      | 2.558             | Spatial 35% slower | Naive        |
-| Clustered distribution | 3.086      | 3.174             | Spatial 3% slower  | Naive        |
-| Uniform distribution   | 4.559      | 3.399             | Spatial 25% faster | Spatial Hash |
+| Degenerate spatial     | 1.388      | 1.458             | Spatial 5% slower  | Naive        |
+| Dense overlap          | 2.224      | 2.040             | Spatial 8% faster  | Spatial Hash |
+| Clustered distribution | 3.604      | 3.075             | Spatial 15% faster | Spatial Hash |
+| Uniform distribution   | 3.638      | 2.465             | Spatial 32% faster | Spatial Hash |
 
-**Key Findings**:
+**Key Findings** (median-of-N with deterministic datasets):
 
-- Spatial hashing can be significantly slower than naive algorithms in dense overlap scenarios (35% slower)
-- Dense overlap scenarios strongly favor naive O(n²) algorithms
-- Clustered distributions show minimal spatial hash benefits (3% slower)
-- Uniform distributions show consistent spatial hash benefits (25% improvement)
-- Degenerate spatial cases show minimal spatial hash impact (3% slower)
+- Dense overlap does not universally favor naive; with this seed spatial is ~8% faster
+- Uniform and clustered distributions favor spatial hashing (15–32% faster)
+- Degenerate single-cell case slightly favors naive (~5% advantage)
 
 _\See `src/__\tests__/readme-benchmarks.test.ts` for full stress test implementation and methodology_
 
@@ -2139,6 +2443,15 @@ Our algorithms have been rigorously tested across various workloads and scenario
 - **pnpm**: v10.17.1
 - **Test Environment**: Arch Linux 6.16.8-arch3-1 x86\_\64
 
+### Benchmark Methodology
+
+- **Deterministic datasets**: All random datasets are generated with a seeded RNG for reproducibility.
+- **Median-of-N sampling**: For each (algorithm, dataset) we collect N samples and use the median to reduce outliers. Typical N: 21 for small (n < 100), 11 for medium (100 ≤ n < 500), 9 for large (n ≥ 500). Each sample averages several inner iterations.
+- **Warm-up**: Each algorithm path is warmed up before timing to reduce JIT/startup noise.
+- **Separation of concerns**: Dataset generation is excluded from timed sections; selection-only, algorithm-only, and combined paths are measured separately where relevant.
+- **Fixed spatial parameters**: Spatial hashing uses a fixed `cellSize` per suite to avoid accidental variance.
+- **Reporting**: README tables show medians; p10/p90 are available in console output when running the benchmark suite.
+
 ### 🚀 Performance Summary
 
 | Algorithm          | Operations/sec   | Memory/op | Time Complexity | Space Complexity |
@@ -2234,12 +2547,12 @@ Query Size  | Objects Found | Time (ms) | Efficiency
 
 #### PAW Optimization Framework Performance
 
-**Workload Analysis Performance**:
+**Workload Analysis Performance (median-of-N)**:
 
-- **Object Count Analysis**: 0.0001ms (10,000,000 analyses/sec)
-- **Spatial Density Calculation**: 0.001ms (1,000,000 calculations/sec)
-- **Memory Pressure Assessment**: 0.0005ms (2,000,000 assessments/sec)
-- **Algorithm Selection**: 0.001ms (1,000,000 selections/sec)
+- **Selection-only latency**: ~0.000821ms (seeded workload)
+- **Combined (selection + algorithm, 100 objs)**: ~0.0317ms
+- **Algorithm-only baseline (100 objs)**: ~0.3061ms
+- **Net overhead (combined - alg)**: -0.2744ms (-89.66%)
 
 **Optimization Effectiveness**:
 
@@ -2288,11 +2601,11 @@ Huge (n<100000)  | 100000     | 500            | 99.5%
 
 Our enhanced memory pooling system provides significant performance improvements:
 
-**Allocation Performance** (measured on Intel i5-1135G7 @ 2.40GHz, Node.js v24.9.0):
+**Allocation Performance** (median-of-N, deterministic datasets; Intel i5-1135G7 @ 2.40GHz, Node.js v24.9.0):
 
-- **Standard Allocation**: 0.0087ms per object
-- **Pooled Allocation**: 0.0363ms per object
-- **Performance Impact**: Pooling introduces 4.2x overhead for small allocations due to pool management
+- **Standard Allocation**: 0.0155ms per object
+- **Pooled Allocation**: 0.0622ms per object
+- **Performance Impact**: Pooling introduces ~4.0x overhead for small allocations due to pool management
 
 **Memory Efficiency**:
 

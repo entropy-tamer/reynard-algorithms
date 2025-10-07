@@ -14,16 +14,26 @@ import { EnhancedMemoryPool } from "../optimization/core/enhanced-memory-pool";
 import { PerformanceTimer } from "../performance/timer";
 import { SpatialHash } from "../spatial-hash/spatial-hash-core";
 import { UnionFind } from "../union-find/union-find-core";
+import { AlgorithmSelector, type WorkloadCharacteristics } from "../optimization/core/algorithm-selector";
 import type { AABB, CollisionPair } from "../geometry/collision/aabb-types";
 
-// Test data generators
-function generateRandomAABBs(count: number, worldSize: number = 1000): AABB[] {
+// Deterministic RNG and test data generators
+function createSeededRng(seed: number): () => number {
+  // Simple LCG (32-bit)
+  let s = seed >>> 0;
+  return () => {
+    s = (1664525 * s + 1013904223) >>> 0;
+    return (s & 0xffffffff) / 0x100000000;
+  };
+}
+
+function generateRandomAABBs(count: number, worldSize: number, rng: () => number): AABB[] {
   const aabbs: AABB[] = [];
   for (let i = 0; i < count; i++) {
-    const size = Math.random() * 50 + 10; // 10-60 size
+    const size = rng() * 50 + 10; // 10-60 size
     aabbs.push({
-      x: Math.random() * (worldSize - size),
-      y: Math.random() * (worldSize - size),
+      x: rng() * (worldSize - size),
+      y: rng() * (worldSize - size),
       width: size,
       height: size,
     });
@@ -31,20 +41,20 @@ function generateRandomAABBs(count: number, worldSize: number = 1000): AABB[] {
   return aabbs;
 }
 
-function generateClusteredAABBs(count: number, clusters: number = 5): AABB[] {
+function generateClusteredAABBs(count: number, clusters: number, rng: () => number): AABB[] {
   const aabbs: AABB[] = [];
   const clusterSize = 200;
 
   for (let cluster = 0; cluster < clusters; cluster++) {
-    const clusterX = Math.random() * 600;
-    const clusterY = Math.random() * 600;
+    const clusterX = rng() * 600;
+    const clusterY = rng() * 600;
     const objectsInCluster = Math.floor(count / clusters);
 
     for (let i = 0; i < objectsInCluster; i++) {
-      const size = Math.random() * 30 + 10;
+      const size = rng() * 30 + 10;
       aabbs.push({
-        x: clusterX + (Math.random() - 0.5) * clusterSize,
-        y: clusterY + (Math.random() - 0.5) * clusterSize,
+        x: clusterX + (rng() - 0.5) * clusterSize,
+        y: clusterY + (rng() - 0.5) * clusterSize,
         width: size,
         height: size,
       });
@@ -98,37 +108,59 @@ interface BenchmarkResult {
   datasetType: string;
 }
 
+// Adapter helpers to normalize batch collision outputs to CollisionPair[]
+const adaptBatchToCollisionPairs = (
+  fn: (aabbs: AABB[]) => Array<{ index1: number; index2: number; result: any }>
+): ((aabbs: AABB[]) => CollisionPair[]) => {
+  return (aabbs: AABB[]) => fn(aabbs).map(({ index1, index2, result }) => ({ a: index1, b: index2, result }));
+};
+
+function collectSamples(
+  algorithm: (aabbs: AABB[]) => CollisionPair[],
+  aabbs: AABB[],
+  samples: number,
+  iterationsPerSample: number
+): { median: number; p10: number; p90: number; lastCount: number } {
+  const timer = new PerformanceTimer();
+  const values: number[] = [];
+  let lastCount = 0;
+
+  // Warm up
+  for (let i = 0; i < 5; i++) algorithm(aabbs);
+
+  for (let s = 0; s < samples; s++) {
+    let total = 0;
+    for (let i = 0; i < iterationsPerSample; i++) {
+      timer.start();
+      const collisions = algorithm(aabbs);
+      total += timer.stop();
+      lastCount = collisions.length;
+    }
+    values.push(total / iterationsPerSample);
+  }
+
+  values.sort((a, b) => a - b);
+  const idx = (q: number) => Math.floor(q * (values.length - 1));
+  const median = values[idx(0.5)];
+  const p10 = values[idx(0.1)];
+  const p90 = values[idx(0.9)];
+  return { median, p10, p90, lastCount };
+}
+
 function benchmarkAlgorithm(
   algorithm: (aabbs: AABB[]) => CollisionPair[],
   aabbs: AABB[],
-  iterations: number,
   algorithmName: string,
-  datasetType: string
+  datasetType: string,
+  samples: number,
+  iterationsPerSample: number
 ): BenchmarkResult {
-  const timer = new PerformanceTimer();
-  let totalTime = 0;
-  let collisionCount = 0;
-
-  // Warm up
-  for (let i = 0; i < 3; i++) {
-    algorithm(aabbs);
-  }
-
-  // Benchmark
-  for (let i = 0; i < iterations; i++) {
-    timer.start();
-    const collisions = algorithm(aabbs);
-    const time = timer.stop();
-
-    totalTime += time;
-    collisionCount = collisions.length;
-  }
-
+  const { median, lastCount } = collectSamples(algorithm, aabbs, samples, iterationsPerSample);
   return {
     algorithm: algorithmName,
-    executionTime: totalTime / iterations,
-    collisionCount,
-    iterations,
+    executionTime: median,
+    collisionCount: lastCount,
+    iterations: samples * iterationsPerSample,
     datasetSize: aabbs.length,
     datasetType,
   };
@@ -255,8 +287,10 @@ describe("README Performance Validation Benchmarks", () => {
 
     datasetSizes.forEach(size => {
       it(`should benchmark PAW vs naive for ${size} objects`, () => {
-        const aabbs = generateRandomAABBs(size);
-        const iterations = size < 100 ? 100 : size < 500 ? 20 : 5;
+        const rng = createSeededRng(1337 + size);
+        const aabbs = generateRandomAABBs(size, 1000, rng);
+        const samples = size < 100 ? 21 : size < 500 ? 11 : 9;
+        const iterationsPerSample = size < 100 ? 10 : size < 500 ? 5 : 3;
 
         // Configure PAW enabled
         configureOptimization({
@@ -266,7 +300,14 @@ describe("README Performance Validation Benchmarks", () => {
           algorithmSelectionStrategy: "adaptive",
         });
 
-        const pawResult = benchmarkAlgorithm(detectCollisions, aabbs, iterations, "PAW-optimized", "random");
+        const pawResult = benchmarkAlgorithm(
+          detectCollisions,
+          aabbs,
+          "PAW-optimized",
+          "random",
+          samples,
+          iterationsPerSample
+        );
 
         // Configure PAW disabled
         configureOptimization({
@@ -275,7 +316,14 @@ describe("README Performance Validation Benchmarks", () => {
           enablePerformanceMonitoring: false,
         });
 
-        const naiveResult = benchmarkAlgorithm(batchCollisionDetection, aabbs, iterations, "naive", "random");
+        const naiveResult = benchmarkAlgorithm(
+          adaptBatchToCollisionPairs(batchCollisionDetection as unknown as (a: AABB[]) => any[]),
+          aabbs,
+          "naive",
+          "random",
+          samples,
+          iterationsPerSample
+        );
 
         const improvement = naiveResult.executionTime / pawResult.executionTime;
 
@@ -326,22 +374,30 @@ describe("README Performance Validation Benchmarks", () => {
   describe("Pathological Case Stress Tests", () => {
     it("should test degenerate spatial hash performance", () => {
       const degenerateAABBs = generateDegenerateSpatialHash(200);
-      const iterations = 10;
+      const samples = 11;
+      const iterations = 5;
 
       const naiveResult = benchmarkAlgorithm(
-        batchCollisionDetection,
+        adaptBatchToCollisionPairs(batchCollisionDetection as unknown as (a: AABB[]) => any[]),
         degenerateAABBs,
-        iterations,
         "naive",
-        "degenerate-spatial"
+        "degenerate-spatial",
+        samples,
+        iterations
       );
 
       const spatialResult = benchmarkAlgorithm(
-        aabbs => batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }),
+        (aabbs: AABB[]) =>
+          batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }).map(({ index1, index2, result }) => ({
+            a: index1,
+            b: index2,
+            result,
+          })),
         degenerateAABBs,
-        iterations,
         "spatial-hash",
-        "degenerate-spatial"
+        "degenerate-spatial",
+        samples,
+        iterations
       );
 
       console.log("Degenerate Spatial Hash Results:");
@@ -361,16 +417,30 @@ describe("README Performance Validation Benchmarks", () => {
 
     it("should test dense overlap performance", () => {
       const denseAABBs = generateDenseOverlap(200);
-      const iterations = 10;
+      const samples = 11;
+      const iterations = 5;
 
-      const naiveResult = benchmarkAlgorithm(batchCollisionDetection, denseAABBs, iterations, "naive", "dense-overlap");
+      const naiveResult = benchmarkAlgorithm(
+        adaptBatchToCollisionPairs(batchCollisionDetection as unknown as (a: AABB[]) => any[]),
+        denseAABBs,
+        "naive",
+        "dense-overlap",
+        samples,
+        iterations
+      );
 
       const spatialResult = benchmarkAlgorithm(
-        aabbs => batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }),
+        (aabbs: AABB[]) =>
+          batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }).map(({ index1, index2, result }) => ({
+            a: index1,
+            b: index2,
+            result,
+          })),
         denseAABBs,
-        iterations,
         "spatial-hash",
-        "dense-overlap"
+        "dense-overlap",
+        samples,
+        iterations
       );
 
       console.log("Dense Overlap Results:");
@@ -388,34 +458,57 @@ describe("README Performance Validation Benchmarks", () => {
     });
 
     it("should test clustered vs uniform distribution performance", () => {
-      const uniformAABBs = generateRandomAABBs(300);
-      const clusteredAABBs = generateClusteredAABBs(300, 5);
-      const iterations = 10;
+      const rng1 = createSeededRng(9001);
+      const rng2 = createSeededRng(42);
+      const uniformAABBs = generateRandomAABBs(300, 1000, rng1);
+      const clusteredAABBs = generateClusteredAABBs(300, 5, rng2);
+      const samples = 11;
+      const iterations = 5;
 
-      const uniformNaive = benchmarkAlgorithm(batchCollisionDetection, uniformAABBs, iterations, "naive", "uniform");
+      const uniformNaive = benchmarkAlgorithm(
+        adaptBatchToCollisionPairs(batchCollisionDetection as unknown as (a: AABB[]) => any[]),
+        uniformAABBs,
+        "naive",
+        "uniform",
+        samples,
+        iterations
+      );
 
       const clusteredNaive = benchmarkAlgorithm(
-        batchCollisionDetection,
+        adaptBatchToCollisionPairs(batchCollisionDetection as unknown as (a: AABB[]) => any[]),
         clusteredAABBs,
-        iterations,
         "naive",
-        "clustered"
+        "clustered",
+        samples,
+        iterations
       );
 
       const uniformSpatial = benchmarkAlgorithm(
-        aabbs => batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }),
+        (aabbs: AABB[]) =>
+          batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }).map(({ index1, index2, result }) => ({
+            a: index1,
+            b: index2,
+            result,
+          })),
         uniformAABBs,
-        iterations,
         "spatial-hash",
-        "uniform"
+        "uniform",
+        samples,
+        iterations
       );
 
       const clusteredSpatial = benchmarkAlgorithm(
-        aabbs => batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }),
+        (aabbs: AABB[]) =>
+          batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }).map(({ index1, index2, result }) => ({
+            a: index1,
+            b: index2,
+            result,
+          })),
         clusteredAABBs,
-        iterations,
         "spatial-hash",
-        "clustered"
+        "clustered",
+        samples,
+        iterations
       );
 
       console.log("Distribution Performance Comparison:");
@@ -444,7 +537,14 @@ describe("README Performance Validation Benchmarks", () => {
 
       // These operations should work in single-threaded environment
       // but would be unsafe in multi-threaded environment
-      spatialHash.insert({ id: "1", x: 50, y: 50, data: { test: true } });
+      spatialHash.insert({
+        id: 1,
+        x: 50,
+        y: 50,
+        width: 10,
+        height: 10,
+        data: { id: "o1", type: "render" },
+      });
       unionFind.union(0, 1);
 
       // Verify operations completed successfully
@@ -461,8 +561,9 @@ describe("README Performance Validation Benchmarks", () => {
 
   describe("Algorithm Selection Overhead Measurement", () => {
     it("should measure PAW selection overhead", () => {
-      const aabbs = generateRandomAABBs(100);
-      const iterations = 1000;
+      const rng = createSeededRng(2025);
+      const aabbs = generateRandomAABBs(100, 1000, rng);
+      const iterations = 500;
 
       // Measure overhead of algorithm selection
       const timer = new PerformanceTimer();
@@ -475,43 +576,63 @@ describe("README Performance Validation Benchmarks", () => {
         algorithmSelectionStrategy: "adaptive",
       });
 
-      let totalTime = 0;
+      // Combined (selection + algorithm)
+      let totalCombined = 0;
       for (let i = 0; i < iterations; i++) {
         timer.start();
         detectCollisions(aabbs);
-        totalTime += timer.stop();
+        totalCombined += timer.stop();
       }
+      const averageCombined = totalCombined / iterations;
 
-      const averageTime = totalTime / iterations;
-
-      // Measure without PAW overhead
+      // Algorithm-only baseline (no selection, no monitoring)
       configureOptimization({
         enableMemoryPooling: false,
         enableAlgorithmSelection: false,
         enablePerformanceMonitoring: false,
       });
 
-      let totalTimeNoPAW = 0;
+      let totalAlgOnly = 0;
       for (let i = 0; i < iterations; i++) {
         timer.start();
         batchCollisionDetection(aabbs);
-        totalTimeNoPAW += timer.stop();
+        totalAlgOnly += timer.stop();
       }
+      const averageAlgOnly = totalAlgOnly / iterations;
 
-      const averageTimeNoPAW = totalTimeNoPAW / iterations;
-      const overhead = averageTime - averageTimeNoPAW;
+      // Selection-only timing (no algorithm execution)
+      const selector = new AlgorithmSelector();
+      const workload: WorkloadCharacteristics = {
+        objectCount: aabbs.length,
+        spatialDistribution: "random",
+        updateFrequency: "low",
+      } as unknown as WorkloadCharacteristics;
+
+      let totalSelectOnly = 0;
+      for (let i = 0; i < iterations * 10; i++) {
+        timer.start();
+        selector.selectCollisionAlgorithm(workload);
+        totalSelectOnly += timer.stop();
+      }
+      const averageSelectOnly = totalSelectOnly / (iterations * 10);
+
+      const overhead = averageCombined - averageAlgOnly;
 
       console.log("PAW Overhead Analysis:");
-      console.log(`With PAW: ${averageTime.toFixed(4)}ms`);
-      console.log(`Without PAW: ${averageTimeNoPAW.toFixed(4)}ms`);
-      console.log(`Overhead: ${overhead.toFixed(4)}ms (${((overhead / averageTimeNoPAW) * 100).toFixed(2)}%)`);
+      console.log(`Combined (selection+algorithm): ${averageCombined.toFixed(4)}ms`);
+      console.log(`Algorithm only: ${averageAlgOnly.toFixed(4)}ms`);
+      console.log(`Selection only: ${averageSelectOnly.toFixed(6)}ms`);
+      console.log(
+        `Overhead (combined - alg): ${overhead.toFixed(4)}ms (${((overhead / averageAlgOnly) * 100).toFixed(2)}%)`
+      );
 
       // Store results for README update
       (global as any).pawOverheadResults = {
-        withPAW: averageTime,
-        withoutPAW: averageTimeNoPAW,
+        withPAW: averageCombined,
+        withoutPAW: averageAlgOnly,
+        selectionOnly: averageSelectOnly,
         overhead,
-        overheadPercentage: (overhead / averageTimeNoPAW) * 100,
+        overheadPercentage: (overhead / averageAlgOnly) * 100,
       };
     });
   });
