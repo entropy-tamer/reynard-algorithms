@@ -365,3 +365,4 @@ export const COMMON_AABBS = {
     id: 'tall-rectangle',
   } as AABB,
 };
+

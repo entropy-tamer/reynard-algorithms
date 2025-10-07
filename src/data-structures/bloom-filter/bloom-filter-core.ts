@@ -31,7 +31,6 @@ import type {
   BloomFilterMembershipResult,
   BloomFilterStats,
   BloomFilterEvent,
-  BloomFilterEventType,
   BloomFilterEventHandler,
   BloomFilterOptions,
   BloomFilterPerformanceMetrics,
@@ -39,6 +38,8 @@ import type {
   BloomFilterSerialization,
   HashFunctionGeneratorOptions,
 } from './bloom-filter-types';
+import { BloomFilterEventType } from './bloom-filter-types';
+import { DEFAULT_BLOOM_FILTER_CONFIG, DEFAULT_BLOOM_FILTER_OPTIONS } from './bloom-filter-types';
 
 /**
  * Bloom Filter Data Structure Implementation
@@ -60,8 +61,8 @@ export class BloomFilter {
     
     this.config = { ...DEFAULT_BLOOM_FILTER_CONFIG, ...opts.config };
     this.eventHandlers = opts.eventHandlers || [];
-    this.enableStats = opts.enableStats;
-    this.enableDebug = opts.enableDebug;
+    this.enableStats = opts.enableStats ?? true;
+    this.enableDebug = opts.enableDebug ?? false;
     
     // Calculate optimal parameters if not provided
     this.calculateOptimalParameters();
@@ -140,7 +141,7 @@ export class BloomFilter {
         success: false,
         executionTime: performance.now() - startTime,
         hashFunctionsUsed: 0,
-        metadata: { error: error.message },
+        metadata: { error: error instanceof Error ? error.message : String(error) },
       };
     }
   }
@@ -236,7 +237,7 @@ export class BloomFilter {
         success: false,
         executionTime: performance.now() - startTime,
         hashFunctionsUsed: 0,
-        metadata: { error: error.message },
+        metadata: { error: error instanceof Error ? error.message : String(error) },
       };
     }
   }
@@ -267,7 +268,7 @@ export class BloomFilter {
       } catch (error) {
         results.push(false);
         failed++;
-        errors.push(`Error inserting element ${element}: ${error}`);
+        errors.push(`Error inserting element ${element}: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
     
@@ -624,11 +625,11 @@ export class BloomFilter {
       try {
         handler(event);
       } catch (error) {
-        console.error('Error in BloomFilter event handler:', error);
+        console.error('Error in BloomFilter event handler:', error instanceof Error ? error.message : String(error));
       }
     }
   }
 }
 
 // Import default options
-import { DEFAULT_BLOOM_FILTER_OPTIONS } from './bloom-filter-types';
+

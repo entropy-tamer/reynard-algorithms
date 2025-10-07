@@ -18,7 +18,7 @@
   ],
   "scripts": {
     "dev": "vite build --watch",
-    "build": "vite build && tsc src/index.ts --declaration --declarationMap --emitDeclarationOnly --outDir dist --skipLibCheck",
+    "build": "vite build && tsc -p tsconfig.json --emitDeclarationOnly --skipLibCheck",
     "build:types": "tsc -p tsconfig.json --emitDeclarationOnly --skipLibCheck",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",

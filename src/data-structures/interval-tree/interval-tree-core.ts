@@ -28,15 +28,15 @@ import type {
   IntervalTreeTraversalResult,
   IntervalTreeStats,
   IntervalTreeEvent,
-  IntervalTreeEventType,
   IntervalTreeEventHandler,
   IntervalTreeOptions,
   IntervalTreePerformanceMetrics,
-  TraversalOrder,
   TraversalOptions,
   BatchOperationResult,
   IntervalTreeSerialization,
 } from './interval-tree-types';
+import { TraversalOrder } from './interval-tree-types';
+import { IntervalTreeEventType, DEFAULT_INTERVAL_TREE_CONFIG, DEFAULT_INTERVAL_TREE_OPTIONS } from './interval-tree-types';
 
 /**
  * Interval Tree Data Structure Implementation
@@ -57,8 +57,8 @@ export class IntervalTree {
     
     this.config = { ...DEFAULT_INTERVAL_TREE_CONFIG, ...opts.config };
     this.eventHandlers = opts.eventHandlers || [];
-    this.enableStats = opts.enableStats;
-    this.enableDebug = opts.enableDebug;
+    this.enableStats = opts.enableStats ?? true;
+    this.enableDebug = opts.enableDebug ?? false;
     
     this.root = null;
     
@@ -1025,4 +1025,4 @@ export class IntervalTree {
 }
 
 // Import default options
-import { DEFAULT_INTERVAL_TREE_OPTIONS } from './interval-tree-types';
+

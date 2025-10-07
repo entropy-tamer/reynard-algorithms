@@ -72,18 +72,31 @@ export function batchCollisionWithSpatialHash(
     return batchCollisionDetection(aabbs, options);
   }
 
-  const hash = new SpatialHash(spatialHash.cellSize);
+  const hash = new SpatialHash({
+    cellSize: spatialHash.cellSize,
+    maxObjectsPerCell: spatialHash.maxObjectsPerCell || 50,
+  });
 
   // Insert all AABBs into spatial hash
   for (let i = 0; i < aabbs.length; i++) {
-    hash.insert(i, aabbs[i]);
+    const aabb = aabbs[i];
+    hash.insert({
+      id: i,
+      x: aabb.x,
+      y: aabb.y,
+      width: aabb.width,
+      height: aabb.height,
+      data: aabb as any,
+    });
   }
 
   // Query for collisions
   for (let i = 0; i < aabbs.length; i++) {
-    const candidates = hash.query(aabbs[i]);
+    const aabb = aabbs[i];
+    const candidates = hash.queryRect(aabb.x, aabb.y, aabb.width, aabb.height);
 
-    for (const j of candidates) {
+    for (const candidate of candidates) {
+      const j = candidate.id as number;
       if (!includeSelf && i >= j) continue;
 
       const result = checkCollision(aabbs[i], aabbs[j]);

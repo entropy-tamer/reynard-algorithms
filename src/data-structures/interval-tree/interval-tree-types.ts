@@ -211,6 +211,10 @@ export interface IntervalTreeOptions {
    * Initial intervals to insert.
    */
   initialIntervals?: Interval[];
+  /**
+   * Event handlers for monitoring operations.
+   */
+  eventHandlers?: IntervalTreeEventHandler[];
 }
 
 /**

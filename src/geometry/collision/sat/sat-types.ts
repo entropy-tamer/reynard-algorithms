@@ -355,3 +355,4 @@ export const COMMON_POLYGONS = {
     radius: 0.5,
   } as ConvexPolygon,
 };
+

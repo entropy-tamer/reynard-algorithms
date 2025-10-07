@@ -53,6 +53,11 @@ export type {
   LRUCachePerformanceMetrics,
 } from "./data-structures/lru-cache";
 
+// Trie (Prefix Tree)
+// Note: Trie implementation is incomplete, commenting out for now
+// export { Trie } from "./data-structures/trie/trie-core";
+// export type { TrieNode, TrieConfig, TrieSearchResult } from "./data-structures/trie/trie-types";
+
 // ============================================================================
 // SPATIAL STRUCTURES
 // ============================================================================
@@ -80,6 +85,21 @@ export type {
   QuadtreePerformanceMetrics,
 } from "./spatial-structures/quadtree";
 
+// R-Tree
+export { RTree } from "./spatial-structures/rtree/rtree-core";
+export type {
+  Point as RTreePoint,
+  Rectangle as RTreeRectangle,
+  RTreeEntry,
+  RTreeNode,
+  RTreeConfig,
+  RTreeStats,
+  RTreeQueryResult,
+  RTreeQueryOptions,
+  RTreeInsertResult,
+  RTreeDeleteResult,
+} from "./spatial-structures/rtree/rtree-types";
+
 // ============================================================================
 // GEOMETRY OPERATIONS
 // ============================================================================
@@ -99,6 +119,55 @@ export { CircleOps } from "./geometry/shapes/circle-algorithms";
 export { PolygonOps } from "./geometry/shapes/polygon-algorithms";
 export { TransformOps } from "./geometry/transformations/transformation-algorithms";
 
+// Bresenham's Line Algorithm
+export { BresenhamLine } from "./geometry/algorithms/bresenham/bresenham-core";
+export type {
+  Point as BresenhamPoint,
+  Pixel,
+  BresenhamConfig,
+  BresenhamResult,
+  LineDrawingOptions,
+  LineDrawingResult,
+  MultiLineOptions,
+  MultiLineResult,
+} from "./geometry/algorithms/bresenham/bresenham-types";
+
+// Delaunay Triangulation
+export { DelaunayTriangulation } from "./geometry/algorithms/delaunay/delaunay-core";
+export type {
+  Point as DelaunayPoint,
+  Triangle,
+  Edge as DelaunayEdge,
+  Circumcircle,
+  DelaunayConfig,
+  DelaunayStats,
+  DelaunayResult,
+  TriangulationQueryOptions,
+  TriangulationQueryResult,
+  MeshGenerationOptions,
+  Mesh,
+  ConstrainedDelaunayOptions,
+  ConstrainedDelaunayResult,
+} from "./geometry/algorithms/delaunay/delaunay-types";
+
+// Convex Hull Algorithms
+export { ConvexHull } from "./geometry/algorithms/convex-hull/convex-hull-core";
+export type {
+  Point as ConvexHullPoint,
+  Vector,
+  HullEdge,
+  ConvexHullAlgorithm,
+  ConvexHullConfig,
+  ConvexHullStats,
+  ConvexHullResult,
+  HullAnalysisOptions,
+  HullAnalysis,
+  HullComparisonOptions,
+  HullComparison,
+  HullSimplificationOptions,
+  HullSimplificationResult,
+} from "./geometry/algorithms/convex-hull/convex-hull-types";
+
 // ============================================================================
 // PERFORMANCE UTILITIES
 // ============================================================================
@@ -112,11 +181,31 @@ export { throttle, debounce } from "./performance/throttle";
 export { PerformanceBudgetChecker } from "./performance/budget";
 
 // ============================================================================
+// PATHFINDING ALGORITHMS
+// ============================================================================
+
+// A* Pathfinding Algorithm
+// Note: A* implementation is incomplete, commenting out for now
+// export { AStar } from "./pathfinding/astar/astar-core";
+// export type { GridNode, AStarConfig, PathNode, PathResult, HeuristicFunction } from "./pathfinding/astar/astar-types";
+// export { manhattan, euclidean, chebyshev } from "./pathfinding/astar/heuristics";
+
+// ============================================================================
 // COLLISION DETECTION
 // ============================================================================
 
-// Collision detection types and functions
-export type { AABB, CollisionPair, CollisionResult } from "./computational-geometry/collision/aabb-types";
+// Separating Axis Theorem (SAT) Collision Detection
+// Note: Polygon and Vector types are already exported from geometry module above
+// export { satCollision } from "./geometry/collision/sat/sat-core";
+// export type { Projection, SATResult, OverlapResult } from "./geometry/collision/sat/sat-types";
+
+// Sweep and Prune Broad-Phase Collision Detection
+// Note: Sweep and Prune implementation is incomplete, commenting out for now
+// export { SweepAndPrune } from "./geometry/collision/sweep-prune/sweep-prune-core";
+// export type { AABB, EndPoint, Axis, SweepAndPruneConfig, PotentialCollisionPair, SweepAndPruneResult } from "./geometry/collision/sweep-prune/sweep-prune-types";
+
+// Existing AABB collision detection types and functions
+export type { AABB as AABBCollision, CollisionPair, CollisionResult } from "./computational-geometry/collision/aabb-types";
 export {
   checkCollision,
   batchCollisionDetection,

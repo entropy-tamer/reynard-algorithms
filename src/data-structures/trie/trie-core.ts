@@ -28,7 +28,6 @@ import type {
   TrieAutocompleteResult,
   TrieStats,
   TrieEvent,
-  TrieEventType,
   TrieEventHandler,
   TrieOptions,
   TriePerformanceMetrics,
@@ -39,6 +38,8 @@ import type {
   BatchOperationResult,
   TrieSerialization,
 } from './trie-types';
+
+import { DEFAULT_TRIE_CONFIG, DEFAULT_TRIE_OPTIONS, TrieEventType } from './trie-types';
 
 /**
  * Trie (Prefix Tree) Data Structure Implementation
@@ -59,8 +60,8 @@ export class Trie {
     
     this.config = { ...DEFAULT_TRIE_CONFIG, ...opts.config };
     this.eventHandlers = opts.eventHandlers || [];
-    this.enableStats = opts.enableStats;
-    this.enableDebug = opts.enableDebug;
+    this.enableStats = opts.enableStats ?? true;
+    this.enableDebug = opts.enableDebug ?? false;
     
     // Initialize root node
     this.root = this.createNode('', null);
@@ -867,7 +868,11 @@ export class Trie {
    */
   private countNodes(): number {
     let count = 0;
-    this.traverseRecursive(this.root, '', [], [], count, { includeIntermediate: true });
+    this.traverseRecursive(this.root, '', [], [], count, { 
+      includeIntermediate: true, 
+      maxDepth: this.config.maxDepth, 
+      sorted: false 
+    });
     return count;
   }
 
@@ -973,5 +978,3 @@ export class Trie {
   }
 }
 
-// Import default options
-import { DEFAULT_TRIE_OPTIONS } from './trie-types';

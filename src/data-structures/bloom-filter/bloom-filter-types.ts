@@ -195,6 +195,10 @@ export interface BloomFilterOptions {
    * Initial elements to insert.
    */
   initialElements?: string[];
+  /**
+   * Event handlers for monitoring operations.
+   */
+  eventHandlers?: BloomFilterEventHandler[];
 }
 
 /**
@@ -310,3 +314,4 @@ export const DEFAULT_BLOOM_FILTER_OPTIONS: BloomFilterOptions = {
   enableDebug: false,
   initialElements: [],
 };
+

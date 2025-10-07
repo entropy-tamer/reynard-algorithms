@@ -25,6 +25,6 @@ export {
   type Rectangle,
   type Circle,
   type Polygon,
-  type AABB,
+  type AABBCollision as AABB,
   type CollisionResult,
 } from "./exports";
