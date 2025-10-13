@@ -1,6 +1,6 @@
 {
-  "name": "reynard-algorithms",
-  "version": "0.3.0",
+  "name": "@entropy-tamer/reynard-algorithms",
+  "version": "0.3.1",
   "description": "Algorithm primitives and data structures for Reynard applications",
   "type": "module",
   "main": "./dist/index.js",
@@ -14,7 +14,9 @@
     }
   },
   "files": [
-    "dist"
+    "dist",
+    "docs",
+    "examples"
   ],
   "scripts": {
     "dev": "vite build --watch",
