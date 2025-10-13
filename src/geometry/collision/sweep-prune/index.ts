@@ -9,7 +9,7 @@
  */
 
 // Export core implementation
-export { SweepPrune } from './sweep-prune-core';
+export { SweepPrune } from "./sweep-prune-core";
 
 // Export all types and interfaces
 export type {
@@ -31,12 +31,7 @@ export type {
   SortingOptions,
   AxisSweepResult,
   MultiAxisSweepResult,
-} from './sweep-prune-types';
+} from "./sweep-prune-types";
 
 // Export default configurations and common AABBs
-export {
-  DEFAULT_SWEEP_PRUNE_CONFIG,
-  DEFAULT_SWEEP_PRUNE_OPTIONS,
-  COMMON_AABBS,
-} from './sweep-prune-types';
-
+export { DEFAULT_SWEEP_PRUNE_CONFIG, DEFAULT_SWEEP_PRUNE_OPTIONS, COMMON_AABBS } from "./sweep-prune-types";

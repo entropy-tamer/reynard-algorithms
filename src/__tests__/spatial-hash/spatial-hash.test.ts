@@ -1,9 +1,20 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-structures/spatial-hash-core";
-import type { SpatialObject } from "../../spatial-structures/spatial-hash/spatial-structures/spatial-hash-types";
+import { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-hash-core";
+import type { SpatialObject } from "../../spatial-structures/spatial-hash/spatial-hash-types";
+import type { SpatialObjectData } from "../../types/spatial-types";
 
 describe("SpatialHash", () => {
-  let spatialHash: SpatialHash<{ name: string }>;
+  let spatialHash: SpatialHash;
+
+  // Helper function to create test spatial data
+  function createTestSpatialData(name: string): SpatialObjectData {
+    return {
+      id: name,
+      type: "test",
+      category: "entity",
+      properties: { name }
+    };
+  }
 
   beforeEach(() => {
     spatialHash = new SpatialHash({ cellSize: 100 });
@@ -23,11 +34,11 @@ describe("SpatialHash", () => {
 
   describe("insert", () => {
     it("should insert an object into the spatial hash", () => {
-      const obj: SpatialObject & { data: { name: string } } = {
+      const obj: SpatialObject = {
         id: "1",
         x: 50,
         y: 50,
-        data: { name: "test" },
+        data: createTestSpatialData("test"),
       };
 
       spatialHash.insert(obj);
@@ -37,17 +48,17 @@ describe("SpatialHash", () => {
     });
 
     it("should handle multiple objects in same cell", () => {
-      const obj1: SpatialObject & { data: { name: string } } = {
+      const obj1: SpatialObject = {
         id: "1",
         x: 50,
         y: 50,
-        data: { name: "test1" },
+        data: createTestSpatialData("test1"),
       };
-      const obj2: SpatialObject & { data: { name: string } } = {
+      const obj2: SpatialObject = {
         id: "2",
         x: 75,
         y: 75,
-        data: { name: "test2" },
+        data: createTestSpatialData("test2"),
       };
 
       spatialHash.insert(obj1);
@@ -59,11 +70,11 @@ describe("SpatialHash", () => {
 
   describe("remove", () => {
     it("should remove an object from the spatial hash", () => {
-      const obj: SpatialObject & { data: { name: string } } = {
+      const obj: SpatialObject = {
         id: "1",
         x: 50,
         y: 50,
-        data: { name: "test" },
+        data: createTestSpatialData("test"),
       };
 
       spatialHash.insert(obj);
@@ -80,11 +91,11 @@ describe("SpatialHash", () => {
 
   describe("update", () => {
     it("should update an object position", () => {
-      const obj: SpatialObject & { data: { name: string } } = {
+      const obj: SpatialObject = {
         id: "1",
         x: 50,
         y: 50,
-        data: { name: "test" },
+        data: createTestSpatialData("test"),
       };
 
       spatialHash.insert(obj);
@@ -98,11 +109,11 @@ describe("SpatialHash", () => {
     });
 
     it("should return false when updating non-existent object", () => {
-      const obj: SpatialObject & { data: { name: string } } = {
+      const obj: SpatialObject = {
         id: "1",
         x: 50,
         y: 50,
-        data: { name: "test" },
+        data: createTestSpatialData("test"),
       };
 
       expect(spatialHash.update(obj)).toBe(false);
@@ -111,17 +122,17 @@ describe("SpatialHash", () => {
 
   describe("queryRect", () => {
     it("should query objects in rectangular area", () => {
-      const obj1: SpatialObject & { data: { name: string } } = {
+      const obj1: SpatialObject = {
         id: "1",
         x: 50,
         y: 50,
-        data: { name: "test1" },
+        data: createTestSpatialData("test1"),
       };
-      const obj2: SpatialObject & { data: { name: string } } = {
+      const obj2: SpatialObject = {
         id: "2",
         x: 150,
         y: 150,
-        data: { name: "test2" },
+        data: createTestSpatialData("test2"),
       };
 
       spatialHash.insert(obj1);
@@ -140,17 +151,17 @@ describe("SpatialHash", () => {
 
   describe("queryRadius", () => {
     it("should query objects within radius", () => {
-      const obj1: SpatialObject & { data: { name: string } } = {
+      const obj1: SpatialObject = {
         id: "1",
         x: 50,
         y: 50,
-        data: { name: "test1" },
+        data: createTestSpatialData("test1"),
       };
-      const obj2: SpatialObject & { data: { name: string } } = {
+      const obj2: SpatialObject = {
         id: "2",
         x: 200,
         y: 200,
-        data: { name: "test2" },
+        data: createTestSpatialData("test2"),
       };
 
       spatialHash.insert(obj1);
@@ -164,17 +175,17 @@ describe("SpatialHash", () => {
 
   describe("findNearest", () => {
     it("should find nearest object to a point", () => {
-      const obj1: SpatialObject & { data: { name: string } } = {
+      const obj1: SpatialObject = {
         id: "1",
         x: 50,
         y: 50,
-        data: { name: "test1" },
+        data: createTestSpatialData("test1"),
       };
-      const obj2: SpatialObject & { data: { name: string } } = {
+      const obj2: SpatialObject = {
         id: "2",
         x: 200,
         y: 200,
-        data: { name: "test2" },
+        data: createTestSpatialData("test2"),
       };
 
       spatialHash.insert(obj1);
@@ -193,11 +204,11 @@ describe("SpatialHash", () => {
 
   describe("clear", () => {
     it("should clear all objects from spatial hash", () => {
-      const obj: SpatialObject & { data: { name: string } } = {
+      const obj: SpatialObject = {
         id: "1",
         x: 50,
         y: 50,
-        data: { name: "test" },
+        data: createTestSpatialData("test"),
       };
 
       spatialHash.insert(obj);
@@ -210,11 +221,11 @@ describe("SpatialHash", () => {
 
   describe("getStats", () => {
     it("should return statistics about the spatial hash", () => {
-      const obj: SpatialObject & { data: { name: string } } = {
+      const obj: SpatialObject = {
         id: "1",
         x: 50,
         y: 50,
-        data: { name: "test" },
+        data: createTestSpatialData("test"),
       };
 
       spatialHash.insert(obj);
@@ -230,11 +241,11 @@ describe("SpatialHash", () => {
     it("should return all objects in the spatial hash", () => {
       expect(spatialHash.getAllObjects()).toHaveLength(0);
 
-      const obj: SpatialObject & { data: { name: string } } = {
+      const obj: SpatialObject = {
         id: "1",
         x: 50,
         y: 50,
-        data: { name: "test" },
+        data: createTestSpatialData("test"),
       };
 
       spatialHash.insert(obj);

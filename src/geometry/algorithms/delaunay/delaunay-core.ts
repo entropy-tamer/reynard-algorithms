@@ -9,7 +9,6 @@ import {
   Edge,
   Circumcircle,
   DelaunayConfig,
-  DelaunayStats,
   DelaunayResult,
   TriangulationQueryOptions,
   TriangulationQueryResult,
@@ -112,7 +111,7 @@ export class DelaunayTriangulation {
         },
       };
     } catch (error) {
-      return this.createEmptyResult(startTime, error instanceof Error ? error.message : 'Unknown error');
+      return this.createEmptyResult(startTime, error instanceof Error ? error.message : "Unknown error");
     }
   }
 
@@ -166,7 +165,7 @@ export class DelaunayTriangulation {
           edgeCount: 0,
           executionTime: performance.now() - startTime,
           success: false,
-          error: error instanceof Error ? error.message : 'Unknown error',
+          error: error instanceof Error ? error.message : "Unknown error",
         },
         constrainedEdges: [],
         failedConstraints: constrainedOptions.constrainedEdges || [],
@@ -198,7 +197,8 @@ export class DelaunayTriangulation {
 
     for (const triangle of triangles) {
       const containsPoint = this.pointInTriangle(queryPoint, triangle);
-      const isAdjacent = queryOptions.includeAdjacentTriangles && 
+      const isAdjacent =
+        queryOptions.includeAdjacentTriangles &&
         this.isTriangleAdjacentToPoint(triangle, queryPoint, queryOptions.maxDistance!);
 
       if (containsPoint && queryOptions.includeContainingTriangles) {
@@ -221,10 +221,7 @@ export class DelaunayTriangulation {
    * @param options - Mesh generation options.
    * @returns A Mesh object.
    */
-  generateMesh(
-    triangles: Triangle[],
-    options: Partial<MeshGenerationOptions> = {}
-  ): Mesh {
+  generateMesh(triangles: Triangle[], options: Partial<MeshGenerationOptions> = {}): Mesh {
     const meshOptions: MeshGenerationOptions = {
       generateIndices: true,
       generateEdges: true,
@@ -252,9 +249,9 @@ export class DelaunayTriangulation {
         if (index === undefined) {
           if (meshOptions.removeDuplicates) {
             // Check if vertex already exists
-            const existingIndex = vertices.findIndex(v => 
-              Math.abs(v.x - vertex.x) < this.config.tolerance! &&
-              Math.abs(v.y - vertex.y) < this.config.tolerance!
+            const existingIndex = vertices.findIndex(
+              v =>
+                Math.abs(v.x - vertex.x) < this.config.tolerance! && Math.abs(v.y - vertex.y) < this.config.tolerance!
             );
 
             if (existingIndex !== -1) {
@@ -291,9 +288,8 @@ export class DelaunayTriangulation {
 
         for (const edge of triangleEdges) {
           // Check if edge already exists (avoid duplicates)
-          const edgeExists = edges.some(e => 
-            (e[0] === edge[0] && e[1] === edge[1]) ||
-            (e[0] === edge[1] && e[1] === edge[0])
+          const edgeExists = edges.some(
+            e => (e[0] === edge[0] && e[1] === edge[1]) || (e[0] === edge[1] && e[1] === edge[0])
           );
 
           if (!edgeExists) {
@@ -320,7 +316,7 @@ export class DelaunayTriangulation {
 
     for (let i = 0; i < points.length; i++) {
       const point = points[i];
-      if (!point || typeof point.x !== 'number' || typeof point.y !== 'number') {
+      if (!point || typeof point.x !== "number" || typeof point.y !== "number") {
         throw new Error(`Invalid point at index ${i}: must have x and y properties`);
       }
 
@@ -350,7 +346,10 @@ export class DelaunayTriangulation {
 
   private createSuperTriangle(points: Point[]): Triangle {
     // Find bounding box
-    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      maxX = -Infinity,
+      maxY = -Infinity;
 
     for (const point of points) {
       minX = Math.min(minX, point.x);
@@ -416,10 +415,11 @@ export class DelaunayTriangulation {
   }
 
   private removeSuperTriangle(triangles: Triangle[], superTriangle: Triangle): Triangle[] {
-    return triangles.filter(triangle => 
-      !this.triangleSharesVertex(triangle, superTriangle.a) &&
-      !this.triangleSharesVertex(triangle, superTriangle.b) &&
-      !this.triangleSharesVertex(triangle, superTriangle.c)
+    return triangles.filter(
+      triangle =>
+        !this.triangleSharesVertex(triangle, superTriangle.a) &&
+        !this.triangleSharesVertex(triangle, superTriangle.b) &&
+        !this.triangleSharesVertex(triangle, superTriangle.c)
     );
   }
 
@@ -457,19 +457,22 @@ export class DelaunayTriangulation {
   }
 
   private edgesEqual(edge1: Edge, edge2: Edge): boolean {
-    return (this.pointsEqual(edge1.p1, edge2.p1) && this.pointsEqual(edge1.p2, edge2.p2)) ||
-           (this.pointsEqual(edge1.p1, edge2.p2) && this.pointsEqual(edge1.p2, edge2.p1));
+    return (
+      (this.pointsEqual(edge1.p1, edge2.p1) && this.pointsEqual(edge1.p2, edge2.p2)) ||
+      (this.pointsEqual(edge1.p1, edge2.p2) && this.pointsEqual(edge1.p2, edge2.p1))
+    );
   }
 
   private pointsEqual(p1: Point, p2: Point): boolean {
-    return Math.abs(p1.x - p2.x) < this.config.tolerance! &&
-           Math.abs(p1.y - p2.y) < this.config.tolerance!;
+    return Math.abs(p1.x - p2.x) < this.config.tolerance! && Math.abs(p1.y - p2.y) < this.config.tolerance!;
   }
 
   private triangleSharesVertex(triangle: Triangle, vertex: Point): boolean {
-    return this.pointsEqual(triangle.a, vertex) ||
-           this.pointsEqual(triangle.b, vertex) ||
-           this.pointsEqual(triangle.c, vertex);
+    return (
+      this.pointsEqual(triangle.a, vertex) ||
+      this.pointsEqual(triangle.b, vertex) ||
+      this.pointsEqual(triangle.c, vertex)
+    );
   }
 
   private pointInCircumcircle(point: Point, triangle: Triangle): boolean {
@@ -498,8 +501,10 @@ export class DelaunayTriangulation {
       };
     }
 
-    const ux = ((ax * ax + ay * ay) * (by - cy) + (bx * bx + by * by) * (cy - ay) + (cx * cx + cy * cy) * (ay - by)) / d;
-    const uy = ((ax * ax + ay * ay) * (cx - bx) + (bx * bx + by * by) * (ax - cx) + (cx * cx + cy * cy) * (bx - ax)) / d;
+    const ux =
+      ((ax * ax + ay * ay) * (by - cy) + (bx * bx + by * by) * (cy - ay) + (cx * cx + cy * cy) * (ay - by)) / d;
+    const uy =
+      ((ax * ax + ay * ay) * (cx - bx) + (bx * bx + by * by) * (ax - cx) + (cx * cx + cy * cy) * (bx - ax)) / d;
 
     const center = { x: ux, y: uy };
     const radius = Math.sqrt((ax - ux) * (ax - ux) + (ay - uy) * (ay - uy));
@@ -509,7 +514,7 @@ export class DelaunayTriangulation {
 
   private pointInTriangle(point: Point, triangle: Triangle): boolean {
     const { a, b, c } = triangle;
-    
+
     const denom = (b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y);
     if (Math.abs(denom) < this.config.tolerance!) {
       return false; // Degenerate triangle
@@ -572,12 +577,12 @@ export class DelaunayTriangulation {
     for (const constraint of constrainedEdges) {
       // Check if the constraint edge exists in the triangulation
       const exists = this.edgeExistsInTriangulation(triangles, constraint);
-      
+
       if (exists) {
         successfulConstraints.push(constraint);
       } else {
         failedConstraints.push(constraint);
-        
+
         if (enforceConstraints) {
           // In a full implementation, you would retriangulate to enforce the constraint
           // For now, we'll just mark it as failed

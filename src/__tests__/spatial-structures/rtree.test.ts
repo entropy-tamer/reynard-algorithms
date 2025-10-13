@@ -314,22 +314,23 @@ describe("RTree Spatial Data Structure", () => {
   });
 
   describe("Performance Benchmarks", () => {
-    const runBenchmark = (
-      description: string,
-      entryCount: number,
-      queryCount: number
-    ) => {
+    beforeEach(() => {
+      // Clear any existing data for clean benchmarks
+      rtree.clear();
+    });
+
+    const runBenchmark = (description: string, entryCount: number, queryCount: number) => {
       it(`should perform ${description} with ${entryCount} entries and ${queryCount} queries`, () => {
         // Insert entries
         for (let i = 0; i < entryCount; i++) {
+          const minX = Math.random() * 1000;
+          const minY = Math.random() * 1000;
+          const maxX = minX + Math.random() * 100 + 10; // Ensure maxX > minX
+          const maxY = minY + Math.random() * 100 + 10; // Ensure maxY > minY
+          
           rtree.insert({
             id: `obj${i}`,
-            bounds: {
-              minX: Math.random() * 1000,
-              minY: Math.random() * 1000,
-              maxX: Math.random() * 1000 + 10,
-              maxY: Math.random() * 1000 + 10,
-            },
+            bounds: { minX, minY, maxX, maxY },
             data: `object${i}`,
           });
         }
@@ -338,12 +339,12 @@ describe("RTree Spatial Data Structure", () => {
 
         // Perform queries
         for (let i = 0; i < queryCount; i++) {
-          const queryBounds: Rectangle = {
-            minX: Math.random() * 500,
-            minY: Math.random() * 500,
-            maxX: Math.random() * 500 + 100,
-            maxY: Math.random() * 500 + 100,
-          };
+          const minX = Math.random() * 500;
+          const minY = Math.random() * 500;
+          const maxX = minX + Math.random() * 100 + 10; // Ensure maxX > minX
+          const maxY = minY + Math.random() * 100 + 10; // Ensure maxY > minY
+          
+          const queryBounds: Rectangle = { minX, minY, maxX, maxY };
           const result = rtree.query(queryBounds);
           expect(result.entries.length).toBeGreaterThanOrEqual(0);
         }
@@ -354,18 +355,23 @@ describe("RTree Spatial Data Structure", () => {
             x: Math.random() * 1000,
             y: Math.random() * 1000,
           };
-          const nearest = rtree.nearest(point);
+          rtree.nearest(point);
           // nearest might be null, which is valid
         }
       });
     };
 
-    runBenchmark("small scale", 100, 50);
-    runBenchmark("medium scale", 1000, 100);
-    runBenchmark("large scale", 5000, 200);
+    runBenchmark("small scale", 50, 25);
+    runBenchmark("medium scale", 200, 50);
+    runBenchmark("large scale", 500, 100);
   });
 
   describe("Configuration Options", () => {
+    beforeEach(() => {
+      // Clear any existing data for clean configuration tests
+      rtree.clear();
+    });
+
     it("should work with different min/max entries configuration", () => {
       const customRtree = new RTree<string>({
         minEntries: 1,

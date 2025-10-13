@@ -170,9 +170,9 @@ describe("Bresenham's Line Algorithm", () => {
       const start: Point = { x: 0, y: 0 };
       const end: Point = { x: 3, y: 0 };
       const callbackPoints: Point[] = [];
-      
+
       const result = bresenham.drawLine(start, end, {
-        onPoint: (point) => {
+        onPoint: point => {
           callbackPoints.push(point);
           return true; // Continue processing
         },
@@ -187,9 +187,9 @@ describe("Bresenham's Line Algorithm", () => {
       const start: Point = { x: 0, y: 0 };
       const end: Point = { x: 10, y: 0 };
       let callCount = 0;
-      
+
       const result = bresenham.drawLine(start, end, {
-        onPoint: (point) => {
+        onPoint: _point => {
           callCount++;
           return callCount < 3; // Stop after 2 points
         },
@@ -227,7 +227,7 @@ describe("Bresenham's Line Algorithm", () => {
 
       expect(result.success).toBe(true);
       expect(result.lines.length).toBe(2);
-      
+
       // First line should include end point
       expect(result.lines[0].points[result.lines[0].points.length - 1]).toEqual(points[1]);
       // Second line should start from the same point (no duplication)
@@ -329,7 +329,7 @@ describe("Bresenham's Line Algorithm", () => {
       const points = BresenhamLine.drawCircle(center, radius);
 
       expect(points.length).toBeGreaterThan(0);
-      
+
       // Check that all points are approximately at the correct distance from center
       for (const point of points) {
         const distance = BresenhamLine.distance(center, point);
@@ -339,26 +339,21 @@ describe("Bresenham's Line Algorithm", () => {
   });
 
   describe("Performance Benchmarks", () => {
-    const runBenchmark = (
-      description: string,
-      start: Point,
-      end: Point,
-      iterations: number = 1000
-    ) => {
+    const runBenchmark = (description: string, start: Point, end: Point, iterations: number = 1000) => {
       it(`should perform ${description} efficiently`, () => {
         const startTime = performance.now();
-        
+
         for (let i = 0; i < iterations; i++) {
           const result = bresenham.drawLine(start, end);
           expect(result.success).toBe(true);
         }
-        
+
         const endTime = performance.now();
         const duration = endTime - startTime;
-        
+
         // Log for manual inspection during benchmark runs
         // console.log(`Benchmark: ${description} - ${iterations} iterations in ${duration.toFixed(3)} ms`);
-        
+
         expect(duration).toBeGreaterThanOrEqual(0);
       });
     };

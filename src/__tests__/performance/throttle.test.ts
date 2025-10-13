@@ -131,7 +131,7 @@ describe("debounce", () => {
   it("should maintain context (this)", async () => {
     const obj = {
       value: 42,
-      method: vi.fn(function () {
+      method: vi.fn(function (this: any) {
         return this.value;
       }),
     };

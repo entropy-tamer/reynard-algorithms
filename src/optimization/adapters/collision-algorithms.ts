@@ -7,10 +7,10 @@
  * @module algorithms/optimization/collisionAlgorithms
  */
 
-import type { AABB, CollisionPair, CollisionResult } from "../../computational-geometry/collision/aabb-types";
+import type { AABB, CollisionPair, CollisionResult } from "../../geometry/collision/aabb/aabb-types";
 import type { CollisionObjectData } from "../../types/spatial-types";
 // import { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-structures/spatial-hash-core";
-import { EnhancedMemoryPool } from "../core/enhanced-memory-pool";
+import { MemoryPool } from "../core/memory-pool";
 
 /**
  * Basic collision detection between two AABBs
@@ -81,7 +81,7 @@ export function executeNaiveCollisionDetection(aabbs: AABB[]): CollisionPair[] {
 /**
  * Spatial hash-based collision detection
  */
-export function executeSpatialCollisionDetection(aabbs: AABB[], memoryPool: EnhancedMemoryPool): CollisionPair[] {
+export function executeSpatialCollisionDetection(aabbs: AABB[], memoryPool: MemoryPool): CollisionPair[] {
   // For medium datasets, use naive approach as it's faster
   if (aabbs.length < 300) {
     return executeNaiveCollisionDetection(aabbs);
@@ -153,6 +153,6 @@ export function executeSpatialCollisionDetection(aabbs: AABB[], memoryPool: Enha
 /**
  * Optimized collision detection (currently same as spatial)
  */
-export function executeOptimizedCollisionDetection(aabbs: AABB[], memoryPool: EnhancedMemoryPool): CollisionPair[] {
+export function executeOptimizedCollisionDetection(aabbs: AABB[], memoryPool: MemoryPool): CollisionPair[] {
   return executeSpatialCollisionDetection(aabbs, memoryPool);
 }

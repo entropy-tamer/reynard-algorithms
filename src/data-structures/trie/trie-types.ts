@@ -134,15 +134,15 @@ export interface TrieStats {
  * Event types for Trie operations
  */
 export enum TrieEventType {
-  WORD_INSERTED = 'word_inserted',
-  WORD_DELETED = 'word_deleted',
-  WORD_SEARCHED = 'word_searched',
-  PREFIX_SEARCHED = 'prefix_searched',
-  AUTCOMPLETE_PERFORMED = 'autocomplete_performed',
-  NODE_CREATED = 'node_created',
-  NODE_DELETED = 'node_deleted',
-  COMPRESSION_PERFORMED = 'compression_performed',
-  CLEAR_PERFORMED = 'clear_performed',
+  WORD_INSERTED = "word_inserted",
+  WORD_DELETED = "word_deleted",
+  WORD_SEARCHED = "word_searched",
+  PREFIX_SEARCHED = "prefix_searched",
+  AUTCOMPLETE_PERFORMED = "autocomplete_performed",
+  NODE_CREATED = "node_created",
+  NODE_DELETED = "node_deleted",
+  COMPRESSION_PERFORMED = "compression_performed",
+  CLEAR_PERFORMED = "clear_performed",
 }
 
 /**
@@ -295,7 +295,7 @@ export const DEFAULT_TRIE_CONFIG: TrieConfig = {
   useCompression: false,
   trackFrequency: true,
   enableWildcards: true,
-  wildcardChar: '*',
+  wildcardChar: "*",
   enableFuzzyMatching: false,
   maxEditDistance: 2,
 };
@@ -316,28 +316,83 @@ export const DEFAULT_TRIE_OPTIONS: TrieOptions = {
 export const COMMON_WORD_SETS = {
   /** Common English words */
   ENGLISH_WORDS: [
-    'hello', 'world', 'test', 'example', 'algorithm', 'data', 'structure',
-    'tree', 'node', 'search', 'insert', 'delete', 'find', 'prefix',
-    'suffix', 'match', 'pattern', 'string', 'character', 'word'
+    "hello",
+    "world",
+    "test",
+    "example",
+    "algorithm",
+    "data",
+    "structure",
+    "tree",
+    "node",
+    "search",
+    "insert",
+    "delete",
+    "find",
+    "prefix",
+    "suffix",
+    "match",
+    "pattern",
+    "string",
+    "character",
+    "word",
   ],
-  
+
   /** Programming keywords */
   PROGRAMMING_KEYWORDS: [
-    'function', 'variable', 'class', 'method', 'interface', 'type',
-    'const', 'let', 'var', 'if', 'else', 'for', 'while', 'return',
-    'import', 'export', 'async', 'await', 'promise', 'callback'
+    "function",
+    "variable",
+    "class",
+    "method",
+    "interface",
+    "type",
+    "const",
+    "let",
+    "var",
+    "if",
+    "else",
+    "for",
+    "while",
+    "return",
+    "import",
+    "export",
+    "async",
+    "await",
+    "promise",
+    "callback",
   ],
-  
+
   /** Short words for testing */
   SHORT_WORDS: [
-    'a', 'an', 'at', 'be', 'by', 'do', 'go', 'he', 'in', 'is',
-    'it', 'me', 'my', 'no', 'of', 'on', 'or', 'so', 'to', 'up'
+    "a",
+    "an",
+    "at",
+    "be",
+    "by",
+    "do",
+    "go",
+    "he",
+    "in",
+    "is",
+    "it",
+    "me",
+    "my",
+    "no",
+    "of",
+    "on",
+    "or",
+    "so",
+    "to",
+    "up",
   ],
-  
+
   /** Long words for testing */
   LONG_WORDS: [
-    'antidisestablishmentarianism', 'pneumonoultramicroscopicsilicovolcanoconiosis',
-    'supercalifragilisticexpialidocious', 'pseudopseudohypoparathyroidism',
-    'floccinaucinihilipilification', 'hippopotomonstrosesquippedaliophobia'
+    "antidisestablishmentarianism",
+    "pneumonoultramicroscopicsilicovolcanoconiosis",
+    "supercalifragilisticexpialidocious",
+    "pseudopseudohypoparathyroidism",
+    "floccinaucinihilipilification",
+    "hippopotomonstrosesquippedaliophobia",
   ],
 };

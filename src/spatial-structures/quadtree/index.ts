@@ -31,5 +31,3 @@ export type {
   QuadtreeNearestNeighborResult,
   QuadtreePerformanceMetrics,
 } from "./quadtree-types";
-
-

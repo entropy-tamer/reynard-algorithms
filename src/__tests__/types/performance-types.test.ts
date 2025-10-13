@@ -2,8 +2,6 @@ import { describe, expect, it } from "vitest";
 import type {
   PerformanceMemoryInfo,
   PerformanceMemoryAPI,
-  ExtendedPerformance,
-  ExtendedGlobal,
   ThrottleOptions,
   DebounceOptions,
   FunctionSignature,
@@ -39,8 +37,7 @@ describe("Performance Types", () => {
 
       // TypeScript compile-time check - readonly properties can't be reassigned
       expect(() => {
-        // @ts-expect-error - readonly property
-        // memoryInfo.usedJSHeapSize = 500000;
+        (memoryInfo as any).usedJSHeapSize = 500000;
       }).not.toThrow();
     });
   });

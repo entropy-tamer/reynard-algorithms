@@ -9,12 +9,12 @@
 
 import { AlgorithmSelector } from "../core/algorithm-selector";
 import {
-  EnhancedMemoryPool,
+  MemoryPool,
   type MemoryPoolConfig,
   type MemoryPoolStats,
   type OptimizationRecommendation,
-} from "../core/enhanced-memory-pool";
-import type { AABB, CollisionPair } from "../../computational-geometry/collision/aabb-types";
+} from "../core/memory-pool";
+import type { AABB, CollisionPair } from "../../geometry/collision/aabb/aabb-types";
 import {
   // executeNaiveCollisionDetection,
   // executeSpatialCollisionDetection,
@@ -47,7 +47,7 @@ export type { CollisionPerformanceStats, PerformanceReport } from "./performance
  */
 export class OptimizedCollisionAdapter {
   private algorithmSelector: AlgorithmSelector;
-  private memoryPool: EnhancedMemoryPool;
+  private memoryPool: MemoryPool;
   private performanceMonitor: PerformanceMonitor;
   private config: OptimizedCollisionConfig;
 
@@ -65,7 +65,7 @@ export class OptimizedCollisionAdapter {
       ...config,
     };
     this.algorithmSelector = new AlgorithmSelector();
-    this.memoryPool = new EnhancedMemoryPool(this.config.memoryPoolConfig);
+    this.memoryPool = new MemoryPool(this.config.memoryPoolConfig);
     this.performanceMonitor = new PerformanceMonitor(this.config.performanceThresholds);
   }
 

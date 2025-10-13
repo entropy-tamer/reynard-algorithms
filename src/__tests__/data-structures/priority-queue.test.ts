@@ -1,11 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import {
   PriorityQueue,
-  PriorityQueueNode,
-  PriorityQueueConfig,
-  PriorityQueueStats,
   PriorityQueueComparator,
-  PriorityQueueOptions,
   PriorityQueueEvent,
 } from "../../data-structures/priority-queue";
 

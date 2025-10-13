@@ -115,7 +115,7 @@ export class Quadtree<T> {
    */
   insert(data: T, position: Point, bounds?: Rectangle): boolean {
     const startTime = performance.now();
-    
+
     try {
       const quadtreeData: QuadtreeData<T> = {
         data,
@@ -140,11 +140,13 @@ export class Quadtree<T> {
 
       this.updateAverageInsertTime(performance.now() - startTime);
       this.updateMemoryUsage();
-      this.emitEvent('insert', quadtreeData, node);
-      
+      this.emitEvent("insert", quadtreeData, node);
+
       return true;
     } catch (error) {
-      this.emitEvent('insert', undefined, undefined, { error: error instanceof Error ? error.message : 'Unknown error' });
+      this.emitEvent("insert", undefined, undefined, {
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
       return false;
     }
   }
@@ -163,35 +165,59 @@ export class Quadtree<T> {
    */
   remove(data: T, position: Point): boolean {
     const startTime = performance.now();
-    
-    const node = this.findNode(this.root, position);
+
+    let node = this.findNode(this.root, position);
     if (!node) {
       return false;
     }
 
-    const index = node.objects.findIndex(obj => 
-      obj.data === data && 
-      obj.position.x === position.x && 
-      obj.position.y === position.y
+    let index = node.objects.findIndex(
+      obj => obj.data === data && obj.position.x === position.x && obj.position.y === position.y
     );
 
+    // Fallback: remove by data anywhere in the current subtree if exact position didn't match
     if (index === -1) {
-      return false;
+      // Search entire tree by data as a fallback (positions may be approximate)
+      const stack: QuadtreeNode<T>[] = [this.root];
+      let foundNode: QuadtreeNode<T> | null = null;
+      let foundIndex = -1;
+      while (stack.length > 0 && foundIndex === -1) {
+        const n = stack.pop()!;
+        const i = n.objects.findIndex(obj => obj.data === data);
+        if (i !== -1) {
+          foundNode = n;
+          foundIndex = i;
+          break;
+        }
+        if (n.children) stack.push(...n.children);
+      }
+      if (foundNode && foundIndex !== -1) {
+        node = foundNode;
+        index = foundIndex;
+      } else {
+        return false;
+      }
     }
 
     const removedObject = node.objects.splice(index, 1)[0];
     this.stats.totalObjects--;
     this.updateAverageObjectsPerNode();
 
-    // Merge if necessary
-    if (this.shouldMerge(node)) {
-      this.merge(node);
+    // Merge upwards if necessary
+    let current: QuadtreeNode<T> | null = node;
+    while (current && current.parent) {
+      if (this.shouldMerge(current.parent)) {
+        this.merge(current.parent);
+        current = current.parent.parent;
+      } else {
+        break;
+      }
     }
 
     this.updateAverageRemoveTime(performance.now() - startTime);
     this.updateMemoryUsage();
-    this.emitEvent('remove', removedObject, node);
-    
+    this.emitEvent("remove", removedObject, node);
+
     return true;
   }
 
@@ -241,12 +267,14 @@ export class Quadtree<T> {
     const queryTime = performance.now() - startTime;
     this.stats.queries++;
     this.updateAverageQueryTime(queryTime);
+    this.stats.averageQueryTime =
+      (this.stats.averageQueryTime * (this.stats.queries - 1) + queryTime) / this.stats.queries;
     this.updateQueryEfficiency(objects.length, nodesSearched);
 
-    this.emitEvent('query', undefined, undefined, { 
-      queryType: 'rectangle',
+    this.emitEvent("query", undefined, undefined, {
+      queryType: "rectangle",
       resultCount: objects.length,
-      nodesSearched 
+      nodesSearched,
     });
 
     return {
@@ -305,12 +333,14 @@ export class Quadtree<T> {
     const queryTime = performance.now() - startTime;
     this.stats.queries++;
     this.updateAverageQueryTime(queryTime);
+    this.stats.averageQueryTime =
+      (this.stats.averageQueryTime * (this.stats.queries - 1) + queryTime) / this.stats.queries;
     this.updateQueryEfficiency(objects.length, nodesSearched);
 
-    this.emitEvent('query', undefined, undefined, { 
-      queryType: 'circle',
+    this.emitEvent("query", undefined, undefined, {
+      queryType: "circle",
       resultCount: objects.length,
-      nodesSearched 
+      nodesSearched,
     });
 
     return {
@@ -371,7 +401,7 @@ export class Quadtree<T> {
       for (const obj of node.objects) {
         objectsChecked++;
         const distance = this.distance(obj.position, point);
-        
+
         if (distance < minDistance) {
           minDistance = distance;
           nearest = obj;
@@ -390,7 +420,7 @@ export class Quadtree<T> {
 
     return {
       nearest,
-      distance: minDistance === Infinity ? -1 : minDistance,
+      distance: nearest ? minDistance : -1,
       objectsChecked,
       queryTime,
     };
@@ -410,6 +440,7 @@ export class Quadtree<T> {
       distance?: number;
     }> = [];
     let checksPerformed = 0;
+    const seenPairs = new Set<string>();
 
     // Get all objects
     const allObjects = this.getAllObjects();
@@ -426,13 +457,19 @@ export class Quadtree<T> {
 
         checksPerformed++;
         const distance = this.distance(obj1.position, obj2.position);
-        
+
         if (distance <= collisionRadius) {
-          collisions.push({
-            object1: obj1,
-            object2: obj2,
-            distance,
-          });
+          const id1 = obj1.id ?? String(obj1.data);
+          const id2 = obj2.id ?? String(obj2.data);
+          const key = id1 < id2 ? `${id1}|${id2}` : `${id2}|${id1}`;
+          if (!seenPairs.has(key)) {
+            seenPairs.add(key);
+            collisions.push({
+              object1: obj1,
+              object2: obj2,
+              distance,
+            });
+          }
         }
       }
     }
@@ -456,7 +493,7 @@ export class Quadtree<T> {
     this.stats.totalNodes = 1;
     this.stats.leafNodes = 1;
     this.stats.maxDepth = 0;
-    this.emitEvent('clear');
+    this.emitEvent("clear");
   }
 
   /**
@@ -594,10 +631,7 @@ export class Quadtree<T> {
    * @returns True if node can be subdivided
    */
   private canSubdivide(node: QuadtreeNode<T>): boolean {
-    return (
-      node.bounds.width > this.config.minNodeSize &&
-      node.bounds.height > this.config.minNodeSize
-    );
+    return node.bounds.width > this.config.minNodeSize && node.bounds.height > this.config.minNodeSize;
   }
 
   /**
@@ -607,7 +641,7 @@ export class Quadtree<T> {
    */
   private subdivide(node: QuadtreeNode<T>): void {
     const startTime = performance.now();
-    
+
     const { x, y, width, height } = node.bounds;
     const halfWidth = width / 2;
     const halfHeight = height / 2;
@@ -615,23 +649,11 @@ export class Quadtree<T> {
     // Create four child nodes
     const children: QuadtreeNode<T>[] = [
       // Northwest
-      this.createNode(
-        { x, y, width: halfWidth, height: halfHeight },
-        node.depth + 1,
-        node
-      ),
+      this.createNode({ x, y, width: halfWidth, height: halfHeight }, node.depth + 1, node),
       // Northeast
-      this.createNode(
-        { x: x + halfWidth, y, width: halfWidth, height: halfHeight },
-        node.depth + 1,
-        node
-      ),
+      this.createNode({ x: x + halfWidth, y, width: halfWidth, height: halfHeight }, node.depth + 1, node),
       // Southwest
-      this.createNode(
-        { x, y: y + halfHeight, width: halfWidth, height: halfHeight },
-        node.depth + 1,
-        node
-      ),
+      this.createNode({ x, y: y + halfHeight, width: halfWidth, height: halfHeight }, node.depth + 1, node),
       // Southeast
       this.createNode(
         { x: x + halfWidth, y: y + halfHeight, width: halfWidth, height: halfHeight },
@@ -660,7 +682,7 @@ export class Quadtree<T> {
     }
 
     this.updateAverageSubdivisionTime(performance.now() - startTime);
-    this.emitEvent('subdivide', undefined, node);
+    this.emitEvent("subdivide", undefined, node);
   }
 
   /**
@@ -671,9 +693,7 @@ export class Quadtree<T> {
    */
   private shouldMerge(node: QuadtreeNode<T>): boolean {
     return (
-      this.config.autoMerge &&
-      node.children !== null &&
-      this.getTotalObjectsInSubtree(node) <= this.config.maxObjects
+      this.config.autoMerge && node.children !== null && this.getTotalObjectsInSubtree(node) <= this.config.maxObjects
     );
   }
 
@@ -685,13 +705,13 @@ export class Quadtree<T> {
    */
   private getTotalObjectsInSubtree(node: QuadtreeNode<T>): number {
     let count = node.objects.length;
-    
+
     if (node.children) {
       for (const child of node.children) {
         count += this.getTotalObjectsInSubtree(child);
       }
     }
-    
+
     return count;
   }
 
@@ -719,7 +739,7 @@ export class Quadtree<T> {
     this.stats.leafNodes -= 3;
     this.stats.merges++;
 
-    this.emitEvent('merge', undefined, node);
+    this.emitEvent("merge", undefined, node);
   }
 
   /**
@@ -749,7 +769,7 @@ export class Quadtree<T> {
     if (obj.bounds) {
       return this.intersects(obj.bounds, bounds);
     }
-    
+
     return (
       obj.position.x >= bounds.x &&
       obj.position.x <= bounds.x + bounds.width &&
@@ -819,7 +839,7 @@ export class Quadtree<T> {
    * @param time - Time taken for insertion
    */
   private updateAverageInsertTime(time: number): void {
-    this.performanceMetrics.averageInsertTime = 
+    this.performanceMetrics.averageInsertTime =
       (this.performanceMetrics.averageInsertTime * (this.stats.totalObjects - 1) + time) / this.stats.totalObjects;
   }
 
@@ -829,7 +849,7 @@ export class Quadtree<T> {
    * @param time - Time taken for removal
    */
   private updateAverageRemoveTime(time: number): void {
-    this.performanceMetrics.averageRemoveTime = 
+    this.performanceMetrics.averageRemoveTime =
       (this.performanceMetrics.averageRemoveTime * (this.stats.totalObjects - 1) + time) / this.stats.totalObjects;
   }
 
@@ -839,7 +859,7 @@ export class Quadtree<T> {
    * @param time - Time taken for query
    */
   private updateAverageQueryTime(time: number): void {
-    this.performanceMetrics.averageQueryTime = 
+    this.performanceMetrics.averageQueryTime =
       (this.performanceMetrics.averageQueryTime * (this.stats.queries - 1) + time) / this.stats.queries;
   }
 
@@ -849,7 +869,7 @@ export class Quadtree<T> {
    * @param time - Time taken for subdivision
    */
   private updateAverageSubdivisionTime(time: number): void {
-    this.performanceMetrics.averageSubdivisionTime = 
+    this.performanceMetrics.averageSubdivisionTime =
       (this.performanceMetrics.averageSubdivisionTime * (this.stats.subdivisions - 1) + time) / this.stats.subdivisions;
   }
 

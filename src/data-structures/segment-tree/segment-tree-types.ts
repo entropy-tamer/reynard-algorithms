@@ -213,18 +213,18 @@ export interface SegmentTreeOptions<T> {
   /**
    * Event handlers for monitoring operations.
    */
-  eventHandlers?: SegmentTreeEventHandler<T>[];
+  eventHandlers?: SegmentTreeEventHandler[];
 }
 
 /**
  * Event types for Segment Tree operations.
  */
 export enum SegmentTreeEventType {
-  ELEMENT_UPDATED = 'element_updated',
-  RANGE_UPDATED = 'range_updated',
-  QUERY_PERFORMED = 'query_performed',
-  TREE_BUILT = 'tree_built',
-  TREE_CLEARED = 'tree_cleared',
+  ELEMENT_UPDATED = "element_updated",
+  RANGE_UPDATED = "range_updated",
+  QUERY_PERFORMED = "query_performed",
+  TREE_BUILT = "tree_built",
+  TREE_CLEARED = "tree_cleared",
 }
 
 /**
@@ -328,10 +328,10 @@ export interface SegmentTreeNode<T> {
  * Traversal order options.
  */
 export enum TraversalOrder {
-  IN_ORDER = 'in_order',
-  PRE_ORDER = 'pre_order',
-  POST_ORDER = 'post_order',
-  LEVEL_ORDER = 'level_order',
+  IN_ORDER = "in_order",
+  PRE_ORDER = "pre_order",
+  POST_ORDER = "post_order",
+  LEVEL_ORDER = "level_order",
 }
 
 /**
@@ -397,4 +397,3 @@ export const DEFAULT_SEGMENT_TREE_OPTIONS: SegmentTreeOptions<number> = {
   enableDebug: false,
   initialArray: [],
 };
-

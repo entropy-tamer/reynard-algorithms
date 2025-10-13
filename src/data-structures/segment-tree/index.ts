@@ -23,4 +23,3 @@ export type {
   TraversalOptions,
   TraversalResult,
 } from "./segment-tree-types";
-

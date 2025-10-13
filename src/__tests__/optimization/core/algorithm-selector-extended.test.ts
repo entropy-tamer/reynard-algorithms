@@ -84,17 +84,20 @@ describe("Algorithm Selector Extended Coverage", () => {
 
       const performanceRecord: PerformanceRecord = {
         algorithm: "naive",
-        objectCount: 100,
-        executionTime: 5.2,
-        memoryUsage: 1024,
-        timestamp: Date.now(),
-        workloadCharacteristics: {
+        workload: {
           objectCount: 100,
           spatialDensity: 0.5,
           overlapRatio: 0.1,
           updateFrequency: 0.8,
           queryPattern: "random",
         },
+        performance: {
+          executionTime: 12.3,
+          memoryUsage: 4096,
+          allocationCount: 0,
+          cacheHitRate: 0.8,
+        },
+        timestamp: Date.now() + 2000,
       };
 
       selector.updatePerformanceModel(performanceRecord);
@@ -109,17 +112,20 @@ describe("Algorithm Selector Extended Coverage", () => {
       for (let i = 0; i < 1001; i++) {
         const performanceRecord: PerformanceRecord = {
           algorithm: "naive",
-          objectCount: 100,
-          executionTime: 5.2,
-          memoryUsage: 1024,
-          timestamp: Date.now(),
-          workloadCharacteristics: {
+          workload: {
             objectCount: 100,
             spatialDensity: 0.5,
             overlapRatio: 0.1,
             updateFrequency: 0.8,
             queryPattern: "random",
           },
+          performance: {
+            executionTime: 5.2,
+            memoryUsage: 1024,
+            allocationCount: 0,
+            cacheHitRate: 0.8,
+          },
+          timestamp: Date.now(),
         };
 
         selector.updatePerformanceModel(performanceRecord);
@@ -134,17 +140,20 @@ describe("Algorithm Selector Extended Coverage", () => {
       for (let i = 0; i < 1000; i++) {
         const performanceRecord: PerformanceRecord = {
           algorithm: "naive",
-          objectCount: 100,
-          executionTime: 5.2,
-          memoryUsage: 1024,
-          timestamp: Date.now() + i, // Incrementing timestamp
-          workloadCharacteristics: {
+          workload: {
             objectCount: 100,
             spatialDensity: 0.5,
             overlapRatio: 0.1,
             updateFrequency: 0.8,
             queryPattern: "random",
           },
+          performance: {
+            executionTime: 5.2,
+            memoryUsage: 1024,
+            allocationCount: 0,
+            cacheHitRate: 0.8,
+          },
+          timestamp: Date.now() + i, // Incrementing timestamp
         };
 
         selector.updatePerformanceModel(performanceRecord);
@@ -153,17 +162,20 @@ describe("Algorithm Selector Extended Coverage", () => {
       // Add one more record
       const latestRecord: PerformanceRecord = {
         algorithm: "spatial",
-        objectCount: 200,
-        executionTime: 8.5,
-        memoryUsage: 2048,
-        timestamp: Date.now() + 1000,
-        workloadCharacteristics: {
+        workload: {
           objectCount: 200,
           spatialDensity: 0.7,
           overlapRatio: 0.2,
           updateFrequency: 0.6,
           queryPattern: "clustered",
         },
+        performance: {
+          executionTime: 12.3,
+          memoryUsage: 4096,
+          allocationCount: 0,
+          cacheHitRate: 0.8,
+        },
+        timestamp: Date.now() + 2000,
       };
 
       selector.updatePerformanceModel(latestRecord);
@@ -176,17 +188,20 @@ describe("Algorithm Selector Extended Coverage", () => {
     it("should update selection statistics", () => {
       const performanceRecord: PerformanceRecord = {
         algorithm: "naive",
-        objectCount: 100,
-        executionTime: 5.2,
-        memoryUsage: 1024,
-        timestamp: Date.now(),
-        workloadCharacteristics: {
+        workload: {
           objectCount: 100,
           spatialDensity: 0.5,
           overlapRatio: 0.1,
           updateFrequency: 0.8,
           queryPattern: "random",
         },
+        performance: {
+          executionTime: 12.3,
+          memoryUsage: 4096,
+          allocationCount: 0,
+          cacheHitRate: 0.8,
+        },
+        timestamp: Date.now() + 2000,
       };
 
       selector.updatePerformanceModel(performanceRecord);
@@ -201,17 +216,20 @@ describe("Algorithm Selector Extended Coverage", () => {
     it("should handle updateSelectionStats call", () => {
       const performanceRecord: PerformanceRecord = {
         algorithm: "naive",
-        objectCount: 100,
-        executionTime: 5.2,
-        memoryUsage: 1024,
-        timestamp: Date.now(),
-        workloadCharacteristics: {
+        workload: {
           objectCount: 100,
           spatialDensity: 0.5,
           overlapRatio: 0.1,
           updateFrequency: 0.8,
           queryPattern: "random",
         },
+        performance: {
+          executionTime: 12.3,
+          memoryUsage: 4096,
+          allocationCount: 0,
+          cacheHitRate: 0.8,
+        },
+        timestamp: Date.now() + 2000,
       };
 
       // This should trigger updateSelectionStats internally
@@ -226,45 +244,54 @@ describe("Algorithm Selector Extended Coverage", () => {
       const performanceRecords: PerformanceRecord[] = [
         {
           algorithm: "naive",
-          objectCount: 100,
-          executionTime: 5.2,
-          memoryUsage: 1024,
-          timestamp: Date.now(),
-          workloadCharacteristics: {
+          workload: {
             objectCount: 100,
             spatialDensity: 0.5,
             overlapRatio: 0.1,
             updateFrequency: 0.8,
             queryPattern: "random",
           },
+          performance: {
+            executionTime: 5.2,
+            memoryUsage: 1024,
+            allocationCount: 0,
+            cacheHitRate: 0.8,
+          },
+          timestamp: Date.now(),
         },
         {
           algorithm: "spatial",
-          objectCount: 200,
-          executionTime: 8.5,
-          memoryUsage: 2048,
-          timestamp: Date.now() + 1000,
-          workloadCharacteristics: {
+          workload: {
             objectCount: 200,
             spatialDensity: 0.7,
             overlapRatio: 0.2,
             updateFrequency: 0.6,
             queryPattern: "clustered",
           },
+          performance: {
+            executionTime: 8.5,
+            memoryUsage: 2048,
+            allocationCount: 0,
+            cacheHitRate: 0.8,
+          },
+          timestamp: Date.now() + 1000,
         },
         {
           algorithm: "optimized",
-          objectCount: 500,
-          executionTime: 12.3,
-          memoryUsage: 4096,
-          timestamp: Date.now() + 2000,
-          workloadCharacteristics: {
+          workload: {
             objectCount: 500,
             spatialDensity: 1.0,
             overlapRatio: 0.4,
             updateFrequency: 0.9,
             queryPattern: "random",
           },
+          performance: {
+            executionTime: 12.3,
+            memoryUsage: 4096,
+            allocationCount: 0,
+            cacheHitRate: 0.8,
+          },
+          timestamp: Date.now() + 2000,
         },
       ];
 
@@ -282,17 +309,20 @@ describe("Algorithm Selector Extended Coverage", () => {
     it("should handle empty performance record", () => {
       const performanceRecord: PerformanceRecord = {
         algorithm: "naive",
-        objectCount: 0,
-        executionTime: 0,
-        memoryUsage: 0,
-        timestamp: 0,
-        workloadCharacteristics: {
+        workload: {
           objectCount: 0,
           spatialDensity: 0,
           overlapRatio: 0,
           updateFrequency: 0,
           queryPattern: "random",
         },
+        performance: {
+          executionTime: 0,
+          memoryUsage: 0,
+          allocationCount: 0,
+          cacheHitRate: 0.8,
+        },
+        timestamp: 0,
       };
 
       selector.updatePerformanceModel(performanceRecord);
@@ -305,17 +335,20 @@ describe("Algorithm Selector Extended Coverage", () => {
     it("should handle performance record with negative values", () => {
       const performanceRecord: PerformanceRecord = {
         algorithm: "naive",
-        objectCount: -1,
-        executionTime: -1,
-        memoryUsage: -1,
-        timestamp: -1,
-        workloadCharacteristics: {
+        workload: {
           objectCount: -1,
           spatialDensity: -1,
           overlapRatio: -1,
           updateFrequency: -1,
           queryPattern: "random",
         },
+        performance: {
+          executionTime: -1,
+          memoryUsage: -1,
+          allocationCount: 0,
+          cacheHitRate: 0.8,
+        },
+        timestamp: -1,
       };
 
       selector.updatePerformanceModel(performanceRecord);
@@ -328,17 +361,20 @@ describe("Algorithm Selector Extended Coverage", () => {
     it("should handle performance record with very large values", () => {
       const performanceRecord: PerformanceRecord = {
         algorithm: "naive",
-        objectCount: Number.MAX_SAFE_INTEGER,
-        executionTime: Number.MAX_SAFE_INTEGER,
-        memoryUsage: Number.MAX_SAFE_INTEGER,
-        timestamp: Number.MAX_SAFE_INTEGER,
-        workloadCharacteristics: {
+        workload: {
           objectCount: Number.MAX_SAFE_INTEGER,
           spatialDensity: Number.MAX_SAFE_INTEGER,
           overlapRatio: Number.MAX_SAFE_INTEGER,
           updateFrequency: Number.MAX_SAFE_INTEGER,
           queryPattern: "random",
         },
+        performance: {
+          executionTime: Number.MAX_SAFE_INTEGER,
+          memoryUsage: Number.MAX_SAFE_INTEGER,
+          allocationCount: 0,
+          cacheHitRate: 0.8,
+        },
+        timestamp: Number.MAX_SAFE_INTEGER,
       };
 
       selector.updatePerformanceModel(performanceRecord);
@@ -351,17 +387,20 @@ describe("Algorithm Selector Extended Coverage", () => {
     it("should handle performance record with invalid algorithm", () => {
       const performanceRecord: PerformanceRecord = {
         algorithm: "invalid" as any,
-        objectCount: 100,
-        executionTime: 5.2,
-        memoryUsage: 1024,
-        timestamp: Date.now(),
-        workloadCharacteristics: {
+        workload: {
           objectCount: 100,
           spatialDensity: 0.5,
           overlapRatio: 0.1,
           updateFrequency: 0.8,
           queryPattern: "random",
         },
+        performance: {
+          executionTime: 12.3,
+          memoryUsage: 4096,
+          allocationCount: 0,
+          cacheHitRate: 0.8,
+        },
+        timestamp: Date.now() + 2000,
       };
 
       selector.updatePerformanceModel(performanceRecord);
@@ -374,17 +413,20 @@ describe("Algorithm Selector Extended Coverage", () => {
     it("should handle performance record with invalid query pattern", () => {
       const performanceRecord: PerformanceRecord = {
         algorithm: "naive",
-        objectCount: 100,
-        executionTime: 5.2,
-        memoryUsage: 1024,
-        timestamp: Date.now(),
-        workloadCharacteristics: {
+        workload: {
           objectCount: 100,
           spatialDensity: 0.5,
           overlapRatio: 0.1,
           updateFrequency: 0.8,
           queryPattern: "invalid" as any,
         },
+        performance: {
+          executionTime: 12.3,
+          memoryUsage: 4096,
+          allocationCount: 0,
+          cacheHitRate: 0.8,
+        },
+        timestamp: Date.now() + 2000,
       };
 
       selector.updatePerformanceModel(performanceRecord);
@@ -403,17 +445,20 @@ describe("Algorithm Selector Extended Coverage", () => {
       for (let i = 0; i < 1000; i++) {
         const performanceRecord: PerformanceRecord = {
           algorithm: i % 3 === 0 ? "naive" : i % 3 === 1 ? "spatial" : "optimized",
-          objectCount: 100 + i,
-          executionTime: 5.2 + i * 0.01,
-          memoryUsage: 1024 + i * 10,
-          timestamp: Date.now() + i,
-          workloadCharacteristics: {
+          workload: {
             objectCount: 100 + i,
             spatialDensity: 0.5 + i * 0.001,
             overlapRatio: 0.1 + i * 0.0001,
             updateFrequency: 0.8 + i * 0.0001,
             queryPattern: i % 2 === 0 ? "random" : "clustered",
           },
+          performance: {
+            executionTime: 5.2 + i * 0.01,
+            memoryUsage: 1024 + i * 10,
+            allocationCount: 0,
+            cacheHitRate: 0.8,
+          },
+          timestamp: Date.now() + i, // Incrementing timestamp
         };
 
         selector.updatePerformanceModel(performanceRecord);
@@ -434,17 +479,20 @@ describe("Algorithm Selector Extended Coverage", () => {
       for (let i = 0; i < 1000; i++) {
         const performanceRecord: PerformanceRecord = {
           algorithm: "naive",
-          objectCount: 100,
-          executionTime: 5.2,
-          memoryUsage: 1024,
-          timestamp: Date.now() + i,
-          workloadCharacteristics: {
+          workload: {
             objectCount: 100,
             spatialDensity: 0.5,
             overlapRatio: 0.1,
             updateFrequency: 0.8,
             queryPattern: "random",
           },
+          performance: {
+            executionTime: 5.2,
+            memoryUsage: 1024,
+            allocationCount: 0,
+            cacheHitRate: 0.8,
+          },
+          timestamp: Date.now() + i, // Incrementing timestamp
         };
 
         selector.updatePerformanceModel(performanceRecord);
@@ -453,17 +501,20 @@ describe("Algorithm Selector Extended Coverage", () => {
       // Add one more record to trigger cleanup
       const latestRecord: PerformanceRecord = {
         algorithm: "spatial",
-        objectCount: 200,
-        executionTime: 8.5,
-        memoryUsage: 2048,
-        timestamp: Date.now() + 1000,
-        workloadCharacteristics: {
+        workload: {
           objectCount: 200,
           spatialDensity: 0.7,
           overlapRatio: 0.2,
           updateFrequency: 0.6,
           queryPattern: "clustered",
         },
+        performance: {
+          executionTime: 12.3,
+          memoryUsage: 4096,
+          allocationCount: 0,
+          cacheHitRate: 0.8,
+        },
+        timestamp: Date.now() + 2000,
       };
 
       selector.updatePerformanceModel(latestRecord);

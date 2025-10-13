@@ -49,11 +49,7 @@ export class BresenhamLine {
    * @param options - Optional line drawing options.
    * @returns A LineDrawingResult object with the generated points and statistics.
    */
-  drawLine(
-    start: Point,
-    end: Point,
-    options: Partial<LineDrawingOptions> = {}
-  ): LineDrawingResult {
+  drawLine(start: Point, end: Point, options: Partial<LineDrawingOptions> = {}): LineDrawingResult {
     const startTime = performance.now();
     const lineOptions: LineDrawingOptions = {
       ...this.config,
@@ -78,7 +74,7 @@ export class BresenhamLine {
         pointCount: 0,
         executionTime: performance.now() - startTime,
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : "Unknown error",
         stoppedEarly: false,
         pointsProcessed: 0,
       };
@@ -91,10 +87,7 @@ export class BresenhamLine {
    * @param options - Optional multi-line drawing options.
    * @returns A MultiLineResult object with all generated lines and statistics.
    */
-  drawMultiLine(
-    points: Point[],
-    options: Partial<MultiLineOptions> = {}
-  ): MultiLineResult {
+  drawMultiLine(points: Point[], options: Partial<MultiLineOptions> = {}): MultiLineResult {
     const startTime = performance.now();
     const multiOptions: MultiLineOptions = {
       ...this.config,
@@ -174,7 +167,7 @@ export class BresenhamLine {
         pointCount: 0,
         executionTime: performance.now() - startTime,
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }
@@ -186,11 +179,7 @@ export class BresenhamLine {
    * @param options - Line drawing options.
    * @returns Array of points representing the line.
    */
-  private generateLinePoints(
-    start: Point,
-    end: Point,
-    options: LineDrawingOptions
-  ): Point[] {
+  private generateLinePoints(start: Point, end: Point, options: LineDrawingOptions): Point[] {
     const points: Point[] = [];
     let processedCount = 0;
 
@@ -217,9 +206,7 @@ export class BresenhamLine {
     // Process each point
     for (const point of basicPoints) {
       // Apply offset back if we adjusted for negative coordinates
-      const finalPoint = options.handleNegativeCoordinates
-        ? { x: point.x - offsetX, y: point.y - offsetY }
-        : point;
+      const finalPoint = options.handleNegativeCoordinates ? { x: point.x - offsetX, y: point.y - offsetY } : point;
 
       // Check if we should stop early
       if (options.maxPoints && points.length >= options.maxPoints) {
@@ -248,11 +235,7 @@ export class BresenhamLine {
    * @param options - Optional configuration options.
    * @returns Array of points representing the line.
    */
-  private generateBasicLinePoints(
-    start: Point,
-    end: Point,
-    options: Partial<BresenhamConfig> = {}
-  ): Point[] {
+  private generateBasicLinePoints(start: Point, end: Point, options: Partial<BresenhamConfig> = {}): Point[] {
     const config = { ...this.config, ...options };
     const points: Point[] = [];
 
@@ -347,27 +330,24 @@ export class BresenhamLine {
    * @param tolerance - Tolerance for floating point comparison.
    * @returns True if the point is on the line segment.
    */
-  static isPointOnLine(
-    point: Point,
-    start: Point,
-    end: Point,
-    tolerance: number = 0.001
-  ): boolean {
+  static isPointOnLine(point: Point, start: Point, end: Point, tolerance: number = 0.001): boolean {
     // Check if point is within the bounding box of the line segment
     const minX = Math.min(start.x, end.x);
     const maxX = Math.max(start.x, end.x);
     const minY = Math.min(start.y, end.y);
     const maxY = Math.max(start.y, end.y);
 
-    if (point.x < minX - tolerance || point.x > maxX + tolerance ||
-        point.y < minY - tolerance || point.y > maxY + tolerance) {
+    if (
+      point.x < minX - tolerance ||
+      point.x > maxX + tolerance ||
+      point.y < minY - tolerance ||
+      point.y > maxY + tolerance
+    ) {
       return false;
     }
 
     // Check if point is on the line using cross product
-    const crossProduct = Math.abs(
-      (end.y - start.y) * (point.x - start.x) - (end.x - start.x) * (point.y - start.y)
-    );
+    const crossProduct = Math.abs((end.y - start.y) * (point.x - start.x) - (end.x - start.x) * (point.y - start.y));
 
     return crossProduct <= tolerance;
   }
@@ -388,9 +368,7 @@ export class BresenhamLine {
       return start; // Line segment is a point
     }
 
-    const t = Math.max(0, Math.min(1, 
-      ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared
-    ));
+    const t = Math.max(0, Math.min(1, ((point.x - start.x) * dx + (point.y - start.y) * dy) / lengthSquared));
 
     return {
       x: start.x + t * dx,
@@ -405,11 +383,7 @@ export class BresenhamLine {
    * @param options - Optional configuration options.
    * @returns Array of points representing the circle.
    */
-  static drawCircle(
-    center: Point,
-    radius: number,
-    options: Partial<BresenhamConfig> = {}
-  ): Point[] {
+  static drawCircle(center: Point, radius: number, options: Partial<BresenhamConfig> = {}): Point[] {
     const config = {
       includeStart: true,
       includeEnd: true,

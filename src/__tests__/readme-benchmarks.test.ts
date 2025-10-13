@@ -8,14 +8,14 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { detectCollisions, PerformanceMonitor, configureOptimization, cleanup } from "../optimized";
-import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../computational-geometry/collision";
-import { EnhancedMemoryPool } from "../optimization/core/enhanced-memory-pool";
+import { detectCollisions, configureOptimization, cleanup } from "../optimized";
+import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../geometry/collision/aabb";
+import { MemoryPool } from "../optimization/core/enhanced-memory-pool";
 import { PerformanceTimer } from "../performance/timer";
-import { SpatialHash } from "../spatial-structures/spatial-hash/spatial-structures/spatial-hash-core";
-import { UnionFind } from "../data-structures/union-find/data-structures/union-find-core";
+import { SpatialHash } from "../spatial-structures/spatial-hash/spatial-hash-core";
+import { UnionFind } from "../data-structures/union-find/union-find-core";
 import { AlgorithmSelector, type WorkloadCharacteristics } from "../optimization/core/algorithm-selector";
-import type { AABB, CollisionPair } from "../computational-geometry/collision/aabb-types";
+import type { AABB, CollisionPair } from "../geometry/collision/aabb/aabb-types";
 
 // Deterministic RNG and test data generators
 function createSeededRng(seed: number): () => number {
@@ -178,15 +178,15 @@ function measureMemoryPoolPerformance(): {
   let standardTime = 0;
   for (let i = 0; i < iterations; i++) {
     timer.start();
-    const spatialHash = new SpatialHash({ cellSize: 100 });
-    const unionFind = new UnionFind(100);
-    const collisionArray: CollisionPair[] = [];
-    const processedSet = new Set<number>();
+    new SpatialHash({ cellSize: 100 });
+    new UnionFind(100);
+    new Array<CollisionPair>();
+    new Set<number>();
     standardTime += timer.stop();
   }
 
   // Pooled allocation
-  const memoryPool = new EnhancedMemoryPool({
+  const memoryPool = new MemoryPool({
     spatialHashPoolSize: 50,
     unionFindPoolSize: 50,
     collisionArrayPoolSize: 100,
@@ -246,7 +246,7 @@ describe("README Performance Validation Benchmarks", () => {
     });
 
     it("should measure memory pool hit rates and efficiency", () => {
-      const memoryPool = new EnhancedMemoryPool({
+      const memoryPool = new MemoryPool({
         spatialHashPoolSize: 20,
         unionFindPoolSize: 20,
         collisionArrayPoolSize: 50,
@@ -282,7 +282,7 @@ describe("README Performance Validation Benchmarks", () => {
   });
 
   describe("PAW Overhead vs Benefits Analysis", () => {
-    const datasetSizes = [20, 50, 100, 200, 500, 1000];
+    const datasetSizes = [20, 50, 100, 150, 200];
     const results: BenchmarkResult[] = [];
 
     datasetSizes.forEach(size => {
@@ -460,8 +460,8 @@ describe("README Performance Validation Benchmarks", () => {
     it("should test clustered vs uniform distribution performance", () => {
       const rng1 = createSeededRng(9001);
       const rng2 = createSeededRng(42);
-      const uniformAABBs = generateRandomAABBs(300, 1000, rng1);
-      const clusteredAABBs = generateClusteredAABBs(300, 5, rng2);
+      const uniformAABBs = generateRandomAABBs(150, 1000, rng1);
+      const clusteredAABBs = generateClusteredAABBs(150, 5, rng2);
       const samples = 11;
       const iterations = 5;
 

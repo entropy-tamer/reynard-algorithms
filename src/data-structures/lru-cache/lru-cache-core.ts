@@ -58,7 +58,6 @@ export class LRUCache<K, V> {
   private cleanupTimer?: NodeJS.Timeout;
   private performanceMetrics: LRUCachePerformanceMetrics;
 
-
   /**
    * Creates a new LRU Cache instance
    *

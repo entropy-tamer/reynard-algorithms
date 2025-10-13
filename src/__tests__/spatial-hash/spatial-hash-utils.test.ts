@@ -3,15 +3,22 @@ import {
   createOptimizedSpatialHash,
   calculateOptimalCellSize,
   estimateMemoryUsage,
-} from "../../spatial-structures/spatial-hash/spatial-structures/spatial-hash-utils";
-import type { SpatialObject } from "../../spatial-structures/spatial-hash/spatial-structures/spatial-hash-types";
+} from "../../spatial-structures/spatial-hash/spatial-hash-utils";
+import type { SpatialObject } from "../../spatial-structures/spatial-hash/spatial-hash-types";
 
 describe("Spatial Hash Utils", () => {
   const createSpatialObject = (x: number, y: number, width: number = 0, height: number = 0): SpatialObject => ({
+    id: `obj-${x}-${y}`,
     x,
     y,
     width,
     height,
+    data: {
+      id: `obj-${x}-${y}`,
+      type: "test",
+      category: "entity" as const,
+      properties: { test: true }
+    }
   });
 
   describe("createOptimizedSpatialHash", () => {

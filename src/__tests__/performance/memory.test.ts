@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
-import { MemoryMonitor, MemoryLeakDetector } from "../../performance/memory";
+import { describe, it, expect, beforeEach } from "vitest";
+import { MemoryMonitor } from "../../performance/memory";
 
 describe("MemoryMonitor", () => {
   let monitor: MemoryMonitor;

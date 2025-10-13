@@ -4,9 +4,29 @@ import type {
   SpatialHashStats,
   SpatialObject,
   QueryResult,
-} from "../../spatial-structures/spatial-hash/spatial-structures/spatial-hash-types";
+} from "../../spatial-structures/spatial-hash/spatial-hash-types";
+import type { SpatialObjectData, GameEntityData } from "../../types/spatial-types";
 
 describe("Spatial Hash Types", () => {
+  // Helper function to create test spatial data
+  function createTestSpatialData(id: string, category: "entity" | "obstacle" | "trigger" | "decoration" = "entity"): SpatialObjectData {
+    return {
+      id,
+      type: "test",
+      category,
+      properties: { test: true }
+    };
+  }
+
+  // Helper function to create test game entity data
+  function createTestGameEntityData(id: string, entityType: "player" | "enemy" | "npc" | "item" | "projectile" = "player"): GameEntityData {
+    return {
+      id,
+      type: "game-entity",
+      entityType,
+      health: 100
+    };
+  }
   describe("SpatialHashConfig interface", () => {
     it("should create a valid spatial hash configuration", () => {
       const config: SpatialHashConfig = {
@@ -140,7 +160,7 @@ describe("Spatial Hash Types", () => {
         y: 200,
         width: 50,
         height: 75,
-        data: "test-data",
+        data: createTestSpatialData("object-1"),
       };
 
       expect(obj.id).toBe("object-1");
@@ -156,7 +176,7 @@ describe("Spatial Hash Types", () => {
         id: 123,
         x: 0,
         y: 0,
-        data: { type: "player", health: 100 },
+        data: createTestGameEntityData("player-123", "player"),
       };
 
       expect(obj.id).toBe(123);
@@ -170,7 +190,7 @@ describe("Spatial Hash Types", () => {
         id: "point-object",
         x: 50,
         y: 75,
-        data: "point-data",
+        data: createTestSpatialData("point-data"),
       };
 
       expect(obj.id).toBe("point-object");
@@ -188,7 +208,7 @@ describe("Spatial Hash Types", () => {
         y: -200,
         width: 50,
         height: 75,
-        data: "negative-data",
+        data: createTestSpatialData("negative-data"),
       };
 
       expect(obj.x).toBe(-100);
@@ -204,7 +224,7 @@ describe("Spatial Hash Types", () => {
         y: 20.7,
         width: 30.3,
         height: 40.9,
-        data: "fractional-data",
+        data: createTestSpatialData("fractional-data"),
       };
 
       expect(obj.x).toBe(10.5);
@@ -222,7 +242,7 @@ describe("Spatial Hash Types", () => {
         y: 200,
         width: 50,
         height: 75,
-        data: "test-data",
+        data: createTestSpatialData("test-data"),
       };
 
       const result: QueryResult = {
@@ -241,7 +261,7 @@ describe("Spatial Hash Types", () => {
         id: "zero-distance",
         x: 0,
         y: 0,
-        data: "zero-data",
+        data: createTestSpatialData("zero-data"),
       };
 
       const result: QueryResult = {
@@ -259,7 +279,7 @@ describe("Spatial Hash Types", () => {
         id: "far-object",
         x: 1000,
         y: 2000,
-        data: "far-data",
+        data: createTestSpatialData("far-data"),
       };
 
       const result: QueryResult = {
@@ -277,7 +297,7 @@ describe("Spatial Hash Types", () => {
         id: "complex-key",
         x: -100,
         y: -200,
-        data: "complex-data",
+        data: createTestSpatialData("complex-data"),
       };
 
       const result: QueryResult = {
@@ -296,7 +316,7 @@ describe("Spatial Hash Types", () => {
         id: "compatibility-test",
         x: 100,
         y: 200,
-        data: "compatibility-data",
+        data: createTestSpatialData("compatibility-data"),
       };
 
       const result: QueryResult = {
@@ -310,8 +330,7 @@ describe("Spatial Hash Types", () => {
     });
 
     it("should handle generic type constraints", () => {
-      interface CustomData {
-        type: string;
+      interface CustomData extends SpatialObjectData {
         value: number;
       }
 
@@ -319,7 +338,12 @@ describe("Spatial Hash Types", () => {
         id: "custom-object",
         x: 50,
         y: 75,
-        data: { type: "custom", value: 42 },
+        data: { 
+          id: "custom-object",
+          type: "custom", 
+          category: "entity" as const,
+          value: 42 
+        },
       };
 
       const result: QueryResult<CustomData> = {

@@ -34,7 +34,6 @@ describe("Memory Pool Utils Extended Coverage", () => {
         maxSize: 20,
         growthFactor: 2,
         enableStats: true,
-        enableOptimization: true,
       };
 
       const pool = createSpatialObjectPool(config);
@@ -92,7 +91,6 @@ describe("Memory Pool Utils Extended Coverage", () => {
         maxSize: 50,
         growthFactor: 1.5,
         enableStats: false,
-        enableOptimization: false,
       };
 
       const pool = createAABBPool(config);
@@ -142,7 +140,6 @@ describe("Memory Pool Utils Extended Coverage", () => {
         maxSize: 100,
         growthFactor: 3,
         enableStats: true,
-        enableOptimization: true,
       };
 
       const pool = createPointPool(config);
@@ -187,7 +184,6 @@ describe("Memory Pool Utils Extended Coverage", () => {
         maxSize: 32,
         growthFactor: 2.5,
         enableStats: false,
-        enableOptimization: true,
       };
 
       const pool = createVectorPool(config);
@@ -280,14 +276,14 @@ describe("Memory Pool Utils Extended Coverage", () => {
     });
 
     it("should get all pool statistics", () => {
-      const pool1 = manager.createPool("pool1", () => ({
+      manager.createPool("pool1", () => ({
         value: 0,
         reset() {
           this.value = 0;
         },
       }));
 
-      const pool2 = manager.createPool("pool2", () => ({
+      manager.createPool("pool2", () => ({
         value: 0,
         reset() {
           this.value = 0;
@@ -302,14 +298,14 @@ describe("Memory Pool Utils Extended Coverage", () => {
     });
 
     it("should clear all pools", () => {
-      const pool1 = manager.createPool("pool1", () => ({
+      manager.createPool("pool1", () => ({
         value: 0,
         reset() {
           this.value = 0;
         },
       }));
 
-      const pool2 = manager.createPool("pool2", () => ({
+      manager.createPool("pool2", () => ({
         value: 0,
         reset() {
           this.value = 0;
@@ -329,7 +325,6 @@ describe("Memory Pool Utils Extended Coverage", () => {
         maxSize: 20,
         growthFactor: 2,
         enableStats: true,
-        enableOptimization: true,
       };
 
       const config2: PerformanceMemoryPoolConfig = {
@@ -337,7 +332,6 @@ describe("Memory Pool Utils Extended Coverage", () => {
         maxSize: 50,
         growthFactor: 1.5,
         enableStats: false,
-        enableOptimization: false,
       };
 
       const pool1 = manager.createPool(
@@ -449,7 +443,6 @@ describe("Memory Pool Utils Extended Coverage", () => {
         maxSize: 1,
         growthFactor: 1,
         enableStats: true,
-        enableOptimization: true,
       };
 
       const pool = createSpatialObjectPool(config);

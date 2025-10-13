@@ -39,4 +39,4 @@ export {
 } from "./performance-monitor";
 
 // Re-export types from core modules
-export type { MemoryPoolConfig, MemoryPoolStats, OptimizationRecommendation } from "../core/enhanced-memory-pool";
+export type { MemoryPoolConfig, MemoryPoolStats, OptimizationRecommendation } from "../core/memory-pool";

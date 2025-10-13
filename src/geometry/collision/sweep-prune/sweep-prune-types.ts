@@ -125,16 +125,16 @@ export interface SweepPruneStats {
  * Event types for Sweep and Prune algorithm
  */
 export enum SweepPruneEventType {
-  COLLISION_DETECTION_STARTED = 'collision_detection_started',
-  COLLISION_DETECTION_COMPLETED = 'collision_detection_completed',
-  AABB_ADDED = 'aabb_added',
-  AABB_REMOVED = 'aabb_removed',
-  AABB_UPDATED = 'aabb_updated',
-  COLLISION_PAIR_FOUND = 'collision_pair_found',
-  COLLISION_PAIR_LOST = 'collision_pair_lost',
-  AXIS_SWEEP_STARTED = 'axis_sweep_started',
-  AXIS_SWEEP_COMPLETED = 'axis_sweep_completed',
-  SORTING_PERFORMED = 'sorting_performed',
+  COLLISION_DETECTION_STARTED = "collision_detection_started",
+  COLLISION_DETECTION_COMPLETED = "collision_detection_completed",
+  AABB_ADDED = "aabb_added",
+  AABB_REMOVED = "aabb_removed",
+  AABB_UPDATED = "aabb_updated",
+  COLLISION_PAIR_FOUND = "collision_pair_found",
+  COLLISION_PAIR_LOST = "collision_pair_lost",
+  AXIS_SWEEP_STARTED = "axis_sweep_started",
+  AXIS_SWEEP_COMPLETED = "axis_sweep_completed",
+  SORTING_PERFORMED = "sorting_performed",
 }
 
 /**
@@ -225,7 +225,7 @@ export interface IncrementalUpdate {
   /** Previous AABB bounds */
   previousBounds: AABB;
   /** Type of update */
-  updateType: 'add' | 'remove' | 'update';
+  updateType: "add" | "remove" | "update";
   /** Timestamp of update */
   timestamp: number;
 }
@@ -253,7 +253,7 @@ export interface BatchUpdateResult {
  */
 export interface SortingOptions {
   /** Algorithm to use for sorting */
-  algorithm: 'insertion' | 'quick' | 'merge' | 'tim' | 'auto';
+  algorithm: "insertion" | "quick" | "merge" | "tim" | "auto";
   /** Whether to use stable sorting */
   stable: boolean;
   /** Custom comparison function */
@@ -326,43 +326,42 @@ export const COMMON_AABBS = {
     minY: 0,
     maxX: 1,
     maxY: 1,
-    id: 'unit-square',
+    id: "unit-square",
   } as AABB,
-  
+
   /** Unit square offset by (1, 1) */
   OFFSET_SQUARE: {
     minX: 1,
     minY: 1,
     maxX: 2,
     maxY: 2,
-    id: 'offset-square',
+    id: "offset-square",
   } as AABB,
-  
+
   /** Large square covering multiple units */
   LARGE_SQUARE: {
     minX: 0,
     minY: 0,
     maxX: 5,
     maxY: 5,
-    id: 'large-square',
+    id: "large-square",
   } as AABB,
-  
+
   /** Thin rectangle */
   THIN_RECTANGLE: {
     minX: 0,
     minY: 0,
     maxX: 10,
     maxY: 1,
-    id: 'thin-rectangle',
+    id: "thin-rectangle",
   } as AABB,
-  
+
   /** Tall rectangle */
   TALL_RECTANGLE: {
     minX: 0,
     minY: 0,
     maxX: 1,
     maxY: 10,
-    id: 'tall-rectangle',
+    id: "tall-rectangle",
   } as AABB,
 };
-

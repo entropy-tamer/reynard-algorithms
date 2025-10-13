@@ -70,10 +70,7 @@ export class RTree<T = any> {
       if (result.newNode) {
         // Root was split, create new root
         const newRoot = this.createInternalNode();
-        newRoot.entries.push(
-          { id: 'root1', bounds: this.root.bounds },
-          { id: 'root2', bounds: result.newNode.bounds }
-        );
+        newRoot.entries.push({ id: "root1", bounds: this.root.bounds }, { id: "root2", bounds: result.newNode.bounds });
         this.root.parent = newRoot;
         result.newNode.parent = newRoot;
         this.root = newRoot;
@@ -93,7 +90,7 @@ export class RTree<T = any> {
         nodesCreated,
         nodesSplit,
         executionTime: performance.now() - startTime,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }
@@ -115,7 +112,7 @@ export class RTree<T = any> {
           entriesDeleted: 0,
           nodesRemoved: 0,
           executionTime: performance.now() - startTime,
-          error: 'Tree is empty',
+          error: "Tree is empty",
         };
       }
 
@@ -141,7 +138,7 @@ export class RTree<T = any> {
         entriesDeleted,
         nodesRemoved,
         executionTime: performance.now() - startTime,
-        error: result.found ? undefined : 'Entry not found',
+        error: result.found ? undefined : "Entry not found",
       };
     } catch (error) {
       return {
@@ -149,7 +146,7 @@ export class RTree<T = any> {
         entriesDeleted,
         nodesRemoved,
         executionTime: performance.now() - startTime,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }
@@ -295,7 +292,11 @@ export class RTree<T = any> {
       if (!childNode) continue;
 
       const enlargement = this.calculateEnlargement(childNode.bounds, entry.bounds);
-      if (enlargement < minEnlargement || (enlargement === minEnlargement && this.area(childNode.bounds) < this.area(bestChild?.bounds || { minX: 0, minY: 0, maxX: 0, maxY: 0 }))) {
+      if (
+        enlargement < minEnlargement ||
+        (enlargement === minEnlargement &&
+          this.area(childNode.bounds) < this.area(bestChild?.bounds || { minX: 0, minY: 0, maxX: 0, maxY: 0 }))
+      ) {
         minEnlargement = enlargement;
         bestChild = childNode;
       }
@@ -404,8 +405,12 @@ export class RTree<T = any> {
 
     for (let i = 0; i < entries.length; i++) {
       for (let j = i + 1; j < entries.length; j++) {
-        const xDistance = Math.abs(entries[i].bounds.maxX - entries[j].bounds.minX) + Math.abs(entries[j].bounds.maxX - entries[i].bounds.minX);
-        const yDistance = Math.abs(entries[i].bounds.maxY - entries[j].bounds.minY) + Math.abs(entries[j].bounds.maxY - entries[i].bounds.minY);
+        const xDistance =
+          Math.abs(entries[i].bounds.maxX - entries[j].bounds.minX) +
+          Math.abs(entries[j].bounds.maxX - entries[i].bounds.minX);
+        const yDistance =
+          Math.abs(entries[i].bounds.maxY - entries[j].bounds.minY) +
+          Math.abs(entries[j].bounds.maxY - entries[i].bounds.minY);
 
         if (xDistance > maxXDistance) {
           maxXDistance = xDistance;
@@ -552,10 +557,12 @@ export class RTree<T = any> {
       }
     } else {
       // Sort children by distance to point
-      const childrenWithDistance = node.entries.map(entry => ({
-        entry,
-        distance: this.pointToBoundsDistance(point, entry.bounds),
-      })).sort((a, b) => a.distance - b.distance);
+      const childrenWithDistance = node.entries
+        .map(entry => ({
+          entry,
+          distance: this.pointToBoundsDistance(point, entry.bounds),
+        }))
+        .sort((a, b) => a.distance - b.distance);
 
       for (const { entry, distance } of childrenWithDistance) {
         if (distance < nearestDistance) {
@@ -643,11 +650,19 @@ export class RTree<T = any> {
 
   private boundsIntersect(bounds1: Rectangle, bounds2: Rectangle, includeTouching: boolean = false): boolean {
     if (includeTouching) {
-      return !(bounds1.maxX < bounds2.minX || bounds2.maxX < bounds1.minX ||
-               bounds1.maxY < bounds2.minY || bounds2.maxY < bounds1.minY);
+      return !(
+        bounds1.maxX < bounds2.minX ||
+        bounds2.maxX < bounds1.minX ||
+        bounds1.maxY < bounds2.minY ||
+        bounds2.maxY < bounds1.minY
+      );
     } else {
-      return !(bounds1.maxX <= bounds2.minX || bounds2.maxX <= bounds1.minX ||
-               bounds1.maxY <= bounds2.minY || bounds2.maxY <= bounds1.minY);
+      return !(
+        bounds1.maxX <= bounds2.minX ||
+        bounds2.maxX <= bounds1.minX ||
+        bounds1.maxY <= bounds2.minY ||
+        bounds2.maxY <= bounds1.minY
+      );
     }
   }
 

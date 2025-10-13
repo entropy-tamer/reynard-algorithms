@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, beforeEach } from "vitest";
 import {
   checkCollision,
   createCollisionResult,
@@ -6,9 +6,26 @@ import {
   executeSpatialCollisionDetection,
   executeOptimizedCollisionDetection,
 } from "../../../optimization/adapters/collision-algorithms";
-import type { AABB } from "../../../computational-geometry/collision/aabb-types";
+import { MemoryPool } from "../../../optimization/core/enhanced-memory-pool";
+import type { AABB } from "../../../geometry/collision/aabb/aabb-types";
 
 describe("Collision Algorithms", () => {
+  let memoryPool: MemoryPool;
+
+  beforeEach(() => {
+    memoryPool = new MemoryPool({
+      spatialHashPoolSize: 5,
+      unionFindPoolSize: 5,
+      collisionArrayPoolSize: 5,
+      processedSetPoolSize: 5,
+      enableAutoResize: true,
+      maxPoolSize: 100,
+      cleanupInterval: 1000,
+      enableStatistics: true,
+      enablePerformanceTracking: true,
+    });
+  });
+
   describe("checkCollision", () => {
     it("should detect collision between overlapping AABBs", () => {
       const a: AABB = { x: 0, y: 0, width: 10, height: 10 };
@@ -216,11 +233,7 @@ describe("Collision Algorithms", () => {
         { x: 20, y: 20, width: 10, height: 10 },
       ];
 
-      const result = executeOptimizedCollisionDetection(aabbs, {
-        enableMemoryPooling: true,
-        enableSpatialHashing: true,
-        cellSize: 16,
-      });
+      const result = executeOptimizedCollisionDetection(aabbs, memoryPool);
 
       expect(result).toHaveLength(1);
       expect(result[0].a).toBe(0);
@@ -230,11 +243,7 @@ describe("Collision Algorithms", () => {
     it("should handle empty array", () => {
       const aabbs: AABB[] = [];
 
-      const result = executeOptimizedCollisionDetection(aabbs, {
-        enableMemoryPooling: true,
-        enableSpatialHashing: true,
-        cellSize: 16,
-      });
+      const result = executeOptimizedCollisionDetection(aabbs, memoryPool);
 
       expect(result).toHaveLength(0);
     });
@@ -245,11 +254,7 @@ describe("Collision Algorithms", () => {
         { x: 5, y: 5, width: 10, height: 10 },
       ];
 
-      const result = executeOptimizedCollisionDetection(aabbs, {
-        enableMemoryPooling: false,
-        enableSpatialHashing: true,
-        cellSize: 16,
-      });
+      const result = executeOptimizedCollisionDetection(aabbs, memoryPool);
 
       expect(result).toHaveLength(1);
     });
@@ -260,11 +265,7 @@ describe("Collision Algorithms", () => {
         { x: 5, y: 5, width: 10, height: 10 },
       ];
 
-      const result = executeOptimizedCollisionDetection(aabbs, {
-        enableMemoryPooling: true,
-        enableSpatialHashing: false,
-        cellSize: 16,
-      });
+      const result = executeOptimizedCollisionDetection(aabbs, memoryPool);
 
       expect(result).toHaveLength(1);
     });
@@ -275,7 +276,7 @@ describe("Collision Algorithms", () => {
         { x: 5, y: 5, width: 10, height: 10 },
       ];
 
-      const result = executeOptimizedCollisionDetection(aabbs, {});
+      const result = executeOptimizedCollisionDetection(aabbs, memoryPool);
 
       expect(result).toHaveLength(1);
     });

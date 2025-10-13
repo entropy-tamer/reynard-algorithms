@@ -5,7 +5,7 @@ import type {
   CollisionPair,
   CollisionStats,
   AABBSpatialHashConfig,
-} from "../../computational-geometry/collision/aabb-types";
+} from "../../../geometry/collision/aabb/aabb-types";
 
 describe("AABB Types", () => {
   describe("AABB interface", () => {

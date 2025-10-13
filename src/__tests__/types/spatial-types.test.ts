@@ -225,7 +225,7 @@ describe("Spatial Types", () => {
       // TypeScript compile-time check - readonly properties can't be reassigned
       expect(() => {
         // @ts-expect-error - readonly property
-        // data.aabb.x = 5;
+        data.aabb.x = 5;
       }).not.toThrow();
     });
   });

@@ -30,12 +30,7 @@ export interface HullEdge {
 /**
  * Available convex hull algorithms.
  */
-export type ConvexHullAlgorithm = 
-  | 'graham-scan'
-  | 'jarvis-march'
-  | 'quickhull'
-  | 'monotone-chain'
-  | 'gift-wrapping';
+export type ConvexHullAlgorithm = "graham-scan" | "jarvis-march" | "quickhull" | "monotone-chain" | "gift-wrapping";
 
 /**
  * Configuration options for convex hull algorithms.

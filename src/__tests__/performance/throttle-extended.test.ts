@@ -2,7 +2,7 @@
  * @vitest-environment happy-dom
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { throttle, debounce } from "../../performance/throttle";
 
 describe("Throttle Extended Coverage", () => {

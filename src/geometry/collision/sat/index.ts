@@ -9,7 +9,7 @@
  */
 
 // Export core implementation
-export { SAT } from './sat-core';
+export { SAT } from "./sat-core";
 
 // Export all types and interfaces
 export type {
@@ -33,12 +33,7 @@ export type {
   SATBatchResult,
   TransformMatrix,
   TransformedPolygon,
-} from './sat-types';
+} from "./sat-types";
 
 // Export default configurations and common polygons
-export {
-  DEFAULT_SAT_CONFIG,
-  DEFAULT_SAT_OPTIONS,
-  COMMON_POLYGONS,
-} from './sat-types';
-
+export { DEFAULT_SAT_CONFIG, DEFAULT_SAT_OPTIONS, COMMON_POLYGONS } from "./sat-types";

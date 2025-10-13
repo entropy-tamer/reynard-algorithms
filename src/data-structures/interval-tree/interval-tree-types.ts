@@ -221,11 +221,11 @@ export interface IntervalTreeOptions {
  * Event types for interval tree operations.
  */
 export enum IntervalTreeEventType {
-  INTERVAL_INSERTED = 'interval_inserted',
-  INTERVAL_DELETED = 'interval_deleted',
-  INTERVAL_SEARCHED = 'interval_searched',
-  TREE_REBALANCED = 'tree_rebalanced',
-  TREE_CLEARED = 'tree_cleared',
+  INTERVAL_INSERTED = "interval_inserted",
+  INTERVAL_DELETED = "interval_deleted",
+  INTERVAL_SEARCHED = "interval_searched",
+  TREE_REBALANCED = "tree_rebalanced",
+  TREE_CLEARED = "tree_cleared",
 }
 
 /**
@@ -246,10 +246,10 @@ export type IntervalTreeEventHandler = (event: IntervalTreeEvent) => void;
  * Traversal order options.
  */
 export enum TraversalOrder {
-  IN_ORDER = 'in_order',
-  PRE_ORDER = 'pre_order',
-  POST_ORDER = 'post_order',
-  LEVEL_ORDER = 'level_order',
+  IN_ORDER = "in_order",
+  PRE_ORDER = "pre_order",
+  POST_ORDER = "post_order",
+  LEVEL_ORDER = "level_order",
 }
 
 /**

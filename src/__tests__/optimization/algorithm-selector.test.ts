@@ -2,7 +2,6 @@ import { describe, expect, it, beforeEach } from "vitest";
 import {
   AlgorithmSelector,
   WorkloadCharacteristics,
-  AlgorithmSelection,
 } from "../../optimization/core/algorithm-selector";
 
 describe("AlgorithmSelector", () => {

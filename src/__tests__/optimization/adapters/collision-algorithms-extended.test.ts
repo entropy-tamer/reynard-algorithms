@@ -7,21 +7,23 @@ import {
   executeSpatialCollisionDetection,
   executeOptimizedCollisionDetection,
 } from "../../../optimization/adapters/collision-algorithms";
-import { EnhancedMemoryPool } from "../../../optimization/core/enhanced-memory-pool";
-import type { AABB } from "../../../computational-geometry/collision/aabb-types";
+import { MemoryPool } from "../../../optimization/core/enhanced-memory-pool";
+import type { AABB } from "../../../geometry/collision/aabb/aabb-types";
 
 describe("Collision Algorithms Extended Coverage", () => {
-  let memoryPool: EnhancedMemoryPool;
+  let memoryPool: MemoryPool;
   let aabbs: AABB[];
 
   beforeEach(() => {
-    memoryPool = new EnhancedMemoryPool({
+    memoryPool = new MemoryPool({
       spatialHashPoolSize: 5,
       unionFindPoolSize: 5,
       collisionArrayPoolSize: 5,
       processedSetPoolSize: 5,
-      enableStats: true,
-      enableOptimization: true,
+      enableAutoResize: true,
+      maxPoolSize: 100,
+      enableStatistics: true,
+      enablePerformanceTracking: true,
       cleanupInterval: 1000,
     });
 
@@ -117,15 +119,7 @@ describe("Collision Algorithms Extended Coverage", () => {
 
   describe("executeOptimizedCollisionDetection", () => {
     it("should handle optimized collision detection with config", () => {
-      const config = {
-        enableSpatialOptimization: true,
-        enableMemoryPooling: true,
-        spatialHashCellSize: 50,
-        maxCollisionChecks: 1000,
-        enableEarlyTermination: true,
-      };
-
-      const collisions = executeOptimizedCollisionDetection(aabbs, config, memoryPool);
+      const collisions = executeOptimizedCollisionDetection(aabbs, memoryPool);
 
       expect(Array.isArray(collisions)).toBe(true);
       expect(collisions.length).toBeGreaterThan(0);
@@ -159,36 +153,21 @@ describe("Collision Algorithms Extended Coverage", () => {
         },
       ];
 
-      configs.forEach(config => {
-        const collisions = executeOptimizedCollisionDetection(aabbs, config, memoryPool);
+      configs.forEach(_config => {
+        const collisions = executeOptimizedCollisionDetection(aabbs, memoryPool);
         expect(Array.isArray(collisions)).toBe(true);
       });
     });
 
     it("should handle empty AABB array with optimization", () => {
-      const config = {
-        enableSpatialOptimization: true,
-        enableMemoryPooling: true,
-        spatialHashCellSize: 50,
-        maxCollisionChecks: 1000,
-        enableEarlyTermination: true,
-      };
 
-      const collisions = executeOptimizedCollisionDetection([], config, memoryPool);
+      const collisions = executeOptimizedCollisionDetection([], memoryPool);
       expect(collisions).toEqual([]);
     });
 
     it("should handle single AABB with optimization", () => {
       const singleAABB = [{ x: 0, y: 0, width: 10, height: 10 }];
-      const config = {
-        enableSpatialOptimization: true,
-        enableMemoryPooling: true,
-        spatialHashCellSize: 50,
-        maxCollisionChecks: 1000,
-        enableEarlyTermination: true,
-      };
-
-      const collisions = executeOptimizedCollisionDetection(singleAABB, config, memoryPool);
+      const collisions = executeOptimizedCollisionDetection(singleAABB, memoryPool);
       expect(collisions).toEqual([]);
     });
 
@@ -203,15 +182,8 @@ describe("Collision Algorithms Extended Coverage", () => {
         });
       }
 
-      const config = {
-        enableSpatialOptimization: true,
-        enableMemoryPooling: true,
-        spatialHashCellSize: 50,
-        maxCollisionChecks: 5000,
-        enableEarlyTermination: true,
-      };
 
-      const collisions = executeOptimizedCollisionDetection(largeAABBs, config, memoryPool);
+      const collisions = executeOptimizedCollisionDetection(largeAABBs, memoryPool);
       expect(Array.isArray(collisions)).toBe(true);
     });
 
@@ -223,15 +195,8 @@ describe("Collision Algorithms Extended Coverage", () => {
         { x: -5, y: -5, width: 10, height: 10 },
       ];
 
-      const config = {
-        enableSpatialOptimization: true,
-        enableMemoryPooling: true,
-        spatialHashCellSize: 50,
-        maxCollisionChecks: 1000,
-        enableEarlyTermination: true,
-      };
 
-      const collisions = executeOptimizedCollisionDetection(edgeCaseAABBs, config, memoryPool);
+      const collisions = executeOptimizedCollisionDetection(edgeCaseAABBs, memoryPool);
       expect(Array.isArray(collisions)).toBe(true);
     });
   });
@@ -248,18 +213,11 @@ describe("Collision Algorithms Extended Coverage", () => {
     });
 
     it("should properly use memory pool for optimized operations", () => {
-      const config = {
-        enableSpatialOptimization: true,
-        enableMemoryPooling: true,
-        spatialHashCellSize: 50,
-        maxCollisionChecks: 1000,
-        enableEarlyTermination: true,
-      };
 
       const initialStats = memoryPool.getStatistics();
       const initialAllocations = initialStats.totalAllocations;
 
-      executeOptimizedCollisionDetection(aabbs, config, memoryPool);
+      executeOptimizedCollisionDetection(aabbs, memoryPool);
 
       const finalStats = memoryPool.getStatistics();
       const finalAllocations = finalStats.totalAllocations;

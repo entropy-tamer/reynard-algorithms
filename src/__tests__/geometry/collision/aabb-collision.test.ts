@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { checkCollision } from "../../../computational-geometry/collision/aabb-collision";
-import type { AABB } from "../../../computational-geometry/collision/aabb-types";
+import { checkCollision } from "../../../geometry/collision/aabb";
+import type { AABB } from "../../../geometry/collision/aabb/aabb-types";
 
 describe("AABB Collision Detection", () => {
   describe("checkCollision", () => {

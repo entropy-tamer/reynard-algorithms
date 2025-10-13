@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { PolygonOps, type Polygon } from "../../geometry/polygon";
+import { PolygonOps } from "../../geometry/polygon";
 import type { Point } from "../../geometry/point";
 
 describe("Polygon Operations", () => {

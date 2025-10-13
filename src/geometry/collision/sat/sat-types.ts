@@ -91,6 +91,8 @@ export interface SATCollisionResult {
   penetrationDepth: number;
   /** Execution time in milliseconds */
   executionTime: number;
+  /** Whether the collision test was successful */
+  success: boolean;
   /** Number of axes tested */
   axesTested: number;
 }
@@ -141,13 +143,13 @@ export interface SATStats {
  * Event types for SAT algorithm
  */
 export enum SATEventType {
-  COLLISION_TEST_STARTED = 'collision_test_started',
-  COLLISION_TEST_COMPLETED = 'collision_test_completed',
-  COLLISION_DETECTED = 'collision_detected',
-  NO_COLLISION = 'no_collision',
-  AXIS_CACHED = 'axis_cached',
-  CACHE_HIT = 'cache_hit',
-  CACHE_MISS = 'cache_miss',
+  COLLISION_TEST_STARTED = "collision_test_started",
+  COLLISION_TEST_COMPLETED = "collision_test_completed",
+  COLLISION_DETECTED = "collision_detected",
+  NO_COLLISION = "no_collision",
+  AXIS_CACHED = "axis_cached",
+  CACHE_HIT = "cache_hit",
+  CACHE_MISS = "cache_miss",
 }
 
 /**
@@ -329,7 +331,7 @@ export const COMMON_POLYGONS = {
     center: { x: 0, y: 0 },
     radius: Math.sqrt(2) / 2,
   } as ConvexPolygon,
-  
+
   /** Unit triangle centered at origin */
   UNIT_TRIANGLE: {
     vertices: [
@@ -340,7 +342,7 @@ export const COMMON_POLYGONS = {
     center: { x: 0, y: 0 },
     radius: 0.577,
   } as ConvexPolygon,
-  
+
   /** Unit hexagon centered at origin */
   UNIT_HEXAGON: {
     vertices: [
@@ -355,4 +357,3 @@ export const COMMON_POLYGONS = {
     radius: 0.5,
   } as ConvexPolygon,
 };
-

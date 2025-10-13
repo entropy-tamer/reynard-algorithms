@@ -65,7 +65,7 @@ export class PriorityQueue<T> {
 
     this.comparator = options.comparator;
     this.eventHandler = options.onEvent;
-    
+
     this.stats = {
       insertCount: 0,
       extractCount: 0,
@@ -95,11 +95,11 @@ export class PriorityQueue<T> {
    */
   insert(data: T, priority: number): boolean {
     const startTime = performance.now();
-    
+
     try {
       // Check capacity limits
       if (this.heap.length >= this.config.maxCapacity) {
-        this.emitEvent('insert', data, priority, { error: 'Capacity exceeded' });
+        this.emitEvent("insert", data, priority, { error: "Capacity exceeded" });
         return false;
       }
 
@@ -110,7 +110,7 @@ export class PriorityQueue<T> {
 
       // Create new node
       const newNode: PriorityQueueNode<T> = { data, priority };
-      
+
       // Add to end of heap
       this.heap.push(newNode);
       this.stats.size++;
@@ -121,11 +121,11 @@ export class PriorityQueue<T> {
 
       this.stats.insertCount++;
       this.updateAverageInsertTime(performance.now() - startTime);
-      
-      this.emitEvent('insert', data, priority);
+
+      this.emitEvent("insert", data, priority);
       return true;
     } catch (error) {
-      this.emitEvent('insert', data, priority, { error: error instanceof Error ? error.message : 'Unknown error' });
+      this.emitEvent("insert", data, priority, { error: error instanceof Error ? error.message : "Unknown error" });
       return false;
     }
   }
@@ -143,14 +143,14 @@ export class PriorityQueue<T> {
    */
   extract(): T | undefined {
     const startTime = performance.now();
-    
+
     if (this.isEmpty()) {
       return undefined;
     }
 
     // Get root element (highest priority)
     const root = this.heap[0];
-    
+
     // Move last element to root
     const lastElement = this.heap.pop()!;
     this.stats.size--;
@@ -163,8 +163,8 @@ export class PriorityQueue<T> {
 
     this.stats.extractCount++;
     this.updateAverageExtractTime(performance.now() - startTime);
-    
-    this.emitEvent('extract', root.data, root.priority);
+
+    this.emitEvent("extract", root.data, root.priority);
     return root.data;
   }
 
@@ -216,7 +216,7 @@ export class PriorityQueue<T> {
   clear(): void {
     this.heap.length = 0;
     this.stats.size = 0;
-    this.emitEvent('clear');
+    this.emitEvent("clear");
   }
 
   /**
@@ -271,7 +271,7 @@ export class PriorityQueue<T> {
   *[Symbol.iterator](): Iterator<T> {
     // Create a copy to avoid modifying the original queue
     const copy = new PriorityQueue<T>({ ...this.config, comparator: this.comparator });
-    
+
     // Copy all elements
     for (const node of this.heap) {
       copy.insert(node.data, node.priority);
@@ -296,7 +296,7 @@ export class PriorityQueue<T> {
   private bubbleUp(index: number): void {
     while (index > 0) {
       const parentIndex = Math.floor((index - 1) / 2);
-      
+
       if (this.hasHigherPriority(index, parentIndex)) {
         this.swap(index, parentIndex);
         index = parentIndex;
@@ -377,18 +377,15 @@ export class PriorityQueue<T> {
    * Resizes the heap array when capacity is exceeded
    */
   private resize(): void {
-    const newCapacity = Math.min(
-      this.heap.length * this.config.growthFactor,
-      this.config.maxCapacity
-    );
-    
+    const newCapacity = Math.min(this.heap.length * this.config.growthFactor, this.config.maxCapacity);
+
     if (newCapacity > this.heap.length) {
       const newHeap = new Array(newCapacity);
       for (let i = 0; i < this.heap.length; i++) {
         newHeap[i] = this.heap[i];
       }
       this.heap = newHeap;
-      this.emitEvent('resize', undefined, undefined, { newCapacity });
+      this.emitEvent("resize", undefined, undefined, { newCapacity });
     }
   }
 
@@ -398,7 +395,7 @@ export class PriorityQueue<T> {
    * @param time - Time taken for insertion
    */
   private updateAverageInsertTime(time: number): void {
-    this.stats.averageInsertTime = 
+    this.stats.averageInsertTime =
       (this.stats.averageInsertTime * (this.stats.insertCount - 1) + time) / this.stats.insertCount;
   }
 
@@ -408,7 +405,7 @@ export class PriorityQueue<T> {
    * @param time - Time taken for extraction
    */
   private updateAverageExtractTime(time: number): void {
-    this.stats.averageExtractTime = 
+    this.stats.averageExtractTime =
       (this.stats.averageExtractTime * (this.stats.extractCount - 1) + time) / this.stats.extractCount;
   }
 
@@ -420,12 +417,7 @@ export class PriorityQueue<T> {
    * @param priority - Event priority
    * @param metadata - Additional metadata
    */
-  private emitEvent(
-    type: PriorityQueueEventType,
-    data?: T,
-    priority?: number,
-    metadata?: Record<string, any>
-  ): void {
+  private emitEvent(type: PriorityQueueEventType, data?: T, priority?: number, metadata?: Record<string, any>): void {
     if (this.eventHandler) {
       const event: PriorityQueueEvent<T> = {
         type,

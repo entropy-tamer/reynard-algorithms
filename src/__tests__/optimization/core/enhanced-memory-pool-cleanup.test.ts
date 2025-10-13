@@ -2,14 +2,14 @@
  * @vitest-environment happy-dom
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { EnhancedMemoryPool } from "../../../optimization/core/enhanced-memory-pool";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import { MemoryPool } from "../../../optimization/core/enhanced-memory-pool";
 
 describe("Enhanced Memory Pool Cleanup Coverage", () => {
-  let memoryPool: EnhancedMemoryPool;
+  let memoryPool: MemoryPool;
 
   beforeEach(() => {
-    memoryPool = new EnhancedMemoryPool();
+    memoryPool = new MemoryPool();
   });
 
   afterEach(() => {
@@ -38,7 +38,7 @@ describe("Enhanced Memory Pool Cleanup Coverage", () => {
 
     it("should clean up unused data-structures/union-find pools after maxIdleTime", () => {
       // Get a data-structures/union-find and mark it as unused
-      const unionFind = memoryPool.getUnionFind();
+      const unionFind = memoryPool.getUnionFind(100);
 
       // Manually mark as unused and set old lastUsed time
       (unionFind as any).isInUse = false;
@@ -289,7 +289,7 @@ describe("Enhanced Memory Pool Cleanup Coverage", () => {
     it("should handle cleanup with mixed pool types", () => {
       // Create pools of different types
       const spatialHash = memoryPool.getSpatialHash({ cellSize: 100 });
-      const unionFind = memoryPool.getUnionFind();
+      const unionFind = memoryPool.getUnionFind(100);
       const collisionArray = memoryPool.getCollisionArray();
       const processedSet = memoryPool.getProcessedSet();
 

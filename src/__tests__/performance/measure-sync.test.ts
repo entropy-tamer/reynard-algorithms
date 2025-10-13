@@ -2,7 +2,6 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { measureSync } from "../../performance/benchmark";
 import {
   mockPerformanceNow,
-  originalPerformance,
   setupPerformanceMock,
   teardownPerformanceMock,
   resetPerformanceMock,

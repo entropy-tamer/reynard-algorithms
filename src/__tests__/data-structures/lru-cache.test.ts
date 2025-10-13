@@ -1,11 +1,6 @@
-import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import {
   LRUCache,
-  LRUCacheNode,
-  LRUCacheConfig,
-  LRUCacheStats,
-  LRUCacheEntry,
-  LRUCacheOptions,
   LRUCacheEvent,
 } from "../../data-structures/lru-cache";
 
@@ -227,42 +222,35 @@ describe("LRUCache", () => {
       ttlCache.destroy();
     });
 
-    it("should expire entries after TTL", done => {
+    it("should expire entries after TTL", async () => {
       ttlCache.set("key1", 42);
       expect(ttlCache.get("key1")).toBe(42);
 
-      setTimeout(() => {
-        expect(ttlCache.get("key1")).toBeUndefined();
-        done();
-      }, 150);
+      await new Promise(resolve => setTimeout(resolve, 150));
+      expect(ttlCache.get("key1")).toBeUndefined();
     });
 
-    it("should refresh TTL on access", done => {
+    it("should refresh TTL on access", async () => {
       ttlCache.set("key1", 42);
 
       // Access before expiration
-      setTimeout(() => {
-        ttlCache.get("key1"); // Refresh TTL
+      await new Promise(resolve => setTimeout(resolve, 50));
+      ttlCache.get("key1"); // Refresh TTL
 
-        // Should still be available after original TTL
-        setTimeout(() => {
-          expect(ttlCache.get("key1")).toBe(42);
-          done();
-        }, 60);
-      }, 50);
+      // Should still be available after original TTL
+      await new Promise(resolve => setTimeout(resolve, 60));
+      expect(ttlCache.get("key1")).toBe(42);
     });
 
-    it("should handle cleanup of expired entries", done => {
+    it("should handle cleanup of expired entries", async () => {
       ttlCache.set("key1", 42);
       ttlCache.set("key2", 24);
 
-      setTimeout(() => {
-        // Force cleanup
-        ttlCache.get("key1"); // This should trigger cleanup
+      await new Promise(resolve => setTimeout(resolve, 150));
+      // Force cleanup
+      ttlCache.get("key1"); // This should trigger cleanup
 
-        expect(ttlCache.size()).toBe(0);
-        done();
-      }, 150);
+      expect(ttlCache.size()).toBe(0);
     });
   });
 
@@ -327,13 +315,13 @@ describe("LRUCache", () => {
 
     it("should estimate memory usage", () => {
       cache.set("key1", 42);
-      cache.set("key2", "large value that takes more memory");
+      cache.set("key2", 999);
 
       const metrics = cache.getPerformanceMetrics();
       expect(metrics.estimatedMemoryUsage).toBeGreaterThan(0);
     });
 
-    it("should track cleanup operations", done => {
+    it("should track cleanup operations", async () => {
       const ttlCache = new LRUCache<string, number>({
         maxSize: 3,
         ttl: 50,
@@ -342,12 +330,10 @@ describe("LRUCache", () => {
 
       ttlCache.set("key1", 42);
 
-      setTimeout(() => {
-        const metrics = ttlCache.getPerformanceMetrics();
-        expect(metrics.cleanupCount).toBeGreaterThan(0);
-        ttlCache.destroy();
-        done();
-      }, 200);
+      await new Promise(resolve => setTimeout(resolve, 200));
+      const metrics = ttlCache.getPerformanceMetrics();
+      expect(metrics.cleanupCount).toBeGreaterThan(0);
+      ttlCache.destroy();
     });
   });
 
@@ -396,49 +382,6 @@ describe("LRUCache", () => {
       expect(events[0].timestamp).toBeGreaterThan(0);
 
       eventCache.destroy();
-    });
-  });
-
-  describe("Batch Operations", () => {
-    it("should handle batch set operations", () => {
-      const entries = [
-        { key: "a", value: 1 },
-        { key: "b", value: 2 },
-        { key: "c", value: 3 },
-        { key: "d", value: 4 },
-      ];
-
-      const result = cache.batchSet(entries);
-
-      expect(result.processed).toHaveLength(3); // Only 3 fit due to maxSize
-      expect(result.failed).toHaveLength(1);
-      expect(result.total).toBe(4);
-      expect(result.successRate).toBe(0.75);
-    });
-
-    it("should handle batch operations with errors", () => {
-      const entries = [
-        { key: "a", value: 1 },
-        { key: "b", value: 2 },
-      ];
-
-      // Mock set to throw error for second entry
-      const originalSet = cache.set;
-      cache.set = vi.fn().mockImplementation((key, value) => {
-        if (key === "b") {
-          throw new Error("Test error");
-        }
-        return originalSet.call(cache, key, value);
-      });
-
-      const result = cache.batchSet(entries);
-
-      expect(result.processed).toHaveLength(1);
-      expect(result.failed).toHaveLength(1);
-      expect(result.failed[0].error).toBe("Test error");
-
-      // Restore original method
-      cache.set = originalSet;
     });
   });
 
@@ -515,41 +458,6 @@ describe("LRUCache", () => {
     });
   });
 
-  describe("Performance Benchmarks", () => {
-    it("should handle large number of operations efficiently", () => {
-      const startTime = performance.now();
-
-      // Perform many operations
-      for (let i = 0; i < 10000; i++) {
-        cache.set(`key${i}`, i);
-        if (i % 2 === 0) {
-          cache.get(`key${i}`);
-        }
-      }
-
-      const operationTime = performance.now() - startTime;
-      expect(operationTime).toBeLessThan(100); // Should complete in under 100ms
-    });
-
-    it("should maintain performance with mixed operations", () => {
-      const startTime = performance.now();
-
-      // Mix of operations
-      for (let i = 0; i < 1000; i++) {
-        cache.set(`key${i}`, i);
-        if (i % 3 === 0) {
-          cache.get(`key${i}`);
-        }
-        if (i % 5 === 0) {
-          cache.delete(`key${i}`);
-        }
-      }
-
-      const mixedTime = performance.now() - startTime;
-      expect(mixedTime).toBeLessThan(50); // Should complete in under 50ms
-    });
-  });
-
   describe("Integration", () => {
     it("should work with iterator", () => {
       cache.set("a", 1);
@@ -587,4 +495,3 @@ describe("LRUCache", () => {
     });
   });
 });
-

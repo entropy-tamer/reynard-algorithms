@@ -4,8 +4,9 @@
  * Tests for spatial collision optimization functionality
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { SpatialCollisionOptimizer, AABB } from "../../../computational-geometry/collision/spatial-collision-optimizer";
+import { describe, it, expect, beforeEach } from "vitest";
+import { SpatialCollisionOptimizer } from "../../../geometry/collision/optimization/spatial-collision-optimizer";
+import type { AABB } from "../../../geometry/collision/aabb/aabb-types";
 
 describe("SpatialCollisionOptimizer", () => {
   let optimizer: SpatialCollisionOptimizer;
@@ -26,12 +27,12 @@ describe("SpatialCollisionOptimizer", () => {
       { x: 100, y: 100, width: 50, height: 50 },
     ];
 
-    const collisions = optimizer.detectCollisions(aabbs);
+    const _collisions = optimizer.detectCollisions(aabbs);
 
-    expect(collisions).toHaveLength(1);
-    expect(collisions[0].a).toBe(0);
-    expect(collisions[0].b).toBe(1);
-    expect(collisions[0].result.colliding).toBe(true);
+    expect(_collisions).toHaveLength(1);
+    expect(_collisions[0].a).toBe(0);
+    expect(_collisions[0].b).toBe(1);
+    expect(_collisions[0].result.colliding).toBe(true);
   });
 
   it("should use spatial optimization for large datasets", () => {
@@ -47,8 +48,11 @@ describe("SpatialCollisionOptimizer", () => {
       });
     }
 
-    const collisions = optimizer.detectCollisions(aabbs);
+    const _collisions = optimizer.detectCollisions(aabbs);
     const stats = optimizer.getStats();
+    
+    // Verify collisions were detected
+    expect(_collisions.length).toBeGreaterThan(0);
 
     expect(stats.spatialQueries).toBe(1);
     expect(stats.naiveQueries).toBe(0);

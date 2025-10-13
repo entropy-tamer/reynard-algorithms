@@ -3,11 +3,11 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { EnhancedMemoryPool } from "../../../optimization/core/enhanced-memory-pool";
+import { MemoryPool } from "../../../optimization/core/enhanced-memory-pool";
 import type { MemoryPoolConfig } from "../../../optimization/core/enhanced-memory-pool";
 
-describe("EnhancedMemoryPool", () => {
-  let memoryPool: EnhancedMemoryPool;
+describe("MemoryPool", () => {
+  let memoryPool: MemoryPool;
   let config: MemoryPoolConfig;
 
   beforeEach(() => {
@@ -23,7 +23,7 @@ describe("EnhancedMemoryPool", () => {
       enableStatistics: true,
       enablePerformanceTracking: true,
     };
-    memoryPool = new EnhancedMemoryPool(config);
+    memoryPool = new MemoryPool(config);
   });
 
   afterEach(() => {
@@ -89,7 +89,7 @@ describe("EnhancedMemoryPool", () => {
   describe("Pool Cleanup", () => {
     it("should start cleanup interval", () => {
       const setIntervalSpy = vi.spyOn(global, "setInterval");
-      const newPool = new EnhancedMemoryPool({
+      new MemoryPool({
         ...config,
         cleanupInterval: 100,
       });
@@ -207,7 +207,7 @@ describe("EnhancedMemoryPool", () => {
         enablePerformanceTracking: false,
       };
 
-      const customPool = new EnhancedMemoryPool(customConfig);
+      const customPool = new MemoryPool(customConfig);
       const stats = customPool.getStatistics();
 
       expect(stats.totalAllocations).toBeGreaterThanOrEqual(0);

@@ -3,18 +3,18 @@
  *
  * Implementation of the Fenwick Tree (Binary Indexed Tree) data structure with comprehensive
  * features including range queries, range updates, and efficient prefix sum operations.
- * 
+ *
  * Mathematical Theory:
  * A Fenwick Tree is a data structure that supports efficient range sum queries and
  * point updates. It uses the binary representation of indices to achieve O(log n)
  * time complexity for both operations.
- * 
+ *
  * Key operations:
  * - Build: O(n log n) time complexity
  * - Query: O(log n) time complexity
  * - Point Update: O(log n) time complexity
  * - Range Update: O(log n) time complexity (with range update technique)
- * 
+ *
  * Space Complexity: O(n) where n is the number of elements.
  *
  * @module algorithms/data-structures/fenwick-tree
@@ -32,12 +32,12 @@ import type {
   FenwickTreePerformanceMetrics,
   BatchOperationResult,
   FenwickTreeSerialization,
-} from './fenwick-tree-types';
-import { FenwickTreeEventType, DEFAULT_FENWICK_TREE_CONFIG, DEFAULT_FENWICK_TREE_OPTIONS } from './fenwick-tree-types';
+} from "./fenwick-tree-types";
+import { FenwickTreeEventType, DEFAULT_FENWICK_TREE_CONFIG, DEFAULT_FENWICK_TREE_OPTIONS } from "./fenwick-tree-types";
 
 /**
  * Fenwick Tree (Binary Indexed Tree) Data Structure Implementation
- * 
+ *
  * Provides efficient range sum queries and updates with support for
  * range updates and configurable indexing.
  */
@@ -52,15 +52,15 @@ export class FenwickTree {
 
   constructor(options: Partial<FenwickTreeOptions> = {}) {
     const opts = { ...DEFAULT_FENWICK_TREE_OPTIONS, ...options };
-    
+
     this.config = { ...DEFAULT_FENWICK_TREE_CONFIG, ...opts.config };
     this.eventHandlers = opts.eventHandlers || [];
     this.enableStats = opts.enableStats ?? true;
     this.enableDebug = opts.enableDebug ?? false;
-    
+
     this.array = opts.initialArray || [];
     this.tree = [];
-    
+
     this.stats = {
       totalElements: this.array.length,
       totalNodes: 0,
@@ -72,7 +72,7 @@ export class FenwickTree {
       averageUpdateTime: 0,
       memoryUsage: 0,
     };
-    
+
     // Build the tree if initial array is provided
     if (this.array.length > 0) {
       this.build();
@@ -81,39 +81,39 @@ export class FenwickTree {
 
   /**
    * Build the Fenwick tree from the current array
-   * 
+   *
    * @returns True if build was successful
    */
   build(): boolean {
     const startTime = performance.now();
-    
+
     try {
       if (this.array.length === 0) {
         return false;
       }
-      
+
       if (this.array.length > this.config.maxElements!) {
         return false;
       }
-      
+
       // Initialize tree with zeros
       this.tree = new Array(this.array.length + 1).fill(0);
-      
+
       // Build the tree by adding each element
       for (let i = 0; i < this.array.length; i++) {
         this.add(i, this.array[i]);
       }
-      
+
       // Update statistics
       this.stats.totalElements = this.array.length;
       this.stats.totalNodes = this.tree.length;
       this.stats.memoryUsage = this.calculateMemoryUsage();
-      
-      this.emitEvent(FenwickTreeEventType.TREE_BUILT, { 
+
+      this.emitEvent(FenwickTreeEventType.TREE_BUILT, {
         elementCount: this.array.length,
-        executionTime: performance.now() - startTime
+        executionTime: performance.now() - startTime,
       });
-      
+
       return true;
     } catch (error) {
       return false;
@@ -122,14 +122,14 @@ export class FenwickTree {
 
   /**
    * Query the sum from index 0 to index (inclusive)
-   * 
+   *
    * @param index End index of the query
    * @returns Query result
    */
   query(index: number): FenwickTreeQueryResult {
     const startTime = performance.now();
     let nodesVisited = 0;
-    
+
     try {
       if (!this.config.enableRangeQueries) {
         return {
@@ -139,7 +139,7 @@ export class FenwickTree {
           range: { start: 0, end: index },
         };
       }
-      
+
       if (index < 0 || index >= this.array.length) {
         return {
           result: 0,
@@ -148,21 +148,22 @@ export class FenwickTree {
           range: { start: 0, end: index },
         };
       }
-      
+
       const result = this.queryRecursive(index, nodesVisited);
-      
+
       if (this.enableStats) {
         this.stats.totalQueries++;
         const executionTime = performance.now() - startTime;
-        this.stats.averageQueryTime = (this.stats.averageQueryTime * (this.stats.totalQueries - 1) + executionTime) / this.stats.totalQueries;
+        this.stats.averageQueryTime =
+          (this.stats.averageQueryTime * (this.stats.totalQueries - 1) + executionTime) / this.stats.totalQueries;
       }
-      
-      this.emitEvent(FenwickTreeEventType.QUERY_PERFORMED, { 
-        range: { start: 0, end: index }, 
+
+      this.emitEvent(FenwickTreeEventType.QUERY_PERFORMED, {
+        range: { start: 0, end: index },
         result,
-        executionTime: performance.now() - startTime
+        executionTime: performance.now() - startTime,
       });
-      
+
       return {
         result,
         executionTime: performance.now() - startTime,
@@ -181,7 +182,7 @@ export class FenwickTree {
 
   /**
    * Query the sum from start index to end index (inclusive)
-   * 
+   *
    * @param start Start index of the range
    * @param end End index of the range
    * @returns Query result
@@ -189,7 +190,7 @@ export class FenwickTree {
   queryRange(start: number, end: number): FenwickTreeQueryResult {
     const startTime = performance.now();
     let nodesVisited = 0;
-    
+
     try {
       if (!this.config.enableRangeQueries) {
         return {
@@ -199,7 +200,7 @@ export class FenwickTree {
           range: { start, end },
         };
       }
-      
+
       if (start < 0 || end >= this.array.length || start > end) {
         return {
           result: 0,
@@ -208,24 +209,25 @@ export class FenwickTree {
           range: { start, end },
         };
       }
-      
+
       // Range sum = query(end) - query(start - 1)
       const endSum = this.queryRecursive(end, nodesVisited);
       const startSum = start > 0 ? this.queryRecursive(start - 1, nodesVisited) : 0;
       const result = endSum - startSum;
-      
+
       if (this.enableStats) {
         this.stats.totalQueries++;
         const executionTime = performance.now() - startTime;
-        this.stats.averageQueryTime = (this.stats.averageQueryTime * (this.stats.totalQueries - 1) + executionTime) / this.stats.totalQueries;
+        this.stats.averageQueryTime =
+          (this.stats.averageQueryTime * (this.stats.totalQueries - 1) + executionTime) / this.stats.totalQueries;
       }
-      
-      this.emitEvent(FenwickTreeEventType.QUERY_PERFORMED, { 
-        range: { start, end }, 
+
+      this.emitEvent(FenwickTreeEventType.QUERY_PERFORMED, {
+        range: { start, end },
         result,
-        executionTime: performance.now() - startTime
+        executionTime: performance.now() - startTime,
       });
-      
+
       return {
         result,
         executionTime: performance.now() - startTime,
@@ -244,15 +246,15 @@ export class FenwickTree {
 
   /**
    * Update a single element in the Fenwick tree
-   * 
+   *
    * @param index Index of the element to update
    * @param value New value
    * @returns Update result
    */
-  updatePoint(index: number, value: T): FenwickTreeUpdateResult {
+  updatePoint(index: number, value: number): FenwickTreeUpdateResult {
     const startTime = performance.now();
     let nodesUpdated = 0;
-    
+
     try {
       if (!this.config.enablePointUpdates) {
         return {
@@ -262,7 +264,7 @@ export class FenwickTree {
           index,
         };
       }
-      
+
       if (index < 0 || index >= this.array.length) {
         return {
           success: false,
@@ -271,24 +273,25 @@ export class FenwickTree {
           index,
         };
       }
-      
+
       const difference = value - this.array[index];
       this.array[index] = value;
       this.add(index, difference, nodesUpdated);
-      
+
       if (this.enableStats) {
         this.stats.totalUpdates++;
         this.stats.pointUpdates++;
         const executionTime = performance.now() - startTime;
-        this.stats.averageUpdateTime = (this.stats.averageUpdateTime * (this.stats.totalUpdates - 1) + executionTime) / this.stats.totalUpdates;
+        this.stats.averageUpdateTime =
+          (this.stats.averageUpdateTime * (this.stats.totalUpdates - 1) + executionTime) / this.stats.totalUpdates;
       }
-      
-      this.emitEvent(FenwickTreeEventType.ELEMENT_UPDATED, { 
-        index, 
+
+      this.emitEvent(FenwickTreeEventType.ELEMENT_UPDATED, {
+        index,
         value,
-        executionTime: performance.now() - startTime
+        executionTime: performance.now() - startTime,
       });
-      
+
       return {
         success: true,
         executionTime: performance.now() - startTime,
@@ -307,7 +310,7 @@ export class FenwickTree {
 
   /**
    * Update a range of elements in the Fenwick tree
-   * 
+   *
    * @param start Start index of the range
    * @param end End index of the range
    * @param value Update value
@@ -316,7 +319,7 @@ export class FenwickTree {
   updateRange(start: number, end: number, value: number): FenwickTreeRangeUpdateResult {
     const startTime = performance.now();
     let nodesUpdated = 0;
-    
+
     try {
       if (!this.config.enableRangeUpdates) {
         return {
@@ -326,7 +329,7 @@ export class FenwickTree {
           range: { start, end },
         };
       }
-      
+
       if (start < 0 || end >= this.array.length || start > end) {
         return {
           success: false,
@@ -335,31 +338,32 @@ export class FenwickTree {
           range: { start, end },
         };
       }
-      
+
       // Range update using the range update technique
       this.add(start, value, nodesUpdated);
       if (end + 1 < this.array.length) {
         this.add(end + 1, -value, nodesUpdated);
       }
-      
+
       // Update the array
       for (let i = start; i <= end; i++) {
         this.array[i] += value;
       }
-      
+
       if (this.enableStats) {
         this.stats.totalUpdates++;
         this.stats.rangeUpdates++;
         const executionTime = performance.now() - startTime;
-        this.stats.averageUpdateTime = (this.stats.averageUpdateTime * (this.stats.totalUpdates - 1) + executionTime) / this.stats.totalUpdates;
+        this.stats.averageUpdateTime =
+          (this.stats.averageUpdateTime * (this.stats.totalUpdates - 1) + executionTime) / this.stats.totalUpdates;
       }
-      
-      this.emitEvent(FenwickTreeEventType.RANGE_UPDATED, { 
-        range: { start, end }, 
+
+      this.emitEvent(FenwickTreeEventType.RANGE_UPDATED, {
+        range: { start, end },
         value,
-        executionTime: performance.now() - startTime
+        executionTime: performance.now() - startTime,
       });
-      
+
       return {
         success: true,
         executionTime: performance.now() - startTime,
@@ -378,7 +382,7 @@ export class FenwickTree {
 
   /**
    * Get the value at a specific index
-   * 
+   *
    * @param index Index to query
    * @returns Value at the index
    */
@@ -391,7 +395,7 @@ export class FenwickTree {
 
   /**
    * Set the value at a specific index
-   * 
+   *
    * @param index Index to set
    * @param value New value
    * @returns True if successful
@@ -400,14 +404,14 @@ export class FenwickTree {
     if (index < 0 || index >= this.array.length) {
       return false;
     }
-    
+
     const result = this.updatePoint(index, value);
     return result.success;
   }
 
   /**
    * Get the size of the array
-   * 
+   *
    * @returns Number of elements
    */
   size(): number {
@@ -416,7 +420,7 @@ export class FenwickTree {
 
   /**
    * Check if the tree is empty
-   * 
+   *
    * @returns True if empty
    */
   isEmpty(): boolean {
@@ -429,7 +433,7 @@ export class FenwickTree {
   clear(): void {
     this.tree = [];
     this.array = [];
-    
+
     this.stats = {
       totalElements: 0,
       totalNodes: 0,
@@ -441,13 +445,13 @@ export class FenwickTree {
       averageUpdateTime: 0,
       memoryUsage: 0,
     };
-    
+
     this.emitEvent(FenwickTreeEventType.TREE_CLEARED, {});
   }
 
   /**
    * Update multiple elements in batch
-   * 
+   *
    * @param updates Array of {index, value} pairs
    * @returns Batch operation result
    */
@@ -457,7 +461,7 @@ export class FenwickTree {
     const errors: string[] = [];
     let successful = 0;
     let failed = 0;
-    
+
     for (const update of updates) {
       try {
         const result = this.updatePoint(update.index, update.value);
@@ -474,7 +478,7 @@ export class FenwickTree {
         errors.push(`Error updating index ${update.index}: ${error}`);
       }
     }
-    
+
     return {
       successful,
       failed,
@@ -486,7 +490,7 @@ export class FenwickTree {
 
   /**
    * Get all elements in the array
-   * 
+   *
    * @returns Array of all elements
    */
   getAllElements(): number[] {
@@ -495,12 +499,12 @@ export class FenwickTree {
 
   /**
    * Serialize the tree to a JSON format
-   * 
+   *
    * @returns Serialized tree data
    */
   serialize(): FenwickTreeSerialization {
     return {
-      version: '1.0',
+      version: "1.0",
       config: this.config,
       data: this.array,
       metadata: {
@@ -513,7 +517,7 @@ export class FenwickTree {
 
   /**
    * Deserialize a tree from JSON format
-   * 
+   *
    * @param serialized Serialized tree data
    * @returns True if deserialization was successful
    */
@@ -522,16 +526,16 @@ export class FenwickTree {
       this.clear();
       this.config = serialized.config;
       this.array = serialized.data;
-      
+
       // Recalculate statistics
       this.stats.totalElements = serialized.metadata.totalElements;
       this.stats.totalNodes = serialized.metadata.totalNodes;
-      
+
       // Rebuild the tree
       if (this.array.length > 0) {
         this.build();
       }
-      
+
       return true;
     } catch (error) {
       return false;
@@ -566,15 +570,19 @@ export class FenwickTree {
    * Get performance metrics
    */
   getPerformanceMetrics(): FenwickTreePerformanceMetrics {
-    const performanceScore = Math.min(100, Math.max(0,
-      (Math.max(0, 1 - this.stats.averageQueryTime / 10) * 40) +
-      (Math.max(0, 1 - this.stats.averageUpdateTime / 10) * 30) +
-      (Math.max(0, 1 - this.stats.memoryUsage / 1000000) * 30)
-    ));
-    
+    const performanceScore = Math.min(
+      100,
+      Math.max(
+        0,
+        Math.max(0, 1 - this.stats.averageQueryTime / 10) * 40 +
+          Math.max(0, 1 - this.stats.averageUpdateTime / 10) * 30 +
+          Math.max(0, 1 - this.stats.memoryUsage / 1000000) * 30
+      )
+    );
+
     const queryEfficiency = this.stats.totalQueries / Math.max(1, this.stats.totalElements);
     const updateEfficiency = this.stats.totalUpdates / Math.max(1, this.stats.totalElements);
-    
+
     return {
       memoryUsage: this.stats.memoryUsage,
       averageQueryTime: this.stats.averageQueryTime,
@@ -599,12 +607,12 @@ export class FenwickTree {
    */
   private add(index: number, value: number, nodesUpdated: number = 0): void {
     // Convert to 1-based indexing if configured
-    const treeIndex = this.config.useOneBasedIndexing ? index + 1 : index;
-    
+    let treeIndex = this.config.useOneBasedIndexing ? index + 1 : index;
+
     while (treeIndex < this.tree.length) {
       this.tree[treeIndex] += value;
       nodesUpdated++;
-      treeIndex += treeIndex & (-treeIndex); // Get the next index to update
+      treeIndex += treeIndex & -treeIndex; // Get the next index to update
     }
   }
 
@@ -613,15 +621,15 @@ export class FenwickTree {
    */
   private queryRecursive(index: number, nodesVisited: number): number {
     // Convert to 1-based indexing if configured
-    const treeIndex = this.config.useOneBasedIndexing ? index + 1 : index;
+    let treeIndex = this.config.useOneBasedIndexing ? index + 1 : index;
     let sum = 0;
-    
+
     while (treeIndex > 0) {
       sum += this.tree[treeIndex];
       nodesVisited++;
-      treeIndex -= treeIndex & (-treeIndex); // Get the parent index
+      treeIndex -= treeIndex & -treeIndex; // Get the parent index
     }
-    
+
     return sum;
   }
 
@@ -638,22 +646,21 @@ export class FenwickTree {
    */
   private emitEvent(type: FenwickTreeEventType, data?: any): void {
     if (!this.enableDebug) return;
-    
+
     const event: FenwickTreeEvent = {
       type,
       timestamp: Date.now(),
       data,
     };
-    
+
     for (const handler of this.eventHandlers) {
       try {
         handler(event);
       } catch (error) {
-        console.error('Error in FenwickTree event handler:', error);
+        console.error("Error in FenwickTree event handler:", error);
       }
     }
   }
 }
 
 // Import default options
-

@@ -6,25 +6,5 @@
  * automatic optimization and performance monitoring.
  */
 
-// Core algorithm classes, geometry operations, and performance utilities
-export {
-  UnionFind,
-  SpatialHash,
-  PointOps,
-  LineOps,
-  RectangleOps,
-  CircleOps,
-  PolygonOps,
-  PerformanceTimer,
-  MemoryMonitor,
-  throttle,
-  debounce,
-  batchCollisionDetection,
-  batchCollisionWithSpatialHash,
-  type Point,
-  type Rectangle,
-  type Circle,
-  type Polygon,
-  type AABBCollision as AABB,
-  type CollisionResult,
-} from "./exports";
+// Export all available algorithms from the comprehensive exports file
+export * from "./exports";

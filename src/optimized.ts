@@ -16,9 +16,9 @@ import {
 } from "./optimization/adapters/optimized-collision-adapter";
 // import { AlgorithmSelector } from "./optimization/core/algorithm-selector";
 // import type { WorkloadCharacteristics } from "./optimization/core/algorithm-selector-types";
-// import { EnhancedMemoryPool } from "./optimization/core/enhanced-memory-pool";
-import { checkCollision } from "./computational-geometry/collision/aabb-collision";
-import type { AABB, CollisionPair } from "./computational-geometry/collision/aabb-types";
+// import { MemoryPool } from "./optimization/core/enhanced-memory-pool";
+import { checkCollision } from "./geometry/collision/aabb/aabb-collision";
+import type { AABB, CollisionPair } from "./geometry/collision/aabb/aabb-types";
 
 // Global optimization configuration
 let globalOptimizationConfig: OptimizedCollisionConfig = {
@@ -35,7 +35,7 @@ let globalOptimizationConfig: OptimizedCollisionConfig = {
 
 // Global instances
 let globalCollisionAdapter: OptimizedCollisionAdapter | null = null;
-// let globalMemoryPool: EnhancedMemoryPool | null = null;
+// let globalMemoryPool: MemoryPool | null = null;
 // let globalAlgorithmSelector: AlgorithmSelector | null = null;
 
 /**
@@ -64,9 +64,9 @@ function getGlobalCollisionAdapter(): OptimizedCollisionAdapter {
 /**
  * Get the global memory pool instance
  */
-// function getGlobalMemoryPool(): EnhancedMemoryPool {
+// function getGlobalMemoryPool(): MemoryPool {
 //   if (!globalMemoryPool) {
-//     globalMemoryPool = new EnhancedMemoryPool();
+//     globalMemoryPool = new MemoryPool();
 //   }
 //   return globalMemoryPool;
 // }

@@ -205,10 +205,10 @@ export interface BloomFilterOptions {
  * Event types for Bloom Filter operations.
  */
 export enum BloomFilterEventType {
-  ELEMENT_INSERTED = 'element_inserted',
-  ELEMENT_TESTED = 'element_tested',
-  FILTER_CLEARED = 'filter_cleared',
-  STATS_UPDATED = 'stats_updated',
+  ELEMENT_INSERTED = "element_inserted",
+  ELEMENT_TESTED = "element_tested",
+  FILTER_CLEARED = "filter_cleared",
+  STATS_UPDATED = "stats_updated",
 }
 
 /**
@@ -314,4 +314,3 @@ export const DEFAULT_BLOOM_FILTER_OPTIONS: BloomFilterOptions = {
   enableDebug: false,
   initialElements: [],
 };
-

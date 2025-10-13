@@ -4,19 +4,19 @@
  * Implementation of the Sweep and Prune algorithm for broad-phase collision
  * detection. This algorithm sorts objects along coordinate axes and detects
  * potential collisions by finding overlapping intervals.
- * 
+ *
  * Mathematical Theory:
  * Sweep and Prune works by:
  * 1. Creating endpoints for each AABB on each axis (min and max coordinates)
  * 2. Sorting endpoints along each axis
  * 3. Sweeping through sorted endpoints, maintaining active set
  * 4. Detecting collisions when AABBs are both active on all axes
- * 
+ *
  * Time Complexity:
  * - Sorting: O(n log n) per axis
  * - Sweeping: O(n + k) where k is number of collisions
  * - Overall: O(n log n + k) for 2D
- * 
+ *
  * Space Complexity: O(n) for storing endpoints and active sets
  *
  * @module algorithms/geometry/collision/sweep-prune
@@ -30,22 +30,18 @@ import type {
   SweepPruneConfig,
   SweepPruneStats,
   SweepPruneEvent,
-  SweepPruneEventType,
   SweepPruneEventHandler,
   SweepPruneOptions,
   SweepPruneCacheEntry,
   SweepPrunePerformanceMetrics,
   SpatialCell,
-  IncrementalUpdate,
-  BatchUpdateResult,
-  SortingOptions,
   AxisSweepResult,
-  MultiAxisSweepResult,
-} from './sweep-prune-types';
+} from "./sweep-prune-types";
+import { SweepPruneEventType, DEFAULT_SWEEP_PRUNE_CONFIG, DEFAULT_SWEEP_PRUNE_OPTIONS } from "./sweep-prune-types";
 
 /**
  * Sweep and Prune Collision Detection Implementation
- * 
+ *
  * Provides efficient broad-phase collision detection using the sweep and prune
  * algorithm with optimizations including temporal coherence, multi-axis optimization,
  * and spatial partitioning for large datasets.
@@ -59,29 +55,27 @@ export class SweepPrune {
   private enableStats: boolean;
   private enableDebug: boolean;
   private cacheSize: number;
-  
+
   // Active data structures
   private aabbs: Map<string | number, AABB>;
   private activeCollisionPairs: Map<string, CollisionPair>;
-  private lastUpdateTime: number;
   private spatialCells: Map<string, SpatialCell>;
 
   constructor(options: Partial<SweepPruneOptions> = {}) {
     const opts = { ...DEFAULT_SWEEP_PRUNE_OPTIONS, ...options };
-    
+
     this.config = { ...DEFAULT_SWEEP_PRUNE_CONFIG, ...opts.config };
     this.eventHandlers = opts.eventHandlers || [];
-    this.enableCaching = opts.enableCaching;
-    this.enableStats = opts.enableStats;
-    this.enableDebug = opts.enableDebug;
-    this.cacheSize = opts.cacheSize;
-    
+    this.enableCaching = opts.enableCaching ?? true;
+    this.enableStats = opts.enableStats ?? true;
+    this.enableDebug = opts.enableDebug ?? false;
+    this.cacheSize = opts.cacheSize ?? 1000;
+
     this.cache = new Map();
     this.aabbs = new Map();
     this.activeCollisionPairs = new Map();
     this.spatialCells = new Map();
-    this.lastUpdateTime = 0;
-    
+
     this.stats = {
       totalOperations: 0,
       totalExecutionTime: 0,
@@ -97,21 +91,21 @@ export class SweepPrune {
 
   /**
    * Add an AABB to the collision detection system
-   * 
+   *
    * @param aabb The AABB to add
    */
   addAABB(aabb: AABB): void {
     this.aabbs.set(aabb.id, aabb);
     this.emitEvent(SweepPruneEventType.AABB_ADDED, { aabb });
-    
+
     if (this.config.enableIncrementalUpdates) {
-      this.performIncrementalUpdate(aabb, 'add');
+      this.performIncrementalUpdate(aabb, "add");
     }
   }
 
   /**
    * Remove an AABB from the collision detection system
-   * 
+   *
    * @param aabbId The ID of the AABB to remove
    */
   removeAABB(aabbId: string | number): void {
@@ -119,16 +113,16 @@ export class SweepPrune {
     if (aabb) {
       this.aabbs.delete(aabbId);
       this.emitEvent(SweepPruneEventType.AABB_REMOVED, { aabb });
-      
+
       if (this.config.enableIncrementalUpdates) {
-        this.performIncrementalUpdate(aabb, 'remove');
+        this.performIncrementalUpdate(aabb, "remove");
       }
     }
   }
 
   /**
    * Update an existing AABB
-   * 
+   *
    * @param aabb The updated AABB
    */
   updateAABB(aabb: AABB): void {
@@ -136,16 +130,16 @@ export class SweepPrune {
     if (existingAABB) {
       this.aabbs.set(aabb.id, aabb);
       this.emitEvent(SweepPruneEventType.AABB_UPDATED, { aabb, previousAABB: existingAABB });
-      
+
       if (this.config.enableIncrementalUpdates) {
-        this.performIncrementalUpdate(aabb, 'update', existingAABB);
+        this.performIncrementalUpdate(aabb, "update", existingAABB);
       }
     }
   }
 
   /**
    * Perform collision detection using sweep and prune algorithm
-   * 
+   *
    * @param aabbs Optional array of AABBs to test (uses internal AABBs if not provided)
    * @returns Collision detection result
    */
@@ -155,31 +149,31 @@ export class SweepPrune {
 
     try {
       const testAABBs = aabbs || Array.from(this.aabbs.values());
-      
+
       // Check cache first
       const cacheKey = this.getCacheKey(testAABBs);
       if (this.enableCaching && this.cache.has(cacheKey)) {
         const cached = this.cache.get(cacheKey)!;
         cached.accessCount++;
-        this.emitEvent(SweepPruneEventType.CACHE_HIT, { cacheKey });
-        
-        const result = { ...cached.collisionPairs };
-        this.updateStats(result, performance.now() - startTime, testAABBs.length);
+        // Cache hit - no specific event type defined
+
+        const collisionPairs = [...cached.collisionPairs]; // Copy the array
+        this.updateStats(collisionPairs, performance.now() - startTime, testAABBs.length);
         return {
-          collisionPairs: result,
+          collisionPairs,
           totalAABBs: testAABBs.length,
-          activeCollisions: result.filter(pair => pair.active).length,
+          activeCollisions: collisionPairs.filter(pair => pair.active).length,
           executionTime: 0,
           endpointsProcessed: 0,
           axisSweeps: 0,
         };
       }
 
-      this.emitEvent(SweepPruneEventType.CACHE_MISS, { cacheKey });
+      // Cache miss - no specific event type defined
 
       // Perform sweep and prune
       const result = this.performSweepPrune(testAABBs);
-      
+
       // Cache result
       if (this.enableCaching) {
         this.cacheResult(cacheKey, result.collisionPairs);
@@ -187,7 +181,7 @@ export class SweepPrune {
 
       this.updateStats(result.collisionPairs, performance.now() - startTime, testAABBs.length);
       this.emitEvent(SweepPruneEventType.COLLISION_DETECTION_COMPLETED, result);
-      
+
       return result;
     } catch (error) {
       const result: SweepPruneResult = {
@@ -198,17 +192,17 @@ export class SweepPrune {
         endpointsProcessed: 0,
         axisSweeps: 0,
       };
-      
+
       this.updateStats([], result.executionTime, 0);
       this.emitEvent(SweepPruneEventType.COLLISION_DETECTION_COMPLETED, result);
-      
+
       return result;
     }
   }
 
   /**
    * Perform the core sweep and prune algorithm
-   * 
+   *
    * @param aabbs Array of AABBs to test
    * @returns Collision detection result
    */
@@ -240,7 +234,7 @@ export class SweepPrune {
 
   /**
    * Perform sweep and prune on a single axis
-   * 
+   *
    * @param aabbs Array of AABBs to test
    * @returns Collision detection result
    */
@@ -256,7 +250,7 @@ export class SweepPrune {
 
       const axisResult = this.sweepAxis(aabbs, axis);
       endpointsProcessed += axisResult.endpointsProcessed;
-      
+
       // For first axis, collect all potential pairs
       if (axis === 0) {
         collisionPairs.push(...axisResult.collisionPairs);
@@ -283,7 +277,7 @@ export class SweepPrune {
 
   /**
    * Perform sweep and prune on multiple axes simultaneously
-   * 
+   *
    * @param aabbs Array of AABBs to test
    * @returns Collision detection result
    */
@@ -307,9 +301,9 @@ export class SweepPrune {
     }
 
     // Find intersection of collision pairs from all axes
-    const combinedPairs = this.intersectCollisionPairs(axisResults.map(r => 
-      this.sweepAxis(aabbs, r.axis).collisionPairs
-    ));
+    const combinedPairs = this.intersectCollisionPairs(
+      axisResults.map(r => this.sweepAxis(aabbs, r.axis).collisionPairs)
+    );
 
     const activeCollisions = combinedPairs.filter(pair => pair.active).length;
 
@@ -325,7 +319,7 @@ export class SweepPrune {
 
   /**
    * Perform sweep and prune with spatial partitioning
-   * 
+   *
    * @param aabbs Array of AABBs to test
    * @returns Collision detection result
    */
@@ -364,7 +358,7 @@ export class SweepPrune {
 
   /**
    * Sweep a single axis and find collision pairs
-   * 
+   *
    * @param aabbs Array of AABBs to test
    * @param axis Axis to sweep (0 = x, 1 = y)
    * @returns Axis sweep result
@@ -375,11 +369,8 @@ export class SweepPrune {
     for (const aabb of aabbs) {
       const minValue = axis === 0 ? aabb.minX : aabb.minY;
       const maxValue = axis === 0 ? aabb.maxX : aabb.maxY;
-      
-      endpoints.push(
-        { aabb, isStart: true, value: minValue, axis },
-        { aabb, isStart: false, value: maxValue, axis }
-      );
+
+      endpoints.push({ aabb, isStart: true, value: minValue, axis }, { aabb, isStart: false, value: maxValue, axis });
     }
 
     // Sort endpoints
@@ -415,7 +406,7 @@ export class SweepPrune {
 
   /**
    * Sort endpoints using appropriate algorithm
-   * 
+   *
    * @param endpoints Array of endpoints to sort
    */
   private sortEndpoints(endpoints: Endpoint[]): void {
@@ -428,26 +419,26 @@ export class SweepPrune {
 
   /**
    * Insertion sort for small arrays
-   * 
+   *
    * @param endpoints Array of endpoints to sort
    */
   private insertionSort(endpoints: Endpoint[]): void {
     for (let i = 1; i < endpoints.length; i++) {
       const key = endpoints[i];
       let j = i - 1;
-      
+
       while (j >= 0 && this.compareEndpoints(endpoints[j], key) > 0) {
         endpoints[j + 1] = endpoints[j];
         j--;
       }
-      
+
       endpoints[j + 1] = key;
     }
   }
 
   /**
    * Quick sort for larger arrays
-   * 
+   *
    * @param endpoints Array of endpoints to sort
    */
   private quickSort(endpoints: Endpoint[]): void {
@@ -456,7 +447,7 @@ export class SweepPrune {
 
   /**
    * Recursive quick sort implementation
-   * 
+   *
    * @param endpoints Array of endpoints to sort
    * @param low Starting index
    * @param high Ending index
@@ -471,7 +462,7 @@ export class SweepPrune {
 
   /**
    * Partition function for quick sort
-   * 
+   *
    * @param endpoints Array of endpoints to sort
    * @param low Starting index
    * @param high Ending index
@@ -480,21 +471,21 @@ export class SweepPrune {
   private partition(endpoints: Endpoint[], low: number, high: number): number {
     const pivot = endpoints[high];
     let i = low - 1;
-    
+
     for (let j = low; j < high; j++) {
       if (this.compareEndpoints(endpoints[j], pivot) <= 0) {
         i++;
         [endpoints[i], endpoints[j]] = [endpoints[j], endpoints[i]];
       }
     }
-    
+
     [endpoints[i + 1], endpoints[high]] = [endpoints[high], endpoints[i + 1]];
     return i + 1;
   }
 
   /**
    * Compare two endpoints for sorting
-   * 
+   *
    * @param a First endpoint
    * @param b Second endpoint
    * @returns Comparison result (-1, 0, 1)
@@ -504,19 +495,19 @@ export class SweepPrune {
     if (Math.abs(a.value - b.value) > this.config.epsilon) {
       return a.value - b.value;
     }
-    
+
     // Secondary sort by start/end (start comes first)
     if (a.isStart !== b.isStart) {
       return a.isStart ? -1 : 1;
     }
-    
+
     // Tertiary sort by AABB ID for stability
     return String(a.aabb.id).localeCompare(String(b.aabb.id));
   }
 
   /**
    * Check if two AABBs overlap on a specific axis
-   * 
+   *
    * @param aabb1 First AABB
    * @param aabb2 Second AABB
    * @param axis Axis to check (0 = x, 1 = y)
@@ -524,15 +515,15 @@ export class SweepPrune {
    */
   private aabbsOverlapOnAxis(aabb1: AABB, aabb2: AABB, axis: number): boolean {
     if (axis === 0) {
-      return aabb1.minX <= aabb2.maxX && aabb2.minX <= aabb1.maxX;
+      return aabb1.minX < aabb2.maxX && aabb2.minX < aabb1.maxX;
     } else {
-      return aabb1.minY <= aabb2.maxY && aabb2.minY <= aabb1.maxY;
+      return aabb1.minY < aabb2.maxY && aabb2.minY < aabb1.maxY;
     }
   }
 
   /**
    * Create a collision pair from two AABBs
-   * 
+   *
    * @param aabb1 First AABB
    * @param aabb2 Second AABB
    * @returns Collision pair
@@ -540,27 +531,27 @@ export class SweepPrune {
   private createCollisionPair(aabb1: AABB, aabb2: AABB): CollisionPair {
     const pairId = this.getPairId(aabb1, aabb2);
     const existingPair = this.activeCollisionPairs.get(pairId);
-    
+
     if (existingPair) {
       existingPair.active = true;
       existingPair.lastUpdate = Date.now();
       return existingPair;
     }
-    
+
     const newPair: CollisionPair = {
       aabb1,
       aabb2,
       active: true,
       lastUpdate: Date.now(),
     };
-    
+
     this.activeCollisionPairs.set(pairId, newPair);
     return newPair;
   }
 
   /**
    * Generate unique ID for a collision pair
-   * 
+   *
    * @param aabb1 First AABB
    * @param aabb2 Second AABB
    * @returns Unique pair ID
@@ -573,17 +564,17 @@ export class SweepPrune {
 
   /**
    * Filter collision pairs based on second axis results
-   * 
+   *
    * @param pairs First axis collision pairs
    * @param secondAxisPairs Second axis collision pairs
    */
   private filterCollisionPairs(pairs: CollisionPair[], secondAxisPairs: CollisionPair[]): void {
     const secondAxisPairIds = new Set(secondAxisPairs.map(pair => this.getPairId(pair.aabb1, pair.aabb2)));
-    
+
     for (const pair of pairs) {
       const pairId = this.getPairId(pair.aabb1, pair.aabb2);
       pair.active = secondAxisPairIds.has(pairId);
-      
+
       if (!pair.active) {
         this.emitEvent(SweepPruneEventType.COLLISION_PAIR_LOST, { pair });
       }
@@ -592,43 +583,43 @@ export class SweepPrune {
 
   /**
    * Find intersection of collision pairs from multiple axes
-   * 
+   *
    * @param axisPairArrays Array of collision pair arrays from each axis
    * @returns Intersected collision pairs
    */
   private intersectCollisionPairs(axisPairArrays: CollisionPair[][]): CollisionPair[] {
     if (axisPairArrays.length === 0) return [];
     if (axisPairArrays.length === 1) return axisPairArrays[0];
-    
+
     // Start with first axis pairs
     let result = axisPairArrays[0];
-    
+
     // Intersect with each subsequent axis
     for (let i = 1; i < axisPairArrays.length; i++) {
       const currentAxisPairs = axisPairArrays[i];
       const currentAxisPairIds = new Set(currentAxisPairs.map(pair => this.getPairId(pair.aabb1, pair.aabb2)));
-      
+
       result = result.filter(pair => {
         const pairId = this.getPairId(pair.aabb1, pair.aabb2);
         return currentAxisPairIds.has(pairId);
       });
     }
-    
+
     return result;
   }
 
   /**
    * Partition AABBs into spatial cells
-   * 
+   *
    * @param aabbs Array of AABBs to partition
    * @returns Map of spatial cells
    */
   private partitionAABBs(aabbs: AABB[]): Map<string, SpatialCell> {
     const cells = new Map<string, SpatialCell>();
-    
+
     for (const aabb of aabbs) {
       const cellKey = this.getSpatialCellKey(aabb);
-      
+
       if (!cells.has(cellKey)) {
         cells.set(cellKey, {
           bounds: this.getCellBounds(cellKey),
@@ -636,16 +627,16 @@ export class SweepPrune {
           active: true,
         });
       }
-      
+
       cells.get(cellKey)!.aabbs.push(aabb);
     }
-    
+
     return cells;
   }
 
   /**
    * Get spatial cell key for an AABB
-   * 
+   *
    * @param aabb The AABB
    * @returns Cell key
    */
@@ -657,14 +648,14 @@ export class SweepPrune {
 
   /**
    * Get bounds for a spatial cell
-   * 
+   *
    * @param cellKey The cell key
    * @returns Cell bounds
    */
   private getCellBounds(cellKey: string): AABB {
-    const [cellX, cellY] = cellKey.split(',').map(Number);
+    const [cellX, cellY] = cellKey.split(",").map(Number);
     const cellSize = this.config.spatialCellSize;
-    
+
     return {
       minX: cellX * cellSize,
       minY: cellY * cellSize,
@@ -676,23 +667,19 @@ export class SweepPrune {
 
   /**
    * Check for collisions between adjacent spatial cells
-   * 
+   *
    * @param cells Map of spatial cells
    * @returns Inter-cell collision pairs
    */
   private checkInterCellCollisions(cells: Map<string, SpatialCell>): CollisionPair[] {
     const interCellPairs: CollisionPair[] = [];
-    
+
     for (const [cellKey, cell] of cells) {
-      const [cellX, cellY] = cellKey.split(',').map(Number);
-      
+      const [cellX, cellY] = cellKey.split(",").map(Number);
+
       // Check adjacent cells
-      const adjacentCells = [
-        `${cellX + 1},${cellY}`,
-        `${cellX},${cellY + 1}`,
-        `${cellX + 1},${cellY + 1}`,
-      ];
-      
+      const adjacentCells = [`${cellX + 1},${cellY}`, `${cellX},${cellY + 1}`, `${cellX + 1},${cellY + 1}`];
+
       for (const adjacentKey of adjacentCells) {
         const adjacentCell = cells.get(adjacentKey);
         if (adjacentCell) {
@@ -707,33 +694,31 @@ export class SweepPrune {
         }
       }
     }
-    
+
     return interCellPairs;
   }
 
   /**
    * Check if two AABBs overlap
-   * 
+   *
    * @param aabb1 First AABB
    * @param aabb2 Second AABB
    * @returns True if AABBs overlap
    */
   private aabbsOverlap(aabb1: AABB, aabb2: AABB): boolean {
-    return aabb1.minX <= aabb2.maxX && aabb2.minX <= aabb1.maxX &&
-           aabb1.minY <= aabb2.maxY && aabb2.minY <= aabb1.maxY;
+    return aabb1.minX < aabb2.maxX && aabb2.minX < aabb1.maxX && aabb1.minY < aabb2.maxY && aabb2.minY < aabb1.maxY;
   }
 
   /**
    * Perform incremental update for an AABB
-   * 
+   *
    * @param aabb The AABB being updated
    * @param updateType Type of update
    * @param previousAABB Previous AABB (for updates)
    */
-  private performIncrementalUpdate(aabb: AABB, updateType: 'add' | 'remove' | 'update', previousAABB?: AABB): void {
+  private performIncrementalUpdate(_aabb: AABB, _updateType: "add" | "remove" | "update", _previousAABB?: AABB): void {
     // Implementation would depend on specific incremental update strategy
-    // For now, we'll just update the timestamp
-    this.lastUpdateTime = Date.now();
+    // Placeholder for future implementation
   }
 
   /**
@@ -741,7 +726,7 @@ export class SweepPrune {
    */
   private getCacheKey(aabbs: AABB[]): string {
     const sortedIds = aabbs.map(aabb => String(aabb.id)).sort();
-    return sortedIds.join(',');
+    return sortedIds.join(",");
   }
 
   /**
@@ -751,9 +736,11 @@ export class SweepPrune {
     if (this.cache.size >= this.cacheSize) {
       // Remove least recently used entry
       const oldestKey = this.cache.keys().next().value;
-      this.cache.delete(oldestKey);
+      if (oldestKey) {
+        this.cache.delete(oldestKey);
+      }
     }
-    
+
     this.cache.set(cacheKey, {
       aabbHash: cacheKey,
       collisionPairs,
@@ -767,7 +754,7 @@ export class SweepPrune {
    */
   private updateStats(collisionPairs: CollisionPair[], executionTime: number, aabbCount: number): void {
     if (!this.enableStats) return;
-    
+
     this.stats.totalOperations++;
     this.stats.totalExecutionTime += executionTime;
     this.stats.averageExecutionTime = this.stats.totalExecutionTime / this.stats.totalOperations;
@@ -775,11 +762,11 @@ export class SweepPrune {
     this.stats.averageAABBsPerOperation = this.stats.totalAABBsProcessed / this.stats.totalOperations;
     this.stats.totalCollisionPairs += collisionPairs.length;
     this.stats.averageCollisionPairsPerOperation = this.stats.totalCollisionPairs / this.stats.totalOperations;
-    
+
     // Calculate cache hit rate
     const cacheHits = this.stats.totalOperations * this.stats.cacheHitRate + (executionTime === 0 ? 1 : 0);
     this.stats.cacheHitRate = cacheHits / this.stats.totalOperations;
-    
+
     // Estimate memory usage
     this.stats.memoryUsage = (this.cache.size + this.aabbs.size + this.activeCollisionPairs.size) * 100;
   }
@@ -789,18 +776,18 @@ export class SweepPrune {
    */
   private emitEvent(type: SweepPruneEventType, data?: any): void {
     if (!this.enableDebug) return;
-    
+
     const event: SweepPruneEvent = {
       type,
       timestamp: Date.now(),
       data,
     };
-    
+
     for (const handler of this.eventHandlers) {
       try {
         handler(event);
       } catch (error) {
-        console.error('Error in SweepPrune event handler:', error);
+        console.error("Error in SweepPrune event handler:", error);
       }
     }
   }
@@ -833,15 +820,19 @@ export class SweepPrune {
    * Get performance metrics
    */
   getPerformanceMetrics(): SweepPrunePerformanceMetrics {
-    const efficiencyRatio = this.stats.totalAABBsProcessed > 0 ? 
-      this.stats.totalCollisionPairs / this.stats.totalAABBsProcessed : 0;
-    
-    const performanceScore = Math.min(100, Math.max(0,
-      (this.stats.cacheHitRate * 30) +
-      (Math.max(0, 1 - this.stats.averageExecutionTime / 100) * 40) +
-      (Math.min(1, efficiencyRatio) * 30)
-    ));
-    
+    const efficiencyRatio =
+      this.stats.totalAABBsProcessed > 0 ? this.stats.totalCollisionPairs / this.stats.totalAABBsProcessed : 0;
+
+    const performanceScore = Math.min(
+      100,
+      Math.max(
+        0,
+        this.stats.cacheHitRate * 30 +
+          Math.max(0, 1 - this.stats.averageExecutionTime / 100) * 40 +
+          Math.min(1, efficiencyRatio) * 30
+      )
+    );
+
     return {
       memoryUsage: this.stats.memoryUsage,
       cacheSize: this.cache.size,
@@ -904,10 +895,5 @@ export class SweepPrune {
     this.aabbs.clear();
     this.activeCollisionPairs.clear();
     this.spatialCells.clear();
-    this.lastUpdateTime = 0;
   }
 }
-
-// Import default options
-import { DEFAULT_SWEEP_PRUNE_OPTIONS } from './sweep-prune-types';
-

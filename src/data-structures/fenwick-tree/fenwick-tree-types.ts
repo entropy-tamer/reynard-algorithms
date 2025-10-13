@@ -217,11 +217,11 @@ export interface FenwickTreeOptions {
  * Event types for Fenwick Tree operations.
  */
 export enum FenwickTreeEventType {
-  ELEMENT_UPDATED = 'element_updated',
-  RANGE_UPDATED = 'range_updated',
-  QUERY_PERFORMED = 'query_performed',
-  TREE_BUILT = 'tree_built',
-  TREE_CLEARED = 'tree_cleared',
+  ELEMENT_UPDATED = "element_updated",
+  RANGE_UPDATED = "range_updated",
+  QUERY_PERFORMED = "query_performed",
+  TREE_BUILT = "tree_built",
+  TREE_CLEARED = "tree_cleared",
 }
 
 /**
@@ -311,4 +311,3 @@ export const DEFAULT_FENWICK_TREE_OPTIONS: FenwickTreeOptions = {
   enableDebug: false,
   initialArray: [],
 };
-

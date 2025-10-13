@@ -6,9 +6,10 @@
  */
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { checkCollision } from "../../computational-geometry/collision/aabb-collision";
-import type { AABB } from "../../computational-geometry/collision/aabb-types";
-import { AlgorithmSelector, EnhancedMemoryPool as MemoryPool } from "../../optimization";
+import { checkCollision } from "../../geometry/collision/aabb";
+import type { AABB } from "../../geometry/collision/aabb/aabb-types";
+import type { SpatialObjectData } from "../../types/spatial-types";
+import { AlgorithmSelector, MemoryPool as MemoryPool } from "../../optimization";
 import {
   OptimizationConfig,
   PerformanceMonitor,
@@ -18,6 +19,16 @@ import {
   performSpatialQuery,
 } from "../../optimized";
 import { findConnectedComponents } from "../../data-structures/union-find";
+
+// Helper function to create test spatial data
+function createTestSpatialData(id: string, category: "entity" | "obstacle" | "trigger" | "decoration" = "entity"): SpatialObjectData {
+  return {
+    id,
+    type: "test",
+    category,
+    properties: { test: true }
+  };
+}
 
 describe("Optimized Algorithms API", () => {
   beforeEach(() => {
@@ -112,9 +123,9 @@ describe("Optimized Algorithms API", () => {
   describe("performSpatialQuery", () => {
     it("should find objects within query AABB", () => {
       const spatialObjects = [
-        { aabb: { x: 0, y: 0, width: 50, height: 50 }, data: "object1" },
-        { aabb: { x: 100, y: 100, width: 50, height: 50 }, data: "object2" },
-        { aabb: { x: 25, y: 25, width: 50, height: 50 }, data: "object3" },
+        { aabb: { x: 0, y: 0, width: 50, height: 50 }, data: createTestSpatialData("object1") },
+        { aabb: { x: 100, y: 100, width: 50, height: 50 }, data: createTestSpatialData("object2") },
+        { aabb: { x: 25, y: 25, width: 50, height: 50 }, data: createTestSpatialData("object3") },
       ];
 
       const queryAABB: AABB = { x: 0, y: 0, width: 100, height: 100 };

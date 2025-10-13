@@ -11,11 +11,11 @@
 // Core optimization components
 export { AlgorithmSelector, type AlgorithmSelection, type WorkloadCharacteristics } from "./core/algorithm-selector";
 export {
-  EnhancedMemoryPool,
+  MemoryPool,
   type MemoryPoolConfig,
   type MemoryPoolStats,
   type OptimizationRecommendation,
-} from "./core/enhanced-memory-pool";
+} from "./core/memory-pool";
 
 // Optimized algorithm adapters
 export {
@@ -27,6 +27,6 @@ export {
 // Legacy optimizations removed - use OptimizedCollisionAdapter instead
 
 // Re-export types for convenience
-export type { AABB, CollisionPair, CollisionResult } from "../computational-geometry/collision/aabb-types";
+export type { AABB, CollisionPair, CollisionResult } from "../geometry/collision/aabb/aabb-types";
 // export type { SpatialHash } from "../spatial-structures/spatial-hash/spatial-structures/spatial-hash-core"; // Removed to avoid overriding class export
 export { UnionFind } from "../data-structures/union-find/union-find-core";

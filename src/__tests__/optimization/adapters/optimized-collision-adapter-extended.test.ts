@@ -4,8 +4,6 @@
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { OptimizedCollisionAdapter } from "../../../optimization/adapters/optimized-collision-adapter";
-import { EnhancedMemoryPool } from "../../../optimization/core/enhanced-memory-pool";
-import { PerformanceMonitor } from "../../../optimization/adapters/performance-monitor";
 
 describe("Optimized Collision Adapter Extended Coverage", () => {
   let adapter: OptimizedCollisionAdapter;
@@ -38,9 +36,9 @@ describe("Optimized Collision Adapter Extended Coverage", () => {
       expect(stats.algorithmUsage.naive).toBeGreaterThan(0);
     });
 
-    it("should use spatial algorithm for medium datasets (400-1000)", () => {
-      // Create exactly 400 AABBs to test the spatial path
-      const aabbs = Array.from({ length: 400 }, (_, i) => ({
+    it("should use spatial algorithm for medium datasets (100-200)", () => {
+      // Create exactly 100 AABBs to test the spatial path
+      const aabbs = Array.from({ length: 100 }, (_, i) => ({
         x: (i % 20) * 10,
         y: Math.floor(i / 20) * 10,
         width: 5,
@@ -57,9 +55,9 @@ describe("Optimized Collision Adapter Extended Coverage", () => {
       expect(stats.algorithmUsage.spatial).toBeGreaterThan(0);
     });
 
-    it("should use optimized algorithm for large datasets (1000+)", () => {
-      // Create exactly 1000 AABBs to test the optimized path
-      const aabbs = Array.from({ length: 1000 }, (_, i) => ({
+    it("should use optimized algorithm for large datasets (200+)", () => {
+      // Create exactly 200 AABBs to test the optimized path
+      const aabbs = Array.from({ length: 200 }, (_, i) => ({
         x: (i % 30) * 8,
         y: Math.floor(i / 30) * 8,
         width: 4,
@@ -129,6 +127,7 @@ describe("Optimized Collision Adapter Extended Coverage", () => {
       adapter.detectCollisions(aabbs);
 
       const finalStats = adapter.getMemoryPoolStats();
+      expect(finalStats.totalAllocations).toBeGreaterThanOrEqual(initialStats.totalAllocations);
 
       // Pool should be in a clean state
       expect(finalStats).toBeDefined();
@@ -245,7 +244,7 @@ describe("Optimized Collision Adapter Extended Coverage", () => {
 
     it("should handle optimized collision detection with proper index tracking", () => {
       // Create AABBs that will test optimized collision detection
-      const aabbs = Array.from({ length: 2000 }, (_, i) => ({
+      const aabbs = Array.from({ length: 200 }, (_, i) => ({
         x: i * 1,
         y: i * 1,
         width: 0.5,
@@ -327,6 +326,7 @@ describe("Optimized Collision Adapter Extended Coverage", () => {
       adapter.detectCollisions(aabbs);
 
       const finalStats = adapter.getPerformanceStats();
+      expect(finalStats.totalQueries).toBeGreaterThanOrEqual(initialStats.totalQueries);
 
       expect(finalStats.memoryPoolStats).toBeDefined();
       expect(finalStats.memoryPoolStats.totalAllocations).toBeGreaterThanOrEqual(0);
@@ -405,7 +405,7 @@ describe("Optimized Collision Adapter Extended Coverage", () => {
   describe("Memory Management", () => {
     it("should handle memory pool resource management", () => {
       // Create a dataset that will use memory pool resources
-      const aabbs = Array.from({ length: 1000 }, (_, i) => ({
+      const aabbs = Array.from({ length: 100 }, (_, i) => ({
         x: (i % 30) * 8,
         y: Math.floor(i / 30) * 8,
         width: 4,

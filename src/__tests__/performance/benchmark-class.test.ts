@@ -2,10 +2,10 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { PerformanceBenchmark } from "../../performance/benchmark";
 import {
   mockPerformanceNow,
-  originalPerformance,
   setupPerformanceMock,
   teardownPerformanceMock,
   resetPerformanceMock,
+  createTestBudget,
 } from "../../performance/test-utils";
 
 beforeEach(() => {
@@ -113,7 +113,7 @@ describe("PerformanceBenchmark Class", () => {
       .mockReturnValueOnce(200) // iteration end - exceeds budget
       .mockReturnValueOnce(200); // timer end
 
-    const budget = { maxDuration: 100 };
+    const budget = createTestBudget({ maxDuration: 100 });
     await benchmark.run(slowOperation, 1, budget);
 
     expect(consoleSpy).toHaveBeenCalledWith("Performance budget exceeded: 200ms > 100ms");

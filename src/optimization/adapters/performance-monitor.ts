@@ -7,7 +7,7 @@
  * @module algorithms/optimization/performanceMonitor
  */
 
-import type { MemoryPoolStats, OptimizationRecommendation } from "../core/enhanced-memory-pool";
+import type { MemoryPoolStats, OptimizationRecommendation } from "../core/memory-pool";
 // import type { AlgorithmSelector } from "../core/algorithm-selector";
 
 export interface PerformanceRecord {

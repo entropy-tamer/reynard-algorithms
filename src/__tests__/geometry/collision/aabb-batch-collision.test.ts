@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   batchCollisionDetection,
   batchCollisionWithSpatialHash,
-} from "../../../computational-geometry/collision/aabb-batch-collision";
-import type { AABB, AABBSpatialHashConfig } from "../../../computational-geometry/collision/aabb-types";
+} from "../../../geometry/collision/aabb";
+import type { AABB, AABBSpatialHashConfig } from "../../../geometry/collision/aabb/aabb-types";
 
 // Test helper functions
 const createAABB = (x: number, y: number, width: number, height: number): AABB => ({
@@ -85,7 +85,7 @@ describe("AABB Batch Collision Detection - Distance Filtering", () => {
 
       // Should only include close collisions
       expect(collisions.length).toBeGreaterThan(0);
-      collisions.forEach(collision => {
+      collisions.forEach((collision: any) => {
         expect(collision.result.distance).toBeLessThanOrEqual(100);
       });
     });
@@ -151,7 +151,7 @@ describe("AABB Batch Collision Detection - Spatial Hash Function", () => {
         spatialHash: createSpatialHashConfig(100),
       });
 
-      collisions.forEach(collision => {
+      collisions.forEach((collision: any) => {
         expect(collision.result.distance).toBeLessThanOrEqual(100);
       });
     });

@@ -9,7 +9,7 @@
  */
 
 // Export core implementation
-export { AStar } from './astar-core';
+export { AStar } from "./astar-core";
 
 // Export all types and interfaces
 export type {
@@ -30,7 +30,7 @@ export type {
   AStarHeuristic,
   PathSmoothingOptions,
   DynamicWeightingOptions,
-} from './astar-types';
+} from "./astar-types";
 
 // Export heuristics
 export {
@@ -48,11 +48,7 @@ export {
   createHeuristic,
   defaultHeuristic,
   heuristics,
-} from './heuristics';
+} from "./heuristics";
 
 // Export default configurations
-export {
-  DEFAULT_ASTAR_CONFIG,
-  DEFAULT_ASTAR_OPTIONS,
-} from './astar-types';
-
+export { DEFAULT_ASTAR_CONFIG, DEFAULT_ASTAR_OPTIONS } from "./astar-types";

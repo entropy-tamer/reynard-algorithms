@@ -18,4 +18,3 @@ export type {
   BatchOperationResult,
   FenwickTreeSerialization,
 } from "./fenwick-tree-types";
-

@@ -44,7 +44,7 @@ export class ConvexHull {
    */
   constructor(config: Partial<ConvexHullConfig> = {}) {
     this.config = {
-      algorithm: 'graham-scan',
+      algorithm: "graham-scan",
       includeCollinear: false,
       sortInput: true,
       tolerance: 1e-10,
@@ -71,14 +71,24 @@ export class ConvexHull {
 
       // Handle edge cases
       if (points.length < 3) {
-        return this.createEmptyResult(points.length, startTime, selectedAlgorithm, "At least 3 points are required for convex hull");
+        return this.createEmptyResult(
+          points.length,
+          startTime,
+          selectedAlgorithm,
+          "At least 3 points are required for convex hull"
+        );
       }
 
       // Remove duplicate points
       const uniquePoints = this.removeDuplicatePoints(points);
 
       if (uniquePoints.length < 3) {
-        return this.createEmptyResult(points.length, startTime, selectedAlgorithm, "At least 3 unique points are required");
+        return this.createEmptyResult(
+          points.length,
+          startTime,
+          selectedAlgorithm,
+          "At least 3 unique points are required"
+        );
       }
 
       // Sort points if requested
@@ -87,19 +97,19 @@ export class ConvexHull {
       // Compute convex hull using selected algorithm
       let hull: Point[];
       switch (selectedAlgorithm) {
-        case 'graham-scan':
+        case "graham-scan":
           hull = this.grahamScan(sortedPoints);
           break;
-        case 'jarvis-march':
+        case "jarvis-march":
           hull = this.jarvisMarch(sortedPoints);
           break;
-        case 'quickhull':
+        case "quickhull":
           hull = this.quickHull(sortedPoints);
           break;
-        case 'monotone-chain':
+        case "monotone-chain":
           hull = this.monotoneChain(sortedPoints);
           break;
-        case 'gift-wrapping':
+        case "gift-wrapping":
           hull = this.giftWrapping(sortedPoints);
           break;
         default:
@@ -124,7 +134,12 @@ export class ConvexHull {
         },
       };
     } catch (error) {
-      return this.createEmptyResult(points.length, startTime, selectedAlgorithm, error instanceof Error ? error.message : 'Unknown error');
+      return this.createEmptyResult(
+        points.length,
+        startTime,
+        selectedAlgorithm,
+        error instanceof Error ? error.message : "Unknown error"
+      );
     }
   }
 
@@ -180,11 +195,7 @@ export class ConvexHull {
    * @param options - Comparison options.
    * @returns A HullComparison object with comparison results.
    */
-  compareHulls(
-    hull1: Point[],
-    hull2: Point[],
-    options: Partial<HullComparisonOptions> = {}
-  ): HullComparison {
+  compareHulls(hull1: Point[], hull2: Point[], options: Partial<HullComparisonOptions> = {}): HullComparison {
     const comparisonOptions: HullComparisonOptions = {
       compareAreas: true,
       comparePerimeters: true,
@@ -242,7 +253,11 @@ export class ConvexHull {
     }
 
     // Use Douglas-Peucker algorithm for simplification
-    const simplifiedHull = this.douglasPeucker(hull, simplificationOptions.maxDistance!, simplificationOptions.preserveEndpoints!);
+    const simplifiedHull = this.douglasPeucker(
+      hull,
+      simplificationOptions.maxDistance!,
+      simplificationOptions.preserveEndpoints!
+    );
 
     return {
       simplifiedHull,
@@ -262,8 +277,10 @@ export class ConvexHull {
     // Find the bottom-most point (and leftmost in case of tie)
     let bottomIndex = 0;
     for (let i = 1; i < points.length; i++) {
-      if (points[i].y < points[bottomIndex].y || 
-          (points[i].y === points[bottomIndex].y && points[i].x < points[bottomIndex].x)) {
+      if (
+        points[i].y < points[bottomIndex].y ||
+        (points[i].y === points[bottomIndex].y && points[i].x < points[bottomIndex].x)
+      ) {
         bottomIndex = i;
       }
     }
@@ -276,20 +293,20 @@ export class ConvexHull {
     const sortedPoints = points.slice(1).sort((a, b) => {
       const angleA = this.polarAngle(bottomPoint, a);
       const angleB = this.polarAngle(bottomPoint, b);
-      
+
       if (Math.abs(angleA - angleB) < this.config.tolerance!) {
         // If angles are equal, sort by distance
         const distA = this.distanceSquared(bottomPoint, a);
         const distB = this.distanceSquared(bottomPoint, b);
         return distA - distB;
       }
-      
+
       return angleA - angleB;
     });
 
     // Build convex hull
     const hull: Point[] = [bottomPoint];
-    
+
     for (const point of sortedPoints) {
       // Remove points that create clockwise turns
       while (hull.length > 1 && this.crossProduct(hull[hull.length - 2], hull[hull.length - 1], point) <= 0) {
@@ -308,7 +325,7 @@ export class ConvexHull {
     if (points.length < 3) return points;
 
     const hull: Point[] = [];
-    
+
     // Find the leftmost point
     let leftmostIndex = 0;
     for (let i = 1; i < points.length; i++) {
@@ -318,19 +335,19 @@ export class ConvexHull {
     }
 
     let currentIndex = leftmostIndex;
-    
+
     do {
       hull.push(points[currentIndex]);
-      
+
       let nextIndex = (currentIndex + 1) % points.length;
-      
+
       // Find the point that makes the smallest right turn
       for (let i = 0; i < points.length; i++) {
         if (this.crossProduct(points[currentIndex], points[i], points[nextIndex]) > 0) {
           nextIndex = i;
         }
       }
-      
+
       currentIndex = nextIndex;
     } while (currentIndex !== leftmostIndex);
 
@@ -346,7 +363,7 @@ export class ConvexHull {
     // Find leftmost and rightmost points
     let leftmostIndex = 0;
     let rightmostIndex = 0;
-    
+
     for (let i = 1; i < points.length; i++) {
       if (points[i].x < points[leftmostIndex].x) {
         leftmostIndex = i;
@@ -365,7 +382,7 @@ export class ConvexHull {
 
     for (const point of points) {
       if (point === leftmost || point === rightmost) continue;
-      
+
       const cross = this.crossProduct(leftmost, rightmost, point);
       if (cross > 0) {
         leftSet.push(point);
@@ -401,8 +418,7 @@ export class ConvexHull {
     // Build lower hull
     const lower: Point[] = [];
     for (const point of sortedPoints) {
-      while (lower.length >= 2 && 
-             this.crossProduct(lower[lower.length - 2], lower[lower.length - 1], point) <= 0) {
+      while (lower.length >= 2 && this.crossProduct(lower[lower.length - 2], lower[lower.length - 1], point) <= 0) {
         lower.pop();
       }
       lower.push(point);
@@ -412,8 +428,7 @@ export class ConvexHull {
     const upper: Point[] = [];
     for (let i = sortedPoints.length - 1; i >= 0; i--) {
       const point = sortedPoints[i];
-      while (upper.length >= 2 && 
-             this.crossProduct(upper[upper.length - 2], upper[upper.length - 1], point) <= 0) {
+      while (upper.length >= 2 && this.crossProduct(upper[upper.length - 2], upper[upper.length - 1], point) <= 0) {
         upper.pop();
       }
       upper.push(point);
@@ -442,7 +457,7 @@ export class ConvexHull {
 
     for (let i = 0; i < points.length; i++) {
       const point = points[i];
-      if (!point || typeof point.x !== 'number' || typeof point.y !== 'number') {
+      if (!point || typeof point.x !== "number" || typeof point.y !== "number") {
         throw new Error(`Invalid point at index ${i}: must have x and y properties`);
       }
 
@@ -478,7 +493,7 @@ export class ConvexHull {
 
   private generateEdges(hull: Point[]): HullEdge[] {
     const edges: HullEdge[] = [];
-    
+
     for (let i = 0; i < hull.length; i++) {
       const start = hull[i];
       const end = hull[(i + 1) % hull.length];
@@ -518,17 +533,17 @@ export class ConvexHull {
     }
 
     const maxPoint = points[maxIndex];
-    
+
     // Divide points into two sets
     const leftSet: Point[] = [];
     const rightSet: Point[] = [];
 
     for (const point of points) {
       if (point === maxPoint) continue;
-      
+
       const cross1 = this.crossProduct(p1, maxPoint, point);
       const cross2 = this.crossProduct(maxPoint, p2, point);
-      
+
       if (cross1 > 0) {
         leftSet.push(point);
       } else if (cross2 > 0) {
@@ -626,9 +641,7 @@ export class ConvexHull {
     for (const point1 of hull1) {
       let minDistance = Infinity;
       for (const point2 of hull2) {
-        const distance = Math.sqrt(
-          (point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2
-        );
+        const distance = Math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2);
         minDistance = Math.min(minDistance, distance);
       }
       maxDistance = Math.max(maxDistance, minDistance);
@@ -637,9 +650,7 @@ export class ConvexHull {
     for (const point2 of hull2) {
       let minDistance = Infinity;
       for (const point1 of hull1) {
-        const distance = Math.sqrt(
-          (point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2
-        );
+        const distance = Math.sqrt((point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2);
         minDistance = Math.min(minDistance, distance);
       }
       maxDistance = Math.max(maxDistance, minDistance);
@@ -655,8 +666,10 @@ export class ConvexHull {
     for (const point1 of hull1) {
       let found = false;
       for (const point2 of hull2) {
-        if (Math.abs(point1.x - point2.x) < this.config.tolerance! &&
-            Math.abs(point1.y - point2.y) < this.config.tolerance!) {
+        if (
+          Math.abs(point1.x - point2.x) < this.config.tolerance! &&
+          Math.abs(point1.y - point2.y) < this.config.tolerance!
+        ) {
           found = true;
           break;
         }

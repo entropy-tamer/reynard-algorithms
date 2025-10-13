@@ -19,4 +19,3 @@ export type {
   BloomFilterSerialization,
   HashFunctionGeneratorOptions,
 } from "./bloom-filter-types";
-

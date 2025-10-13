@@ -7,7 +7,18 @@ import {
   OptimizationConfig,
   cleanup,
 } from "../optimized";
-import type { AABB } from "../computational-geometry/collision/aabb-types";
+import type { AABB } from "../geometry/collision/aabb/aabb-types";
+import type { SpatialObjectData } from "../types/spatial-types";
+
+// Helper function to create test spatial data
+function createTestSpatialData(id: string, category: "entity" | "obstacle" | "trigger" | "decoration" = "entity"): SpatialObjectData {
+  return {
+    id,
+    type: "test",
+    category,
+    properties: { test: true }
+  };
+}
 
 describe("Optimized Algorithms API", () => {
   beforeEach(() => {
@@ -131,18 +142,18 @@ describe("Optimized Algorithms API", () => {
   describe("spatial data management", () => {
     it("should create spatial data structures", () => {
       const spatialObjects = [
-        { aabb: { x: 0, y: 0, width: 10, height: 10 }, data: "object1" },
-        { aabb: { x: 20, y: 20, width: 5, height: 5 }, data: "object2" },
+        { aabb: { x: 0, y: 0, width: 10, height: 10 }, data: createTestSpatialData("object1") },
+        { aabb: { x: 20, y: 20, width: 5, height: 5 }, data: createTestSpatialData("object2") },
       ];
 
       expect(spatialObjects).toHaveLength(2);
-      expect(spatialObjects[0].data).toBe("object1");
+      expect(spatialObjects[0].data.id).toBe("object1");
     });
 
     it("should query spatial data", () => {
       const spatialObjects = [
-        { aabb: { x: 0, y: 0, width: 10, height: 10 }, data: "object1" },
-        { aabb: { x: 20, y: 20, width: 5, height: 5 }, data: "object2" },
+        { aabb: { x: 0, y: 0, width: 10, height: 10 }, data: createTestSpatialData("object1") },
+        { aabb: { x: 20, y: 20, width: 5, height: 5 }, data: createTestSpatialData("object2") },
       ];
 
       const queryAABB: AABB = { x: 5, y: 5, width: 10, height: 10 };
@@ -153,7 +164,7 @@ describe("Optimized Algorithms API", () => {
     });
 
     it("should update spatial data", () => {
-      const spatialObjects = [{ aabb: { x: 0, y: 0, width: 10, height: 10 }, data: "object1" }];
+      const spatialObjects = [{ aabb: { x: 0, y: 0, width: 10, height: 10 }, data: createTestSpatialData("object1") }];
 
       // Simulate updating an object's position
       spatialObjects[0].aabb.x = 10;
@@ -164,31 +175,31 @@ describe("Optimized Algorithms API", () => {
     });
 
     it("should add to spatial data", () => {
-      const spatialObjects: Array<{ aabb: AABB; data: any }> = [];
+      const spatialObjects: Array<{ aabb: AABB; data: SpatialObjectData }> = [];
 
       spatialObjects.push({
         aabb: { x: 0, y: 0, width: 10, height: 10 },
-        data: "new",
+        data: createTestSpatialData("new"),
       });
 
       expect(spatialObjects).toHaveLength(1);
-      expect(spatialObjects[0].data).toBe("new");
+      expect(spatialObjects[0].data.id).toBe("new");
     });
 
     it("should remove from spatial data", () => {
       const spatialObjects = [
-        { aabb: { x: 0, y: 0, width: 10, height: 10 }, data: "object1" },
-        { aabb: { x: 20, y: 20, width: 5, height: 5 }, data: "object2" },
+        { aabb: { x: 0, y: 0, width: 10, height: 10 }, data: createTestSpatialData("object1") },
+        { aabb: { x: 20, y: 20, width: 5, height: 5 }, data: createTestSpatialData("object2") },
       ];
 
       spatialObjects.splice(0, 1);
 
       expect(spatialObjects).toHaveLength(1);
-      expect(spatialObjects[0].data).toBe("object2");
+      expect(spatialObjects[0].data.id).toBe("object2");
     });
 
     it("should handle spatial data with empty arrays", () => {
-      const spatialObjects: Array<{ aabb: AABB; data: any }> = [];
+      const spatialObjects: Array<{ aabb: AABB; data: SpatialObjectData }> = [];
       const queryAABB: AABB = { x: 0, y: 0, width: 10, height: 10 };
 
       const nearby = performSpatialQuery(queryAABB, spatialObjects);
@@ -379,8 +390,8 @@ describe("Optimized Algorithms API", () => {
 
       // Create spatial objects to trigger globalMemoryPool and globalAlgorithmSelector creation
       const spatialObjects = [
-        { aabb: { x: 0, y: 0, width: 10, height: 10 }, data: "object1" },
-        { aabb: { x: 5, y: 5, width: 10, height: 10 }, data: "object2" },
+        { aabb: { x: 0, y: 0, width: 10, height: 10 }, data: createTestSpatialData("object1") },
+        { aabb: { x: 5, y: 5, width: 10, height: 10 }, data: createTestSpatialData("object2") },
       ];
 
       // This will create globalMemoryPool and globalAlgorithmSelector
@@ -444,8 +455,8 @@ describe("Optimized Algorithms API", () => {
 
     it("should handle query bounds with zero dimensions", () => {
       const spatialObjects = [
-        { aabb: { x: 0, y: 0, width: 10, height: 10 }, data: "obj1" },
-        { aabb: { x: 5, y: 5, width: 10, height: 10 }, data: "obj2" },
+        { aabb: { x: 0, y: 0, width: 10, height: 10 }, data: createTestSpatialData("obj1") },
+        { aabb: { x: 5, y: 5, width: 10, height: 10 }, data: createTestSpatialData("obj2") },
       ];
       const query = { x: 0, y: 0, width: 0, height: 0 };
       const results = performSpatialQuery(query, spatialObjects);
@@ -454,8 +465,8 @@ describe("Optimized Algorithms API", () => {
 
     it("should handle query bounds with negative dimensions", () => {
       const spatialObjects = [
-        { aabb: { x: 0, y: 0, width: 10, height: 10 }, data: "obj1" },
-        { aabb: { x: 5, y: 5, width: 10, height: 10 }, data: "obj2" },
+        { aabb: { x: 0, y: 0, width: 10, height: 10 }, data: createTestSpatialData("obj1") },
+        { aabb: { x: 5, y: 5, width: 10, height: 10 }, data: createTestSpatialData("obj2") },
       ];
       const query = { x: 0, y: 0, width: -10, height: -10 };
       const results = performSpatialQuery(query, spatialObjects);
@@ -465,11 +476,15 @@ describe("Optimized Algorithms API", () => {
     it("should handle configuration with extreme values", () => {
       expect(() =>
         configureOptimization({
-          spatialHashCellSize: 0.001,
-          maxCollisionChecks: 1e6,
           enableAlgorithmSelection: true,
           enableMemoryPooling: true,
-          enablePerformanceTracking: true,
+          enablePerformanceMonitoring: true,
+          algorithmSelectionStrategy: "adaptive",
+          performanceThresholds: {
+            maxExecutionTime: 1e6,
+            maxMemoryUsage: 1e6,
+            minHitRate: 0.001,
+          },
         })
       ).not.toThrow();
     });
@@ -477,8 +492,9 @@ describe("Optimized Algorithms API", () => {
     it("should handle multiple rapid configuration changes", () => {
       for (let i = 0; i < 100; i++) {
         configureOptimization({
-          spatialHashCellSize: Math.random() * 100,
-          maxCollisionChecks: Math.floor(Math.random() * 10000),
+          enableAlgorithmSelection: Math.random() > 0.5,
+          enableMemoryPooling: Math.random() > 0.5,
+          algorithmSelectionStrategy: ["naive", "spatial", "optimized", "adaptive"][Math.floor(Math.random() * 4)] as "naive" | "spatial" | "optimized" | "adaptive",
         });
       }
       expect(() => detectCollisions([{ x: 0, y: 0, width: 10, height: 10 }])).not.toThrow();
@@ -513,7 +529,7 @@ describe("Optimized Algorithms API", () => {
 
       const largeSpatialObjects = Array.from({ length: 100 }, (_, i) => ({
         aabb: { x: i * 0.1, y: i * 0.1, width: 0.1, height: 0.1 },
-        data: `obj${i}`,
+        data: createTestSpatialData(`obj${i}`),
       }));
 
       expect(() => detectCollisions(largeAABBs)).not.toThrow();
@@ -540,38 +556,60 @@ describe("Optimized Algorithms API", () => {
       // Test configuration with various edge cases to cover more lines
       expect(() =>
         configureOptimization({
-          spatialHashCellSize: 0.001,
-          maxCollisionChecks: 1e6,
           enableAlgorithmSelection: true,
           enableMemoryPooling: true,
-          enablePerformanceTracking: true,
+          enablePerformanceMonitoring: true,
+          algorithmSelectionStrategy: "adaptive",
+          performanceThresholds: {
+            maxExecutionTime: 1e6,
+            maxMemoryUsage: 1e6,
+            minHitRate: 0.001,
+          },
         })
       ).not.toThrow();
 
       // Test configuration with extreme values
       expect(() =>
         configureOptimization({
-          spatialHashCellSize: 1e-10,
-          maxCollisionChecks: 1e9,
           enableAlgorithmSelection: false,
           enableMemoryPooling: false,
-          enablePerformanceTracking: false,
+          enablePerformanceMonitoring: false,
+          algorithmSelectionStrategy: "naive",
+          performanceThresholds: {
+            maxExecutionTime: 1e9,
+            maxMemoryUsage: 1e9,
+            minHitRate: 1e-10,
+          },
         })
       ).not.toThrow();
 
-      // Test configuration with NaN values
+      // Test configuration with NaN values in performance thresholds
       expect(() =>
         configureOptimization({
-          spatialHashCellSize: NaN,
-          maxCollisionChecks: NaN,
+          enableAlgorithmSelection: true,
+          enableMemoryPooling: true,
+          enablePerformanceMonitoring: true,
+          algorithmSelectionStrategy: "spatial",
+          performanceThresholds: {
+            maxExecutionTime: NaN,
+            maxMemoryUsage: NaN,
+            minHitRate: NaN,
+          },
         })
       ).not.toThrow();
 
-      // Test configuration with Infinity values
+      // Test configuration with Infinity values in performance thresholds
       expect(() =>
         configureOptimization({
-          spatialHashCellSize: Infinity,
-          maxCollisionChecks: Infinity,
+          enableAlgorithmSelection: true,
+          enableMemoryPooling: true,
+          enablePerformanceMonitoring: true,
+          algorithmSelectionStrategy: "optimized",
+          performanceThresholds: {
+            maxExecutionTime: Infinity,
+            maxMemoryUsage: Infinity,
+            minHitRate: Infinity,
+          },
         })
       ).not.toThrow();
     });

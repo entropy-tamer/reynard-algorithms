@@ -159,13 +159,13 @@ export interface AStarStats {
  * Event types for A* algorithm
  */
 export enum AStarEventType {
-  PATHFINDING_STARTED = 'pathfinding_started',
-  PATHFINDING_COMPLETED = 'pathfinding_completed',
-  NODE_EXPLORED = 'node_explored',
-  PATH_FOUND = 'path_found',
-  PATH_NOT_FOUND = 'path_not_found',
-  CACHE_HIT = 'cache_hit',
-  CACHE_MISS = 'cache_miss',
+  PATHFINDING_STARTED = "pathfinding_started",
+  PATHFINDING_COMPLETED = "pathfinding_completed",
+  NODE_EXPLORED = "node_explored",
+  PATH_FOUND = "path_found",
+  PATH_NOT_FOUND = "path_not_found",
+  CACHE_HIT = "cache_hit",
+  CACHE_MISS = "cache_miss",
 }
 
 /**

@@ -2,26 +2,12 @@
  * PAW Debug Test - Investigate algorithm selection
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach } from "vitest";
 import { detectCollisions, configureOptimization, cleanup } from "../optimized";
 import { analyzeWorkload } from "../optimization/adapters/workload-analyzer";
 import { AlgorithmSelector } from "../optimization/core/algorithm-selector";
 import { generateRandomAABBs } from "./paw-optimization-benchmark.test";
 
-// Helper function from the benchmark test
-function generateRandomAABBs(count: number, worldSize: number = 1000): any[] {
-  const aabbs: any[] = [];
-  for (let i = 0; i < count; i++) {
-    const size = Math.random() * 50 + 10; // 10-60 size
-    aabbs.push({
-      x: Math.random() * (worldSize - size),
-      y: Math.random() * (worldSize - size),
-      width: size,
-      height: size,
-    });
-  }
-  return aabbs;
-}
 
 describe("PAW Debug Investigation", () => {
   beforeEach(() => {

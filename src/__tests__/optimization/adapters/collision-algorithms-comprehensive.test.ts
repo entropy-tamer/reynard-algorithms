@@ -7,13 +7,13 @@ import {
   executeSpatialCollisionDetection,
   executeOptimizedCollisionDetection,
 } from "../../../optimization/adapters/collision-algorithms";
-import { EnhancedMemoryPool } from "../../../optimization/core/enhanced-memory-pool";
+import { MemoryPool } from "../../../optimization/core/enhanced-memory-pool";
 
 describe("Collision Algorithms Comprehensive Coverage", () => {
-  let memoryPool: EnhancedMemoryPool;
+  let memoryPool: MemoryPool;
 
   beforeEach(() => {
-    memoryPool = new EnhancedMemoryPool();
+    memoryPool = new MemoryPool();
   });
 
   afterEach(() => {
