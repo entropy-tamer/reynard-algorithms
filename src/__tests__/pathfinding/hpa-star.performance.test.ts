@@ -101,12 +101,12 @@ describe("HPAStar Performance", () => {
       const goals = [{ x: 49, y: 49 }];
 
       const startTime = performance.now();
-      
+
       for (const start of starts) {
         const result = hpaStar.findPath(start, goals, grid, options);
         expect(result.success).toBe(true);
       }
-      
+
       const endTime = performance.now();
 
       expect(endTime - startTime).toBeLessThan(2000); // Should complete within 2 seconds
@@ -135,7 +135,7 @@ describe("HPAStar Performance", () => {
   describe("clustering performance", () => {
     it("should generate clusters quickly", () => {
       const grid = HPAStarUtils.generateTestGrid(100, 100, 0.3, 12345);
-      
+
       const startTime = performance.now();
       const clusters = hpaStar.generateClusters(grid);
       const endTime = performance.now();
@@ -151,7 +151,7 @@ describe("HPAStar Performance", () => {
       for (const clusterSize of clusterSizes) {
         const testConfig = { ...config, clusterSize };
         const testHPA = new HPAStar(testConfig);
-        
+
         const startTime = performance.now();
         const clusters = testHPA.generateClusters(grid);
         const endTime = performance.now();
@@ -166,7 +166,7 @@ describe("HPAStar Performance", () => {
     it("should build abstract graph quickly", () => {
       const grid = HPAStarUtils.generateTestGrid(100, 100, 0.3, 12345);
       const clusters = hpaStar.generateClusters(grid);
-      
+
       const startTime = performance.now();
       const abstractGraph = hpaStar.buildAbstractGraph(clusters, grid);
       const endTime = performance.now();
@@ -179,7 +179,7 @@ describe("HPAStar Performance", () => {
     it("should handle complex abstract graphs efficiently", () => {
       const grid = HPAStarUtils.generatePatternGrid(100, 100, "maze", 12345);
       const clusters = hpaStar.generateClusters(grid);
-      
+
       const startTime = performance.now();
       const abstractGraph = hpaStar.buildAbstractGraph(clusters, grid);
       const endTime = performance.now();
@@ -200,7 +200,7 @@ describe("HPAStar Performance", () => {
         { x: 50, y: 50 },
         { x: 99, y: 99 },
       ];
-      
+
       const startTime = performance.now();
       const refinedPath = hpaStar.refinePath(abstractPath, clusters, grid);
       const endTime = performance.now();
@@ -213,13 +213,13 @@ describe("HPAStar Performance", () => {
       const grid = HPAStarUtils.generateTestGrid(100, 100, 0.3, 12345);
       const clusters = hpaStar.generateClusters(grid);
       const abstractGraph = hpaStar.buildAbstractGraph(clusters, grid);
-      
+
       // Create a long abstract path
       const abstractPath: Point[] = [];
       for (let i = 0; i < 20; i++) {
         abstractPath.push({ x: i * 5, y: i * 5 });
       }
-      
+
       const startTime = performance.now();
       const refinedPath = hpaStar.refinePath(abstractPath, clusters, grid);
       const endTime = performance.now();
@@ -243,7 +243,7 @@ describe("HPAStar Performance", () => {
 
       // Clear cache to free memory
       hpaStar.clearCache();
-      
+
       // Statistics should be maintained
       const stats = hpaStar.getStatistics();
       expect(stats.totalPathsFound).toBeGreaterThan(0);

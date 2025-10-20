@@ -184,6 +184,12 @@ describe("Union-Find Types", () => {
 
   describe("type usage patterns", () => {
     it("should support node creation patterns", () => {
+      /**
+       *
+       * @param parent
+       * @param rank
+       * @example
+       */
       function createUnionFindNode(parent: number, rank: number = 0): UnionFindNode {
         return { parent, rank };
       }
@@ -198,6 +204,11 @@ describe("Union-Find Types", () => {
     });
 
     it("should support statistics aggregation", () => {
+      /**
+       *
+       * @param statsArray
+       * @example
+       */
       function aggregateStats(statsArray: UnionFindStats[]): UnionFindStats {
         const total = statsArray.length;
 
@@ -240,6 +251,11 @@ describe("Union-Find Types", () => {
     });
 
     it("should support tree analysis functions", () => {
+      /**
+       *
+       * @param stats
+       * @example
+       */
       function analyzeTreeHealth(stats: UnionFindStats): {
         isWellOptimized: boolean;
         compressionEfficiency: number;
@@ -273,6 +289,11 @@ describe("Union-Find Types", () => {
     });
 
     it("should support array operations", () => {
+      /**
+       *
+       * @param size
+       * @example
+       */
       function createNodeArray(size: number): UnionFindNode[] {
         return Array.from({ length: size }, (_, i) => ({
           parent: i, // Initially each node is its own parent
@@ -292,6 +313,12 @@ describe("Union-Find Types", () => {
 
   describe("validation patterns", () => {
     it("should validate node consistency", () => {
+      /**
+       *
+       * @param node
+       * @param maxIndex
+       * @example
+       */
       function isValidNode(node: UnionFindNode, maxIndex: number): boolean {
         return node.parent >= 0 && node.parent <= maxIndex && node.rank >= 0;
       }
@@ -306,6 +333,11 @@ describe("Union-Find Types", () => {
     });
 
     it("should validate statistics consistency", () => {
+      /**
+       *
+       * @param stats
+       * @example
+       */
       function isValidStats(stats: UnionFindStats): boolean {
         return (
           stats.totalNodes >= 0 &&

@@ -67,11 +67,20 @@ export type { FenwickTreeConfig, FenwickTreeStats } from "./data-structures/fenw
 
 // Interval Tree
 export { IntervalTree } from "./data-structures/interval-tree/interval-tree-core";
-export type { Interval, IntervalTreeNode, IntervalTreeConfig, IntervalTreeStats } from "./data-structures/interval-tree/interval-tree-types";
+export type {
+  Interval,
+  IntervalTreeNode,
+  IntervalTreeConfig,
+  IntervalTreeStats,
+} from "./data-structures/interval-tree/interval-tree-types";
 
 // Segment Tree
 export { SegmentTree } from "./data-structures/segment-tree/segment-tree-core";
-export type { SegmentTreeNode, SegmentTreeConfig, SegmentTreeStats } from "./data-structures/segment-tree/segment-tree-types";
+export type {
+  SegmentTreeNode,
+  SegmentTreeConfig,
+  SegmentTreeStats,
+} from "./data-structures/segment-tree/segment-tree-types";
 
 // ============================================================================
 // SPATIAL STRUCTURES
@@ -291,7 +300,11 @@ export type {
 
 // Line Segment Intersection
 export { LineIntersection } from "./geometry/algorithms/line-intersection/line-intersection-core";
-export { SweepLineEventQueue, SweepLineStatusStructure, SweepLineUtils } from "./geometry/algorithms/line-intersection/sweep-line";
+export {
+  SweepLineEventQueue,
+  SweepLineStatusStructure,
+  SweepLineUtils,
+} from "./geometry/algorithms/line-intersection/sweep-line";
 export type {
   Point as LineIntersectionPoint,
   LineSegment as LineIntersectionLineSegment,
@@ -600,10 +613,10 @@ export { PerformanceBudgetChecker } from "./performance/budget";
 
 // Memory Pool utilities
 export { MemoryPool } from "./performance/memory-pool-core";
-export type { 
-  PooledObject, 
-  PerformanceMemoryPoolConfig, 
-  PerformanceMemoryPoolStats 
+export type {
+  PooledObject,
+  PerformanceMemoryPoolConfig,
+  PerformanceMemoryPoolStats,
 } from "./performance/memory-pool-core";
 export * from "./performance/memory-pool-utils";
 
@@ -626,14 +639,15 @@ export type { Projection, SATCollisionResult } from "./geometry/collision/sat/sa
 
 // Sweep and Prune Broad-Phase Collision Detection
 export { SweepPrune } from "./geometry/collision/sweep-prune/sweep-prune-core";
-export type { AABB as SweepPruneAABB, Endpoint, SweepPruneConfig, SweepPruneResult } from "./geometry/collision/sweep-prune/sweep-prune-types";
+export type {
+  AABB as SweepPruneAABB,
+  Endpoint,
+  SweepPruneConfig,
+  SweepPruneResult,
+} from "./geometry/collision/sweep-prune/sweep-prune-types";
 
 // AABB collision detection types and functions
-export type {
-  AABB as AABBCollision,
-  CollisionPair,
-  CollisionResult,
-} from "./geometry/collision/aabb/aabb-types";
+export type { AABB as AABBCollision, CollisionPair, CollisionResult } from "./geometry/collision/aabb/aabb-types";
 export {
   checkCollision,
   batchCollisionDetection,
@@ -647,9 +661,7 @@ export {
 } from "./geometry/collision/aabb";
 
 // Spatial collision optimization
-export {
-  SpatialCollisionOptimizer,
-} from "./geometry/collision/optimization";
+export { SpatialCollisionOptimizer } from "./geometry/collision/optimization";
 
 // ============================================================================
 // OPTIMIZATION FRAMEWORK

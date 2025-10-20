@@ -25,6 +25,7 @@ describe("JPS Performance", () => {
    * @param height - Grid height.
    * @param obstacleRatio - Ratio of obstacles (0-1).
    * @returns Generated grid.
+   * @example
    */
   function generateRandomGrid(width: number, height: number, obstacleRatio: number = 0.3): CellType[] {
     return JPSUtils.generateTestGrid(width, height, obstacleRatio);
@@ -35,10 +36,11 @@ describe("JPS Performance", () => {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns Maze grid.
+   * @example
    */
   function generateMazeGrid(width: number, height: number): CellType[] {
     const grid: CellType[] = new Array(width * height).fill(0);
-    
+
     // Create walls around the border
     for (let x = 0; x < width; x++) {
       grid[0 * width + x] = 1; // Top wall
@@ -48,14 +50,14 @@ describe("JPS Performance", () => {
       grid[y * width + 0] = 1; // Left wall
       grid[y * width + (width - 1)] = 1; // Right wall
     }
-    
+
     // Add some internal obstacles
     for (let i = 0; i < width * height * 0.1; i++) {
       const x = Math.floor(Math.random() * (width - 2)) + 1;
       const y = Math.floor(Math.random() * (height - 2)) + 1;
       grid[y * width + x] = 1;
     }
-    
+
     return grid;
   }
 
@@ -64,6 +66,7 @@ describe("JPS Performance", () => {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns Sparse grid.
+   * @example
    */
   function generateSparseGrid(width: number, height: number): CellType[] {
     return generateRandomGrid(width, height, 0.1);
@@ -74,6 +77,7 @@ describe("JPS Performance", () => {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns Dense grid.
+   * @example
    */
   function generateDenseGrid(width: number, height: number): CellType[] {
     return generateRandomGrid(width, height, 0.6);
@@ -209,7 +213,7 @@ describe("JPS Performance", () => {
   describe("Movement Type Performance", () => {
     it("should handle cardinal movement efficiently", () => {
       jps.updateConfig({ allowDiagonal: false, movementType: "cardinal" as any });
-      
+
       const grid = generateRandomGrid(100, 100, 0.2);
       const start: Point = { x: 0, y: 0 };
       const goal: Point = { x: 99, y: 99 };
@@ -224,7 +228,7 @@ describe("JPS Performance", () => {
 
     it("should handle diagonal movement efficiently", () => {
       jps.updateConfig({ allowDiagonal: true, movementType: "all" as any });
-      
+
       const grid = generateRandomGrid(100, 100, 0.2);
       const start: Point = { x: 0, y: 0 };
       const goal: Point = { x: 99, y: 99 };
@@ -258,7 +262,7 @@ describe("JPS Performance", () => {
 
       expect(result1.found).toBe(true);
       expect(result2.found).toBe(true);
-      
+
       // Diagonal should generally be faster due to shorter paths
       expect(time2).toBeLessThan(time1 * 2); // Diagonal shouldn't be more than 2x slower
     });
@@ -267,7 +271,7 @@ describe("JPS Performance", () => {
   describe("Caching Performance", () => {
     it("should benefit from caching on repeated queries", () => {
       jps.updateConfig({ enableCaching: true });
-      
+
       const grid = generateRandomGrid(100, 100, 0.2);
       const start: Point = { x: 0, y: 0 };
       const goal: Point = { x: 99, y: 99 };
@@ -291,7 +295,7 @@ describe("JPS Performance", () => {
 
     it("should handle multiple cached queries efficiently", () => {
       jps.updateConfig({ enableCaching: true });
-      
+
       const grid = generateRandomGrid(100, 100, 0.2);
       const queries = [
         { start: { x: 0, y: 0 }, goal: { x: 99, y: 99 } },
@@ -300,13 +304,13 @@ describe("JPS Performance", () => {
       ];
 
       const startTime = performance.now();
-      
+
       for (let i = 0; i < 10; i++) {
         for (const query of queries) {
           jps.findPath(grid, 100, 100, query.start, query.goal);
         }
       }
-      
+
       const endTime = performance.now();
 
       expect(endTime - startTime).toBeLessThan(1000); // Should complete quickly with caching
@@ -333,10 +337,10 @@ describe("JPS Performance", () => {
       const goal: Point = { x: 199, y: 199 };
 
       const _result = jps.findPath(grid, 200, 200, start, goal, { optimizePath: true });
-      
+
       expect(_result.found).toBe(true);
       expect(_result.path.length).toBeGreaterThan(0);
-      
+
       // Path should be reasonably optimized
       expect(_result.path.length).toBeLessThan(400); // Should be less than naive path length
     });
@@ -364,7 +368,7 @@ describe("JPS Performance", () => {
       const goal: Point = { x: 99, y: 99 };
 
       const _result = jps.findPath(grid, 100, 100, start, goal, { returnExplored: true });
-      
+
       // Even if no path is found, should handle large exploration efficiently
       expect(_result.stats.nodesExplored).toBeGreaterThan(0);
       expect(_result.stats.executionTime).toBeLessThan(500);
@@ -374,18 +378,18 @@ describe("JPS Performance", () => {
   describe("Memory Usage", () => {
     it("should not leak memory during repeated pathfinding", () => {
       const grid = generateRandomGrid(100, 100, 0.2);
-      
+
       // Perform many pathfinding operations
       for (let i = 0; i < 100; i++) {
-        const start: Point = { 
-          x: Math.floor(Math.random() * 100), 
-          y: Math.floor(Math.random() * 100) 
+        const start: Point = {
+          x: Math.floor(Math.random() * 100),
+          y: Math.floor(Math.random() * 100),
         };
-        const goal: Point = { 
-          x: Math.floor(Math.random() * 100), 
-          y: Math.floor(Math.random() * 100) 
+        const goal: Point = {
+          x: Math.floor(Math.random() * 100),
+          y: Math.floor(Math.random() * 100),
         };
-        
+
         jps.findPath(grid, 100, 100, start, goal);
       }
 
@@ -410,23 +414,23 @@ describe("JPS Performance", () => {
   describe("Stress Tests", () => {
     it("should handle rapid successive pathfinding", () => {
       const grid = generateRandomGrid(100, 100, 0.2);
-      
+
       const startTime = performance.now();
-      
+
       // Rapidly find paths between random points
       for (let i = 0; i < 50; i++) {
-        const start: Point = { 
-          x: Math.floor(Math.random() * 100), 
-          y: Math.floor(Math.random() * 100) 
+        const start: Point = {
+          x: Math.floor(Math.random() * 100),
+          y: Math.floor(Math.random() * 100),
         };
-        const goal: Point = { 
-          x: Math.floor(Math.random() * 100), 
-          y: Math.floor(Math.random() * 100) 
+        const goal: Point = {
+          x: Math.floor(Math.random() * 100),
+          y: Math.floor(Math.random() * 100),
         };
-        
+
         jps.findPath(grid, 100, 100, start, goal);
       }
-      
+
       const endTime = performance.now();
 
       expect(endTime - startTime).toBeLessThan(1000); // Should handle rapid queries
@@ -438,7 +442,7 @@ describe("JPS Performance", () => {
       const goal: Point = { x: 99, y: 99 };
 
       // Find the same path multiple times
-      let results: any[] = [];
+      const results: any[] = [];
       for (let i = 0; i < 10; i++) {
         results.push(jps.findPath(grid, 100, 100, start, goal));
       }
@@ -468,7 +472,7 @@ describe("JPS Performance", () => {
 
     it("should handle maximum iterations gracefully", () => {
       jps.updateConfig({ maxIterations: 100 });
-      
+
       const grid = generateDenseGrid(100, 100);
       const start: Point = { x: 0, y: 0 };
       const goal: Point = { x: 99, y: 99 };
@@ -504,7 +508,7 @@ describe("JPS Performance", () => {
       const goal: Point = { x: 98, y: 98 };
 
       const _result = jps.findPath(grid, 100, 100, start, goal);
-      
+
       expect(_result.stats.jumpPointsFound).toBeGreaterThan(0);
       expect(_result.stats.jumpPointsFound).toBeLessThan(_result.stats.nodesExplored); // Should find fewer jump points than total nodes
     });
@@ -515,7 +519,7 @@ describe("JPS Performance", () => {
       const goal: Point = { x: 99, y: 99 };
 
       const _result = jps.findPath(grid, 100, 100, start, goal);
-      
+
       expect(_result.found).toBe(true);
       expect(_result.stats.executionTime).toBeLessThan(300);
     });

@@ -27,6 +27,7 @@ export class HPAClustering {
    * @param config - HPA configuration.
    * @param options - Cluster generation options.
    * @returns Cluster generation result.
+   * @example
    */
   static generateClusters(
     grid: CellType[],
@@ -57,18 +58,9 @@ export class HPAClustering {
         for (let x = 0; x < width; x += clusterSize) {
           const clusterWidth = Math.min(clusterSize, width - x);
           const clusterHeight = Math.min(clusterSize, height - y);
-          
-          const cluster = this.createCluster(
-            grid,
-            x,
-            y,
-            clusterWidth,
-            clusterHeight,
-            width,
-            height,
-            clusters.length
-          );
-          
+
+          const cluster = this.createCluster(grid, x, y, clusterWidth, clusterHeight, width, height, clusters.length);
+
           if (cluster) {
             clusters.push(cluster);
           }
@@ -124,6 +116,7 @@ export class HPAClustering {
    * @param gridHeight - Grid height.
    * @param clusterIndex - Cluster index.
    * @returns Created cluster or null if invalid.
+   * @example
    */
   private static createCluster(
     grid: CellType[],
@@ -149,7 +142,7 @@ export class HPAClustering {
             type: grid[index],
           };
           cells.push(cell);
-          
+
           if (grid[index] === CellType.WALKABLE) {
             walkableCells++;
           }
@@ -190,11 +183,9 @@ export class HPAClustering {
    * @param clusters - Clusters to process.
    * @param options - Processing options.
    * @returns Processed clusters.
+   * @example
    */
-  private static postProcessClusters(
-    clusters: Cluster[],
-    options: ClusterGenerationOptions
-  ): Cluster[] {
+  private static postProcessClusters(clusters: Cluster[], options: ClusterGenerationOptions): Cluster[] {
     let processedClusters = [...clusters];
 
     // Merge small clusters if requested
@@ -215,11 +206,9 @@ export class HPAClustering {
    * @param clusters - Clusters to process.
    * @param options - Processing options.
    * @returns Clusters with small ones merged.
+   * @example
    */
-  private static mergeSmallClusters(
-    clusters: Cluster[],
-    options: ClusterGenerationOptions
-  ): Cluster[] {
+  private static mergeSmallClusters(clusters: Cluster[], options: ClusterGenerationOptions): Cluster[] {
     const mergedClusters: Cluster[] = [];
     const processed = new Set<string>();
 
@@ -229,11 +218,11 @@ export class HPAClustering {
       }
 
       const walkableCells = cluster.cells.filter(cell => cell.type === CellType.WALKABLE).length;
-      
+
       if (walkableCells < options.smallClusterThreshold) {
         // Find best neighbor to merge with
         const bestNeighbor = this.findBestMergeNeighbor(cluster, clusters, processed);
-        
+
         if (bestNeighbor) {
           const mergedCluster = this.mergeClusters(cluster, bestNeighbor);
           mergedClusters.push(mergedCluster);
@@ -258,12 +247,9 @@ export class HPAClustering {
    * @param clusters - All clusters.
    * @param processed - Processed cluster IDs.
    * @returns Best neighbor or null.
+   * @example
    */
-  private static findBestMergeNeighbor(
-    cluster: Cluster,
-    clusters: Cluster[],
-    processed: Set<string>
-  ): Cluster | null {
+  private static findBestMergeNeighbor(cluster: Cluster, clusters: Cluster[], processed: Set<string>): Cluster | null {
     let bestNeighbor: Cluster | null = null;
     let bestScore = -1;
 
@@ -289,13 +275,16 @@ export class HPAClustering {
    * @param cluster1 - First cluster.
    * @param cluster2 - Second cluster.
    * @returns True if clusters are adjacent.
+   * @example
    */
   private static areClustersAdjacent(cluster1: Cluster, cluster2: Cluster): boolean {
     const dx = Math.abs(cluster1.x - cluster2.x);
     const dy = Math.abs(cluster1.y - cluster2.y);
-    
-    return (dx === cluster1.width && dy < cluster1.height + cluster2.height) ||
-           (dy === cluster1.height && dx < cluster1.width + cluster2.width);
+
+    return (
+      (dx === cluster1.width && dy < cluster1.height + cluster2.height) ||
+      (dy === cluster1.height && dx < cluster1.width + cluster2.width)
+    );
   }
 
   /**
@@ -303,18 +292,19 @@ export class HPAClustering {
    * @param cluster1 - First cluster.
    * @param cluster2 - Second cluster.
    * @returns Merge score.
+   * @example
    */
   private static calculateMergeScore(cluster1: Cluster, cluster2: Cluster): number {
     const walkable1 = cluster1.cells.filter(cell => cell.type === CellType.WALKABLE).length;
     const walkable2 = cluster2.cells.filter(cell => cell.type === CellType.WALKABLE).length;
-    
+
     // Prefer merging with clusters that have similar walkable cell counts
     const similarity = 1 - Math.abs(walkable1 - walkable2) / Math.max(walkable1, walkable2);
-    
+
     // Prefer merging with smaller clusters
-    const sizeRatio = Math.min(cluster1.cells.length, cluster2.cells.length) / 
-                     Math.max(cluster1.cells.length, cluster2.cells.length);
-    
+    const sizeRatio =
+      Math.min(cluster1.cells.length, cluster2.cells.length) / Math.max(cluster1.cells.length, cluster2.cells.length);
+
     return similarity * 0.7 + sizeRatio * 0.3;
   }
 
@@ -323,15 +313,16 @@ export class HPAClustering {
    * @param cluster1 - First cluster.
    * @param cluster2 - Second cluster.
    * @returns Merged cluster.
+   * @example
    */
   private static mergeClusters(cluster1: Cluster, cluster2: Cluster): Cluster {
     const minX = Math.min(cluster1.x, cluster2.x);
     const minY = Math.min(cluster1.y, cluster2.y);
     const maxX = Math.max(cluster1.x + cluster1.width, cluster2.x + cluster2.width);
     const maxY = Math.max(cluster1.y + cluster1.height, cluster2.y + cluster2.height);
-    
+
     const mergedCells = [...cluster1.cells, ...cluster2.cells];
-    
+
     return {
       id: `merged_${cluster1.id}_${cluster2.id}`,
       x: minX,
@@ -350,16 +341,14 @@ export class HPAClustering {
    * @param clusters - Clusters to process.
    * @param options - Processing options.
    * @returns Clusters with adaptive sizing applied.
+   * @example
    */
-  private static applyAdaptiveSizing(
-    clusters: Cluster[],
-    options: ClusterGenerationOptions
-  ): Cluster[] {
+  private static applyAdaptiveSizing(clusters: Cluster[], options: ClusterGenerationOptions): Cluster[] {
     // Simple adaptive sizing based on obstacle density
     return clusters.map(cluster => {
       const obstacleCount = cluster.cells.filter(cell => cell.type === CellType.OBSTACLE).length;
       const obstacleRatio = obstacleCount / cluster.cells.length;
-      
+
       // If obstacle ratio is high, consider it a small cluster
       if (obstacleRatio > 0.5) {
         return {
@@ -367,7 +356,7 @@ export class HPAClustering {
           type: ClusterType.BORDER,
         };
       }
-      
+
       return cluster;
     });
   }
@@ -379,6 +368,7 @@ export class HPAClustering {
    * @param config - HPA configuration.
    * @param options - Entrance detection options.
    * @returns Entrance detection result.
+   * @example
    */
   static detectEntrances(
     clusters: Cluster[],
@@ -406,7 +396,7 @@ export class HPAClustering {
         for (let j = i + 1; j < clusters.length; j++) {
           const cluster1 = clusters[i];
           const cluster2 = clusters[j];
-          
+
           if (this.areClustersAdjacent(cluster1, cluster2)) {
             const clusterEntrances = this.findEntrancesBetweenClusters(
               cluster1,
@@ -416,7 +406,7 @@ export class HPAClustering {
               entranceOptions,
               entranceIndex
             );
-            
+
             entrances.push(...clusterEntrances);
             entranceIndex += clusterEntrances.length;
           }
@@ -463,6 +453,7 @@ export class HPAClustering {
    * @param options - Entrance detection options.
    * @param startIndex - Starting entrance index.
    * @returns Array of entrances.
+   * @example
    */
   private static findEntrancesBetweenClusters(
     cluster1: Cluster,
@@ -477,30 +468,20 @@ export class HPAClustering {
 
     // Find the boundary between clusters
     const boundary = this.findClusterBoundary(cluster1, cluster2);
-    
+
     if (!boundary) {
       return entrances;
     }
 
     // Find walkable cells along the boundary
-    const walkableBoundaryCells = this.findWalkableBoundaryCells(
-      boundary,
-      grid,
-      config.width,
-      config.height
-    );
+    const walkableBoundaryCells = this.findWalkableBoundaryCells(boundary, grid, config.width, config.height);
 
     // Group walkable cells into entrance segments
-    const entranceSegments = this.groupIntoEntranceSegments(
-      walkableBoundaryCells,
-      options
-    );
+    const entranceSegments = this.groupIntoEntranceSegments(walkableBoundaryCells, options);
 
     // Create entrances from segments
     for (const segment of entranceSegments) {
-      if (segment.length >= options.minEntranceWidth && 
-          segment.length <= options.maxEntranceWidth) {
-        
+      if (segment.length >= options.minEntranceWidth && segment.length <= options.maxEntranceWidth) {
         const entrance: Entrance = {
           id: `entrance_${entranceIndex}`,
           x: segment[0].x,
@@ -510,7 +491,7 @@ export class HPAClustering {
           isBorder: this.isEntranceOnBorder(segment, config),
           cost: this.calculateEntranceCost(segment),
         };
-        
+
         entrances.push(entrance);
         entranceIndex++;
       }
@@ -524,6 +505,7 @@ export class HPAClustering {
    * @param cluster1 - First cluster.
    * @param cluster2 - Second cluster.
    * @returns Boundary information or null.
+   * @example
    */
   private static findClusterBoundary(
     cluster1: Cluster,
@@ -531,33 +513,39 @@ export class HPAClustering {
   ): { x1: number; y1: number; x2: number; y2: number; direction: "horizontal" | "vertical" } | null {
     const dx = Math.abs(cluster1.x - cluster2.x);
     const dy = Math.abs(cluster1.y - cluster2.y);
-    
+
     if (dx === cluster1.width && dy < cluster1.height + cluster2.height) {
       // Vertical boundary
       const x = Math.max(cluster1.x, cluster2.x);
       const y1 = Math.max(cluster1.y, cluster2.y);
       const y2 = Math.min(cluster1.y + cluster1.height, cluster2.y + cluster2.height);
-      
+
       return { x1: x, y1, x2: x, y2, direction: "vertical" };
     } else if (dy === cluster1.height && dx < cluster1.width + cluster2.width) {
       // Horizontal boundary
       const y = Math.max(cluster1.y, cluster2.y);
       const x1 = Math.max(cluster1.x, cluster2.x);
       const x2 = Math.min(cluster1.x + cluster1.width, cluster2.x + cluster2.width);
-      
+
       return { x1, y1: y, x2, y2: y, direction: "horizontal" };
     }
-    
+
     return null;
   }
 
   /**
    * Finds walkable cells along a boundary.
    * @param boundary - Boundary information.
+   * @param boundary.x1
    * @param grid - The grid.
+   * @param boundary.y1
    * @param gridWidth - Grid width.
+   * @param boundary.x2
    * @param gridHeight - Grid height.
+   * @param boundary.y2
+   * @param boundary.direction
    * @returns Array of walkable boundary cells.
+   * @example
    */
   private static findWalkableBoundaryCells(
     boundary: { x1: number; y1: number; x2: number; y2: number; direction: "horizontal" | "vertical" },
@@ -566,7 +554,7 @@ export class HPAClustering {
     gridHeight: number
   ): Point[] {
     const walkableCells: Point[] = [];
-    
+
     if (boundary.direction === "horizontal") {
       for (let x = boundary.x1; x <= boundary.x2; x++) {
         if (x >= 0 && x < gridWidth && boundary.y1 >= 0 && boundary.y1 < gridHeight) {
@@ -586,7 +574,7 @@ export class HPAClustering {
         }
       }
     }
-    
+
     return walkableCells;
   }
 
@@ -595,11 +583,9 @@ export class HPAClustering {
    * @param walkableCells - Walkable boundary cells.
    * @param options - Entrance detection options.
    * @returns Array of entrance segments.
+   * @example
    */
-  private static groupIntoEntranceSegments(
-    walkableCells: Point[],
-    options: EntranceDetectionOptions
-  ): Point[][] {
+  private static groupIntoEntranceSegments(walkableCells: Point[], options: EntranceDetectionOptions): Point[][] {
     if (walkableCells.length === 0) {
       return [];
     }
@@ -616,11 +602,10 @@ export class HPAClustering {
     for (let i = 1; i < walkableCells.length; i++) {
       const current = walkableCells[i];
       const previous = walkableCells[i - 1];
-      
+
       // Check if cells are adjacent
-      const isAdjacent = Math.abs(current.x - previous.x) <= 1 && 
-                        Math.abs(current.y - previous.y) <= 1;
-      
+      const isAdjacent = Math.abs(current.x - previous.x) <= 1 && Math.abs(current.y - previous.y) <= 1;
+
       if (isAdjacent) {
         currentSegment.push(current);
       } else {
@@ -628,9 +613,9 @@ export class HPAClustering {
         currentSegment = [current];
       }
     }
-    
+
     segments.push(currentSegment);
-    
+
     return segments;
   }
 
@@ -639,11 +624,11 @@ export class HPAClustering {
    * @param segment - Entrance segment.
    * @param config - HPA configuration.
    * @returns True if entrance is on border.
+   * @example
    */
   private static isEntranceOnBorder(segment: Point[], config: HPAConfig): boolean {
-    return segment.some(point => 
-      point.x === 0 || point.x === config.width - 1 ||
-      point.y === 0 || point.y === config.height - 1
+    return segment.some(
+      point => point.x === 0 || point.x === config.width - 1 || point.y === 0 || point.y === config.height - 1
     );
   }
 
@@ -651,6 +636,7 @@ export class HPAClustering {
    * Calculates the cost of an entrance.
    * @param segment - Entrance segment.
    * @returns Entrance cost.
+   * @example
    */
   private static calculateEntranceCost(segment: Point[]): number {
     // Simple cost based on segment length
@@ -662,22 +648,16 @@ export class HPAClustering {
    * @param clusters - Clusters to update.
    * @param entrances - All entrances.
    * @returns Updated clusters.
+   * @example
    */
-  private static updateClustersWithEntrances(
-    clusters: Cluster[],
-    entrances: Entrance[]
-  ): Cluster[] {
+  private static updateClustersWithEntrances(clusters: Cluster[], entrances: Entrance[]): Cluster[] {
     return clusters.map(cluster => {
-      const clusterEntrances = entrances.filter(entrance => 
-        entrance.connectedClusters.includes(cluster.id)
-      );
-      
+      const clusterEntrances = entrances.filter(entrance => entrance.connectedClusters.includes(cluster.id));
+
       return {
         ...cluster,
         entrances: clusterEntrances,
-        neighbors: clusterEntrances.flatMap(entrance => 
-          entrance.connectedClusters.filter(id => id !== cluster.id)
-        ),
+        neighbors: clusterEntrances.flatMap(entrance => entrance.connectedClusters.filter(id => id !== cluster.id)),
       };
     });
   }
@@ -686,12 +666,13 @@ export class HPAClustering {
    * Calculates the average cluster size.
    * @param clusters - Clusters to analyze.
    * @returns Average cluster size.
+   * @example
    */
   private static calculateAverageClusterSize(clusters: Cluster[]): number {
     if (clusters.length === 0) {
       return 0;
     }
-    
+
     const totalSize = clusters.reduce((sum, cluster) => sum + cluster.cells.length, 0);
     return totalSize / clusters.length;
   }

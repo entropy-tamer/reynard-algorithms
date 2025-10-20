@@ -9,10 +9,10 @@ All algorithms include comprehensive performance monitoring and benchmarking cap
 ### Basic Benchmarking
 
 ```typescript
-import { Benchmark } from '@entropy-tamer/reynard-algorithms';
+import { Benchmark } from "@entropy-tamer/reynard-algorithms";
 
 // Create a benchmark
-const benchmark = new Benchmark('Union-Find Operations');
+const benchmark = new Benchmark("Union-Find Operations");
 
 // Start timing
 benchmark.start();
@@ -35,9 +35,9 @@ console.log(`Ops/sec: ${results.opsPerSecond}`);
 ### Memory Benchmarking
 
 ```typescript
-import { MemoryBenchmark } from '@entropy-tamer/reynard-algorithms';
+import { MemoryBenchmark } from "@entropy-tamer/reynard-algorithms";
 
-const memoryBenchmark = new MemoryBenchmark('Memory Usage Test');
+const memoryBenchmark = new MemoryBenchmark("Memory Usage Test");
 
 memoryBenchmark.start();
 // Perform memory-intensive operations
@@ -54,18 +54,18 @@ console.log(`Memory efficiency: ${memoryResults.efficiency}%`);
 ### Real-time Performance Tracking
 
 ```typescript
-import { PerformanceMonitor } from '@entropy-tamer/reynard-algorithms';
+import { PerformanceMonitor } from "@entropy-tamer/reynard-algorithms";
 
 const monitor = new PerformanceMonitor();
 
 // Track different operations
-monitor.startOperation('collision-detection');
+monitor.startOperation("collision-detection");
 // ... collision detection code ...
-monitor.endOperation('collision-detection');
+monitor.endOperation("collision-detection");
 
-monitor.startOperation('pathfinding');
+monitor.startOperation("pathfinding");
 // ... pathfinding code ...
-monitor.endOperation('pathfinding');
+monitor.endOperation("pathfinding");
 
 // Get performance report
 const report = monitor.getReport();
@@ -75,21 +75,21 @@ console.log(report);
 ### Frame Rate Monitoring
 
 ```typescript
-import { FrameRateMonitor } from '@entropy-tamer/reynard-algorithms';
+import { FrameRateMonitor } from "@entropy-tamer/reynard-algorithms";
 
 const frameMonitor = new FrameRateMonitor();
 
 // In your game loop
 function gameLoop() {
   frameMonitor.startFrame();
-  
+
   // Game logic here
-  
+
   frameMonitor.endFrame();
-  
+
   // Check if we need to adjust performance
   if (frameMonitor.getAverageFPS() < 60) {
-    console.log('Performance warning: FPS below target');
+    console.log("Performance warning: FPS below target");
   }
 }
 ```
@@ -99,26 +99,26 @@ function gameLoop() {
 ### Union-Find Performance
 
 ```typescript
-import { UnionFind } from '@entropy-tamer/reynard-algorithms';
+import { UnionFind } from "@entropy-tamer/reynard-algorithms";
 
 function benchmarkUnionFind() {
   const sizes = [100, 1000, 10000, 100000];
-  
+
   for (const size of sizes) {
     const uf = new UnionFind(size);
     const benchmark = new Benchmark(`Union-Find ${size} elements`);
-    
+
     benchmark.start();
-    
+
     // Perform random unions
     for (let i = 0; i < size * 2; i++) {
       const a = Math.floor(Math.random() * size);
       const b = Math.floor(Math.random() * size);
       uf.union(a, b);
     }
-    
+
     benchmark.end();
-    
+
     const results = benchmark.getResults();
     console.log(`${size} elements: ${results.opsPerSecond} ops/sec`);
   }
@@ -128,17 +128,17 @@ function benchmarkUnionFind() {
 ### Spatial Hash Performance
 
 ```typescript
-import { SpatialHash } from '@entropy-tamer/reynard-algorithms';
+import { SpatialHash } from "@entropy-tamer/reynard-algorithms";
 
 function benchmarkSpatialHash() {
   const objectCounts = [100, 1000, 10000];
   const cellSizes = [25, 50, 100];
-  
+
   for (const count of objectCounts) {
     for (const cellSize of cellSizes) {
       const spatialHash = new SpatialHash(cellSize);
       const objects = [];
-      
+
       // Create test objects
       for (let i = 0; i < count; i++) {
         const obj = {
@@ -146,24 +146,24 @@ function benchmarkSpatialHash() {
           x: Math.random() * 1000,
           y: Math.random() * 1000,
           width: 10,
-          height: 10
+          height: 10,
         };
         objects.push(obj);
         spatialHash.insert(obj);
       }
-      
+
       const benchmark = new Benchmark(`Spatial Hash ${count} objects, cell size ${cellSize}`);
       benchmark.start();
-      
+
       // Perform queries
       for (let i = 0; i < 1000; i++) {
         const x = Math.random() * 1000;
         const y = Math.random() * 1000;
         spatialHash.query(x, y, 50, 50);
       }
-      
+
       benchmark.end();
-      
+
       const results = benchmark.getResults();
       console.log(`${count} objects, cell ${cellSize}: ${results.opsPerSecond} queries/sec`);
     }
@@ -171,32 +171,32 @@ function benchmarkSpatialHash() {
 }
 ```
 
-### A* Pathfinding Performance
+### A\* Pathfinding Performance
 
 ```typescript
-import { AStar, Point } from '@entropy-tamer/reynard-algorithms';
+import { AStar, Point } from "@entropy-tamer/reynard-algorithms";
 
 function benchmarkAStar() {
   const gridSizes = [50, 100, 200];
   const obstacleRatios = [0.1, 0.2, 0.3];
-  
+
   for (const size of gridSizes) {
     for (const ratio of obstacleRatios) {
       const grid = createTestGrid(size, size, ratio);
       const pathfinder = new AStar();
-      
+
       const benchmark = new Benchmark(`A* ${size}x${size} grid, ${ratio * 100}% obstacles`);
       benchmark.start();
-      
+
       // Perform pathfinding
       for (let i = 0; i < 100; i++) {
         const start = new Point(0, 0);
         const goal = new Point(size - 1, size - 1);
         pathfinder.findPath(start, goal, grid);
       }
-      
+
       benchmark.end();
-      
+
       const results = benchmark.getResults();
       console.log(`${size}x${size}, ${ratio * 100}% obstacles: ${results.opsPerSecond} paths/sec`);
     }
@@ -204,8 +204,10 @@ function benchmarkAStar() {
 }
 
 function createTestGrid(width: number, height: number, obstacleRatio: number): number[][] {
-  const grid = Array(height).fill(null).map(() => Array(width).fill(0));
-  
+  const grid = Array(height)
+    .fill(null)
+    .map(() => Array(width).fill(0));
+
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       if (Math.random() < obstacleRatio) {
@@ -213,7 +215,7 @@ function createTestGrid(width: number, height: number, obstacleRatio: number): n
       }
     }
   }
-  
+
   return grid;
 }
 ```
@@ -223,14 +225,14 @@ function createTestGrid(width: number, height: number, obstacleRatio: number): n
 ### Memory Pool Benchmarking
 
 ```typescript
-import { MemoryPool } from '@entropy-tamer/reynard-algorithms';
+import { MemoryPool } from "@entropy-tamer/reynard-algorithms";
 
 function benchmarkMemoryPool() {
   const pool = new MemoryPool(() => new AABB(0, 0, 0, 0));
-  
-  const benchmark = new Benchmark('Memory Pool Operations');
+
+  const benchmark = new Benchmark("Memory Pool Operations");
   benchmark.start();
-  
+
   // Test allocation and deallocation
   for (let i = 0; i < 100000; i++) {
     const aabb = pool.get();
@@ -238,18 +240,18 @@ function benchmarkMemoryPool() {
     aabb.y = i;
     aabb.width = 10;
     aabb.height = 10;
-    
+
     // Simulate some work
     const area = aabb.width * aabb.height;
-    
+
     pool.release(aabb);
   }
-  
+
   benchmark.end();
-  
+
   const results = benchmark.getResults();
   const stats = pool.getStats();
-  
+
   console.log(`Pool operations: ${results.opsPerSecond} ops/sec`);
   console.log(`Pool efficiency: ${stats.efficiency}%`);
   console.log(`Pool size: ${stats.size}`);
@@ -261,15 +263,15 @@ function benchmarkMemoryPool() {
 ### Algorithm Selection
 
 ```typescript
-import { AlgorithmSelector } from '@entropy-tamer/reynard-algorithms';
+import { AlgorithmSelector } from "@entropy-tamer/reynard-algorithms";
 
 const selector = new AlgorithmSelector();
 
 // The selector automatically chooses the best algorithm based on data size
-const bestAlgorithm = selector.selectAlgorithm('collision-detection', {
+const bestAlgorithm = selector.selectAlgorithm("collision-detection", {
   objectCount: 1000,
   worldSize: { width: 1000, height: 1000 },
-  updateFrequency: 60
+  updateFrequency: 60,
 });
 
 console.log(`Best algorithm: ${bestAlgorithm}`);
@@ -278,7 +280,7 @@ console.log(`Best algorithm: ${bestAlgorithm}`);
 ### Memory Optimization
 
 ```typescript
-import { MemoryOptimizer } from '@entropy-tamer/reynard-algorithms';
+import { MemoryOptimizer } from "@entropy-tamer/reynard-algorithms";
 
 const optimizer = new MemoryOptimizer();
 
@@ -286,30 +288,30 @@ const optimizer = new MemoryOptimizer();
 const optimizedConfig = optimizer.optimize({
   maxObjects: 10000,
   averageObjectSize: 32,
-  memoryBudget: 1024 * 1024 // 1MB
+  memoryBudget: 1024 * 1024, // 1MB
 });
 
-console.log('Optimized configuration:', optimizedConfig);
+console.log("Optimized configuration:", optimizedConfig);
 ```
 
 ### Performance Budgets
 
 ```typescript
-import { PerformanceBudget } from '@entropy-tamer/reynard-algorithms';
+import { PerformanceBudget } from "@entropy-tamer/reynard-algorithms";
 
 const budget = new PerformanceBudget({
   targetFPS: 60,
   maxFrameTime: 16.67, // 60 FPS = 16.67ms per frame
-  memoryLimit: 100 * 1024 * 1024 // 100MB
+  memoryLimit: 100 * 1024 * 1024, // 100MB
 });
 
 // Check if operations fit within budget
-if (budget.canAfford('collision-detection', 1000)) {
+if (budget.canAfford("collision-detection", 1000)) {
   // Perform collision detection
   performCollisionDetection();
 } else {
   // Skip or reduce quality
-  console.log('Skipping collision detection to maintain performance');
+  console.log("Skipping collision detection to maintain performance");
 }
 ```
 
@@ -318,7 +320,7 @@ if (budget.canAfford('collision-detection', 1000)) {
 ### Performance Profiling
 
 ```typescript
-import { Profiler } from '@entropy-tamer/reynard-algorithms';
+import { Profiler } from "@entropy-tamer/reynard-algorithms";
 
 const profiler = new Profiler();
 
@@ -332,7 +334,7 @@ runGameLoop();
 profiler.stop();
 const profile = profiler.getProfile();
 
-console.log('Performance Profile:');
+console.log("Performance Profile:");
 console.log(`Total time: ${profile.totalTime}ms`);
 console.log(`Hot spots:`, profile.hotSpots);
 console.log(`Memory usage:`, profile.memoryUsage);
@@ -341,28 +343,28 @@ console.log(`Memory usage:`, profile.memoryUsage);
 ### Performance Regression Testing
 
 ```typescript
-import { PerformanceTest } from '@entropy-tamer/reynard-algorithms';
+import { PerformanceTest } from "@entropy-tamer/reynard-algorithms";
 
 const performanceTest = new PerformanceTest();
 
 // Define performance expectations
-performanceTest.expect('union-find', {
+performanceTest.expect("union-find", {
   minOpsPerSecond: 1000000,
-  maxMemoryUsage: 1024 * 1024 // 1MB
+  maxMemoryUsage: 1024 * 1024, // 1MB
 });
 
-performanceTest.expect('spatial-hash', {
+performanceTest.expect("spatial-hash", {
   minOpsPerSecond: 100000,
-  maxMemoryUsage: 512 * 1024 // 512KB
+  maxMemoryUsage: 512 * 1024, // 512KB
 });
 
 // Run tests
 const results = performanceTest.run();
 
 if (results.passed) {
-  console.log('All performance tests passed!');
+  console.log("All performance tests passed!");
 } else {
-  console.log('Performance regression detected:', results.failures);
+  console.log("Performance regression detected:", results.failures);
 }
 ```
 

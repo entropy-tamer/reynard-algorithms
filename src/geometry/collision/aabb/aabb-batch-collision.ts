@@ -13,6 +13,12 @@ import { checkCollision } from "./aabb-collision";
 
 /**
  * Batch collision detection for multiple AABBs
+ * @param aabbs
+ * @param options
+ * @param options.maxDistance
+ * @param options.includeSelf
+ * @param options.spatialHash
+ * @example
  */
 export function batchCollisionDetection(
   aabbs: AABB[],
@@ -52,6 +58,12 @@ export function batchCollisionDetection(
 
 /**
  * Batch collision detection using spatial hashing
+ * @param aabbs
+ * @param options
+ * @param options.maxDistance
+ * @param options.includeSelf
+ * @param options.spatialHash
+ * @example
  */
 export function batchCollisionWithSpatialHash(
   aabbs: AABB[],

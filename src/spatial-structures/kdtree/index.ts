@@ -32,6 +32,3 @@ export type {
 } from "./kdtree-types";
 export { KdTreeEventType } from "./kdtree-types";
 export { DEFAULT_KD_TREE_CONFIG, DEFAULT_KD_TREE_OPTIONS } from "./kdtree-types";
-
-
-

@@ -1,8 +1,5 @@
 import { describe, it, expect } from "vitest";
-import type {
-  ThrottleOptions,
-  DebounceOptions,
-} from "../types/performance-types";
+import type { ThrottleOptions, DebounceOptions } from "../types/performance-types";
 
 describe("Performance Types", () => {
   describe("ThrottleOptions", () => {

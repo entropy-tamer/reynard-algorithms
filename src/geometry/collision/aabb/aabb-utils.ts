@@ -11,6 +11,8 @@ import type { AABB } from "./aabb-types";
 
 /**
  * Calculate the area of an AABB
+ * @param aabb
+ * @example
  */
 export function getAABBArea(aabb: AABB): number {
   return aabb.width * aabb.height;
@@ -18,6 +20,8 @@ export function getAABBArea(aabb: AABB): number {
 
 /**
  * Calculate the perimeter of an AABB
+ * @param aabb
+ * @example
  */
 export function getAABBPerimeter(aabb: AABB): number {
   return 2 * (aabb.width + aabb.height);

@@ -63,6 +63,11 @@ export class PerformanceMonitor {
   private performanceHistory: PerformanceRecord[] = [];
   private thresholds: PerformanceThresholds;
 
+  /**
+   *
+   * @param thresholds
+   * @example
+   */
   constructor(thresholds: PerformanceThresholds) {
     this.thresholds = thresholds;
     this.stats = {
@@ -92,6 +97,12 @@ export class PerformanceMonitor {
 
   /**
    * Record a performance measurement
+   * @param algorithm
+   * @param objectCount
+   * @param executionTime
+   * @param memoryUsage
+   * @param hitRate
+   * @example
    */
   recordPerformance(
     algorithm: string,
@@ -124,6 +135,8 @@ export class PerformanceMonitor {
 
   /**
    * Update memory pool statistics
+   * @param stats
+   * @example
    */
   updateMemoryPoolStats(stats: MemoryPoolStats): void {
     this.stats.memoryPoolStats = stats;
@@ -131,6 +144,7 @@ export class PerformanceMonitor {
 
   /**
    * Get current memory usage
+   * @example
    */
   getCurrentMemoryUsage(): number {
     return (performance as any).memory?.usedJSHeapSize || 0;
@@ -138,6 +152,7 @@ export class PerformanceMonitor {
 
   /**
    * Get performance statistics
+   * @example
    */
   getPerformanceStats(): CollisionPerformanceStats {
     return { ...this.stats };
@@ -145,6 +160,7 @@ export class PerformanceMonitor {
 
   /**
    * Check if performance is degraded
+   * @example
    */
   isPerformanceDegraded(): boolean {
     return (
@@ -156,6 +172,8 @@ export class PerformanceMonitor {
 
   /**
    * Get performance report
+   * @param recommendations
+   * @example
    */
   getPerformanceReport(recommendations: OptimizationRecommendation[]): PerformanceReport {
     return {
@@ -174,6 +192,7 @@ export class PerformanceMonitor {
 
   /**
    * Estimate update frequency based on recent queries
+   * @example
    */
   estimateUpdateFrequency(): number {
     const now = Date.now();
@@ -185,6 +204,7 @@ export class PerformanceMonitor {
 
   /**
    * Reset all statistics
+   * @example
    */
   resetStatistics(): void {
     this.stats = {
@@ -215,6 +235,9 @@ export class PerformanceMonitor {
 
   /**
    * Update running averages
+   * @param executionTime
+   * @param memoryUsage
+   * @example
    */
   private updateRunningAverages(executionTime: number, memoryUsage: number): void {
     // Update average execution time
@@ -228,6 +251,8 @@ export class PerformanceMonitor {
 
   /**
    * Update algorithm usage statistics
+   * @param algorithm
+   * @example
    */
   private updateAlgorithmUsage(algorithm: string): void {
     if (algorithm in this.stats.algorithmUsage) {

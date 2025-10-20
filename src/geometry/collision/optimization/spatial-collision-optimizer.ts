@@ -29,12 +29,20 @@ import {
 export type { AABB, CollisionResult } from "../aabb/aabb-types";
 export type { SpatialCollisionConfig, SpatialCollisionStats } from "./spatial-collision-stats";
 
+/**
+ *
+ */
 export class SpatialCollisionOptimizer {
   private spatialHash: SpatialHash<CollisionObjectData>;
   private config: SpatialCollisionConfig;
   private collisionCache: CollisionCache;
   private stats: SpatialCollisionStats;
 
+  /**
+   *
+   * @param config
+   * @example
+   */
   constructor(config: Partial<SpatialCollisionConfig> = {}) {
     this.config = createDefaultConfig(config);
 
@@ -57,6 +65,8 @@ export class SpatialCollisionOptimizer {
 
   /**
    * Detect collisions using spatial optimization
+   * @param aabbs
+   * @example
    */
   detectCollisions(aabbs: AABB[]): CollisionPair[] {
     const start = performance.now();
@@ -77,6 +87,8 @@ export class SpatialCollisionOptimizer {
 
   /**
    * Naive O(n²) collision detection for small datasets
+   * @param aabbs
+   * @example
    */
   private naiveCollisionDetection(aabbs: AABB[]): CollisionPair[] {
     this.stats.naiveQueries++;
@@ -85,6 +97,8 @@ export class SpatialCollisionOptimizer {
 
   /**
    * Spatial hash optimized collision detection
+   * @param aabbs
+   * @example
    */
   private spatialCollisionDetection(aabbs: AABB[]): CollisionPair[] {
     this.stats.spatialQueries++;
@@ -93,6 +107,7 @@ export class SpatialCollisionOptimizer {
 
   /**
    * Get performance statistics
+   * @example
    */
   getStats(): SpatialCollisionStats {
     return {
@@ -103,6 +118,7 @@ export class SpatialCollisionOptimizer {
 
   /**
    * Clear collision cache
+   * @example
    */
   clearCache(): void {
     this.collisionCache.cache.clear();
@@ -111,6 +127,8 @@ export class SpatialCollisionOptimizer {
 
   /**
    * Update configuration
+   * @param newConfig
+   * @example
    */
   updateConfig(newConfig: Partial<SpatialCollisionConfig>): void {
     this.config = { ...this.config, ...newConfig };

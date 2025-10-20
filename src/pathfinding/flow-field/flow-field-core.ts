@@ -37,7 +37,7 @@ import { FlowFieldGenerator } from "./flow-field-generator";
  * const grid = FlowFieldUtils.generateTestGrid(100, 100, 0.3);
  * const goals = [{ x: 99, y: 99 }];
  * const result = flowField.generateFlowField(grid, 100, 100, goals);
- * 
+ *
  * // Use flow field for agent pathfinding
  * const agentStart = { x: 0, y: 0 };
  * const agentPath = flowField.findAgentPath(agentStart, result.flowField, 100, 100);
@@ -54,6 +54,7 @@ export class FlowField {
   /**
    * Creates an instance of FlowField.
    * @param config - Optional configuration for the algorithm.
+   * @example
    */
   constructor(config: Partial<FlowFieldConfig> = {}) {
     this.config = {
@@ -93,6 +94,7 @@ export class FlowField {
    * @param goals - Array of goal points.
    * @param options - Generation options.
    * @returns Flow field result.
+   * @example
    */
   generateFlowField(
     grid: CellType[],
@@ -142,7 +144,7 @@ export class FlowField {
 
       // Generate flow field
       const result = FlowFieldGenerator.generateFlowField(grid, goals, this.config, flowOptions);
-      
+
       this.integrationField = result.integrationField;
       this.flowField = result.flowField;
 
@@ -197,6 +199,7 @@ export class FlowField {
    * @param height - Grid height.
    * @param options - Agent pathfinding options.
    * @returns Agent pathfinding result.
+   * @example
    */
   findAgentPath(
     start: Point,
@@ -221,7 +224,7 @@ export class FlowField {
       const path: Point[] = [start];
       let current = start;
       let flowFieldLookups = 0;
-      let integrationFieldLookups = 0;
+      const integrationFieldLookups = 0;
       let aStarNodes = 0;
       let usedFlowField = false;
       let usedAStarFallback = false;
@@ -229,7 +232,7 @@ export class FlowField {
       // Follow flow field
       if (agentOptions.useFlowField) {
         usedFlowField = true;
-        
+
         while (path.length < agentOptions.maxPathLength) {
           const currentIndex = current.y * width + current.x;
           const flowCell = flowField[currentIndex];
@@ -255,8 +258,7 @@ export class FlowField {
           };
 
           // Check if we've reached a goal or hit an obstacle
-          if (this.isGoal(next, flowField, width, height) || 
-              this.isObstacle(next, flowField, width, height)) {
+          if (this.isGoal(next, flowField, width, height) || this.isObstacle(next, flowField, width, height)) {
             break;
           }
 
@@ -320,6 +322,7 @@ export class FlowField {
    * @param height - Grid height.
    * @param options - Crowd simulation options.
    * @returns Crowd simulation result.
+   * @example
    */
   simulateCrowd(
     agents: Point[],
@@ -356,7 +359,7 @@ export class FlowField {
       for (let i = 0; i < Math.min(agents.length, crowdOptions.agentCount); i++) {
         const agentStart = agents[i];
         const agentPath = this.findAgentPath(agentStart, flowField, width, height);
-        
+
         agentPaths.push(agentPath.path);
         totalPathLength += agentPath.length;
 
@@ -414,6 +417,7 @@ export class FlowField {
    * @param integrationField - The integration field to validate.
    * @param options - Validation options.
    * @returns Validation result.
+   * @example
    */
   validateFlowField(
     flowField: FlowCell[],
@@ -503,6 +507,7 @@ export class FlowField {
    * @param flowField2 - Second flow field.
    * @param options - Comparison options.
    * @returns Comparison result.
+   * @example
    */
   compareFlowFields(
     flowField1: FlowFieldResult,
@@ -532,7 +537,7 @@ export class FlowField {
         comparisonOptions.tolerance!
       );
       integrationFieldSimilarity = integrationSimilarity.similarity;
-      
+
       if (integrationSimilarity.differences.length > 0) {
         differences.push(...integrationSimilarity.differences);
       }
@@ -546,7 +551,7 @@ export class FlowField {
         comparisonOptions.tolerance!
       );
       flowFieldSimilarity = flowSimilarity.similarity;
-      
+
       if (flowSimilarity.differences.length > 0) {
         differences.push(...flowSimilarity.differences);
       }
@@ -583,11 +588,9 @@ export class FlowField {
    * @param result - Result to serialize.
    * @param options - Serialization options.
    * @returns Serialized result.
+   * @example
    */
-  serialize(
-    result: FlowFieldResult,
-    options: Partial<FlowFieldSerializationOptions> = {}
-  ): FlowFieldSerialization {
+  serialize(result: FlowFieldResult, options: Partial<FlowFieldSerializationOptions> = {}): FlowFieldSerialization {
     const serializationOptions: FlowFieldSerializationOptions = {
       precision: 6,
       includeStats: false,
@@ -599,8 +602,10 @@ export class FlowField {
     };
 
     const round = (value: number) => {
-      return Math.round(value * Math.pow(10, serializationOptions.precision!)) / 
-             Math.pow(10, serializationOptions.precision!);
+      return (
+        Math.round(value * Math.pow(10, serializationOptions.precision!)) /
+        Math.pow(10, serializationOptions.precision!)
+      );
     };
 
     const serialized: FlowFieldSerialization = {
@@ -643,6 +648,7 @@ export class FlowField {
   /**
    * Updates the configuration.
    * @param newConfig - New configuration options.
+   * @example
    */
   updateConfig(newConfig: Partial<FlowFieldConfig>): void {
     this.config = { ...this.config, ...newConfig };
@@ -651,6 +657,7 @@ export class FlowField {
   /**
    * Gets the current configuration.
    * @returns The current configuration.
+   * @example
    */
   getConfig(): FlowFieldConfig {
     return { ...this.config };
@@ -659,6 +666,7 @@ export class FlowField {
   /**
    * Gets the current statistics.
    * @returns The current statistics.
+   * @example
    */
   getStats(): FlowFieldStats {
     return { ...this.stats };
@@ -666,6 +674,7 @@ export class FlowField {
 
   /**
    * Resets the statistics.
+   * @example
    */
   resetStats(): void {
     this.stats = {
@@ -683,6 +692,7 @@ export class FlowField {
 
   /**
    * Clears the cache.
+   * @example
    */
   clearCache(): void {
     this.cache.clear();
@@ -695,6 +705,7 @@ export class FlowField {
    * @param height - Grid height.
    * @param goals - Goal points.
    * @returns Validation result.
+   * @example
    */
   private validateInput(
     grid: CellType[],
@@ -727,6 +738,7 @@ export class FlowField {
   /**
    * Counts different cell types in the grid.
    * @param grid - The grid.
+   * @example
    */
   private countCellTypes(grid: CellType[]): void {
     this.stats.goalCells = 0;
@@ -751,6 +763,7 @@ export class FlowField {
 
   /**
    * Calculates statistics from the integration field.
+   * @example
    */
   private calculateStats(): void {
     if (this.integrationField.length === 0) return;
@@ -781,6 +794,7 @@ export class FlowField {
    * @param goals - Goal points.
    * @param options - Generation options.
    * @returns Cache key.
+   * @example
    */
   private getCacheKey(
     grid: CellType[],
@@ -789,8 +803,8 @@ export class FlowField {
     goals: Point[],
     options: FlowFieldOptions
   ): string {
-    const gridHash = grid.slice(0, Math.min(100, grid.length)).join(',');
-    const goalsHash = goals.map(g => `${g.x},${g.y}`).join('|');
+    const gridHash = grid.slice(0, Math.min(100, grid.length)).join(",");
+    const goalsHash = goals.map(g => `${g.x},${g.y}`).join("|");
     const optionsHash = JSON.stringify(options);
     return `flow-${width}x${height}_${goalsHash}_${gridHash}_${optionsHash}`;
   }
@@ -802,13 +816,12 @@ export class FlowField {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns A* path.
+   * @example
    */
   private findAStarPath(start: Point, flowField: FlowCell[], width: number, height: number): Point[] {
     // Simple A* implementation for fallback
     const visited = new Set<string>();
-    const queue: Array<{ point: Point; cost: number; path: Point[] }> = [
-      { point: start, cost: 0, path: [start] }
-    ];
+    const queue: Array<{ point: Point; cost: number; path: Point[] }> = [{ point: start, cost: 0, path: [start] }];
 
     while (queue.length > 0) {
       const current = queue.shift()!;
@@ -847,10 +860,11 @@ export class FlowField {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns True if point is a goal.
+   * @example
    */
   private isGoal(point: Point, flowField: FlowCell[], width: number, height: number): boolean {
     if (!this.isWithinBounds(point, width, height)) return false;
-    
+
     const index = point.y * width + point.x;
     const cell = flowField[index];
     return cell.magnitude === 0; // Goals have zero magnitude
@@ -863,10 +877,11 @@ export class FlowField {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns True if point is an obstacle.
+   * @example
    */
   private isObstacle(point: Point, flowField: FlowCell[], width: number, height: number): boolean {
     if (!this.isWithinBounds(point, width, height)) return true;
-    
+
     const index = point.y * width + point.x;
     const cell = flowField[index];
     return !cell.valid; // Obstacles have invalid flow
@@ -876,6 +891,7 @@ export class FlowField {
    * Calculates the cost of a path.
    * @param path - Path to calculate cost for.
    * @returns Path cost.
+   * @example
    */
   private calculatePathCost(path: Point[]): number {
     let cost = 0;
@@ -884,7 +900,7 @@ export class FlowField {
       const to = path[i];
       const dx = Math.abs(to.x - from.x);
       const dy = Math.abs(to.y - from.y);
-      
+
       if (dx === 1 && dy === 1) {
         cost += this.config.diagonalCost;
       } else if (dx === 1 || dy === 1) {
@@ -900,6 +916,7 @@ export class FlowField {
    * Detects circular flows in the flow field.
    * @param flowField - The flow field.
    * @returns Array of circular flow points.
+   * @example
    */
   private detectCircularFlows(flowField: FlowCell[]): Point[] {
     const circularFlows: Point[] = [];
@@ -917,7 +934,7 @@ export class FlowField {
 
       while (true) {
         const currentKey = this.pointToKey(current);
-        
+
         if (currentVisited.has(currentKey)) {
           // Found a cycle
           const cycleStart = path.indexOf(current);
@@ -956,6 +973,7 @@ export class FlowField {
    * @param field2 - Second integration field.
    * @param tolerance - Comparison tolerance.
    * @returns Comparison result.
+   * @example
    */
   private compareIntegrationFields(
     field1: IntegrationCell[],
@@ -988,6 +1006,7 @@ export class FlowField {
    * @param field2 - Second flow field.
    * @param tolerance - Comparison tolerance.
    * @returns Comparison result.
+   * @example
    */
   private compareFlowFieldArrays(
     field1: FlowCell[],
@@ -1006,10 +1025,16 @@ export class FlowField {
       if (cell1.valid !== cell2.valid) {
         differences.push(`Flow validity difference at (${cell1.x}, ${cell1.y}): ${cell1.valid} vs ${cell2.valid}`);
       } else if (Math.abs(cell1.magnitude - cell2.magnitude) > tolerance) {
-        differences.push(`Flow magnitude difference at (${cell1.x}, ${cell1.y}): ${cell1.magnitude} vs ${cell2.magnitude}`);
-      } else if (Math.abs(cell1.vector.x - cell2.vector.x) > tolerance || 
-                 Math.abs(cell1.vector.y - cell2.vector.y) > tolerance) {
-        differences.push(`Flow vector difference at (${cell1.x}, ${cell1.y}): (${cell1.vector.x}, ${cell1.vector.y}) vs (${cell2.vector.x}, ${cell2.vector.y})`);
+        differences.push(
+          `Flow magnitude difference at (${cell1.x}, ${cell1.y}): ${cell1.magnitude} vs ${cell2.magnitude}`
+        );
+      } else if (
+        Math.abs(cell1.vector.x - cell2.vector.x) > tolerance ||
+        Math.abs(cell1.vector.y - cell2.vector.y) > tolerance
+      ) {
+        differences.push(
+          `Flow vector difference at (${cell1.x}, ${cell1.y}): (${cell1.vector.x}, ${cell1.vector.y}) vs (${cell2.vector.x}, ${cell2.vector.y})`
+        );
       } else {
         matchingCells++;
       }
@@ -1024,6 +1049,7 @@ export class FlowField {
    * @param stats1 - First statistics.
    * @param stats2 - Second statistics.
    * @returns Comparison result.
+   * @example
    */
   private compareStats(stats1: FlowFieldStats, stats2: FlowFieldStats): { differences: string[] } {
     const differences: string[] = [];
@@ -1049,13 +1075,12 @@ export class FlowField {
    * @param path2 - Second path.
    * @param radius - Collision radius.
    * @returns True if collision detected.
+   * @example
    */
   private checkCollision(path1: Point[], path2: Point[], radius: number): boolean {
     for (const point1 of path1) {
       for (const point2 of path2) {
-        const distance = Math.sqrt(
-          Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2)
-        );
+        const distance = Math.sqrt(Math.pow(point1.x - point2.x, 2) + Math.pow(point1.y - point2.y, 2));
         if (distance < radius) {
           return true;
         }
@@ -1070,12 +1095,19 @@ export class FlowField {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns Array of neighbor points.
+   * @example
    */
   private getNeighbors(point: Point, width: number, height: number): Point[] {
     const neighbors: Point[] = [];
     const directions = [
-      { x: 0, y: -1 }, { x: 1, y: 0 }, { x: 0, y: 1 }, { x: -1, y: 0 },
-      { x: 1, y: -1 }, { x: 1, y: 1 }, { x: -1, y: 1 }, { x: -1, y: -1 }
+      { x: 0, y: -1 },
+      { x: 1, y: 0 },
+      { x: 0, y: 1 },
+      { x: -1, y: 0 },
+      { x: 1, y: -1 },
+      { x: 1, y: 1 },
+      { x: -1, y: 1 },
+      { x: -1, y: -1 },
     ];
 
     for (const dir of directions) {
@@ -1094,6 +1126,7 @@ export class FlowField {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns True if point is within bounds.
+   * @example
    */
   private isWithinBounds(point: Point, width: number, height: number): boolean {
     return point.x >= 0 && point.x < width && point.y >= 0 && point.y < height;
@@ -1103,6 +1136,7 @@ export class FlowField {
    * Creates a key for a point (for use in maps/sets).
    * @param point - Point to create key for.
    * @returns String key.
+   * @example
    */
   private pointToKey(point: Point): string {
     return `${point.x},${point.y}`;
@@ -1114,6 +1148,7 @@ export class FlowField {
    * @param b - Second point.
    * @param tolerance - Numerical tolerance.
    * @returns True if points are equal.
+   * @example
    */
   private pointsEqual(a: Point, b: Point, tolerance: number = 1e-10): boolean {
     return Math.abs(a.x - b.x) < tolerance && Math.abs(a.y - b.y) < tolerance;

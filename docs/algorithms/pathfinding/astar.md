@@ -1,6 +1,6 @@
-# A*
+# A\*
 
-> Mathematical theory and implementation details for A*
+> Mathematical theory and implementation details for A\*
 
 ## Mathematical Theory
 
@@ -27,7 +27,7 @@ For implementation details and usage examples, see the source code in the `src/`
 
 ```typescript
 // Import the algorithm
-import { A } from '@entropy-tamer/reynard-algorithms';
+import { A } from "@entropy-tamer/reynard-algorithms";
 ```
 
 ## Performance

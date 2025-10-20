@@ -18,11 +18,7 @@ import {
   IntersectionSerializationOptions,
   IntersectionSerialization,
 } from "./line-intersection-types";
-import {
-  SweepLineEventQueue,
-  SweepLineStatusStructure,
-  SweepLineUtils,
-} from "./sweep-line";
+import { SweepLineEventQueue, SweepLineStatusStructure, SweepLineUtils } from "./sweep-line";
 
 /**
  * The LineIntersection class implements the Bentley-Ottmann algorithm for finding
@@ -50,6 +46,7 @@ export class LineIntersection {
   /**
    * Creates an instance of LineIntersection.
    * @param config - Optional configuration for the algorithm.
+   * @example
    */
   constructor(config: Partial<LineIntersectionConfig> = {}) {
     this.config = {
@@ -70,6 +67,7 @@ export class LineIntersection {
    * Finds all intersections between the given line segments.
    * @param segments - Array of line segments to analyze.
    * @returns The result containing all intersections found.
+   * @example
    */
   findIntersections(segments: LineSegment[]): LineIntersectionResult {
     const startTime = performance.now();
@@ -129,11 +127,9 @@ export class LineIntersection {
    * @param segments - Array of line segments to analyze.
    * @param options - Query options.
    * @returns The query result.
+   * @example
    */
-  queryIntersections(
-    segments: LineSegment[],
-    options: IntersectionQueryOptions = {}
-  ): IntersectionQueryResult {
+  queryIntersections(segments: LineSegment[], options: IntersectionQueryOptions = {}): IntersectionQueryResult {
     const startTime = performance.now();
 
     const result = this.findIntersections(segments);
@@ -148,9 +144,10 @@ export class LineIntersection {
 
     // Apply segment ID filter
     if (options.segmentIds) {
-      filteredIntersections = filteredIntersections.filter(intersection =>
-        options.segmentIds!.includes(intersection.segments[0].id) ||
-        options.segmentIds!.includes(intersection.segments[1].id)
+      filteredIntersections = filteredIntersections.filter(
+        intersection =>
+          options.segmentIds!.includes(intersection.segments[0].id) ||
+          options.segmentIds!.includes(intersection.segments[1].id)
       );
     }
 
@@ -163,8 +160,8 @@ export class LineIntersection {
 
     // Apply degenerate filter
     if (!options.includeDegenerates) {
-      filteredIntersections = filteredIntersections.filter(intersection =>
-        !this.isDegenerateIntersection(intersection)
+      filteredIntersections = filteredIntersections.filter(
+        intersection => !this.isDegenerateIntersection(intersection)
       );
     }
 
@@ -182,11 +179,9 @@ export class LineIntersection {
    * @param segments - The segments to validate.
    * @param options - Validation options.
    * @returns The validation result.
+   * @example
    */
-  validateSegments(
-    segments: LineSegment[],
-    options: Partial<SegmentValidationOptions> = {}
-  ): SegmentValidationResult {
+  validateSegments(segments: LineSegment[], options: Partial<SegmentValidationOptions> = {}): SegmentValidationResult {
     const validationOptions: SegmentValidationOptions = {
       checkZeroLength: true,
       checkDuplicates: true,
@@ -214,7 +209,7 @@ export class LineIntersection {
     // Check each segment
     for (let i = 0; i < segments.length; i++) {
       const segment = segments[i];
-      
+
       if (!segment || typeof segment.id === "undefined") {
         errors.push(`Segment ${i} must have an id`);
         invalidCount++;
@@ -243,8 +238,12 @@ export class LineIntersection {
 
       // Check for infinite coordinates
       if (validationOptions.checkInfinite) {
-        if (!isFinite(segment.start.x) || !isFinite(segment.start.y) ||
-            !isFinite(segment.end.x) || !isFinite(segment.end.y)) {
+        if (
+          !isFinite(segment.start.x) ||
+          !isFinite(segment.start.y) ||
+          !isFinite(segment.end.x) ||
+          !isFinite(segment.end.y)
+        ) {
           errors.push(`Segment ${i} has infinite coordinates`);
           invalidCount++;
         }
@@ -263,13 +262,7 @@ export class LineIntersection {
       }
     }
 
-    return this.createValidationResult(
-      errors.length === 0,
-      errors,
-      warnings,
-      invalidCount,
-      duplicateCount
-    );
+    return this.createValidationResult(errors.length === 0, errors, warnings, invalidCount, duplicateCount);
   }
 
   /**
@@ -277,6 +270,7 @@ export class LineIntersection {
    * @param result - The intersection result to serialize.
    * @param options - Serialization options.
    * @returns Serialized intersection data.
+   * @example
    */
   serialize(
     result: LineIntersectionResult,
@@ -291,8 +285,10 @@ export class LineIntersection {
     };
 
     const round = (value: number) => {
-      return Math.round(value * Math.pow(10, serializationOptions.precision!)) / 
-             Math.pow(10, serializationOptions.precision!);
+      return (
+        Math.round(value * Math.pow(10, serializationOptions.precision!)) /
+        Math.pow(10, serializationOptions.precision!)
+      );
     };
 
     const roundPoint = (point: Point) => ({
@@ -321,6 +317,7 @@ export class LineIntersection {
   /**
    * Updates the configuration.
    * @param newConfig - New configuration options.
+   * @example
    */
   updateConfig(newConfig: Partial<LineIntersectionConfig>): void {
     this.config = { ...this.config, ...newConfig };
@@ -330,6 +327,7 @@ export class LineIntersection {
   /**
    * Gets the current configuration.
    * @returns The current configuration.
+   * @example
    */
   getConfig(): LineIntersectionConfig {
     return { ...this.config };
@@ -338,6 +336,7 @@ export class LineIntersection {
   /**
    * Initializes the event queue with segment endpoints.
    * @param segments - The segments to process.
+   * @example
    */
   private initializeEventQueue(segments: LineSegment[]): void {
     this.eventQueue.clear();
@@ -353,6 +352,7 @@ export class LineIntersection {
   /**
    * Runs the main sweep line algorithm.
    * @returns Array of intersection points found.
+   * @example
    */
   private runSweepLineAlgorithm(): IntersectionPoint[] {
     const intersections: IntersectionPoint[] = [];
@@ -382,6 +382,7 @@ export class LineIntersection {
    * Handles a start event (segment begins).
    * @param event - The start event.
    * @param intersections - Array to collect intersections.
+   * @example
    */
   private handleStartEvent(event: SweepLineEvent, intersections: IntersectionPoint[]): void {
     const segment = event.segment!;
@@ -389,11 +390,11 @@ export class LineIntersection {
 
     // Check for intersections with neighboring segments
     const neighbors = this.statusStructure.findNeighbors(segment, event.point.y);
-    
+
     if (neighbors.above) {
       this.checkAndAddIntersection(segment, neighbors.above, event.point.y, intersections);
     }
-    
+
     if (neighbors.below) {
       this.checkAndAddIntersection(segment, neighbors.below, event.point.y, intersections);
     }
@@ -403,11 +404,12 @@ export class LineIntersection {
    * Handles an end event (segment ends).
    * @param event - The end event.
    * @param intersections - Array to collect intersections.
+   * @example
    */
   private handleEndEvent(event: SweepLineEvent, intersections: IntersectionPoint[]): void {
     const segment = event.segment!;
     const neighbors = this.statusStructure.findNeighbors(segment, event.point.y);
-    
+
     this.statusStructure.remove(segment, event.point.y);
 
     // Check for intersections between neighbors
@@ -420,10 +422,11 @@ export class LineIntersection {
    * Handles an intersection event.
    * @param event - The intersection event.
    * @param intersections - Array to collect intersections.
+   * @example
    */
   private handleIntersectionEvent(event: SweepLineEvent, intersections: IntersectionPoint[]): void {
     const [segment1, segment2] = event.segments!;
-    
+
     // Swap segments in the status structure
     this.statusStructure.remove(segment1, event.point.y);
     this.statusStructure.remove(segment2, event.point.y);
@@ -437,7 +440,7 @@ export class LineIntersection {
     if (neighbors1.above) {
       this.checkAndAddIntersection(segment1, neighbors1.above, event.point.y, intersections);
     }
-    
+
     if (neighbors2.below) {
       this.checkAndAddIntersection(segment2, neighbors2.below, event.point.y, intersections);
     }
@@ -455,6 +458,8 @@ export class LineIntersection {
    * @param seg2 - Second segment.
    * @param sweepY - Current sweep line y-coordinate.
    * @param intersections - Array to collect intersections.
+   * @param _intersections
+   * @example
    */
   private checkAndAddIntersection(
     seg1: LineSegment,
@@ -463,7 +468,7 @@ export class LineIntersection {
     _intersections: IntersectionPoint[]
   ): void {
     const intersection = SweepLineUtils.lineSegmentsIntersect(seg1, seg2, this.config.tolerance);
-    
+
     if (intersection && intersection.point.y > sweepY + (this.config.tolerance ?? 1e-10)) {
       // Create intersection event
       const event = SweepLineUtils.createIntersectionEvent(intersection.point, seg1, seg2);
@@ -474,17 +479,15 @@ export class LineIntersection {
   /**
    * Creates an intersection point from an intersection event.
    * @param point - The intersection point.
+   * @param _point
    * @param seg1 - First segment.
    * @param seg2 - Second segment.
    * @returns The intersection point, or null if invalid.
+   * @example
    */
-  private createIntersectionPoint(
-    _point: Point,
-    seg1: LineSegment,
-    seg2: LineSegment
-  ): IntersectionPoint | null {
+  private createIntersectionPoint(_point: Point, seg1: LineSegment, seg2: LineSegment): IntersectionPoint | null {
     const intersection = SweepLineUtils.lineSegmentsIntersect(seg1, seg2, this.config.tolerance);
-    
+
     if (!intersection) {
       return null;
     }
@@ -501,6 +504,7 @@ export class LineIntersection {
    * Post-processes intersection results.
    * @param intersections - Raw intersection points.
    * @returns Processed intersection points.
+   * @example
    */
   private postProcessIntersections(intersections: IntersectionPoint[]): IntersectionPoint[] {
     let processed = intersections;
@@ -522,15 +526,19 @@ export class LineIntersection {
    * Removes duplicate intersection points.
    * @param intersections - Array of intersection points.
    * @returns Array with duplicates removed.
+   * @example
    */
   private removeDuplicateIntersections(intersections: IntersectionPoint[]): IntersectionPoint[] {
     const unique: IntersectionPoint[] = [];
 
     for (const intersection of intersections) {
-      const isDuplicate = unique.some(existing =>
-        SweepLineUtils.pointsEqual(existing.point, intersection.point, this.config.tolerance) &&
-        ((existing.segments[0].id === intersection.segments[0].id && existing.segments[1].id === intersection.segments[1].id) ||
-         (existing.segments[0].id === intersection.segments[1].id && existing.segments[1].id === intersection.segments[0].id))
+      const isDuplicate = unique.some(
+        existing =>
+          SweepLineUtils.pointsEqual(existing.point, intersection.point, this.config.tolerance) &&
+          ((existing.segments[0].id === intersection.segments[0].id &&
+            existing.segments[1].id === intersection.segments[1].id) ||
+            (existing.segments[0].id === intersection.segments[1].id &&
+              existing.segments[1].id === intersection.segments[0].id))
       );
 
       if (!isDuplicate) {
@@ -545,34 +553,38 @@ export class LineIntersection {
    * Checks if an intersection is degenerate (at segment endpoints).
    * @param intersection - The intersection to check.
    * @returns True if the intersection is degenerate.
+   * @example
    */
   private isDegenerateIntersection(intersection: IntersectionPoint): boolean {
     const { point, segments } = intersection;
     const [seg1, seg2] = segments;
 
-    return SweepLineUtils.pointOnSegment(point, seg1, this.config.tolerance) ||
-           SweepLineUtils.pointOnSegment(point, seg2, this.config.tolerance);
+    return (
+      SweepLineUtils.pointOnSegment(point, seg1, this.config.tolerance) ||
+      SweepLineUtils.pointOnSegment(point, seg2, this.config.tolerance)
+    );
   }
 
   /**
    * Sorts segments for better performance.
    * @param segments - Array of segments to sort.
    * @returns Sorted array of segments.
+   * @example
    */
   private sortSegments(segments: LineSegment[]): LineSegment[] {
     return [...segments].sort((a, b) => {
       // Sort by minimum y-coordinate
       const minYA = Math.min(a.start.y, a.end.y);
       const minYB = Math.min(b.start.y, b.end.y);
-      
+
       if (Math.abs(minYA - minYB) > (this.config.tolerance ?? 1e-10)) {
         return minYA - minYB;
       }
-      
+
       // Secondary sort by minimum x-coordinate
       const minXA = Math.min(a.start.x, a.end.x);
       const minXB = Math.min(b.start.x, b.end.x);
-      
+
       return minXA - minXB;
     });
   }
@@ -581,11 +593,18 @@ export class LineIntersection {
    * Checks if a point is within a bounding box.
    * @param point - The point to check.
    * @param boundingBox - The bounding box.
+   * @param boundingBox.min
+   * @param boundingBox.max
    * @returns True if the point is within the bounding box.
+   * @example
    */
   private isPointInBoundingBox(point: Point, boundingBox: { min: Point; max: Point }): boolean {
-    return point.x >= boundingBox.min.x && point.x <= boundingBox.max.x &&
-           point.y >= boundingBox.min.y && point.y <= boundingBox.max.y;
+    return (
+      point.x >= boundingBox.min.x &&
+      point.x <= boundingBox.max.x &&
+      point.y >= boundingBox.min.y &&
+      point.y <= boundingBox.max.y
+    );
   }
 
   /**
@@ -593,6 +612,7 @@ export class LineIntersection {
    * @param point - The point to check.
    * @param maxDistance - The maximum distance.
    * @returns True if the point is within the distance.
+   * @example
    */
   private isPointWithinDistance(point: Point, maxDistance: number): boolean {
     const distance = Math.sqrt(point.x * point.x + point.y * point.y);
@@ -603,13 +623,12 @@ export class LineIntersection {
    * Validates a point.
    * @param point - The point to validate.
    * @returns True if the point is valid.
+   * @example
    */
   private isValidPoint(point: Point): boolean {
-    return point && 
-           typeof point.x === "number" && 
-           typeof point.y === "number" &&
-           isFinite(point.x) && 
-           isFinite(point.y);
+    return (
+      point && typeof point.x === "number" && typeof point.y === "number" && isFinite(point.x) && isFinite(point.y)
+    );
   }
 
   /**
@@ -617,17 +636,21 @@ export class LineIntersection {
    * @param seg1 - First segment.
    * @param seg2 - Second segment.
    * @returns True if the segments are equal.
+   * @example
    */
   private areSegmentsEqual(seg1: LineSegment, seg2: LineSegment): boolean {
-    return (SweepLineUtils.pointsEqual(seg1.start, seg2.start, this.config.tolerance) &&
-            SweepLineUtils.pointsEqual(seg1.end, seg2.end, this.config.tolerance)) ||
-           (SweepLineUtils.pointsEqual(seg1.start, seg2.end, this.config.tolerance) &&
-            SweepLineUtils.pointsEqual(seg1.end, seg2.start, this.config.tolerance));
+    return (
+      (SweepLineUtils.pointsEqual(seg1.start, seg2.start, this.config.tolerance) &&
+        SweepLineUtils.pointsEqual(seg1.end, seg2.end, this.config.tolerance)) ||
+      (SweepLineUtils.pointsEqual(seg1.start, seg2.end, this.config.tolerance) &&
+        SweepLineUtils.pointsEqual(seg1.end, seg2.start, this.config.tolerance))
+    );
   }
 
   /**
    * Calculates the maximum depth of the status tree.
    * @returns The maximum depth.
+   * @example
    */
   private calculateMaxTreeDepth(): number {
     // This is a simplified implementation
@@ -638,6 +661,7 @@ export class LineIntersection {
   /**
    * Calculates the average depth of the status tree.
    * @returns The average depth.
+   * @example
    */
   private calculateAverageTreeDepth(): number {
     // This is a simplified implementation
@@ -653,6 +677,7 @@ export class LineIntersection {
    * @param invalidCount - Number of invalid segments.
    * @param duplicateCount - Number of duplicate segments.
    * @returns The validation result.
+   * @example
    */
   private createValidationResult(
     isValid: boolean,
@@ -675,6 +700,7 @@ export class LineIntersection {
    * @param startTime - Start time for execution time calculation.
    * @param error - Error message.
    * @returns Empty intersection result.
+   * @example
    */
   private createEmptyResult(startTime: number, error: string): LineIntersectionResult {
     const executionTime = performance.now() - startTime;

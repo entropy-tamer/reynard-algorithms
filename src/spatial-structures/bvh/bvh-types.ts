@@ -576,6 +576,3 @@ export const DEFAULT_BVH_OPTIONS: BVHOptions = {
   config: DEFAULT_BVH_CONFIG,
   initialPrimitives: [],
 };
-
-
-

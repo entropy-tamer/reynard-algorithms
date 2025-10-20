@@ -26,6 +26,7 @@ export class HPAAbstractGraph {
    * @param config - HPA configuration.
    * @param options - Abstract graph construction options.
    * @returns Abstract graph construction result.
+   * @example
    */
   static constructAbstractGraph(
     clusters: Cluster[],
@@ -47,15 +48,9 @@ export class HPAAbstractGraph {
     try {
       // Create abstract nodes
       const nodes = this.createAbstractNodes(clusters, entrances);
-      
+
       // Create abstract edges
-      const edges = this.createAbstractEdges(
-        nodes,
-        clusters,
-        entrances,
-        config,
-        graphOptions
-      );
+      const edges = this.createAbstractEdges(nodes, clusters, entrances, config, graphOptions);
 
       const endTime = performance.now();
       const constructionTime = endTime - startTime;
@@ -97,6 +92,7 @@ export class HPAAbstractGraph {
    * @param clusters - Clusters in the hierarchical map.
    * @param entrances - Entrances between clusters.
    * @returns Array of abstract nodes.
+   * @example
    */
   private static createAbstractNodes(clusters: Cluster[], entrances: Entrance[]): AbstractNode[] {
     const nodes: AbstractNode[] = [];
@@ -150,6 +146,7 @@ export class HPAAbstractGraph {
    * @param config - HPA configuration.
    * @param options - Abstract graph construction options.
    * @returns Array of abstract edges.
+   * @example
    */
   private static createAbstractEdges(
     nodes: AbstractNode[],
@@ -162,46 +159,25 @@ export class HPAAbstractGraph {
 
     // Create inter-cluster edges
     if (options.useInterClusterEdges) {
-      const interClusterEdges = this.createInterClusterEdges(
-        nodes,
-        clusters,
-        entrances,
-        config,
-        options
-      );
+      const interClusterEdges = this.createInterClusterEdges(nodes, clusters, entrances, config, options);
       edges.push(...interClusterEdges);
     }
 
     // Create intra-cluster edges
     if (options.useIntraClusterEdges) {
-      const intraClusterEdges = this.createIntraClusterEdges(
-        nodes,
-        clusters,
-        config,
-        options
-      );
+      const intraClusterEdges = this.createIntraClusterEdges(nodes, clusters, config, options);
       edges.push(...intraClusterEdges);
     }
 
     // Create entrance edges
     if (options.useEntranceEdges) {
-      const entranceEdges = this.createEntranceEdges(
-        nodes,
-        entrances,
-        config,
-        options
-      );
+      const entranceEdges = this.createEntranceEdges(nodes, entrances, config, options);
       edges.push(...entranceEdges);
     }
 
     // Create direct cluster connections
     if (options.useDirectClusterConnections) {
-      const directEdges = this.createDirectClusterEdges(
-        nodes,
-        clusters,
-        config,
-        options
-      );
+      const directEdges = this.createDirectClusterEdges(nodes, clusters, config, options);
       edges.push(...directEdges);
     }
 
@@ -216,6 +192,7 @@ export class HPAAbstractGraph {
    * @param config - HPA configuration.
    * @param options - Abstract graph construction options.
    * @returns Array of inter-cluster edges.
+   * @example
    */
   private static createInterClusterEdges(
     nodes: AbstractNode[],
@@ -230,25 +207,20 @@ export class HPAAbstractGraph {
       for (let j = i + 1; j < clusters.length; j++) {
         const cluster1 = clusters[i];
         const cluster2 = clusters[j];
-        
+
         // Check if clusters are connected via entrances
-        const connectingEntrances = entrances.filter(entrance =>
-          entrance.connectedClusters.includes(cluster1.id) &&
-          entrance.connectedClusters.includes(cluster2.id)
+        const connectingEntrances = entrances.filter(
+          entrance =>
+            entrance.connectedClusters.includes(cluster1.id) && entrance.connectedClusters.includes(cluster2.id)
         );
 
         if (connectingEntrances.length > 0) {
           const node1 = nodes.find(n => n.clusterId === cluster1.id);
           const node2 = nodes.find(n => n.clusterId === cluster2.id);
-          
+
           if (node1 && node2) {
-            const cost = this.calculateInterClusterCost(
-              cluster1,
-              cluster2,
-              connectingEntrances,
-              config
-            );
-            
+            const cost = this.calculateInterClusterCost(cluster1, cluster2, connectingEntrances, config);
+
             if (cost <= options.maxEdgeCost) {
               const edge: AbstractEdge = {
                 from: node1.id,
@@ -274,6 +246,7 @@ export class HPAAbstractGraph {
    * @param config - HPA configuration.
    * @param options - Abstract graph construction options.
    * @returns Array of intra-cluster edges.
+   * @example
    */
   private static createIntraClusterEdges(
     nodes: AbstractNode[],
@@ -292,7 +265,7 @@ export class HPAAbstractGraph {
         const entranceNode = nodes.find(n => n.entranceId === entrance.id);
         if (entranceNode) {
           const cost = this.calculateIntraClusterCost(cluster, entrance, config);
-          
+
           if (cost <= options.maxEdgeCost) {
             const edge: AbstractEdge = {
               from: clusterNode.id,
@@ -318,6 +291,7 @@ export class HPAAbstractGraph {
    * @param config - HPA configuration.
    * @param options - Abstract graph construction options.
    * @returns Array of entrance edges.
+   * @example
    */
   private static createEntranceEdges(
     nodes: AbstractNode[],
@@ -331,19 +305,17 @@ export class HPAAbstractGraph {
       for (let j = i + 1; j < entrances.length; j++) {
         const entrance1 = entrances[i];
         const entrance2 = entrances[j];
-        
+
         // Check if entrances are in the same cluster
-        const commonClusters = entrance1.connectedClusters.filter(id =>
-          entrance2.connectedClusters.includes(id)
-        );
+        const commonClusters = entrance1.connectedClusters.filter(id => entrance2.connectedClusters.includes(id));
 
         if (commonClusters.length > 0) {
           const node1 = nodes.find(n => n.entranceId === entrance1.id);
           const node2 = nodes.find(n => n.entranceId === entrance2.id);
-          
+
           if (node1 && node2) {
             const cost = this.calculateEntranceCost(entrance1, entrance2, config);
-            
+
             if (cost <= options.maxEdgeCost) {
               const edge: AbstractEdge = {
                 from: node1.id,
@@ -370,6 +342,7 @@ export class HPAAbstractGraph {
    * @param config - HPA configuration.
    * @param options - Abstract graph construction options.
    * @returns Array of direct cluster edges.
+   * @example
    */
   private static createDirectClusterEdges(
     nodes: AbstractNode[],
@@ -383,15 +356,15 @@ export class HPAAbstractGraph {
       for (let j = i + 1; j < clusters.length; j++) {
         const cluster1 = clusters[i];
         const cluster2 = clusters[j];
-        
+
         // Check if clusters are adjacent
         if (this.areClustersAdjacent(cluster1, cluster2)) {
           const node1 = nodes.find(n => n.clusterId === cluster1.id);
           const node2 = nodes.find(n => n.clusterId === cluster2.id);
-          
+
           if (node1 && node2) {
             const cost = this.calculateDirectClusterCost(cluster1, cluster2, config);
-            
+
             if (cost <= options.maxEdgeCost) {
               const edge: AbstractEdge = {
                 from: node1.id,
@@ -417,6 +390,7 @@ export class HPAAbstractGraph {
    * @param entrances - Connecting entrances.
    * @param config - HPA configuration.
    * @returns Edge cost.
+   * @example
    */
   private static calculateInterClusterCost(
     cluster1: Cluster,
@@ -428,10 +402,10 @@ export class HPAAbstractGraph {
     const dx = Math.abs(cluster1.x + cluster1.width / 2 - cluster2.x - cluster2.width / 2);
     const dy = Math.abs(cluster1.y + cluster1.height / 2 - cluster2.y - cluster2.height / 2);
     const distance = Math.sqrt(dx * dx + dy * dy);
-    
+
     // Add entrance costs
     const entranceCost = entrances.reduce((sum, entrance) => sum + entrance.cost, 0);
-    
+
     return distance + entranceCost;
   }
 
@@ -441,17 +415,14 @@ export class HPAAbstractGraph {
    * @param entrance - Entrance.
    * @param config - HPA configuration.
    * @returns Edge cost.
+   * @example
    */
-  private static calculateIntraClusterCost(
-    cluster: Cluster,
-    entrance: Entrance,
-    config: HPAConfig
-  ): number {
+  private static calculateIntraClusterCost(cluster: Cluster, entrance: Entrance, config: HPAConfig): number {
     // Cost is the distance from cluster center to entrance
     const dx = Math.abs(cluster.x + cluster.width / 2 - entrance.x);
     const dy = Math.abs(cluster.y + cluster.height / 2 - entrance.y);
     const distance = Math.sqrt(dx * dx + dy * dy);
-    
+
     return distance;
   }
 
@@ -461,17 +432,14 @@ export class HPAAbstractGraph {
    * @param entrance2 - Second entrance.
    * @param config - HPA configuration.
    * @returns Edge cost.
+   * @example
    */
-  private static calculateEntranceCost(
-    entrance1: Entrance,
-    entrance2: Entrance,
-    config: HPAConfig
-  ): number {
+  private static calculateEntranceCost(entrance1: Entrance, entrance2: Entrance, config: HPAConfig): number {
     // Cost is the distance between entrances
     const dx = Math.abs(entrance1.x - entrance2.x);
     const dy = Math.abs(entrance1.y - entrance2.y);
     const distance = Math.sqrt(dx * dx + dy * dy);
-    
+
     return distance;
   }
 
@@ -481,17 +449,14 @@ export class HPAAbstractGraph {
    * @param cluster2 - Second cluster.
    * @param config - HPA configuration.
    * @returns Edge cost.
+   * @example
    */
-  private static calculateDirectClusterCost(
-    cluster1: Cluster,
-    cluster2: Cluster,
-    config: HPAConfig
-  ): number {
+  private static calculateDirectClusterCost(cluster1: Cluster, cluster2: Cluster, config: HPAConfig): number {
     // Cost is the distance between cluster centers
     const dx = Math.abs(cluster1.x + cluster1.width / 2 - cluster2.x - cluster2.width / 2);
     const dy = Math.abs(cluster1.y + cluster1.height / 2 - cluster2.y - cluster2.height / 2);
     const distance = Math.sqrt(dx * dx + dy * dy);
-    
+
     return distance;
   }
 
@@ -501,20 +466,17 @@ export class HPAAbstractGraph {
    * @param cluster2 - Second cluster.
    * @param entrances - Connecting entrances.
    * @returns Path points.
+   * @example
    */
-  private static generateInterClusterPath(
-    cluster1: Cluster,
-    cluster2: Cluster,
-    entrances: Entrance[]
-  ): Point[] {
+  private static generateInterClusterPath(cluster1: Cluster, cluster2: Cluster, entrances: Entrance[]): Point[] {
     const path: Point[] = [];
-    
+
     // Start from cluster1 center
     path.push({
       x: cluster1.x + cluster1.width / 2,
       y: cluster1.y + cluster1.height / 2,
     });
-    
+
     // Add entrance points
     for (const entrance of entrances) {
       path.push({
@@ -522,13 +484,13 @@ export class HPAAbstractGraph {
         y: entrance.y,
       });
     }
-    
+
     // End at cluster2 center
     path.push({
       x: cluster2.x + cluster2.width / 2,
       y: cluster2.y + cluster2.height / 2,
     });
-    
+
     return path;
   }
 
@@ -537,6 +499,7 @@ export class HPAAbstractGraph {
    * @param cluster - Cluster.
    * @param entrance - Entrance.
    * @returns Path points.
+   * @example
    */
   private static generateIntraClusterPath(cluster: Cluster, entrance: Entrance): Point[] {
     return [
@@ -556,6 +519,7 @@ export class HPAAbstractGraph {
    * @param entrance1 - First entrance.
    * @param entrance2 - Second entrance.
    * @returns Path points.
+   * @example
    */
   private static generateEntrancePath(entrance1: Entrance, entrance2: Entrance): Point[] {
     return [
@@ -575,6 +539,7 @@ export class HPAAbstractGraph {
    * @param cluster1 - First cluster.
    * @param cluster2 - Second cluster.
    * @returns Path points.
+   * @example
    */
   private static generateDirectClusterPath(cluster1: Cluster, cluster2: Cluster): Point[] {
     return [
@@ -594,12 +559,15 @@ export class HPAAbstractGraph {
    * @param cluster1 - First cluster.
    * @param cluster2 - Second cluster.
    * @returns True if clusters are adjacent.
+   * @example
    */
   private static areClustersAdjacent(cluster1: Cluster, cluster2: Cluster): boolean {
     const dx = Math.abs(cluster1.x - cluster2.x);
     const dy = Math.abs(cluster1.y - cluster2.y);
-    
-    return (dx === cluster1.width && dy < cluster1.height + cluster2.height) ||
-           (dy === cluster1.height && dx < cluster1.width + cluster2.width);
+
+    return (
+      (dx === cluster1.width && dy < cluster1.height + cluster2.height) ||
+      (dy === cluster1.height && dx < cluster1.width + cluster2.width)
+    );
   }
 }

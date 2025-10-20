@@ -62,6 +62,11 @@ export class BVH {
   private stats: BVHStats;
   private primitives: Map<string | number, Primitive>;
 
+  /**
+   *
+   * @param options
+   * @example
+   */
   constructor(options: Partial<BVHOptions> = {}) {
     const opts = { ...DEFAULT_BVH_OPTIONS, ...options };
 
@@ -96,6 +101,8 @@ export class BVH {
 
   /**
    * Insert a primitive into the BVH.
+   * @param primitive
+   * @example
    */
   insert(primitive: Primitive): BVHResult {
     const startTime = performance.now();
@@ -151,6 +158,8 @@ export class BVH {
 
   /**
    * Insert multiple primitives in batch.
+   * @param primitives
+   * @example
    */
   insertBatch(primitives: Primitive[]): BatchOperationResult {
     const startTime = performance.now();
@@ -202,6 +211,8 @@ export class BVH {
 
   /**
    * Remove a primitive from the BVH.
+   * @param primitiveId
+   * @example
    */
   remove(primitiveId: string | number): BVHResult {
     const startTime = performance.now();
@@ -253,6 +264,9 @@ export class BVH {
 
   /**
    * Perform ray intersection query.
+   * @param ray
+   * @param options
+   * @example
    */
   rayIntersection(ray: Ray3D, options: RayIntersectionOptions = {}): RayIntersectionResult {
     const startTime = performance.now();
@@ -264,21 +278,15 @@ export class BVH {
     let primitivesTested = 0;
 
     if (this.root) {
-      const result = this.rayIntersectionRecursive(
-        this.root,
-        ray,
-        primitives,
-        distances,
-        options,
-        0
-      );
+      const result = this.rayIntersectionRecursive(this.root, ray, primitives, distances, options, 0);
       nodesVisited = result.nodesVisited;
       primitivesTested = result.primitivesTested;
     }
 
     // Sort by distance if requested
     if (options.sortByDistance !== false && primitives.length > 1) {
-      const sorted = primitives.map((p, i) => ({ primitive: p, distance: distances[i] }))
+      const sorted = primitives
+        .map((p, i) => ({ primitive: p, distance: distances[i] }))
         .sort((a, b) => a.distance - b.distance);
       primitives.length = 0;
       distances.length = 0;
@@ -289,20 +297,20 @@ export class BVH {
     }
 
     const executionTime = performance.now() - startTime;
-    this.stats.averageRayIntersectionTime = 
-      (this.stats.averageRayIntersectionTime * (this.stats.rayIntersections - 1) + executionTime) / 
+    this.stats.averageRayIntersectionTime =
+      (this.stats.averageRayIntersectionTime * (this.stats.rayIntersections - 1) + executionTime) /
       this.stats.rayIntersections;
-    this.stats.averageNodesVisitedPerRay = 
-      (this.stats.averageNodesVisitedPerRay * (this.stats.rayIntersections - 1) + nodesVisited) / 
+    this.stats.averageNodesVisitedPerRay =
+      (this.stats.averageNodesVisitedPerRay * (this.stats.rayIntersections - 1) + nodesVisited) /
       this.stats.rayIntersections;
-    this.stats.averagePrimitivesTestedPerRay = 
-      (this.stats.averagePrimitivesTestedPerRay * (this.stats.rayIntersections - 1) + primitivesTested) / 
+    this.stats.averagePrimitivesTestedPerRay =
+      (this.stats.averagePrimitivesTestedPerRay * (this.stats.rayIntersections - 1) + primitivesTested) /
       this.stats.rayIntersections;
 
-    this.emitEvent(BVHEventType.RAY_INTERSECTION, { 
-      ray, 
-      results: primitives, 
-      executionTime 
+    this.emitEvent(BVHEventType.RAY_INTERSECTION, {
+      ray,
+      results: primitives,
+      executionTime,
     });
 
     return {
@@ -318,6 +326,9 @@ export class BVH {
 
   /**
    * Perform AABB intersection query.
+   * @param aabb
+   * @param options
+   * @example
    */
   aabbIntersection(aabb: AABB, options: AABBIntersectionOptions = {}): AABBIntersectionResult {
     const startTime = performance.now();
@@ -327,24 +338,18 @@ export class BVH {
     let nodesVisited = 0;
 
     if (this.root) {
-      nodesVisited = this.aabbIntersectionRecursive(
-        this.root,
-        aabb,
-        primitives,
-        options,
-        0
-      );
+      nodesVisited = this.aabbIntersectionRecursive(this.root, aabb, primitives, options, 0);
     }
 
     const executionTime = performance.now() - startTime;
-    this.stats.averageAABBIntersectionTime = 
-      (this.stats.averageAABBIntersectionTime * (this.stats.aabbIntersections - 1) + executionTime) / 
+    this.stats.averageAABBIntersectionTime =
+      (this.stats.averageAABBIntersectionTime * (this.stats.aabbIntersections - 1) + executionTime) /
       this.stats.aabbIntersections;
 
-    this.emitEvent(BVHEventType.AABB_INTERSECTION, { 
-      aabb, 
-      results: primitives, 
-      executionTime 
+    this.emitEvent(BVHEventType.AABB_INTERSECTION, {
+      aabb,
+      results: primitives,
+      executionTime,
     });
 
     return {
@@ -358,6 +363,7 @@ export class BVH {
 
   /**
    * Get the size of the BVH.
+   * @example
    */
   size(): number {
     return this.stats.totalPrimitives;
@@ -365,6 +371,7 @@ export class BVH {
 
   /**
    * Check if the BVH is empty.
+   * @example
    */
   isEmpty(): boolean {
     return this.root === null || this.stats.totalPrimitives === 0;
@@ -372,6 +379,7 @@ export class BVH {
 
   /**
    * Clear all primitives from the BVH.
+   * @example
    */
   clear(): void {
     this.root = null;
@@ -382,6 +390,7 @@ export class BVH {
 
   /**
    * Rebuild the entire BVH.
+   * @example
    */
   rebuild(): BVHResult {
     const startTime = performance.now();
@@ -412,6 +421,7 @@ export class BVH {
 
   /**
    * Get statistics about the BVH.
+   * @example
    */
   getStats(): BVHStats {
     return { ...this.stats };
@@ -419,6 +429,7 @@ export class BVH {
 
   /**
    * Get performance metrics.
+   * @example
    */
   getPerformanceMetrics(): BVHPerformanceMetrics {
     return {
@@ -434,6 +445,7 @@ export class BVH {
 
   /**
    * Serialize the BVH to JSON.
+   * @example
    */
   serialize(): BVHSerialization {
     return {
@@ -454,6 +466,8 @@ export class BVH {
 
   /**
    * Deserialize a BVH from JSON.
+   * @param data
+   * @example
    */
   static deserialize(data: BVHSerialization): BVH {
     const bvh = new BVH({ config: data.config });
@@ -465,6 +479,11 @@ export class BVH {
 
   // Private helper methods
 
+  /**
+   *
+   * @param primitives
+   * @example
+   */
   private buildTree(primitives: Primitive[]): BVHNode {
     if (primitives.length === 0) {
       throw new Error("Cannot build tree with no primitives");
@@ -477,6 +496,12 @@ export class BVH {
     return this.buildNode(primitives, 0);
   }
 
+  /**
+   *
+   * @param primitives
+   * @param depth
+   * @example
+   */
   private buildNode(primitives: Primitive[], depth: number): BVHNode {
     if (primitives.length <= this.config.maxPrimitivesPerLeaf || depth >= this.config.maxDepth) {
       return this.createLeafNode(primitives, depth);
@@ -512,6 +537,12 @@ export class BVH {
     return node;
   }
 
+  /**
+   *
+   * @param primitives
+   * @param depth
+   * @example
+   */
   private createLeafNode(primitives: Primitive[], depth: number): BVHNode {
     return {
       bounds: this.computeBounds(primitives),
@@ -525,6 +556,11 @@ export class BVH {
     };
   }
 
+  /**
+   *
+   * @param primitives
+   * @example
+   */
   private findBestSplit(primitives: Primitive[]): SAHSplitCandidate | null {
     if (!this.config.useSAH) {
       // Simple split along longest axis
@@ -532,11 +568,11 @@ export class BVH {
       const size = bounds.size;
       let axis = 0;
       if (size.y > size.x) axis = 1;
-      if (size.z > size[axis === 0 ? 'x' : axis === 1 ? 'y' : 'z']) axis = 2;
-      
+      if (size.z > size[axis === 0 ? "x" : axis === 1 ? "y" : "z"]) axis = 2;
+
       const center = bounds.center;
-      const position = center[axis === 0 ? 'x' : axis === 1 ? 'y' : 'z'];
-      
+      const position = center[axis === 0 ? "x" : axis === 1 ? "y" : "z"];
+
       return {
         axis,
         position,
@@ -561,11 +597,17 @@ export class BVH {
     return bestSplit;
   }
 
+  /**
+   *
+   * @param primitives
+   * @param axis
+   * @example
+   */
   private findBestSplitAlongAxis(primitives: Primitive[], axis: number): SAHSplitCandidate | null {
     const bounds = this.computeBounds(primitives);
-    const min = bounds.min[axis === 0 ? 'x' : axis === 1 ? 'y' : 'z'];
-    const max = bounds.max[axis === 0 ? 'x' : axis === 1 ? 'y' : 'z'];
-    
+    const min = bounds.min[axis === 0 ? "x" : axis === 1 ? "y" : "z"];
+    const max = bounds.max[axis === 0 ? "x" : axis === 1 ? "y" : "z"];
+
     if (min === max) {
       return null; // No split possible
     }
@@ -578,7 +620,7 @@ export class BVH {
     for (let i = 1; i < this.config.sahBins; i++) {
       const position = min + i * binSize;
       const { left, right } = this.partitionPrimitivesAtPosition(primitives, axis, position);
-      
+
       if (left.length === 0 || right.length === 0) {
         continue;
       }
@@ -599,16 +641,36 @@ export class BVH {
     return bestSplit;
   }
 
-  private partitionPrimitives(primitives: Primitive[], split: SAHSplitCandidate): { left: Primitive[]; right: Primitive[] } {
+  /**
+   *
+   * @param primitives
+   * @param split
+   * @example
+   */
+  private partitionPrimitives(
+    primitives: Primitive[],
+    split: SAHSplitCandidate
+  ): { left: Primitive[]; right: Primitive[] } {
     return this.partitionPrimitivesAtPosition(primitives, split.axis, split.position);
   }
 
-  private partitionPrimitivesAtPosition(primitives: Primitive[], axis: number, position: number): { left: Primitive[]; right: Primitive[] } {
+  /**
+   *
+   * @param primitives
+   * @param axis
+   * @param position
+   * @example
+   */
+  private partitionPrimitivesAtPosition(
+    primitives: Primitive[],
+    axis: number,
+    position: number
+  ): { left: Primitive[]; right: Primitive[] } {
     const left: Primitive[] = [];
     const right: Primitive[] = [];
 
     for (const primitive of primitives) {
-      const center = primitive.bounds.center[axis === 0 ? 'x' : axis === 1 ? 'y' : 'z'];
+      const center = primitive.bounds.center[axis === 0 ? "x" : axis === 1 ? "y" : "z"];
       if (center < position) {
         left.push(primitive);
       } else {
@@ -619,27 +681,43 @@ export class BVH {
     return { left, right };
   }
 
+  /**
+   *
+   * @param left
+   * @param right
+   * @param parentBounds
+   * @example
+   */
   private computeSAHCost(left: Primitive[], right: Primitive[], parentBounds: AABB): number {
     const leftBounds = this.computeBounds(left);
     const rightBounds = this.computeBounds(right);
-    
+
     const parentSA = this.computeSurfaceArea(parentBounds);
     const leftSA = this.computeSurfaceArea(leftBounds);
     const rightSA = this.computeSurfaceArea(rightBounds);
-    
+
     const leftCost = (leftSA / parentSA) * left.length * this.config.intersectionCost;
     const rightCost = (rightSA / parentSA) * right.length * this.config.intersectionCost;
-    
+
     return this.config.traversalCost + leftCost + rightCost;
   }
 
+  /**
+   *
+   * @param primitives
+   * @example
+   */
   private computeBounds(primitives: Primitive[]): AABB {
     if (primitives.length === 0) {
       throw new Error("Cannot compute bounds for empty primitive list");
     }
 
-    let minX = Infinity, minY = Infinity, minZ = Infinity;
-    let maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
+    let minX = Infinity,
+      minY = Infinity,
+      minZ = Infinity;
+    let maxX = -Infinity,
+      maxY = -Infinity,
+      maxZ = -Infinity;
 
     for (const primitive of primitives) {
       minX = Math.min(minX, primitive.bounds.min.x);
@@ -658,11 +736,26 @@ export class BVH {
     };
   }
 
+  /**
+   *
+   * @param bounds
+   * @example
+   */
   private computeSurfaceArea(bounds: AABB): number {
     const size = bounds.size;
     return 2 * (size.x * size.y + size.y * size.z + size.z * size.x);
   }
 
+  /**
+   *
+   * @param node
+   * @param ray
+   * @param primitives
+   * @param distances
+   * @param options
+   * @param nodesVisited
+   * @example
+   */
   private rayIntersectionRecursive(
     node: BVHNode,
     ray: Ray3D,
@@ -685,7 +778,7 @@ export class BVH {
       // Test all primitives in leaf
       for (const primitive of node.primitives) {
         primitivesTested++;
-        
+
         if (options.filter && !options.filter(primitive)) {
           continue;
         }
@@ -694,11 +787,11 @@ export class BVH {
         if (distance !== null) {
           primitives.push(primitive);
           distances.push(distance);
-          
+
           if (!options.findAll) {
             return { nodesVisited, primitivesTested };
           }
-          
+
           if (options.maxIntersections && primitives.length >= options.maxIntersections) {
             return { nodesVisited, primitivesTested };
           }
@@ -710,12 +803,12 @@ export class BVH {
         const result = this.rayIntersectionRecursive(node.left, ray, primitives, distances, options, nodesVisited);
         nodesVisited = result.nodesVisited;
         primitivesTested += result.primitivesTested;
-        
+
         if (!options.findAll && primitives.length > 0) {
           return { nodesVisited, primitivesTested };
         }
       }
-      
+
       if (node.right) {
         const result = this.rayIntersectionRecursive(node.right, ray, primitives, distances, options, nodesVisited);
         nodesVisited = result.nodesVisited;
@@ -726,6 +819,15 @@ export class BVH {
     return { nodesVisited, primitivesTested };
   }
 
+  /**
+   *
+   * @param node
+   * @param aabb
+   * @param primitives
+   * @param options
+   * @param nodesVisited
+   * @example
+   */
   private aabbIntersectionRecursive(
     node: BVHNode,
     aabb: AABB,
@@ -749,7 +851,7 @@ export class BVH {
 
         if (this.aabbIntersects(primitive.bounds, aabb)) {
           primitives.push(primitive);
-          
+
           if (options.maxIntersections && primitives.length >= options.maxIntersections) {
             return nodesVisited;
           }
@@ -768,6 +870,12 @@ export class BVH {
     return nodesVisited;
   }
 
+  /**
+   *
+   * @param ray
+   * @param aabb
+   * @example
+   */
   private rayAABBIntersection(ray: Ray3D, aabb: AABB): boolean {
     const tMin = (aabb.min.x - ray.origin.x) / ray.direction.x;
     const tMax = (aabb.max.x - ray.origin.x) / ray.direction.x;
@@ -793,12 +901,18 @@ export class BVH {
     return tNear <= tFar && tFar >= tMinRay && tNear <= tMaxRay;
   }
 
+  /**
+   *
+   * @param ray
+   * @param primitive
+   * @example
+   */
   private rayPrimitiveIntersection(ray: Ray3D, primitive: Primitive): number | null {
     // For triangles, use ray-triangle intersection
-    if ('v0' in primitive && 'v1' in primitive && 'v2' in primitive) {
+    if ("v0" in primitive && "v1" in primitive && "v2" in primitive) {
       return this.rayTriangleIntersection(ray, primitive as Triangle);
     }
-    
+
     // For other primitives, use ray-AABB intersection
     if (this.rayAABBIntersection(ray, primitive.bounds)) {
       // Return distance to AABB center as approximation
@@ -808,10 +922,16 @@ export class BVH {
       const dz = center.z - ray.origin.z;
       return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
-    
+
     return null;
   }
 
+  /**
+   *
+   * @param ray
+   * @param triangle
+   * @example
+   */
   private rayTriangleIntersection(ray: Ray3D, triangle: Triangle): number | null {
     // Möller-Trumbore algorithm
     const v0 = triangle.v0;
@@ -852,13 +972,39 @@ export class BVH {
     return null;
   }
 
+  /**
+   *
+   * @param aabb1
+   * @param aabb2
+   * @example
+   */
   private aabbIntersects(aabb1: AABB, aabb2: AABB): boolean {
-    return aabb1.min.x <= aabb2.max.x && aabb1.max.x >= aabb2.min.x &&
-           aabb1.min.y <= aabb2.max.y && aabb1.max.y >= aabb2.min.y &&
-           aabb1.min.z <= aabb2.max.z && aabb1.max.z >= aabb2.min.z;
+    return (
+      aabb1.min.x <= aabb2.max.x &&
+      aabb1.max.x >= aabb2.min.x &&
+      aabb1.min.y <= aabb2.max.y &&
+      aabb1.max.y >= aabb2.min.y &&
+      aabb1.min.z <= aabb2.max.z &&
+      aabb1.max.z >= aabb2.min.z
+    );
   }
 
-  private crossProduct(a: { x: number; y: number; z: number }, b: { x: number; y: number; z: number }): { x: number; y: number; z: number } {
+  /**
+   *
+   * @param a
+   * @param a.x
+   * @param a.y
+   * @param a.z
+   * @param b
+   * @param b.x
+   * @param b.y
+   * @param b.z
+   * @example
+   */
+  private crossProduct(
+    a: { x: number; y: number; z: number },
+    b: { x: number; y: number; z: number }
+  ): { x: number; y: number; z: number } {
     return {
       x: a.y * b.z - a.z * b.y,
       y: a.z * b.x - a.x * b.z,
@@ -866,10 +1012,27 @@ export class BVH {
     };
   }
 
+  /**
+   *
+   * @param a
+   * @param a.x
+   * @param a.y
+   * @param a.z
+   * @param b
+   * @param b.x
+   * @param b.y
+   * @param b.z
+   * @example
+   */
   private dotProduct(a: { x: number; y: number; z: number }, b: { x: number; y: number; z: number }): number {
     return a.x * b.x + a.y * b.y + a.z * b.z;
   }
 
+  /**
+   *
+   * @param primitive
+   * @example
+   */
   private isValidPrimitive(primitive: Primitive): boolean {
     if (!primitive || !primitive.bounds || !primitive.id) {
       return false;
@@ -888,6 +1051,10 @@ export class BVH {
     return true;
   }
 
+  /**
+   *
+   * @example
+   */
   private updateStats(): void {
     if (this.root) {
       this.stats.nodeCount = this.countNodes(this.root);
@@ -899,6 +1066,11 @@ export class BVH {
     }
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private countNodes(node: BVHNode): number {
     let count = 1;
     if (!node.isLeaf) {
@@ -908,6 +1080,11 @@ export class BVH {
     return count;
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private countLeaves(node: BVHNode): number {
     if (node.isLeaf) {
       return 1;
@@ -918,6 +1095,11 @@ export class BVH {
     return count;
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private calculateHeight(node: BVHNode): number {
     if (node.isLeaf) {
       return 1;
@@ -928,12 +1110,24 @@ export class BVH {
     return 1 + maxChildHeight;
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private calculateAverageDepth(node: BVHNode): number {
     const depths: number[] = [];
     this.collectDepths(node, 0, depths);
     return depths.reduce((sum, depth) => sum + depth, 0) / depths.length;
   }
 
+  /**
+   *
+   * @param node
+   * @param depth
+   * @param depths
+   * @example
+   */
   private collectDepths(node: BVHNode, depth: number, depths: number[]): void {
     if (node.isLeaf) {
       depths.push(depth);
@@ -943,6 +1137,11 @@ export class BVH {
     }
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private calculateMaxDepth(node: BVHNode): number {
     if (node.isLeaf) {
       return node.depth;
@@ -953,6 +1152,10 @@ export class BVH {
     return maxDepth;
   }
 
+  /**
+   *
+   * @example
+   */
   private estimateMemoryUsage(): number {
     // Rough estimate: each node + primitive data
     const nodeSize = 64; // Approximate size of a BVHNode
@@ -960,14 +1163,22 @@ export class BVH {
     return this.stats.nodeCount * nodeSize + this.stats.totalPrimitives * primitiveSize;
   }
 
+  /**
+   *
+   * @example
+   */
   private calculatePerformanceScore(): number {
     const maxTime = 100; // 100ms as maximum
     const rayScore = Math.max(0, 100 - (this.stats.averageRayIntersectionTime / maxTime) * 100);
     const aabbScore = Math.max(0, 100 - (this.stats.averageAABBIntersectionTime / maxTime) * 100);
-    
+
     return (rayScore + aabbScore) / 2;
   }
 
+  /**
+   *
+   * @example
+   */
   private calculateBalanceRatio(): number {
     if (this.stats.nodeCount === 0) {
       return 1;
@@ -976,6 +1187,10 @@ export class BVH {
     return Math.max(0, 1 - (this.stats.height - idealHeight) / idealHeight);
   }
 
+  /**
+   *
+   * @example
+   */
   private calculateQueryEfficiency(): number {
     if (this.stats.rayIntersections === 0) {
       return 1;
@@ -985,6 +1200,10 @@ export class BVH {
     return Math.max(0, 1 - (actualVisits - idealVisits) / idealVisits);
   }
 
+  /**
+   *
+   * @example
+   */
   private calculateSAHQuality(): number {
     if (!this.config.useSAH) {
       return 0;
@@ -993,10 +1212,19 @@ export class BVH {
     return this.calculateBalanceRatio();
   }
 
+  /**
+   *
+   * @example
+   */
   private serializeTreeStructure(): any {
     return this.serializeNode(this.root);
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private serializeNode(node: BVHNode | null): any {
     if (node === null) {
       return null;
@@ -1012,6 +1240,12 @@ export class BVH {
     };
   }
 
+  /**
+   *
+   * @param type
+   * @param data
+   * @example
+   */
   private emitEvent(type: BVHEventType, data?: any): void {
     if (this.eventHandlers.length === 0) {
       return;
@@ -1028,7 +1262,7 @@ export class BVH {
         handler(event);
       } catch (error) {
         if (this.enableDebug) {
-          console.error('Error in BVH event handler:', error);
+          console.error("Error in BVH event handler:", error);
         }
       }
     }

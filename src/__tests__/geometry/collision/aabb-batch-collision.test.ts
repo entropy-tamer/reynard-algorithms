@@ -1,8 +1,5 @@
 import { describe, it, expect } from "vitest";
-import {
-  batchCollisionDetection,
-  batchCollisionWithSpatialHash,
-} from "../../../geometry/collision/aabb";
+import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../../../geometry/collision/aabb";
 import type { AABB, AABBSpatialHashConfig } from "../../../geometry/collision/aabb/aabb-types";
 
 // Test helper functions

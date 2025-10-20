@@ -1,9 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import {
-  PriorityQueue,
-  PriorityQueueComparator,
-  PriorityQueueEvent,
-} from "../../data-structures/priority-queue";
+import { PriorityQueue, PriorityQueueComparator, PriorityQueueEvent } from "../../data-structures/priority-queue";
 
 describe("PriorityQueue", () => {
   let pq: PriorityQueue<number>;

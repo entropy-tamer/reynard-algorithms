@@ -5,8 +5,16 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { LineIntersection } from "../../../geometry/algorithms/line-intersection/line-intersection-core";
-import { SweepLineEventQueue, SweepLineStatusStructure, SweepLineUtils } from "../../../geometry/algorithms/line-intersection/sweep-line";
-import type { LineSegment, SweepLineEvent, IntersectionQueryOptions } from "../../../geometry/algorithms/line-intersection/line-intersection-types";
+import {
+  SweepLineEventQueue,
+  SweepLineStatusStructure,
+  SweepLineUtils,
+} from "../../../geometry/algorithms/line-intersection/sweep-line";
+import type {
+  LineSegment,
+  SweepLineEvent,
+  IntersectionQueryOptions,
+} from "../../../geometry/algorithms/line-intersection/line-intersection-types";
 
 describe("LineIntersection", () => {
   let intersection: LineIntersection;
@@ -54,9 +62,7 @@ describe("LineIntersection", () => {
     });
 
     it("should validate segment points", () => {
-      const invalidSegments: LineSegment[] = [
-        { id: 1, start: { x: "invalid", y: 0 } as any, end: { x: 1, y: 1 } },
-      ];
+      const invalidSegments: LineSegment[] = [{ id: 1, start: { x: "invalid", y: 0 } as any, end: { x: 1, y: 1 } }];
       const result = intersection.validateSegments(invalidSegments);
       expect(result.isValid).toBe(false);
       expect(result.errors).toContain("Segment 0 has invalid start or end point");
@@ -83,9 +89,7 @@ describe("LineIntersection", () => {
 
     it("should handle validation disabled", () => {
       const intersectionNoValidation = new LineIntersection({ validateInput: false });
-      const invalidSegments = [
-        { id: 1, start: { x: 0, y: 0 } } as any,
-      ];
+      const invalidSegments = [{ id: 1, start: { x: 0, y: 0 } } as any];
       const result = intersectionNoValidation.findIntersections(invalidSegments);
       expect(result.stats.success).toBe(false);
       expect(result.stats.error).toContain("At least 2 segments are required");
@@ -137,9 +141,7 @@ describe("LineIntersection", () => {
     });
 
     it("should handle single segment", () => {
-      const segments: LineSegment[] = [
-        { id: 1, start: { x: 0, y: 0 }, end: { x: 1, y: 1 } },
-      ];
+      const segments: LineSegment[] = [{ id: 1, start: { x: 0, y: 0 }, end: { x: 1, y: 1 } }];
 
       const result = intersection.findIntersections(segments);
 
@@ -348,7 +350,7 @@ describe("LineIntersection", () => {
     it("should respect max intersections limit", () => {
       const limitedIntersection = new LineIntersection({ maxIntersections: 5 });
       const segments: LineSegment[] = [];
-      
+
       // Create many intersecting segments
       for (let i = 0; i < 20; i++) {
         segments.push({

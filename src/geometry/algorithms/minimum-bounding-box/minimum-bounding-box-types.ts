@@ -296,6 +296,3 @@ export interface MinimumBoundingBoxOptimizationResult {
   /** Final objective value */
   objectiveValue: number;
 }
-
-
-

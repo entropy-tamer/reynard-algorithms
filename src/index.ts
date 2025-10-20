@@ -6,5 +6,5 @@
  * automatic optimization and performance monitoring.
  */
 
-// Export all available algorithms from the comprehensive exports file
-export * from "./exports";
+// Export all available algorithms from the minimal exports file
+export * from "./minimal-exports";

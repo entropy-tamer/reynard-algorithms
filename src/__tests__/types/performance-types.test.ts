@@ -297,10 +297,20 @@ describe("Performance Types", () => {
 
   describe("type compatibility", () => {
     it("should allow using types in function parameters", () => {
+      /**
+       *
+       * @param options
+       * @example
+       */
       function processThrottleOptions(options: ThrottleOptions): boolean {
         return options.leading === true;
       }
 
+      /**
+       *
+       * @param stats
+       * @example
+       */
       function processMemoryStats(stats: MemoryPoolStats): number {
         return stats.activeObjects / stats.totalObjects;
       }
@@ -322,6 +332,10 @@ describe("Performance Types", () => {
     });
 
     it("should allow using types in function return values", () => {
+      /**
+       *
+       * @example
+       */
       function createDefaultConfig(): MemoryPoolConfig {
         return {
           initialSize: 10,
@@ -330,6 +344,10 @@ describe("Performance Types", () => {
         };
       }
 
+      /**
+       *
+       * @example
+       */
       function createEmptyStats(): SpatialHashStats {
         return {
           totalCells: 0,

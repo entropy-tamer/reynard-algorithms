@@ -38,7 +38,7 @@ For implementation details and usage examples, see the source code in the `src/`
 
 ```typescript
 // Import the algorithm
-import { LineSegmentIntersection } from '@entropy-tamer/reynard-algorithms';
+import { LineSegmentIntersection } from "@entropy-tamer/reynard-algorithms";
 ```
 
 ## Performance

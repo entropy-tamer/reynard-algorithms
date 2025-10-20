@@ -7,7 +7,7 @@ This guide provides practical examples of using the reynard-algorithms package i
 Union-Find is perfect for connected components, cycle detection, and network analysis.
 
 ```typescript
-import { UnionFind } from '@entropy-tamer/reynard-algorithms';
+import { UnionFind } from "@entropy-tamer/reynard-algorithms";
 
 // Initialize with 10 elements
 const uf = new UnionFind(10);
@@ -31,15 +31,15 @@ console.log(uf.find(3)); // 3 (or 4)
 Use PriorityQueue for efficient ordering and task scheduling.
 
 ```typescript
-import { PriorityQueue } from '@entropy-tamer/reynard-algorithms';
+import { PriorityQueue } from "@entropy-tamer/reynard-algorithms";
 
 // Create a priority queue (lower numbers = higher priority)
 const pq = new PriorityQueue<string>();
 
 // Add items with priorities
-pq.push('urgent task', 1);
-pq.push('normal task', 5);
-pq.push('low priority task', 10);
+pq.push("urgent task", 1);
+pq.push("normal task", 5);
+pq.push("low priority task", 10);
 
 // Process items in priority order
 while (!pq.isEmpty()) {
@@ -56,24 +56,24 @@ while (!pq.isEmpty()) {
 LRU Cache provides efficient caching with automatic eviction.
 
 ```typescript
-import { LRUCache } from '@entropy-tamer/reynard-algorithms';
+import { LRUCache } from "@entropy-tamer/reynard-algorithms";
 
 // Create cache with capacity of 3
 const cache = new LRUCache<string, number>(3);
 
 // Add items
-cache.set('a', 1);
-cache.set('b', 2);
-cache.set('c', 3);
+cache.set("a", 1);
+cache.set("b", 2);
+cache.set("c", 3);
 
 // Access items (makes them recently used)
-console.log(cache.get('a')); // 1
+console.log(cache.get("a")); // 1
 
 // Add new item (evicts least recently used 'b')
-cache.set('d', 4);
+cache.set("d", 4);
 
-console.log(cache.has('b')); // false (evicted)
-console.log(cache.has('a')); // true (still in cache)
+console.log(cache.has("b")); // false (evicted)
+console.log(cache.has("a")); // true (still in cache)
 ```
 
 ## AABB Collision Detection
@@ -81,7 +81,7 @@ console.log(cache.has('a')); // true (still in cache)
 Axis-Aligned Bounding Box collision detection for games and simulations.
 
 ```typescript
-import { AABB, Point } from '@entropy-tamer/reynard-algorithms';
+import { AABB, Point } from "@entropy-tamer/reynard-algorithms";
 
 // Create bounding boxes
 const player = new AABB(10, 10, 20, 30); // x, y, width, height
@@ -89,13 +89,13 @@ const obstacle = new AABB(25, 20, 15, 15);
 
 // Check collision
 if (player.intersects(obstacle)) {
-  console.log('Collision detected!');
+  console.log("Collision detected!");
 }
 
 // Check if point is inside
 const mousePos = new Point(15, 25);
 if (player.contains(mousePos)) {
-  console.log('Mouse is over player');
+  console.log("Mouse is over player");
 }
 ```
 
@@ -104,7 +104,7 @@ if (player.contains(mousePos)) {
 Efficient spatial partitioning for collision detection and queries.
 
 ```typescript
-import { SpatialHash } from '@entropy-tamer/reynard-algorithms';
+import { SpatialHash } from "@entropy-tamer/reynard-algorithms";
 
 // Create spatial hash with cell size of 50
 const spatialHash = new SpatialHash(50);
@@ -121,12 +121,12 @@ const nearby = spatialHash.query(25, 25, 20, 20);
 console.log(nearby.length); // 2 (both objects are nearby)
 ```
 
-## A* Pathfinding
+## A\* Pathfinding
 
 Optimal pathfinding for games and navigation.
 
 ```typescript
-import { AStar, Point } from '@entropy-tamer/reynard-algorithms';
+import { AStar, Point } from "@entropy-tamer/reynard-algorithms";
 
 // Create pathfinder
 const pathfinder = new AStar();
@@ -137,7 +137,7 @@ const grid = [
   [0, 0, 1, 0, 0],
   [0, 0, 0, 0, 0],
   [0, 0, 1, 0, 0],
-  [0, 0, 0, 0, 0]
+  [0, 0, 0, 0, 0],
 ];
 
 // Find path from top-left to bottom-right
@@ -153,10 +153,10 @@ console.log(path); // Array of points representing the optimal path
 All algorithms include built-in performance monitoring.
 
 ```typescript
-import { Benchmark } from '@entropy-tamer/reynard-algorithms';
+import { Benchmark } from "@entropy-tamer/reynard-algorithms";
 
 // Create benchmark
-const benchmark = new Benchmark('Union-Find Operations');
+const benchmark = new Benchmark("Union-Find Operations");
 
 // Measure performance
 benchmark.start();
@@ -174,7 +174,7 @@ console.log(benchmark.getResults());
 Automatic memory management for high-frequency operations.
 
 ```typescript
-import { MemoryPool } from '@entropy-tamer/reynard-algorithms';
+import { MemoryPool } from "@entropy-tamer/reynard-algorithms";
 
 // Create memory pool for AABB objects
 const pool = new MemoryPool(() => new AABB(0, 0, 0, 0));

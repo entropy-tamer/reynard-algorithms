@@ -327,7 +327,7 @@ describe("RTree Spatial Data Structure", () => {
           const minY = Math.random() * 1000;
           const maxX = minX + Math.random() * 100 + 10; // Ensure maxX > minX
           const maxY = minY + Math.random() * 100 + 10; // Ensure maxY > minY
-          
+
           rtree.insert({
             id: `obj${i}`,
             bounds: { minX, minY, maxX, maxY },
@@ -343,7 +343,7 @@ describe("RTree Spatial Data Structure", () => {
           const minY = Math.random() * 500;
           const maxX = minX + Math.random() * 100 + 10; // Ensure maxX > minX
           const maxY = minY + Math.random() * 100 + 10; // Ensure maxY > minY
-          
+
           const queryBounds: Rectangle = { minX, minY, maxX, maxY };
           const result = rtree.query(queryBounds);
           expect(result.entries.length).toBeGreaterThanOrEqual(0);

@@ -160,7 +160,6 @@ describe("Collision Algorithms Extended Coverage", () => {
     });
 
     it("should handle empty AABB array with optimization", () => {
-
       const collisions = executeOptimizedCollisionDetection([], memoryPool);
       expect(collisions).toEqual([]);
     });
@@ -182,7 +181,6 @@ describe("Collision Algorithms Extended Coverage", () => {
         });
       }
 
-
       const collisions = executeOptimizedCollisionDetection(largeAABBs, memoryPool);
       expect(Array.isArray(collisions)).toBe(true);
     });
@@ -194,7 +192,6 @@ describe("Collision Algorithms Extended Coverage", () => {
         { x: 0, y: 0, width: 0, height: 10 },
         { x: -5, y: -5, width: 10, height: 10 },
       ];
-
 
       const collisions = executeOptimizedCollisionDetection(edgeCaseAABBs, memoryPool);
       expect(Array.isArray(collisions)).toBe(true);
@@ -213,7 +210,6 @@ describe("Collision Algorithms Extended Coverage", () => {
     });
 
     it("should properly use memory pool for optimized operations", () => {
-
       const initialStats = memoryPool.getStatistics();
       const initialAllocations = initialStats.totalAllocations;
 

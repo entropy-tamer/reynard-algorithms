@@ -45,6 +45,7 @@ export class OBB {
   /**
    * Creates an instance of OBB.
    * @param config - Optional configuration for OBB operations.
+   * @example
    */
   constructor(config: Partial<OBBConfig> = {}) {
     this.config = {
@@ -70,11 +71,9 @@ export class OBB {
    * @param points - Array of points to fit.
    * @param options - Construction options.
    * @returns Construction result with OBB and quality metrics.
+   * @example
    */
-  constructFromPoints(
-    points: Point[],
-    options: Partial<OBBConstructionOptions> = {}
-  ): OBBConstructionResult {
+  constructFromPoints(points: Point[], options: Partial<OBBConstructionOptions> = {}): OBBConstructionResult {
     const startTime = performance.now();
     const constructionOptions: OBBConstructionOptions = {
       method: "pca",
@@ -160,12 +159,9 @@ export class OBB {
    * @param obb2 - Second OBB.
    * @param options - SAT options.
    * @returns Collision test result.
+   * @example
    */
-  testCollision(
-    obb1: OBBData,
-    obb2: OBBData,
-    options: Partial<SATOptions> = {}
-  ): OBBCollisionResult {
+  testCollision(obb1: OBBData, obb2: OBBData, options: Partial<SATOptions> = {}): OBBCollisionResult {
     const startTime = performance.now();
     const satOptions: SATOptions = {
       computeMTV: true,
@@ -179,7 +175,7 @@ export class OBB {
       if (this.config.validateInput) {
         const validation1 = this.validateOBB(obb1);
         const validation2 = this.validateOBB(obb2);
-        
+
         if (!validation1.isValid || !validation2.isValid) {
           throw new Error("Invalid OBB provided for collision test");
         }
@@ -220,7 +216,7 @@ export class OBB {
         if (overlap < minOverlap) {
           minOverlap = overlap;
           penetrationAxis = axis;
-          
+
           if (satOptions.computeMTV) {
             // Calculate MTV direction
             const center1 = proj1.center;
@@ -272,6 +268,7 @@ export class OBB {
    * @param point - The point to test.
    * @param obb - The OBB to test against.
    * @returns Point test result.
+   * @example
    */
   testPoint(point: Point, obb: OBBData): OBBPointTestResult {
     const startTime = performance.now();
@@ -326,11 +323,9 @@ export class OBB {
    * @param obb - The OBB to transform.
    * @param options - Transform options.
    * @returns Transform result.
+   * @example
    */
-  transformOBB(
-    obb: OBBData,
-    options: Partial<OBBTransformOptions> = {}
-  ): OBBTransformResult {
+  transformOBB(obb: OBBData, options: Partial<OBBTransformOptions> = {}): OBBTransformResult {
     const startTime = performance.now();
     const transformOptions: OBBTransformOptions = {
       translation: { x: 0, y: 0 },
@@ -349,14 +344,11 @@ export class OBB {
         }
       }
 
-      let transformedOBB: OBBData = { ...obb };
+      const transformedOBB: OBBData = { ...obb };
 
       // Apply translation
       if (transformOptions.translation) {
-        transformedOBB.center = OBBUtils.addVectorToPoint(
-          transformedOBB.center,
-          transformOptions.translation
-        );
+        transformedOBB.center = OBBUtils.addVectorToPoint(transformedOBB.center, transformOptions.translation);
       }
 
       // Apply rotation
@@ -415,11 +407,9 @@ export class OBB {
    * @param obb - The OBB to validate.
    * @param options - Validation options.
    * @returns Validation result.
+   * @example
    */
-  validateOBB(
-    obb: OBBData,
-    options: Partial<OBBValidationOptions> = {}
-  ): OBBValidationResult {
+  validateOBB(obb: OBBData, options: Partial<OBBValidationOptions> = {}): OBBValidationResult {
     const validationOptions: OBBValidationOptions = {
       checkDimensions: true,
       checkAxes: true,
@@ -434,8 +424,7 @@ export class OBB {
 
     // Check dimensions
     if (validationOptions.checkDimensions) {
-      if (obb.halfWidths.x < validationOptions.minDimension! || 
-          obb.halfWidths.y < validationOptions.minDimension!) {
+      if (obb.halfWidths.x < validationOptions.minDimension! || obb.halfWidths.y < validationOptions.minDimension!) {
         errors.push("OBB has invalid dimensions");
       }
     }
@@ -480,11 +469,9 @@ export class OBB {
    * @param obb - The OBB to serialize.
    * @param options - Serialization options.
    * @returns Serialized OBB data.
+   * @example
    */
-  serialize(
-    obb: OBBData,
-    options: Partial<OBBSerializationOptions> = {}
-  ): OBBSerialization {
+  serialize(obb: OBBData, options: Partial<OBBSerializationOptions> = {}): OBBSerialization {
     const serializationOptions: OBBSerializationOptions = {
       precision: 6,
       includeStats: false,
@@ -493,8 +480,10 @@ export class OBB {
     };
 
     const round = (value: number) => {
-      return Math.round(value * Math.pow(10, serializationOptions.precision!)) / 
-             Math.pow(10, serializationOptions.precision!);
+      return (
+        Math.round(value * Math.pow(10, serializationOptions.precision!)) /
+        Math.pow(10, serializationOptions.precision!)
+      );
     };
 
     const roundPoint = (point: Point) => ({
@@ -532,6 +521,7 @@ export class OBB {
   /**
    * Updates the configuration.
    * @param newConfig - New configuration options.
+   * @example
    */
   updateConfig(newConfig: Partial<OBBConfig>): void {
     this.config = { ...this.config, ...newConfig };
@@ -540,6 +530,7 @@ export class OBB {
   /**
    * Gets the current configuration.
    * @returns The current configuration.
+   * @example
    */
   getConfig(): OBBConfig {
     return { ...this.config };
@@ -548,6 +539,7 @@ export class OBB {
   /**
    * Gets the current statistics.
    * @returns The current statistics.
+   * @example
    */
   getStats(): OBBStats {
     return { ...this.stats };
@@ -555,6 +547,7 @@ export class OBB {
 
   /**
    * Resets the statistics.
+   * @example
    */
   resetStats(): void {
     this.stats = {
@@ -570,41 +563,40 @@ export class OBB {
    * Constructs an OBB from points using PCA method.
    * @param points - Array of points.
    * @param options - Construction options.
+   * @param _options
    * @returns Constructed OBB.
+   * @example
    */
-  private constructFromPointsPCA(
-    points: Point[],
-    _options: OBBConstructionOptions
-  ): OBBData {
+  private constructFromPointsPCA(points: Point[], _options: OBBConstructionOptions): OBBData {
     // Calculate covariance matrix
     const covariance = OBBUtils.calculateCovarianceMatrix(points);
-    
+
     // Calculate principal components
     const principalComponents = OBBUtils.calculatePrincipalComponents(covariance);
-    
+
     // Calculate centroid
     const centroid = {
       x: points.reduce((sum, p) => sum + p.x, 0) / points.length,
       y: points.reduce((sum, p) => sum + p.y, 0) / points.length,
     };
-    
+
     // Project points onto principal axes to find extents
     const projectionsX: number[] = [];
     const projectionsY: number[] = [];
-    
+
     for (const point of points) {
       const localPoint = {
         x: point.x - centroid.x,
         y: point.y - centroid.y,
       };
-      
+
       projectionsX.push(OBBUtils.dotProduct(localPoint, principalComponents[0]));
       projectionsY.push(OBBUtils.dotProduct(localPoint, principalComponents[1]));
     }
-    
+
     const halfWidthX = (Math.max(...projectionsX) - Math.min(...projectionsX)) / 2;
     const halfWidthY = (Math.max(...projectionsY) - Math.min(...projectionsY)) / 2;
-    
+
     return {
       center: centroid,
       halfWidths: { x: halfWidthX, y: halfWidthY },
@@ -618,11 +610,9 @@ export class OBB {
    * @param points - Array of points.
    * @param options - Construction options.
    * @returns Constructed OBB.
+   * @example
    */
-  private constructFromPointsConvexHull(
-    points: Point[],
-    options: OBBConstructionOptions
-  ): OBBData {
+  private constructFromPointsConvexHull(points: Point[], options: OBBConstructionOptions): OBBData {
     // For now, fall back to PCA method
     // In a full implementation, this would compute the convex hull first
     return this.constructFromPointsPCA(points, options);
@@ -633,11 +623,9 @@ export class OBB {
    * @param points - Array of points.
    * @param options - Construction options.
    * @returns Constructed OBB.
+   * @example
    */
-  private constructFromPointsBruteForce(
-    points: Point[],
-    options: OBBConstructionOptions
-  ): OBBData {
+  private constructFromPointsBruteForce(points: Point[], options: OBBConstructionOptions): OBBData {
     // For now, fall back to PCA method
     // In a full implementation, this would try all possible orientations
     return this.constructFromPointsPCA(points, options);
@@ -648,16 +636,17 @@ export class OBB {
    * @param obb1 - First OBB.
    * @param obb2 - Second OBB.
    * @returns Array of axes to test.
+   * @example
    */
   private getSATAxes(obb1: OBBData, obb2: OBBData): Vector[] {
     const axes: Vector[] = [];
-    
+
     // Add axes from both OBBs
     axes.push(obb1.axes[0]);
     axes.push(obb1.axes[1]);
     axes.push(obb2.axes[0]);
     axes.push(obb2.axes[1]);
-    
+
     return axes;
   }
 
@@ -666,23 +655,25 @@ export class OBB {
    * @param points - Array of points.
    * @param obb - The OBB.
    * @returns Fit quality (0-1, higher is better).
+   * @example
    */
   private calculateFitQuality(points: Point[], obb: OBBData): number {
     if (points.length === 0) return 0;
-    
+
     let insideCount = 0;
     for (const point of points) {
       if (OBBUtils.isPointInsideOBB(point, obb, this.config.tolerance)) {
         insideCount++;
       }
     }
-    
+
     return insideCount / points.length;
   }
 
   /**
    * Creates a default OBB.
    * @returns Default OBB.
+   * @example
    */
   private createDefaultOBB(): OBBData {
     return {

@@ -21,6 +21,11 @@ import {
 export class SutherlandHodgmanClipper {
   private config: SutherlandHodgmanOptions;
 
+  /**
+   *
+   * @param config
+   * @example
+   */
   constructor(config: Partial<SutherlandHodgmanOptions> = {}) {
     this.config = {
       tolerance: 1e-10,
@@ -39,6 +44,7 @@ export class SutherlandHodgmanClipper {
    * @param subject - The polygon to be clipped.
    * @param clippingPolygon - The convex polygon to clip against.
    * @returns The result of the clipping operation.
+   * @example
    */
   clip(subject: Polygon, clippingPolygon: Polygon): ClipResult {
     const startTime = performance.now();
@@ -68,7 +74,7 @@ export class SutherlandHodgmanClipper {
 
       for (const plane of clippingPlanes) {
         resultVertices = this.clipAgainstPlane(resultVertices, plane);
-        
+
         // Early exit if no vertices remain
         if (resultVertices.length === 0) {
           break;
@@ -112,6 +118,7 @@ export class SutherlandHodgmanClipper {
    * @param vertices - The vertices of the polygon to clip.
    * @param plane - The clipping plane.
    * @returns The vertices of the clipped polygon.
+   * @example
    */
   private clipAgainstPlane(vertices: Point[], plane: ClippingPlane): Point[] {
     if (vertices.length < 3) return [];
@@ -153,6 +160,7 @@ export class SutherlandHodgmanClipper {
    * Converts a convex polygon to an array of clipping planes.
    * @param polygon - The convex polygon.
    * @returns Array of clipping planes.
+   * @example
    */
   private polygonToClippingPlanes(polygon: Polygon): ClippingPlane[] {
     const planes: ClippingPlane[] = [];
@@ -195,14 +203,15 @@ export class SutherlandHodgmanClipper {
    * @param point - The point to check.
    * @param plane - The clipping plane.
    * @returns True if the point is inside the plane.
+   * @example
    */
   private isPointInsidePlane(point: Point, plane: ClippingPlane): boolean {
     const dx = point.x - plane.point.x;
     const dy = point.y - plane.point.y;
-    
+
     // Dot product with normal vector
     const dotProduct = dx * plane.normal.x + dy * plane.normal.y;
-    
+
     return dotProduct >= -this.config.tolerance!;
   }
 
@@ -212,12 +221,9 @@ export class SutherlandHodgmanClipper {
    * @param end - End point of the line segment.
    * @param plane - The clipping plane.
    * @returns The intersection point, or null if no intersection.
+   * @example
    */
-  private linePlaneIntersection(
-    start: Point,
-    end: Point,
-    plane: ClippingPlane
-  ): Point | null {
+  private linePlaneIntersection(start: Point, end: Point, plane: ClippingPlane): Point | null {
     const lineVector: Vector = {
       x: end.x - start.x,
       y: end.y - start.y,
@@ -256,6 +262,7 @@ export class SutherlandHodgmanClipper {
    * Removes duplicate vertices from a polygon.
    * @param vertices - The vertices to process.
    * @returns Vertices with duplicates removed.
+   * @example
    */
   private removeDuplicateVertices(vertices: Point[]): Point[] {
     if (vertices.length <= 1) return vertices;
@@ -283,6 +290,7 @@ export class SutherlandHodgmanClipper {
    * Simplifies a polygon by removing collinear vertices.
    * @param vertices - The vertices to simplify.
    * @returns Simplified vertices.
+   * @example
    */
   private simplifyPolygon(vertices: Point[]): Point[] {
     if (vertices.length < 3) return vertices;
@@ -310,6 +318,7 @@ export class SutherlandHodgmanClipper {
    * @param p2 - Second point.
    * @param p3 - Third point.
    * @returns True if the points are collinear.
+   * @example
    */
   private areCollinear(p1: Point, p2: Point, p3: Point): boolean {
     const crossProduct = (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x);
@@ -321,12 +330,10 @@ export class SutherlandHodgmanClipper {
    * @param p1 - First point.
    * @param p2 - Second point.
    * @returns True if the points are equal.
+   * @example
    */
   private pointsEqual(p1: Point, p2: Point): boolean {
-    return (
-      Math.abs(p1.x - p2.x) < this.config.tolerance! &&
-      Math.abs(p1.y - p2.y) < this.config.tolerance!
-    );
+    return Math.abs(p1.x - p2.x) < this.config.tolerance! && Math.abs(p1.y - p2.y) < this.config.tolerance!;
   }
 
   /**
@@ -334,6 +341,7 @@ export class SutherlandHodgmanClipper {
    * @param polygon - The polygon to validate.
    * @param name - The name of the polygon for error messages.
    * @throws Error if validation fails.
+   * @example
    */
   private validatePolygon(polygon: Polygon, name: string): void {
     if (!polygon || !Array.isArray(polygon.vertices)) {
@@ -360,6 +368,7 @@ export class SutherlandHodgmanClipper {
    * Validates that a polygon is convex.
    * @param polygon - The polygon to validate.
    * @throws Error if the polygon is not convex.
+   * @example
    */
   private validateConvexPolygon(polygon: Polygon): void {
     const vertices = polygon.vertices;
@@ -377,7 +386,7 @@ export class SutherlandHodgmanClipper {
 
       if (Math.abs(crossProduct) > this.config.tolerance!) {
         const currentSign = crossProduct > 0 ? 1 : -1;
-        
+
         if (sign === 0) {
           sign = currentSign;
         } else if (sign !== currentSign) {
@@ -392,6 +401,7 @@ export class SutherlandHodgmanClipper {
    * @param startTime - Start time for execution time calculation.
    * @param error - Error message.
    * @returns Empty clip result.
+   * @example
    */
   private createEmptyResult(startTime: number, error: string): ClipResult {
     const executionTime = performance.now() - startTime;

@@ -29,6 +29,7 @@ export class HPAPathRefinement {
    * @param config - HPA configuration.
    * @param options - Path refinement options.
    * @returns Path refinement result.
+   * @example
    */
   static refinePath(
     abstractPath: AbstractNode[],
@@ -56,7 +57,7 @@ export class HPAPathRefinement {
 
       // Convert abstract path to point sequence
       const pointSequence = this.convertAbstractPathToPoints(abstractPath, clusters, entrances);
-      
+
       if (pointSequence.length === 0) {
         return {
           refinedPath: [],
@@ -72,30 +73,15 @@ export class HPAPathRefinement {
 
       // Refine path using selected algorithm
       if (refinementOptions.useAStarRefinement) {
-        const aStarResult = this.refineWithAStar(
-          pointSequence,
-          grid,
-          config,
-          refinementOptions
-        );
+        const aStarResult = this.refineWithAStar(pointSequence, grid, config, refinementOptions);
         refinedPath = aStarResult.path;
         iterationsUsed = aStarResult.iterations;
       } else if (refinementOptions.useJPSRefinement) {
-        const jpsResult = this.refineWithJPS(
-          pointSequence,
-          grid,
-          config,
-          refinementOptions
-        );
+        const jpsResult = this.refineWithJPS(pointSequence, grid, config, refinementOptions);
         refinedPath = jpsResult.path;
         iterationsUsed = jpsResult.iterations;
       } else if (refinementOptions.useThetaStarRefinement) {
-        const thetaStarResult = this.refineWithThetaStar(
-          pointSequence,
-          grid,
-          config,
-          refinementOptions
-        );
+        const thetaStarResult = this.refineWithThetaStar(pointSequence, grid, config, refinementOptions);
         refinedPath = thetaStarResult.path;
         iterationsUsed = thetaStarResult.iterations;
       } else {
@@ -144,6 +130,7 @@ export class HPAPathRefinement {
    * @param clusters - Clusters in the hierarchical map.
    * @param entrances - Entrances between clusters.
    * @returns Sequence of points.
+   * @example
    */
   private static convertAbstractPathToPoints(
     abstractPath: AbstractNode[],
@@ -182,6 +169,7 @@ export class HPAPathRefinement {
    * @param config - HPA configuration.
    * @param options - Refinement options.
    * @returns A* refinement result.
+   * @example
    */
   private static refineWithAStar(
     pointSequence: Point[],
@@ -195,7 +183,7 @@ export class HPAPathRefinement {
     for (let i = 0; i < pointSequence.length - 1; i++) {
       const start = pointSequence[i];
       const goal = pointSequence[i + 1];
-      
+
       const aStarResult = this.findAStarPath(start, goal, grid, config, options);
       refinedPath.push(...aStarResult.path.slice(0, -1)); // Exclude the last point to avoid duplication
       totalIterations += aStarResult.iterations;
@@ -216,6 +204,7 @@ export class HPAPathRefinement {
    * @param config - HPA configuration.
    * @param options - Refinement options.
    * @returns JPS refinement result.
+   * @example
    */
   private static refineWithJPS(
     pointSequence: Point[],
@@ -235,6 +224,7 @@ export class HPAPathRefinement {
    * @param config - HPA configuration.
    * @param options - Refinement options.
    * @returns Theta* refinement result.
+   * @example
    */
   private static refineWithThetaStar(
     pointSequence: Point[],
@@ -255,6 +245,7 @@ export class HPAPathRefinement {
    * @param config - HPA configuration.
    * @param options - Refinement options.
    * @returns A* pathfinding result.
+   * @example
    */
   private static findAStarPath(
     start: Point,
@@ -297,12 +288,12 @@ export class HPAPathRefinement {
         // Reconstruct path
         const path: Point[] = [];
         let node: Point | undefined = goal;
-        
+
         while (node) {
           path.unshift(node);
           node = cameFrom.get(this.pointToKey(node));
         }
-        
+
         return { path, iterations };
       }
 
@@ -310,21 +301,21 @@ export class HPAPathRefinement {
 
       // Check neighbors
       const neighbors = this.getNeighbors(current.point, grid, config);
-      
+
       for (const neighbor of neighbors) {
         const neighborKey = this.pointToKey(neighbor);
-        
+
         if (closedSet.has(neighborKey)) {
           continue;
         }
 
         const tentativeG = gScore.get(currentKey)! + this.getMovementCost(current.point, neighbor, config);
-        
+
         if (!gScore.has(neighborKey) || tentativeG < gScore.get(neighborKey)!) {
           cameFrom.set(neighborKey, current.point);
           gScore.set(neighborKey, tentativeG);
           fScore.set(neighborKey, tentativeG + this.heuristic(neighbor, goal, config));
-          
+
           // Add to open set if not already there
           if (!openSet.some(node => this.pointToKey(node.point) === neighborKey)) {
             openSet.push({
@@ -349,24 +340,20 @@ export class HPAPathRefinement {
    * @param config - HPA configuration.
    * @param smoothingFactor - Smoothing factor (0-1).
    * @returns Smoothed path.
+   * @example
    */
-  private static smoothPath(
-    path: Point[],
-    grid: CellType[],
-    config: HPAConfig,
-    smoothingFactor: number
-  ): Point[] {
+  private static smoothPath(path: Point[], grid: CellType[], config: HPAConfig, smoothingFactor: number): Point[] {
     if (path.length <= 2) {
       return path;
     }
 
     const smoothedPath: Point[] = [path[0]];
-    
+
     for (let i = 1; i < path.length - 1; i++) {
       const prev = path[i - 1];
       const current = path[i];
       const next = path[i + 1];
-      
+
       // Check if we can skip this point
       if (this.hasLineOfSight(prev, next, grid, config)) {
         // Skip this point with probability based on smoothing factor
@@ -377,9 +364,9 @@ export class HPAPathRefinement {
         smoothedPath.push(current);
       }
     }
-    
+
     smoothedPath.push(path[path.length - 1]);
-    
+
     return smoothedPath;
   }
 
@@ -390,38 +377,34 @@ export class HPAPathRefinement {
    * @param grid - The grid.
    * @param config - HPA configuration.
    * @returns True if there's a line of sight.
+   * @example
    */
-  private static hasLineOfSight(
-    from: Point,
-    to: Point,
-    grid: CellType[],
-    config: HPAConfig
-  ): boolean {
+  private static hasLineOfSight(from: Point, to: Point, grid: CellType[], config: HPAConfig): boolean {
     const dx = Math.abs(to.x - from.x);
     const dy = Math.abs(to.y - from.y);
     const steps = Math.max(dx, dy);
-    
+
     if (steps === 0) {
       return true;
     }
-    
+
     const stepX = (to.x - from.x) / steps;
     const stepY = (to.y - from.y) / steps;
-    
+
     for (let i = 0; i <= steps; i++) {
       const x = Math.round(from.x + i * stepX);
       const y = Math.round(from.y + i * stepY);
-      
+
       if (x < 0 || x >= config.width || y < 0 || y >= config.height) {
         return false;
       }
-      
+
       const index = y * config.width + x;
       if (index >= 0 && index < grid.length && grid[index] === CellType.OBSTACLE) {
         return false;
       }
     }
-    
+
     return true;
   }
 
@@ -431,20 +414,23 @@ export class HPAPathRefinement {
    * @param grid - The grid.
    * @param config - HPA configuration.
    * @returns Array of neighbor points.
+   * @example
    */
   private static getNeighbors(point: Point, grid: CellType[], config: HPAConfig): Point[] {
     const neighbors: Point[] = [];
     const directions = this.getValidDirections(config);
-    
+
     for (const direction of directions) {
       const neighbor = this.getNeighborInDirection(point, direction);
-      
-      if (this.isWithinBounds(neighbor, config.width, config.height) && 
-          this.isWalkable(grid, neighbor, config.width, config.height)) {
+
+      if (
+        this.isWithinBounds(neighbor, config.width, config.height) &&
+        this.isWalkable(grid, neighbor, config.width, config.height)
+      ) {
         neighbors.push(neighbor);
       }
     }
-    
+
     return neighbors;
   }
 
@@ -452,17 +438,18 @@ export class HPAPathRefinement {
    * Gets valid directions based on configuration.
    * @param config - HPA configuration.
    * @returns Array of valid directions.
+   * @example
    */
   private static getValidDirections(config: HPAConfig): number[] {
     const directions: number[] = [];
-    
+
     // Always include cardinal directions
     directions.push(0, 1, 2, 3); // North, East, South, West
-    
+
     if (config.allowDiagonal) {
       directions.push(4, 5, 6, 7); // Northeast, Southeast, Southwest, Northwest
     }
-    
+
     return directions;
   }
 
@@ -471,16 +458,17 @@ export class HPAPathRefinement {
    * @param point - Current point.
    * @param direction - Direction to move.
    * @returns Neighbor point.
+   * @example
    */
   private static getNeighborInDirection(point: Point, direction: number): Point {
     const directionVectors: Point[] = [
-      { x: 0, y: -1 },  // North
-      { x: 1, y: 0 },   // East
-      { x: 0, y: 1 },   // South
-      { x: -1, y: 0 },  // West
-      { x: 1, y: -1 },  // Northeast
-      { x: 1, y: 1 },   // Southeast
-      { x: -1, y: 1 },  // Southwest
+      { x: 0, y: -1 }, // North
+      { x: 1, y: 0 }, // East
+      { x: 0, y: 1 }, // South
+      { x: -1, y: 0 }, // West
+      { x: 1, y: -1 }, // Northeast
+      { x: 1, y: 1 }, // Southeast
+      { x: -1, y: 1 }, // Southwest
       { x: -1, y: -1 }, // Northwest
     ];
 
@@ -494,11 +482,12 @@ export class HPAPathRefinement {
    * @param to - Ending point.
    * @param config - HPA configuration.
    * @returns Movement cost.
+   * @example
    */
   private static getMovementCost(from: Point, to: Point, config: HPAConfig): number {
     const dx = Math.abs(to.x - from.x);
     const dy = Math.abs(to.y - from.y);
-    
+
     if (dx === 1 && dy === 1) {
       return config.diagonalCost;
     } else if (dx === 1 || dy === 1) {
@@ -516,11 +505,12 @@ export class HPAPathRefinement {
    * @param to - Ending point.
    * @param config - HPA configuration.
    * @returns Heuristic distance.
+   * @example
    */
   private static heuristic(from: Point, to: Point, config: HPAConfig): number {
     const dx = Math.abs(to.x - from.x);
     const dy = Math.abs(to.y - from.y);
-    
+
     if (config.allowDiagonal) {
       // Euclidean distance
       return Math.sqrt(dx * dx + dy * dy);
@@ -536,6 +526,7 @@ export class HPAPathRefinement {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns True if point is within bounds.
+   * @example
    */
   private static isWithinBounds(point: Point, width: number, height: number): boolean {
     return point.x >= 0 && point.x < width && point.y >= 0 && point.y < height;
@@ -548,22 +539,22 @@ export class HPAPathRefinement {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns True if cell is walkable.
+   * @example
    */
   private static isWalkable(grid: CellType[], point: Point, width: number, height: number): boolean {
     if (!this.isWithinBounds(point, width, height)) {
       return false;
     }
-    
+
     const index = point.y * width + point.x;
-    return grid[index] === CellType.WALKABLE || 
-           grid[index] === CellType.GOAL || 
-           grid[index] === CellType.AGENT;
+    return grid[index] === CellType.WALKABLE || grid[index] === CellType.GOAL || grid[index] === CellType.AGENT;
   }
 
   /**
    * Creates a key for a point (for use in maps/sets).
    * @param point - Point to create key for.
    * @returns String key.
+   * @example
    */
   private static pointToKey(point: Point): string {
     return `${point.x},${point.y}`;

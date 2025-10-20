@@ -18,11 +18,11 @@ describe("VoronoiDiagram Performance Tests", () => {
     it("should generate Voronoi diagram for 100 sites efficiently", () => {
       const sites = generateRandomSites(100);
       const startTime = performance.now();
-      
+
       const result = voronoi.generate(sites);
-      
+
       const executionTime = performance.now() - startTime;
-      
+
       expect(result.stats.success).toBe(true);
       expect(result.stats.siteCount).toBe(100);
       expect(result.stats.cellCount).toBe(100);
@@ -33,11 +33,11 @@ describe("VoronoiDiagram Performance Tests", () => {
     it("should generate Voronoi diagram for 500 sites efficiently", () => {
       const sites = generateRandomSites(500);
       const startTime = performance.now();
-      
+
       const result = voronoi.generate(sites);
-      
+
       const executionTime = performance.now() - startTime;
-      
+
       expect(result.stats.success).toBe(true);
       expect(result.stats.siteCount).toBe(500);
       expect(result.stats.cellCount).toBe(500);
@@ -48,11 +48,11 @@ describe("VoronoiDiagram Performance Tests", () => {
     it("should generate Voronoi diagram for 1000 sites efficiently", () => {
       const sites = generateRandomSites(1000);
       const startTime = performance.now();
-      
+
       const result = voronoi.generate(sites);
-      
+
       const executionTime = performance.now() - startTime;
-      
+
       expect(result.stats.success).toBe(true);
       expect(result.stats.siteCount).toBe(1000);
       expect(result.stats.cellCount).toBe(1000);
@@ -63,11 +63,11 @@ describe("VoronoiDiagram Performance Tests", () => {
     it("should handle worst-case input (collinear points)", () => {
       const sites = generateCollinearSites(100);
       const startTime = performance.now();
-      
+
       const result = voronoi.generate(sites);
-      
+
       const executionTime = performance.now() - startTime;
-      
+
       expect(result.stats.success).toBe(true);
       expect(executionTime).toBeLessThan(2000); // Should still be reasonably fast
     });
@@ -75,11 +75,11 @@ describe("VoronoiDiagram Performance Tests", () => {
     it("should handle regular grid input efficiently", () => {
       const sites = generateGridSites(10, 10); // 100 sites in grid
       const startTime = performance.now();
-      
+
       const result = voronoi.generate(sites);
-      
+
       const executionTime = performance.now() - startTime;
-      
+
       expect(result.stats.success).toBe(true);
       expect(result.stats.siteCount).toBe(100);
       expect(executionTime).toBeLessThan(1000);
@@ -90,14 +90,14 @@ describe("VoronoiDiagram Performance Tests", () => {
     it("should perform Lloyd's relaxation efficiently", () => {
       const sites = generateRandomSites(50);
       const startTime = performance.now();
-      
+
       const relaxationResult = voronoi.performLloydRelaxation(sites, {
         maxIterations: 10,
         tolerance: 1e-6,
       });
-      
+
       const executionTime = performance.now() - startTime;
-      
+
       expect(relaxationResult.relaxedSites).toHaveLength(50);
       expect(relaxationResult.iterations).toBeGreaterThan(0);
       expect(executionTime).toBeLessThan(5000); // Should complete within 5 seconds
@@ -110,7 +110,7 @@ describe("VoronoiDiagram Performance Tests", () => {
         maxIterations: 20,
         tolerance: 1e-6,
       });
-      
+
       expect(relaxationResult.converged).toBe(true);
       expect(relaxationResult.iterations).toBeLessThan(10);
     });
@@ -120,11 +120,11 @@ describe("VoronoiDiagram Performance Tests", () => {
     it("should serialize large Voronoi diagram efficiently", () => {
       const sites = generateRandomSites(200);
       const result = voronoi.generate(sites);
-      
+
       const startTime = performance.now();
       const serialized = voronoi.serialize(result);
       const executionTime = performance.now() - startTime;
-      
+
       expect(serialized.voronoi.cells).toHaveLength(200);
       expect(executionTime).toBeLessThan(1000); // Should complete within 1 second
     });
@@ -132,14 +132,14 @@ describe("VoronoiDiagram Performance Tests", () => {
     it("should serialize with Delaunay data efficiently", () => {
       const sites = generateRandomSites(100);
       const result = voronoi.generate(sites);
-      
+
       const startTime = performance.now();
       const serialized = voronoi.serialize(result, {
         includeDelaunay: true,
         includeProperties: true,
       });
       const executionTime = performance.now() - startTime;
-      
+
       expect(serialized.delaunay).toBeDefined();
       expect(executionTime).toBeLessThan(500);
     });
@@ -148,22 +148,22 @@ describe("VoronoiDiagram Performance Tests", () => {
   describe("Memory Usage", () => {
     it("should not leak memory with repeated generations", () => {
       const initialMemory = (performance as any).memory?.usedJSHeapSize || 0;
-      
+
       // Generate multiple Voronoi diagrams
       for (let i = 0; i < 10; i++) {
         const sites = generateRandomSites(100);
         const result = voronoi.generate(sites);
         expect(result.stats.success).toBe(true);
       }
-      
+
       // Force garbage collection if available
       if ((global as any).gc) {
         (global as any).gc();
       }
-      
+
       const finalMemory = (performance as any).memory?.usedJSHeapSize || 0;
       const memoryIncrease = finalMemory - initialMemory;
-      
+
       // Memory increase should be reasonable (less than 50MB)
       if (initialMemory > 0 && finalMemory > 0) {
         expect(memoryIncrease).toBeLessThan(50 * 1024 * 1024);
@@ -175,24 +175,24 @@ describe("VoronoiDiagram Performance Tests", () => {
     it("should scale linearly with number of sites", () => {
       const sizes = [50, 100, 200];
       const times: number[] = [];
-      
+
       for (const size of sizes) {
         const sites = generateRandomSites(size);
         const startTime = performance.now();
-        
+
         const result = voronoi.generate(sites);
-        
+
         const executionTime = performance.now() - startTime;
         times.push(executionTime);
-        
+
         expect(result.stats.success).toBe(true);
       }
-      
+
       // Check that execution time doesn't grow too rapidly
       // O(n log n) algorithm should not grow quadratically
       const ratio1 = times[1] / times[0]; // 100 vs 50
       const ratio2 = times[2] / times[1]; // 200 vs 100
-      
+
       expect(ratio1).toBeLessThan(3); // Should not be more than 3x slower
       expect(ratio2).toBeLessThan(3); // Should not be more than 3x slower
     });
@@ -205,12 +205,12 @@ describe("VoronoiDiagram Performance Tests", () => {
         sites.push({ x: 0, y: 0 });
         sites.push({ x: 1, y: 1 });
       }
-      
+
       const startTime = performance.now();
-      
+
       // This should fail validation, but should fail quickly
       expect(() => voronoi.generate(sites)).toThrow();
-      
+
       const executionTime = performance.now() - startTime;
       expect(executionTime).toBeLessThan(100); // Should fail quickly
     });
@@ -223,11 +223,11 @@ describe("VoronoiDiagram Performance Tests", () => {
           y: 0 + Math.random() * 1e-6,
         });
       }
-      
+
       const startTime = performance.now();
       const result = voronoi.generate(sites);
       const executionTime = performance.now() - startTime;
-      
+
       expect(result.stats.success).toBe(true);
       expect(executionTime).toBeLessThan(2000);
     });
@@ -236,6 +236,11 @@ describe("VoronoiDiagram Performance Tests", () => {
 
 // Helper functions for generating test data
 
+/**
+ *
+ * @param count
+ * @example
+ */
 function generateRandomSites(count: number): Point[] {
   const sites: Point[] = [];
   for (let i = 0; i < count; i++) {
@@ -247,6 +252,11 @@ function generateRandomSites(count: number): Point[] {
   return sites;
 }
 
+/**
+ *
+ * @param count
+ * @example
+ */
 function generateCollinearSites(count: number): Point[] {
   const sites: Point[] = [];
   for (let i = 0; i < count; i++) {
@@ -258,6 +268,12 @@ function generateCollinearSites(count: number): Point[] {
   return sites;
 }
 
+/**
+ *
+ * @param width
+ * @param height
+ * @example
+ */
 function generateGridSites(width: number, height: number): Point[] {
   const sites: Point[] = [];
   for (let x = 0; x < width; x++) {

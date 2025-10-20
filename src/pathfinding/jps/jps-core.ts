@@ -52,6 +52,7 @@ export class JPS {
   /**
    * Creates an instance of JPS.
    * @param config - Optional configuration for the algorithm.
+   * @example
    */
   constructor(config: Partial<JPSConfig> = {}) {
     this.config = {
@@ -88,6 +89,7 @@ export class JPS {
    * @param goal - Goal point.
    * @param options - Pathfinding options.
    * @returns Pathfinding result.
+   * @example
    */
   findPath(
     grid: CellType[],
@@ -201,15 +203,7 @@ export class JPS {
           useEarlyTermination: true,
         };
 
-        const jumpPoints = JPSUtils.getJumpPoints(
-          grid,
-          current,
-          goal,
-          width,
-          height,
-          this.config,
-          jumpPointOptions
-        );
+        const jumpPoints = JPSUtils.getJumpPoints(grid, current, goal, width, height, this.config, jumpPointOptions);
 
         this.stats.jumpPointsFound += jumpPoints.length;
 
@@ -223,10 +217,7 @@ export class JPS {
           }
 
           // Calculate tentative g-cost
-          const tentativeG = current.g + JPSUtils.getMovementCost(
-            jumpPoint.direction!,
-            this.config.allowDiagonal
-          );
+          const tentativeG = current.g + JPSUtils.getMovementCost(jumpPoint.direction!, this.config.allowDiagonal);
 
           // Check if this is a better path
           const existingNode = openSetMap.get(jumpKey);
@@ -334,6 +325,7 @@ export class JPS {
    * @param goal - Goal point.
    * @param options - Validation options.
    * @returns Validation result.
+   * @example
    */
   validateGrid(
     grid: CellType[],
@@ -418,9 +410,11 @@ export class JPS {
           const next = { x: current.x + dir.x, y: current.y + dir.y };
           const nextKey = JPSUtils.pointToKey(next);
 
-          if (JPSUtils.isWithinBounds(next, width, height) &&
-              JPSUtils.isWalkable(grid, next, width, height) &&
-              !visited.has(nextKey)) {
+          if (
+            JPSUtils.isWithinBounds(next, width, height) &&
+            JPSUtils.isWalkable(grid, next, width, height) &&
+            !visited.has(nextKey)
+          ) {
             visited.add(nextKey);
             queue.push(next);
           }
@@ -451,6 +445,7 @@ export class JPS {
    * @param height - Grid height.
    * @param options - Optimization options.
    * @returns Optimization result.
+   * @example
    */
   optimizePath(
     path: Point[],
@@ -523,12 +518,9 @@ export class JPS {
    * @param result2 - Second result.
    * @param options - Comparison options.
    * @returns Comparison result.
+   * @example
    */
-  compare(
-    result1: JPSResult,
-    result2: JPSResult,
-    options: Partial<PathComparisonOptions> = {}
-  ): PathComparisonResult {
+  compare(result1: JPSResult, result2: JPSResult, options: Partial<PathComparisonOptions> = {}): PathComparisonResult {
     const comparisonOptions: PathComparisonOptions = {
       compareLength: true,
       compareCost: true,
@@ -543,10 +535,11 @@ export class JPS {
     const explorationDifference = Math.abs(result1.stats.nodesExplored - result2.stats.nodesExplored);
     const timeDifference = Math.abs(result1.stats.executionTime - result2.stats.executionTime);
 
-    const areEquivalent = lengthDifference < comparisonOptions.tolerance! &&
-                         costDifference < comparisonOptions.tolerance! &&
-                         explorationDifference < comparisonOptions.tolerance! &&
-                         timeDifference < comparisonOptions.tolerance!;
+    const areEquivalent =
+      lengthDifference < comparisonOptions.tolerance! &&
+      costDifference < comparisonOptions.tolerance! &&
+      explorationDifference < comparisonOptions.tolerance! &&
+      timeDifference < comparisonOptions.tolerance!;
 
     // Calculate similarity score
     const maxLength = Math.max(result1.length, result2.length);
@@ -576,11 +569,9 @@ export class JPS {
    * @param result - Result to serialize.
    * @param options - Serialization options.
    * @returns Serialized result.
+   * @example
    */
-  serialize(
-    result: JPSResult,
-    options: Partial<JPSSerializationOptions> = {}
-  ): JPSSerialization {
+  serialize(result: JPSResult, options: Partial<JPSSerializationOptions> = {}): JPSSerialization {
     const serializationOptions: JPSSerializationOptions = {
       precision: 6,
       includeStats: false,
@@ -591,8 +582,10 @@ export class JPS {
     };
 
     const round = (value: number) => {
-      return Math.round(value * Math.pow(10, serializationOptions.precision!)) / 
-             Math.pow(10, serializationOptions.precision!);
+      return (
+        Math.round(value * Math.pow(10, serializationOptions.precision!)) /
+        Math.pow(10, serializationOptions.precision!)
+      );
     };
 
     const roundPoint = (point: Point) => ({
@@ -625,6 +618,7 @@ export class JPS {
   /**
    * Updates the configuration.
    * @param newConfig - New configuration options.
+   * @example
    */
   updateConfig(newConfig: Partial<JPSConfig>): void {
     this.config = { ...this.config, ...newConfig };
@@ -633,6 +627,7 @@ export class JPS {
   /**
    * Gets the current configuration.
    * @returns The current configuration.
+   * @example
    */
   getConfig(): JPSConfig {
     return { ...this.config };
@@ -641,6 +636,7 @@ export class JPS {
   /**
    * Gets the current statistics.
    * @returns The current statistics.
+   * @example
    */
   getStats(): JPSStats {
     return { ...this.stats };
@@ -648,6 +644,7 @@ export class JPS {
 
   /**
    * Resets the statistics.
+   * @example
    */
   resetStats(): void {
     this.stats = {
@@ -663,6 +660,7 @@ export class JPS {
 
   /**
    * Clears the cache.
+   * @example
    */
   clearCache(): void {
     this.cache.clear();
@@ -675,6 +673,7 @@ export class JPS {
    * @param to - Goal point.
    * @param options - Pathfinding options.
    * @returns Heuristic cost.
+   * @example
    */
   private calculateHeuristic(from: Point, to: Point, options: JPSOptions): number {
     if (options.customHeuristic) {
@@ -697,15 +696,19 @@ export class JPS {
    * Gets the node with the lowest f-cost from the open set.
    * @param openSet - Open set array.
    * @param openSetMap - Open set map.
+   * @param _openSetMap
    * @returns Node with lowest f-cost.
+   * @example
    */
   private getLowestFCostNode(openSet: JumpPoint[], _openSetMap: Map<string, JumpPoint>): JumpPoint | null {
     if (openSet.length === 0) return null;
 
     let lowest = openSet[0];
     for (let i = 1; i < openSet.length; i++) {
-      if (openSet[i].f < lowest.f || 
-          (this.config.useTieBreaking && openSet[i].f === lowest.f && openSet[i].h < lowest.h)) {
+      if (
+        openSet[i].f < lowest.f ||
+        (this.config.useTieBreaking && openSet[i].f === lowest.f && openSet[i].h < lowest.h)
+      ) {
         lowest = openSet[i];
       }
     }
@@ -718,11 +721,12 @@ export class JPS {
    * @param openSet - Open set array.
    * @param openSetMap - Open set map.
    * @param node - Node to remove.
+   * @example
    */
   private removeFromOpenSet(openSet: JumpPoint[], openSetMap: Map<string, JumpPoint>, node: JumpPoint): void {
     const key = JPSUtils.pointToKey(node);
     openSetMap.delete(key);
-    
+
     const index = openSet.findIndex(n => JPSUtils.pointsEqual(n, node, this.config.tolerance));
     if (index !== -1) {
       openSet.splice(index, 1);
@@ -733,6 +737,7 @@ export class JPS {
    * Reconstructs the path from the goal node.
    * @param goalNode - Goal node.
    * @returns Reconstructed path.
+   * @example
    */
   private reconstructPath(goalNode: JumpPoint): Point[] {
     const path: Point[] = [];
@@ -754,14 +759,9 @@ export class JPS {
    * @param height - Grid height.
    * @param factor - Smoothing factor.
    * @returns Smoothed path.
+   * @example
    */
-  private smoothPath(
-    path: Point[],
-    grid: CellType[],
-    width: number,
-    height: number,
-    factor: number
-  ): Point[] {
+  private smoothPath(path: Point[], grid: CellType[], width: number, height: number, factor: number): Point[] {
     if (path.length <= 2) return path;
 
     const smoothed: Point[] = [path[0]];
@@ -798,6 +798,7 @@ export class JPS {
    * @param goal - Goal point.
    * @param options - Pathfinding options.
    * @returns Cache key.
+   * @example
    */
   private getCacheKey(
     grid: CellType[],
@@ -807,7 +808,7 @@ export class JPS {
     goal: Point,
     options: JPSOptions
   ): string {
-    const gridHash = grid.slice(0, Math.min(100, grid.length)).join(',');
+    const gridHash = grid.slice(0, Math.min(100, grid.length)).join(",");
     const optionsHash = JSON.stringify(options);
     return `${width}x${height}_${start.x},${start.y}_${goal.x},${goal.y}_${gridHash}_${optionsHash}`;
   }

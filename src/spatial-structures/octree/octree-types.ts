@@ -134,14 +134,14 @@ export interface OctreeNode {
  * Octant enumeration for child nodes.
  */
 export enum Octant {
-  TOP_LEFT_FRONT = 0,     // +x, +y, +z
-  TOP_RIGHT_FRONT = 1,    // -x, +y, +z
-  TOP_LEFT_BACK = 2,      // +x, +y, -z
-  TOP_RIGHT_BACK = 3,     // -x, +y, -z
-  BOTTOM_LEFT_FRONT = 4,  // +x, -y, +z
+  TOP_LEFT_FRONT = 0, // +x, +y, +z
+  TOP_RIGHT_FRONT = 1, // -x, +y, +z
+  TOP_LEFT_BACK = 2, // +x, +y, -z
+  TOP_RIGHT_BACK = 3, // -x, +y, -z
+  BOTTOM_LEFT_FRONT = 4, // +x, -y, +z
   BOTTOM_RIGHT_FRONT = 5, // -x, -y, +z
-  BOTTOM_LEFT_BACK = 6,   // +x, -y, -z
-  BOTTOM_RIGHT_BACK = 7,  // -x, -y, -z
+  BOTTOM_LEFT_BACK = 6, // +x, -y, -z
+  BOTTOM_RIGHT_BACK = 7, // -x, -y, -z
 }
 
 /**
@@ -627,6 +627,3 @@ export const DEFAULT_OCTREE_OPTIONS: OctreeOptions = {
   config: DEFAULT_OCTREE_CONFIG,
   initialPoints: [],
 };
-
-
-

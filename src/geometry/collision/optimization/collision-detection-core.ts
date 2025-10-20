@@ -26,6 +26,10 @@ export interface CollisionCache {
 
 /**
  * Check collision with caching support
+ * @param a
+ * @param b
+ * @param cache
+ * @example
  */
 export function checkCollisionWithCache(a: AABB, b: AABB, cache: CollisionCache): CollisionResult {
   if (!cache.config.enableCaching) {
@@ -55,6 +59,9 @@ export function checkCollisionWithCache(a: AABB, b: AABB, cache: CollisionCache)
 
 /**
  * Generate cache key for AABB pair
+ * @param a
+ * @param b
+ * @example
  */
 export function generateCacheKey(a: AABB, b: AABB): string {
   return `${a.x},${a.y},${a.width},${a.height}|${b.x},${b.y},${b.width},${b.height}`;
@@ -62,6 +69,9 @@ export function generateCacheKey(a: AABB, b: AABB): string {
 
 /**
  * Naive O(n²) collision detection for small datasets
+ * @param aabbs
+ * @param cache
+ * @example
  */
 export function naiveCollisionDetection(aabbs: AABB[], cache: CollisionCache): CollisionPair[] {
   const collisions: CollisionPair[] = [];
@@ -80,6 +90,10 @@ export function naiveCollisionDetection(aabbs: AABB[], cache: CollisionCache): C
 
 /**
  * Spatial hash optimized collision detection
+ * @param aabbs
+ * @param spatialHash
+ * @param cache
+ * @example
  */
 export function spatialCollisionDetection(
   aabbs: AABB[],

@@ -13,9 +13,9 @@ export type { Projection, SATCollisionResult } from "../sat/sat-types";
 
 // Export Sweep and Prune collision detection (excluding conflicting types)
 export { SweepPrune } from "../sweep-prune/sweep-prune-core";
-export type { 
-  Endpoint, 
-  SweepPruneConfig, 
+export type {
+  Endpoint,
+  SweepPruneConfig,
   SweepPruneResult,
-  AABB as SweepPruneAABB 
+  AABB as SweepPruneAABB,
 } from "../sweep-prune/sweep-prune-types";

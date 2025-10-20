@@ -415,7 +415,10 @@ export interface StatusStructure {
    * @param sweepY - Current y-coordinate of the sweep line.
    * @returns Object with above and below segments.
    */
-  findNeighbors(segment: LineSegment, sweepY: number): {
+  findNeighbors(
+    segment: LineSegment,
+    sweepY: number
+  ): {
     above: LineSegment | null;
     below: LineSegment | null;
   };

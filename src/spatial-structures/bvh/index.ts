@@ -32,6 +32,3 @@ export type {
 } from "./bvh-types";
 export { BVHEventType } from "./bvh-types";
 export { DEFAULT_BVH_CONFIG, DEFAULT_BVH_OPTIONS } from "./bvh-types";
-
-
-

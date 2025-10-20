@@ -1,6 +1,6 @@
-# Theta*
+# Theta\*
 
-> Mathematical theory and implementation details for Theta*
+> Mathematical theory and implementation details for Theta\*
 
 ## Mathematical Theory
 
@@ -14,7 +14,7 @@ Theta*extends A* by allowing line-of-sight checks between nodes, enabling any-an
 
 **Mathematical Foundation**:
 
-For nodes $n$ and $s$ (start), Theta* checks:
+For nodes $n$ and $s$ (start), Theta\* checks:
 
 1. **Line-of-Sight**: $LOS(parent(s), n) = \text{true}$ if direct path is obstacle-free
 2. **Parent Update**: If $LOS(parent(s), n)$, then $parent(n) = parent(s)$
@@ -39,7 +39,7 @@ For implementation details and usage examples, see the source code in the `src/`
 
 ```typescript
 // Import the algorithm
-import { Theta } from '@entropy-tamer/reynard-algorithms';
+import { Theta } from "@entropy-tamer/reynard-algorithms";
 ```
 
 ## Performance

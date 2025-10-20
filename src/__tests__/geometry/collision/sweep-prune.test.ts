@@ -6,11 +6,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import {
-  SweepPrune,
-  COMMON_AABBS,
-  type AABB,
-} from "../../../geometry/collision/sweep-prune";
+import { SweepPrune, COMMON_AABBS, type AABB } from "../../../geometry/collision/sweep-prune";
 
 describe("Sweep and Prune Collision Detection", () => {
   let sweepPrune: SweepPrune;

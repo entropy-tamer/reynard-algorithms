@@ -26,15 +26,11 @@ export class HPAStarUtils {
    * @param obstacleRatio - Ratio of obstacles (0-1).
    * @param seed - Random seed for reproducible results.
    * @returns Generated grid.
+   * @example
    */
-  static generateTestGrid(
-    width: number,
-    height: number,
-    obstacleRatio: number = 0.3,
-    seed?: number
-  ): CellType[] {
+  static generateTestGrid(width: number, height: number, obstacleRatio: number = 0.3, seed?: number): CellType[] {
     const grid: CellType[] = new Array(width * height).fill(CellType.WALKABLE);
-    
+
     if (seed !== undefined) {
       this.seedRandom(seed);
     }
@@ -55,6 +51,7 @@ export class HPAStarUtils {
    * @param pattern - Pattern type.
    * @param seed - Random seed for reproducible results.
    * @returns Generated grid.
+   * @example
    */
   static generatePatternGrid(
     width: number,
@@ -85,10 +82,11 @@ export class HPAStarUtils {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns Generated maze grid.
+   * @example
    */
   private static generateMazeGrid(width: number, height: number): CellType[] {
     const grid: CellType[] = new Array(width * height).fill(CellType.OBSTACLE);
-    
+
     // Start from (1, 1)
     const stack: Point[] = [{ x: 1, y: 1 }];
     grid[1 * width + 1] = CellType.WALKABLE;
@@ -100,10 +98,10 @@ export class HPAStarUtils {
       if (neighbors.length > 0) {
         const next = neighbors[Math.floor(Math.random() * neighbors.length)];
         const wall = this.getWallBetween(current, next);
-        
+
         grid[next.y * width + next.x] = CellType.WALKABLE;
         grid[wall.y * width + wall.x] = CellType.WALKABLE;
-        
+
         stack.push(next);
       } else {
         stack.pop();
@@ -118,6 +116,7 @@ export class HPAStarUtils {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns Generated room grid.
+   * @example
    */
   private static generateRoomGrid(width: number, height: number): CellType[] {
     const grid: CellType[] = new Array(width * height).fill(CellType.OBSTACLE);
@@ -134,8 +133,7 @@ export class HPAStarUtils {
       // Check for overlap
       let overlaps = false;
       for (const room of rooms) {
-        if (x < room.x + room.width && x + roomWidth > room.x &&
-            y < room.y + room.height && y + roomHeight > room.y) {
+        if (x < room.x + room.width && x + roomWidth > room.x && y < room.y + room.height && y + roomHeight > room.y) {
           overlaps = true;
           break;
         }
@@ -156,7 +154,7 @@ export class HPAStarUtils {
     for (let i = 1; i < rooms.length; i++) {
       const room1 = rooms[i - 1];
       const room2 = rooms[i];
-      
+
       const center1 = {
         x: room1.x + Math.floor(room1.width / 2),
         y: room1.y + Math.floor(room1.height / 2),
@@ -177,14 +175,15 @@ export class HPAStarUtils {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns Generated corridor grid.
+   * @example
    */
   private static generateCorridorGrid(width: number, height: number): CellType[] {
     const grid: CellType[] = new Array(width * height).fill(CellType.OBSTACLE);
-    
+
     // Create main corridors
     const corridorWidth = 2;
     const corridorSpacing = 8;
-    
+
     // Horizontal corridors
     for (let y = corridorSpacing; y < height - corridorSpacing; y += corridorSpacing) {
       for (let x = 0; x < width; x++) {
@@ -195,7 +194,7 @@ export class HPAStarUtils {
         }
       }
     }
-    
+
     // Vertical corridors
     for (let x = corridorSpacing; x < width - corridorSpacing; x += corridorSpacing) {
       for (let y = 0; y < height; y++) {
@@ -215,35 +214,36 @@ export class HPAStarUtils {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns Generated spiral grid.
+   * @example
    */
   private static generateSpiralGrid(width: number, height: number): CellType[] {
     const grid: CellType[] = new Array(width * height).fill(CellType.OBSTACLE);
-    
+
     const centerX = Math.floor(width / 2);
     const centerY = Math.floor(height / 2);
-    
+
     let x = centerX;
     let y = centerY;
     let dx = 0;
     let dy = -1;
     let step = 1;
     let stepCount = 0;
-    
+
     for (let i = 0; i < width * height; i++) {
       if (x >= 0 && x < width && y >= 0 && y < height) {
         grid[y * width + x] = CellType.WALKABLE;
       }
-      
+
       x += dx;
       y += dy;
       stepCount++;
-      
+
       if (stepCount === step) {
         stepCount = 0;
         const temp = dx;
         dx = -dy;
         dy = temp;
-        
+
         if (dy === 0) {
           step++;
         }
@@ -260,14 +260,9 @@ export class HPAStarUtils {
    * @param height - Grid height.
    * @param from - Starting point.
    * @param to - Ending point.
+   * @example
    */
-  private static createCorridor(
-    grid: CellType[],
-    width: number,
-    height: number,
-    from: Point,
-    to: Point
-  ): void {
+  private static createCorridor(grid: CellType[], width: number, height: number, from: Point, to: Point): void {
     // Horizontal corridor
     const startX = Math.min(from.x, to.x);
     const endX = Math.max(from.x, to.x);
@@ -294,26 +289,26 @@ export class HPAStarUtils {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns Array of unvisited neighbors.
+   * @example
    */
-  private static getUnvisitedNeighbors(
-    point: Point,
-    grid: CellType[],
-    width: number,
-    height: number
-  ): Point[] {
+  private static getUnvisitedNeighbors(point: Point, grid: CellType[], width: number, height: number): Point[] {
     const neighbors: Point[] = [];
     const directions = [
       { x: 0, y: -2 }, // North
-      { x: 2, y: 0 },  // East
-      { x: 0, y: 2 },  // South
+      { x: 2, y: 0 }, // East
+      { x: 0, y: 2 }, // South
       { x: -2, y: 0 }, // West
     ];
 
     for (const dir of directions) {
       const neighbor = { x: point.x + dir.x, y: point.y + dir.y };
-      if (neighbor.x >= 0 && neighbor.x < width && 
-          neighbor.y >= 0 && neighbor.y < height &&
-          grid[neighbor.y * width + neighbor.x] === CellType.OBSTACLE) {
+      if (
+        neighbor.x >= 0 &&
+        neighbor.x < width &&
+        neighbor.y >= 0 &&
+        neighbor.y < height &&
+        grid[neighbor.y * width + neighbor.x] === CellType.OBSTACLE
+      ) {
         neighbors.push(neighbor);
       }
     }
@@ -326,6 +321,7 @@ export class HPAStarUtils {
    * @param from - First point.
    * @param to - Second point.
    * @returns Wall point.
+   * @example
    */
   private static getWallBetween(from: Point, to: Point): Point {
     return {
@@ -342,14 +338,9 @@ export class HPAStarUtils {
    * @param grid - The grid.
    * @param seed - Random seed.
    * @returns Array of goal points.
+   * @example
    */
-  static generateRandomGoals(
-    count: number,
-    width: number,
-    height: number,
-    grid: CellType[],
-    seed?: number
-  ): Point[] {
+  static generateRandomGoals(count: number, width: number, height: number, grid: CellType[], seed?: number): Point[] {
     if (seed !== undefined) {
       this.seedRandom(seed);
     }
@@ -384,6 +375,7 @@ export class HPAStarUtils {
    * @param grid - The grid.
    * @param seed - Random seed.
    * @returns Array of goal points.
+   * @example
    */
   static generateGoalPattern(
     pattern: "corners" | "center" | "edges" | "random",
@@ -400,12 +392,7 @@ export class HPAStarUtils {
 
     switch (pattern) {
       case "corners":
-        goals.push(
-          { x: 0, y: 0 },
-          { x: width - 1, y: 0 },
-          { x: 0, y: height - 1 },
-          { x: width - 1, y: height - 1 }
-        );
+        goals.push({ x: 0, y: 0 }, { x: width - 1, y: 0 }, { x: 0, y: height - 1 }, { x: width - 1, y: height - 1 });
         break;
       case "center":
         goals.push({
@@ -441,6 +428,7 @@ export class HPAStarUtils {
    * @param a - First point.
    * @param b - Second point.
    * @returns Distance.
+   * @example
    */
   static distance(a: Point, b: Point): number {
     const dx = b.x - a.x;
@@ -453,6 +441,7 @@ export class HPAStarUtils {
    * @param a - First point.
    * @param b - Second point.
    * @returns Manhattan distance.
+   * @example
    */
   static manhattanDistance(a: Point, b: Point): number {
     return Math.abs(b.x - a.x) + Math.abs(b.y - a.y);
@@ -463,6 +452,7 @@ export class HPAStarUtils {
    * @param a - First point.
    * @param b - Second point.
    * @returns Chebyshev distance.
+   * @example
    */
   static chebyshevDistance(a: Point, b: Point): number {
     return Math.max(Math.abs(b.x - a.x), Math.abs(b.y - a.y));
@@ -471,6 +461,7 @@ export class HPAStarUtils {
   /**
    * Creates a default configuration for HPA*.
    * @returns Default configuration.
+   * @example
    */
   static createDefaultConfig(): HPAConfig {
     return {
@@ -494,6 +485,7 @@ export class HPAStarUtils {
   /**
    * Creates a default options object for HPA* pathfinding.
    * @returns Default options.
+   * @example
    */
   static createDefaultOptions(): HPAOptions {
     return {
@@ -510,6 +502,7 @@ export class HPAStarUtils {
   /**
    * Creates a default cluster generation options object.
    * @returns Default cluster generation options.
+   * @example
    */
   static createDefaultClusterGenerationOptions(): ClusterGenerationOptions {
     return {
@@ -527,6 +520,7 @@ export class HPAStarUtils {
   /**
    * Creates a default entrance detection options object.
    * @returns Default entrance detection options.
+   * @example
    */
   static createDefaultEntranceDetectionOptions(): EntranceDetectionOptions {
     return {
@@ -542,6 +536,7 @@ export class HPAStarUtils {
   /**
    * Creates a default abstract graph options object.
    * @returns Default abstract graph options.
+   * @example
    */
   static createDefaultAbstractGraphOptions(): AbstractGraphOptions {
     return {
@@ -557,6 +552,7 @@ export class HPAStarUtils {
   /**
    * Creates a default path refinement options object.
    * @returns Default path refinement options.
+   * @example
    */
   static createDefaultPathRefinementOptions(): PathRefinementOptions {
     return {
@@ -573,6 +569,7 @@ export class HPAStarUtils {
   /**
    * Creates a default HPA* validation options object.
    * @returns Default HPA* validation options.
+   * @example
    */
   static createDefaultHPAValidationOptions(): HPAValidationOptions {
     return {
@@ -590,6 +587,7 @@ export class HPAStarUtils {
   /**
    * Seeds the random number generator for reproducible results.
    * @param seed - Random seed.
+   * @example
    */
   private static seedRandom(seed: number): void {
     // Simple linear congruential generator for seeding
@@ -608,6 +606,7 @@ export class HPAStarUtils {
    * @param goals - Optional goal points.
    * @param agents - Optional agent points.
    * @returns Visual string representation.
+   * @example
    */
   static gridToString(
     grid: CellType[],
@@ -617,11 +616,11 @@ export class HPAStarUtils {
     agents: Point[] = []
   ): string {
     let result = "";
-    
+
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const point = { x, y };
-        
+
         if (goals.some(g => this.pointsEqual(g, point))) {
           result += "G";
         } else if (agents.some(a => this.pointsEqual(a, point))) {
@@ -647,7 +646,7 @@ export class HPAStarUtils {
       }
       result += "\n";
     }
-    
+
     return result;
   }
 
@@ -657,6 +656,7 @@ export class HPAStarUtils {
    * @param b - Second point.
    * @param tolerance - Numerical tolerance.
    * @returns True if points are equal.
+   * @example
    */
   private static pointsEqual(a: Point, b: Point, tolerance: number = 1e-10): boolean {
     return Math.abs(a.x - b.x) < tolerance && Math.abs(a.y - b.y) < tolerance;

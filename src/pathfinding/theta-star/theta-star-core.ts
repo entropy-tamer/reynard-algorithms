@@ -54,6 +54,7 @@ export class ThetaStar {
   /**
    * Creates an instance of ThetaStar.
    * @param config - Optional configuration for the algorithm.
+   * @example
    */
   constructor(config: Partial<ThetaStarConfig> = {}) {
     this.config = {
@@ -91,6 +92,7 @@ export class ThetaStar {
    * @param goal - Goal point.
    * @param options - Pathfinding options.
    * @returns Pathfinding result.
+   * @example
    */
   findPath(
     grid: CellType[],
@@ -345,6 +347,7 @@ export class ThetaStar {
    * @param goal - Goal point.
    * @param options - Validation options.
    * @returns Validation result.
+   * @example
    */
   validateGrid(
     grid: CellType[],
@@ -457,6 +460,7 @@ export class ThetaStar {
    * @param height - Grid height.
    * @param options - Optimization options.
    * @returns Optimization result.
+   * @example
    */
   optimizePath(
     path: Point[],
@@ -529,6 +533,7 @@ export class ThetaStar {
    * @param result2 - Second result.
    * @param options - Comparison options.
    * @returns Comparison result.
+   * @example
    */
   compare(
     result1: ThetaStarResult,
@@ -551,11 +556,12 @@ export class ThetaStar {
     const timeDifference = Math.abs(result1.stats.executionTime - result2.stats.executionTime);
     const lineOfSightDifference = Math.abs(result1.stats.lineOfSightChecks - result2.stats.lineOfSightChecks);
 
-    const areEquivalent = lengthDifference < comparisonOptions.tolerance! &&
-                         costDifference < comparisonOptions.tolerance! &&
-                         explorationDifference < comparisonOptions.tolerance! &&
-                         timeDifference < comparisonOptions.tolerance! &&
-                         lineOfSightDifference < comparisonOptions.tolerance!;
+    const areEquivalent =
+      lengthDifference < comparisonOptions.tolerance! &&
+      costDifference < comparisonOptions.tolerance! &&
+      explorationDifference < comparisonOptions.tolerance! &&
+      timeDifference < comparisonOptions.tolerance! &&
+      lineOfSightDifference < comparisonOptions.tolerance!;
 
     // Calculate similarity score
     const maxLength = Math.max(result1.length, result2.length);
@@ -570,7 +576,8 @@ export class ThetaStar {
     const timeSimilarity = maxTime === 0 ? 1 : 1 - timeDifference / maxTime;
     const lineOfSightSimilarity = maxLineOfSight === 0 ? 1 : 1 - lineOfSightDifference / maxLineOfSight;
 
-    const similarity = (lengthSimilarity + costSimilarity + explorationSimilarity + timeSimilarity + lineOfSightSimilarity) / 5;
+    const similarity =
+      (lengthSimilarity + costSimilarity + explorationSimilarity + timeSimilarity + lineOfSightSimilarity) / 5;
 
     return {
       areEquivalent,
@@ -588,11 +595,9 @@ export class ThetaStar {
    * @param result - Result to serialize.
    * @param options - Serialization options.
    * @returns Serialized result.
+   * @example
    */
-  serialize(
-    result: ThetaStarResult,
-    options: Partial<ThetaStarSerializationOptions> = {}
-  ): ThetaStarSerialization {
+  serialize(result: ThetaStarResult, options: Partial<ThetaStarSerializationOptions> = {}): ThetaStarSerialization {
     const serializationOptions: ThetaStarSerializationOptions = {
       precision: 6,
       includeStats: false,
@@ -603,8 +608,10 @@ export class ThetaStar {
     };
 
     const round = (value: number) => {
-      return Math.round(value * Math.pow(10, serializationOptions.precision!)) / 
-             Math.pow(10, serializationOptions.precision!);
+      return (
+        Math.round(value * Math.pow(10, serializationOptions.precision!)) /
+        Math.pow(10, serializationOptions.precision!)
+      );
     };
 
     const roundPoint = (point: Point) => ({
@@ -633,6 +640,7 @@ export class ThetaStar {
   /**
    * Updates the configuration.
    * @param newConfig - New configuration options.
+   * @example
    */
   updateConfig(newConfig: Partial<ThetaStarConfig>): void {
     this.config = { ...this.config, ...newConfig };
@@ -641,6 +649,7 @@ export class ThetaStar {
   /**
    * Gets the current configuration.
    * @returns The current configuration.
+   * @example
    */
   getConfig(): ThetaStarConfig {
     return { ...this.config };
@@ -649,6 +658,7 @@ export class ThetaStar {
   /**
    * Gets the current statistics.
    * @returns The current statistics.
+   * @example
    */
   getStats(): ThetaStarStats {
     return { ...this.stats };
@@ -656,6 +666,7 @@ export class ThetaStar {
 
   /**
    * Resets the statistics.
+   * @example
    */
   resetStats(): void {
     this.stats = {
@@ -672,6 +683,7 @@ export class ThetaStar {
 
   /**
    * Clears the cache.
+   * @example
    */
   clearCache(): void {
     this.cache.clear();
@@ -684,6 +696,7 @@ export class ThetaStar {
    * @param to - Goal point.
    * @param options - Pathfinding options.
    * @returns Heuristic cost.
+   * @example
    */
   private calculateHeuristic(from: Point, to: Point, options: ThetaStarOptions): number {
     if (options.customHeuristic) {
@@ -707,14 +720,17 @@ export class ThetaStar {
    * @param openSet - Open set array.
    * @param openSetMap - Open set map.
    * @returns Node with lowest f-cost.
+   * @example
    */
   private getLowestFCostNode(openSet: ThetaStarNode[], openSetMap: Map<string, ThetaStarNode>): ThetaStarNode | null {
     if (openSet.length === 0) return null;
 
     let lowest = openSet[0];
     for (let i = 1; i < openSet.length; i++) {
-      if (openSet[i].f < lowest.f || 
-          (this.config.useTieBreaking && openSet[i].f === lowest.f && openSet[i].h < lowest.h)) {
+      if (
+        openSet[i].f < lowest.f ||
+        (this.config.useTieBreaking && openSet[i].f === lowest.f && openSet[i].h < lowest.h)
+      ) {
         lowest = openSet[i];
       }
     }
@@ -727,11 +743,16 @@ export class ThetaStar {
    * @param openSet - Open set array.
    * @param openSetMap - Open set map.
    * @param node - Node to remove.
+   * @example
    */
-  private removeFromOpenSet(openSet: ThetaStarNode[], openSetMap: Map<string, ThetaStarNode>, node: ThetaStarNode): void {
+  private removeFromOpenSet(
+    openSet: ThetaStarNode[],
+    openSetMap: Map<string, ThetaStarNode>,
+    node: ThetaStarNode
+  ): void {
     const key = this.pointToKey(node);
     openSetMap.delete(key);
-    
+
     const index = openSet.findIndex(n => this.pointsEqual(n, node, this.config.tolerance));
     if (index !== -1) {
       openSet.splice(index, 1);
@@ -742,6 +763,7 @@ export class ThetaStar {
    * Reconstructs the path from the goal node.
    * @param goalNode - Goal node.
    * @returns Reconstructed path.
+   * @example
    */
   private reconstructPath(goalNode: ThetaStarNode): Point[] {
     const path: Point[] = [];
@@ -762,6 +784,7 @@ export class ThetaStar {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns Array of neighbor points.
+   * @example
    */
   private getNeighbors(node: Point, grid: CellType[], width: number, height: number): Point[] {
     const neighbors: Point[] = [];
@@ -769,9 +792,8 @@ export class ThetaStar {
 
     for (const direction of directions) {
       const neighbor = this.getNeighborInDirection(node, direction);
-      
-      if (this.isWithinBounds(neighbor, width, height) && 
-          this.isWalkable(grid, neighbor, width, height)) {
+
+      if (this.isWithinBounds(neighbor, width, height) && this.isWalkable(grid, neighbor, width, height)) {
         neighbors.push(neighbor);
       }
     }
@@ -782,17 +804,18 @@ export class ThetaStar {
   /**
    * Gets valid directions based on configuration.
    * @returns Array of valid directions.
+   * @example
    */
   private getValidDirections(): Direction[] {
     const directions: Direction[] = [];
-    
+
     // Always include cardinal directions
     directions.push(Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST);
-    
+
     if (this.config.allowDiagonal) {
       directions.push(Direction.NORTHEAST, Direction.SOUTHEAST, Direction.SOUTHWEST, Direction.NORTHWEST);
     }
-    
+
     return directions;
   }
 
@@ -801,16 +824,17 @@ export class ThetaStar {
    * @param point - Current point.
    * @param direction - Direction to move.
    * @returns Neighbor point.
+   * @example
    */
   private getNeighborInDirection(point: Point, direction: Direction): Point {
     const directionVectors: Vector[] = [
-      { x: 0, y: -1 },  // NORTH
-      { x: 1, y: -1 },  // NORTHEAST
-      { x: 1, y: 0 },   // EAST
-      { x: 1, y: 1 },   // SOUTHEAST
-      { x: 0, y: 1 },   // SOUTH
-      { x: -1, y: 1 },  // SOUTHWEST
-      { x: -1, y: 0 },  // WEST
+      { x: 0, y: -1 }, // NORTH
+      { x: 1, y: -1 }, // NORTHEAST
+      { x: 1, y: 0 }, // EAST
+      { x: 1, y: 1 }, // SOUTHEAST
+      { x: 0, y: 1 }, // SOUTH
+      { x: -1, y: 1 }, // SOUTHWEST
+      { x: -1, y: 0 }, // WEST
       { x: -1, y: -1 }, // NORTHWEST
     ];
 
@@ -823,11 +847,12 @@ export class ThetaStar {
    * @param from - Starting point.
    * @param to - Ending point.
    * @returns Movement cost.
+   * @example
    */
   private getMovementCost(from: Point, to: Point): number {
     const dx = Math.abs(to.x - from.x);
     const dy = Math.abs(to.y - from.y);
-    
+
     if (dx === 1 && dy === 1) {
       return Math.sqrt(2); // Diagonal movement
     } else if (dx === 1 || dy === 1) {
@@ -842,6 +867,7 @@ export class ThetaStar {
    * @param from - Starting point.
    * @param to - Ending point.
    * @returns True if move is diagonal.
+   * @example
    */
   private isDiagonalMove(from: Point, to: Point): boolean {
     const dx = Math.abs(to.x - from.x);
@@ -858,6 +884,7 @@ export class ThetaStar {
    * @param height - Grid height.
    * @param options - Line-of-sight options.
    * @returns True if line of sight exists.
+   * @example
    */
   private checkLineOfSight(
     grid: CellType[],
@@ -897,6 +924,7 @@ export class ThetaStar {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns Optimized path.
+   * @example
    */
   private removeRedundantPoints(path: Point[], grid: CellType[], width: number, height: number): Point[] {
     if (path.length <= 2) return path;
@@ -930,6 +958,7 @@ export class ThetaStar {
    * @param height - Grid height.
    * @param factor - Smoothing factor.
    * @returns Smoothed path.
+   * @example
    */
   private smoothPath(path: Point[], grid: CellType[], width: number, height: number, factor: number): Point[] {
     if (path.length <= 2) return path;
@@ -968,6 +997,7 @@ export class ThetaStar {
    * @param goal - Goal point.
    * @param options - Pathfinding options.
    * @returns Cache key.
+   * @example
    */
   private getCacheKey(
     grid: CellType[],
@@ -977,7 +1007,7 @@ export class ThetaStar {
     goal: Point,
     options: ThetaStarOptions
   ): string {
-    const gridHash = grid.slice(0, Math.min(100, grid.length)).join(',');
+    const gridHash = grid.slice(0, Math.min(100, grid.length)).join(",");
     const optionsHash = JSON.stringify(options);
     return `theta-${width}x${height}_${start.x},${start.y}_${goal.x},${goal.y}_${gridHash}_${optionsHash}`;
   }
@@ -987,6 +1017,7 @@ export class ThetaStar {
    * @param a - First point.
    * @param b - Second point.
    * @returns Distance.
+   * @example
    */
   private distance(a: Point, b: Point): number {
     const dx = b.x - a.x;
@@ -999,6 +1030,7 @@ export class ThetaStar {
    * @param a - First point.
    * @param b - Second point.
    * @returns Manhattan distance.
+   * @example
    */
   private manhattanDistance(a: Point, b: Point): number {
     return Math.abs(b.x - a.x) + Math.abs(b.y - a.y);
@@ -1010,6 +1042,7 @@ export class ThetaStar {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns True if point is within bounds.
+   * @example
    */
   private isWithinBounds(point: Point, width: number, height: number): boolean {
     return point.x >= 0 && point.x < width && point.y >= 0 && point.y < height;
@@ -1022,22 +1055,22 @@ export class ThetaStar {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns True if cell is walkable.
+   * @example
    */
   private isWalkable(grid: CellType[], point: Point, width: number, height: number): boolean {
     if (!this.isWithinBounds(point, width, height)) {
       return false;
     }
-    
+
     const index = point.y * width + point.x;
-    return grid[index] === CellType.WALKABLE || 
-           grid[index] === CellType.START || 
-           grid[index] === CellType.GOAL;
+    return grid[index] === CellType.WALKABLE || grid[index] === CellType.START || grid[index] === CellType.GOAL;
   }
 
   /**
    * Creates a key for a point (for use in maps/sets).
    * @param point - Point to create key for.
    * @returns String key.
+   * @example
    */
   private pointToKey(point: Point): string {
     return `${point.x},${point.y}`;
@@ -1049,6 +1082,7 @@ export class ThetaStar {
    * @param b - Second point.
    * @param tolerance - Numerical tolerance.
    * @returns True if points are equal.
+   * @example
    */
   private pointsEqual(a: Point, b: Point, tolerance: number = 1e-10): boolean {
     return Math.abs(a.x - b.x) < tolerance && Math.abs(a.y - b.y) < tolerance;

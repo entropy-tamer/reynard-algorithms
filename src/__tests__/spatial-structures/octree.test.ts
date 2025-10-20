@@ -51,7 +51,7 @@ describe("Octree Data Structure", () => {
     it("should insert a point successfully", () => {
       const point = { x: 25, y: 25, z: 25 };
       const result = octree.insert(point);
-      
+
       expect(result.success).toBe(true);
       expect(result.executionTime).toBeDefined();
       expect(octree.size()).toBe(1);
@@ -61,7 +61,7 @@ describe("Octree Data Structure", () => {
     it("should insert a point with data", () => {
       const point = { x: 30, y: 30, z: 30, data: "test", id: "p1" };
       const result = octree.insert(point);
-      
+
       expect(result.success).toBe(true);
       expect(octree.size()).toBe(1);
     });
@@ -181,7 +181,7 @@ describe("Octree Data Structure", () => {
       };
 
       const result = octree.queryBounds(queryBounds);
-      
+
       expect(result.success).toBe(true);
       expect(result.count).toBe(8); // 2x2x2 grid
       expect(result.points.length).toBe(8);
@@ -194,7 +194,7 @@ describe("Octree Data Structure", () => {
       };
 
       const result = octree.querySphere(sphere);
-      
+
       expect(result.success).toBe(true);
       expect(result.count).toBeGreaterThan(0);
       expect(result.points.length).toBe(result.count);
@@ -209,7 +209,7 @@ describe("Octree Data Structure", () => {
       };
 
       const result = octree.queryBounds(queryBounds);
-      
+
       expect(result.success).toBe(true);
       expect(result.count).toBe(0);
       expect(result.points.length).toBe(0);
@@ -224,9 +224,9 @@ describe("Octree Data Structure", () => {
       };
 
       const result = octree.queryBounds(queryBounds, {
-        filter: (point) => point.x === point.y && point.y === point.z, // Diagonal points
+        filter: point => point.x === point.y && point.y === point.z, // Diagonal points
       });
-      
+
       expect(result.success).toBe(true);
       expect(result.count).toBe(5); // Points [10,10,10], [30,30,30], [50,50,50], [70,70,70], [90,90,90]
     });
@@ -242,7 +242,7 @@ describe("Octree Data Structure", () => {
       const result = octree.queryBounds(queryBounds, {
         maxResults: 3,
       });
-      
+
       expect(result.success).toBe(true);
       expect(result.count).toBeLessThanOrEqual(3);
     });
@@ -268,7 +268,7 @@ describe("Octree Data Structure", () => {
       };
 
       const result = octree.rayIntersection(ray);
-      
+
       expect(result.success).toBe(true);
       expect(result.count).toBeGreaterThan(0);
       expect(result.points.length).toBe(result.count);
@@ -283,7 +283,7 @@ describe("Octree Data Structure", () => {
       };
 
       const result = octree.rayIntersection(ray, { findAll: true });
-      
+
       expect(result.success).toBe(true);
       expect(result.count).toBeGreaterThan(0);
     });
@@ -296,7 +296,7 @@ describe("Octree Data Structure", () => {
       };
 
       const result = octree.rayIntersection(ray);
-      
+
       expect(result.success).toBe(true);
       expect(result.count).toBeLessThanOrEqual(1);
     });
@@ -309,7 +309,7 @@ describe("Octree Data Structure", () => {
       };
 
       const result = octree.rayIntersection(ray);
-      
+
       expect(result.success).toBe(true);
       expect(result.count).toBe(0);
     });
@@ -342,7 +342,7 @@ describe("Octree Data Structure", () => {
       };
 
       const result = octree.frustumCulling(frustum);
-      
+
       expect(result.success).toBe(true);
       expect(result.visibleCount).toBeGreaterThan(0);
       expect(result.culledCount).toBeGreaterThan(0);
@@ -362,7 +362,7 @@ describe("Octree Data Structure", () => {
       };
 
       const result = octree.frustumCulling(frustum);
-      
+
       expect(result.success).toBe(true);
       expect(result.visibleCount).toBe(0);
       expect(result.culledCount).toBe(octree.size());
@@ -384,7 +384,7 @@ describe("Octree Data Structure", () => {
     it("should create voxel grid", () => {
       const voxelSize = 20;
       const voxelGrid = octree.createVoxelGrid(voxelSize);
-      
+
       expect(voxelGrid.voxelSize).toBe(voxelSize);
       expect(voxelGrid.dimensions.x).toBeGreaterThan(0);
       expect(voxelGrid.dimensions.y).toBeGreaterThan(0);
@@ -395,7 +395,7 @@ describe("Octree Data Structure", () => {
     it("should have correct voxel data", () => {
       const voxelSize = 20;
       const voxelGrid = octree.createVoxelGrid(voxelSize);
-      
+
       let occupiedVoxels = 0;
       for (let x = 0; x < voxelGrid.dimensions.x; x++) {
         for (let y = 0; y < voxelGrid.dimensions.y; y++) {
@@ -406,7 +406,7 @@ describe("Octree Data Structure", () => {
           }
         }
       }
-      
+
       expect(occupiedVoxels).toBeGreaterThan(0);
     });
   });
@@ -416,7 +416,7 @@ describe("Octree Data Structure", () => {
       const octreeWithStats = new Octree(bounds, {
         config: { enableStats: true },
       });
-      
+
       octreeWithStats.insert({ x: 10, y: 10, z: 10 });
       octreeWithStats.insert({ x: 20, y: 20, z: 20 });
       octreeWithStats.queryBounds(bounds);
@@ -424,7 +424,7 @@ describe("Octree Data Structure", () => {
         origin: { x: 0, y: 0, z: 0 },
         direction: { x: 1, y: 1, z: 1 },
       });
-      
+
       const stats = octreeWithStats.getStats();
       expect(stats.totalPoints).toBe(2);
       expect(stats.insertions).toBe(2);
@@ -437,12 +437,12 @@ describe("Octree Data Structure", () => {
       const octreeWithStats = new Octree(bounds, {
         config: { enableStats: true },
       });
-      
+
       // Insert some points and perform operations
       for (let i = 0; i < 10; i++) {
         octreeWithStats.insert({ x: i * 10, y: i * 10, z: i * 10 });
       }
-      
+
       const metrics = octreeWithStats.getPerformanceMetrics();
       expect(metrics.memoryUsage).toBeGreaterThan(0);
       expect(metrics.performanceScore).toBeGreaterThanOrEqual(0);
@@ -457,7 +457,7 @@ describe("Octree Data Structure", () => {
         points.push({ x: i * 5, y: i * 5, z: i * 5 });
       }
       octree.insertBatch(points);
-      
+
       const stats = octree.getStats();
       expect(stats.height).toBeGreaterThan(0);
       expect(stats.nodeCount).toBeGreaterThan(0);
@@ -474,12 +474,12 @@ describe("Octree Data Structure", () => {
         { x: 30, y: 30, z: 30, data: "center" },
       ];
       octree.insertBatch(points);
-      
+
       const serialized = octree.serialize();
       expect(serialized.version).toBe("1.0.0");
       expect(serialized.data.points.length).toBe(3);
       expect(serialized.metadata.totalPoints).toBe(3);
-      
+
       const deserialized = Octree.deserialize(serialized, bounds);
       expect(deserialized.size()).toBe(3);
     });
@@ -489,16 +489,16 @@ describe("Octree Data Structure", () => {
     it("should emit events when operations are performed", () => {
       const events: any[] = [];
       const octreeWithEvents = new Octree(bounds, {
-        eventHandlers: [(event) => events.push(event)],
+        eventHandlers: [event => events.push(event)],
       });
-      
+
       octreeWithEvents.insert({ x: 10, y: 10, z: 10 });
       octreeWithEvents.queryBounds(bounds);
       octreeWithEvents.rayIntersection({
         origin: { x: 0, y: 0, z: 0 },
         direction: { x: 1, y: 1, z: 1 },
       });
-      
+
       expect(events.length).toBe(3);
       expect(events[0].type).toBe(OctreeEventType.POINT_INSERTED);
       expect(events[1].type).toBe(OctreeEventType.SPATIAL_QUERY);
@@ -511,11 +511,11 @@ describe("Octree Data Structure", () => {
       const octreeWithSmallMax = new Octree(bounds, {
         config: { maxPoints: 2 },
       });
-      
+
       octreeWithSmallMax.insert({ x: 10, y: 10, z: 10 });
       octreeWithSmallMax.insert({ x: 20, y: 20, z: 20 });
       octreeWithSmallMax.insert({ x: 30, y: 30, z: 30 }); // Should trigger subdivision
-      
+
       const stats = octreeWithSmallMax.getStats();
       expect(stats.nodeCount).toBeGreaterThan(1); // Should have subdivided
     });
@@ -524,14 +524,14 @@ describe("Octree Data Structure", () => {
       const octreeWithSmallDepth = new Octree(bounds, {
         config: { maxDepth: 2 },
       });
-      
+
       // Insert many points to force subdivision
       const points: Array<{ x: number; y: number; z: number }> = [];
       for (let i = 0; i < 50; i++) {
         points.push({ x: Math.random() * 100, y: Math.random() * 100, z: Math.random() * 100 });
       }
       octreeWithSmallDepth.insertBatch(points);
-      
+
       const stats = octreeWithSmallDepth.getStats();
       expect(stats.maxDepth).toBeLessThanOrEqual(2);
     });
@@ -540,7 +540,7 @@ describe("Octree Data Structure", () => {
   describe("Edge Cases", () => {
     it("should handle single point", () => {
       octree.insert({ x: 50, y: 50, z: 50 });
-      
+
       const result = octree.queryBounds(bounds);
       expect(result.success).toBe(true);
       expect(result.count).toBe(1);
@@ -549,10 +549,12 @@ describe("Octree Data Structure", () => {
     it("should handle empty tree operations", () => {
       expect(octree.queryBounds(bounds).count).toBe(0);
       expect(octree.querySphere({ center: { x: 50, y: 50, z: 50 }, radius: 10 }).count).toBe(0);
-      expect(octree.rayIntersection({
-        origin: { x: 0, y: 0, z: 0 },
-        direction: { x: 1, y: 1, z: 1 },
-      }).count).toBe(0);
+      expect(
+        octree.rayIntersection({
+          origin: { x: 0, y: 0, z: 0 },
+          direction: { x: 1, y: 1, z: 1 },
+        }).count
+      ).toBe(0);
     });
 
     it("should handle points at bounds boundaries", () => {
@@ -560,7 +562,7 @@ describe("Octree Data Structure", () => {
         { x: 0, y: 0, z: 0 }, // Min boundary
         { x: 100, y: 100, z: 100 }, // Max boundary
       ];
-      
+
       const result = octree.insertBatch(boundaryPoints);
       expect(result.successful).toBe(2);
       expect(octree.size()).toBe(2);

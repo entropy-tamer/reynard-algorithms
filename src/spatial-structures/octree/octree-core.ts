@@ -65,6 +65,12 @@ export class Octree {
   private enableDebug: boolean;
   private stats: OctreeStats;
 
+  /**
+   *
+   * @param bounds
+   * @param options
+   * @example
+   */
   constructor(bounds: Bounds3D, options: Partial<OctreeOptions> = {}) {
     const opts = { ...DEFAULT_OCTREE_OPTIONS, ...options };
 
@@ -101,6 +107,8 @@ export class Octree {
 
   /**
    * Insert a point into the Octree.
+   * @param point
+   * @example
    */
   insert(point: Point3D): OctreeResult {
     const startTime = performance.now();
@@ -133,7 +141,7 @@ export class Octree {
       this.updateStats();
 
       const executionTime = performance.now() - startTime;
-      this.stats.averageInsertionTime = 
+      this.stats.averageInsertionTime =
         (this.stats.averageInsertionTime * (this.stats.insertions - 1) + executionTime) / this.stats.insertions;
 
       this.emitEvent(OctreeEventType.POINT_INSERTED, { point, executionTime });
@@ -156,6 +164,8 @@ export class Octree {
 
   /**
    * Insert multiple points in batch.
+   * @param points
+   * @example
    */
   insertBatch(points: Point3D[]): BatchOperationResult {
     const startTime = performance.now();
@@ -167,7 +177,7 @@ export class Octree {
     for (const point of points) {
       const result = this.insert(point);
       results.push(result);
-      
+
       if (result.success) {
         successful++;
       } else {
@@ -187,6 +197,8 @@ export class Octree {
 
   /**
    * Remove a point from the Octree.
+   * @param point
+   * @example
    */
   remove(point: Point3D): OctreeResult {
     const startTime = performance.now();
@@ -237,6 +249,9 @@ export class Octree {
 
   /**
    * Query points within a bounding box.
+   * @param bounds
+   * @param options
+   * @example
    */
   queryBounds(bounds: Bounds3D, options: SpatialQueryOptions = {}): SpatialQueryResult {
     const startTime = performance.now();
@@ -246,24 +261,17 @@ export class Octree {
     let nodesVisited = 0;
 
     if (this.root) {
-      nodesVisited = this.queryBoundsRecursive(
-        this.root,
-        bounds,
-        points,
-        options,
-        0
-      );
+      nodesVisited = this.queryBoundsRecursive(this.root, bounds, points, options, 0);
     }
 
     const executionTime = performance.now() - startTime;
-    this.stats.averageQueryTime = 
-      (this.stats.averageQueryTime * (this.stats.spatialQueries - 1) + executionTime) / 
-      this.stats.spatialQueries;
+    this.stats.averageQueryTime =
+      (this.stats.averageQueryTime * (this.stats.spatialQueries - 1) + executionTime) / this.stats.spatialQueries;
 
-    this.emitEvent(OctreeEventType.SPATIAL_QUERY, { 
-      bounds, 
-      results: points, 
-      executionTime 
+    this.emitEvent(OctreeEventType.SPATIAL_QUERY, {
+      bounds,
+      results: points,
+      executionTime,
     });
 
     return {
@@ -277,6 +285,9 @@ export class Octree {
 
   /**
    * Query points within a sphere.
+   * @param sphere
+   * @param options
+   * @example
    */
   querySphere(sphere: Sphere3D, options: SpatialQueryOptions = {}): SpatialQueryResult {
     const startTime = performance.now();
@@ -286,24 +297,17 @@ export class Octree {
     let nodesVisited = 0;
 
     if (this.root) {
-      nodesVisited = this.querySphereRecursive(
-        this.root,
-        sphere,
-        points,
-        options,
-        0
-      );
+      nodesVisited = this.querySphereRecursive(this.root, sphere, points, options, 0);
     }
 
     const executionTime = performance.now() - startTime;
-    this.stats.averageQueryTime = 
-      (this.stats.averageQueryTime * (this.stats.spatialQueries - 1) + executionTime) / 
-      this.stats.spatialQueries;
+    this.stats.averageQueryTime =
+      (this.stats.averageQueryTime * (this.stats.spatialQueries - 1) + executionTime) / this.stats.spatialQueries;
 
-    this.emitEvent(OctreeEventType.SPATIAL_QUERY, { 
-      sphere, 
-      results: points, 
-      executionTime 
+    this.emitEvent(OctreeEventType.SPATIAL_QUERY, {
+      sphere,
+      results: points,
+      executionTime,
     });
 
     return {
@@ -317,6 +321,9 @@ export class Octree {
 
   /**
    * Perform ray intersection query.
+   * @param ray
+   * @param options
+   * @example
    */
   rayIntersection(ray: Ray3D, options: RayIntersectionOptions = {}): RayIntersectionResult {
     const startTime = performance.now();
@@ -327,22 +334,15 @@ export class Octree {
     let nodesVisited = 0;
 
     if (this.root) {
-      nodesVisited = this.rayIntersectionRecursive(
-        this.root,
-        ray,
-        points,
-        distances,
-        options,
-        0
-      );
+      nodesVisited = this.rayIntersectionRecursive(this.root, ray, points, distances, options, 0);
     }
 
     const executionTime = performance.now() - startTime;
 
-    this.emitEvent(OctreeEventType.RAY_INTERSECTION, { 
-      ray, 
-      results: points, 
-      executionTime 
+    this.emitEvent(OctreeEventType.RAY_INTERSECTION, {
+      ray,
+      results: points,
+      executionTime,
     });
 
     return {
@@ -357,6 +357,9 @@ export class Octree {
 
   /**
    * Perform frustum culling.
+   * @param frustum
+   * @param options
+   * @example
    */
   frustumCulling(frustum: Frustum3D, options: FrustumCullingOptions = {}): FrustumCullingResult {
     const startTime = performance.now();
@@ -367,24 +370,18 @@ export class Octree {
     let nodesVisited = 0;
 
     if (this.root) {
-      const result = this.frustumCullingRecursive(
-        this.root,
-        frustum,
-        visiblePoints,
-        options,
-        0
-      );
+      const result = this.frustumCullingRecursive(this.root, frustum, visiblePoints, options, 0);
       nodesVisited = result.nodesVisited;
       culledCount = result.culledCount;
     }
 
     const executionTime = performance.now() - startTime;
 
-    this.emitEvent(OctreeEventType.FRUSTUM_CULLING, { 
-      frustum, 
+    this.emitEvent(OctreeEventType.FRUSTUM_CULLING, {
+      frustum,
       visibleCount: visiblePoints.length,
       culledCount,
-      executionTime 
+      executionTime,
     });
 
     return {
@@ -399,6 +396,7 @@ export class Octree {
 
   /**
    * Get the size of the tree.
+   * @example
    */
   size(): number {
     return this.stats.totalPoints;
@@ -406,6 +404,7 @@ export class Octree {
 
   /**
    * Check if the tree is empty.
+   * @example
    */
   isEmpty(): boolean {
     return this.root === null || this.stats.totalPoints === 0;
@@ -413,6 +412,7 @@ export class Octree {
 
   /**
    * Clear all points from the tree.
+   * @example
    */
   clear(): void {
     if (this.root) {
@@ -426,6 +426,7 @@ export class Octree {
 
   /**
    * Get statistics about the tree.
+   * @example
    */
   getStats(): OctreeStats {
     return { ...this.stats };
@@ -433,6 +434,7 @@ export class Octree {
 
   /**
    * Get performance metrics.
+   * @example
    */
   getPerformanceMetrics(): OctreePerformanceMetrics {
     return {
@@ -449,6 +451,8 @@ export class Octree {
 
   /**
    * Create a voxel grid from the tree.
+   * @param voxelSize
+   * @example
    */
   createVoxelGrid(voxelSize: number): VoxelGrid {
     if (!this.root) {
@@ -490,7 +494,7 @@ export class Octree {
           };
 
           const pointsInVoxel = this.queryBounds(voxelBounds).points;
-          
+
           voxels[x][y][z] = {
             position,
             size: voxelSize,
@@ -511,6 +515,7 @@ export class Octree {
 
   /**
    * Serialize the tree to JSON.
+   * @example
    */
   serialize(): OctreeSerialization {
     return {
@@ -531,6 +536,9 @@ export class Octree {
 
   /**
    * Deserialize a tree from JSON.
+   * @param data
+   * @param bounds
+   * @example
    */
   static deserialize(data: OctreeSerialization, bounds: Bounds3D): Octree {
     const tree = new Octree(bounds, { config: data.config });
@@ -542,6 +550,13 @@ export class Octree {
 
   // Private helper methods
 
+  /**
+   *
+   * @param bounds
+   * @param depth
+   * @param parent
+   * @example
+   */
   private createNode(bounds: Bounds3D, depth: number, parent: OctreeNode | null): OctreeNode {
     return {
       bounds,
@@ -554,6 +569,13 @@ export class Octree {
     };
   }
 
+  /**
+   *
+   * @param node
+   * @param point
+   * @param depth
+   * @example
+   */
   private insertRecursive(node: OctreeNode, point: Point3D, depth: number): number {
     let nodesVisited = 1;
 
@@ -589,18 +611,25 @@ export class Octree {
     return nodesVisited;
   }
 
+  /**
+   *
+   * @param node
+   * @param point
+   * @param depth
+   * @example
+   */
   private removeRecursive(node: OctreeNode, point: Point3D, depth: number): boolean {
     // Check if point is in this node
     const pointIndex = node.points.findIndex(p => this.pointsEqual(p, point));
     if (pointIndex !== -1) {
       node.points.splice(pointIndex, 1);
-      
+
       // If this is a leaf with no points and we can merge, do so
       if (node.isLeaf && node.points.length === 0 && this.config.autoMerge) {
         this.mergeNode(node);
         this.emitEvent(OctreeEventType.NODE_MERGED, { node, depth });
       }
-      
+
       return true;
     }
 
@@ -615,6 +644,11 @@ export class Octree {
     return false;
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private subdivideNode(node: OctreeNode): void {
     if (!node.isLeaf) {
       return;
@@ -707,6 +741,11 @@ export class Octree {
     }
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private mergeNode(node: OctreeNode): void {
     if (node.isLeaf || !node.parent) {
       return;
@@ -727,6 +766,12 @@ export class Octree {
     }
   }
 
+  /**
+   *
+   * @param point
+   * @param bounds
+   * @example
+   */
   private getOctant(point: Point3D, bounds: Bounds3D): Octant {
     const center = bounds.center;
     let octant = 0;
@@ -738,6 +783,15 @@ export class Octree {
     return octant as Octant;
   }
 
+  /**
+   *
+   * @param node
+   * @param bounds
+   * @param points
+   * @param options
+   * @param nodesVisited
+   * @example
+   */
   private queryBoundsRecursive(
     node: OctreeNode,
     bounds: Bounds3D,
@@ -779,6 +833,15 @@ export class Octree {
     return nodesVisited;
   }
 
+  /**
+   *
+   * @param node
+   * @param sphere
+   * @param points
+   * @param options
+   * @param nodesVisited
+   * @example
+   */
   private querySphereRecursive(
     node: OctreeNode,
     sphere: Sphere3D,
@@ -820,6 +883,16 @@ export class Octree {
     return nodesVisited;
   }
 
+  /**
+   *
+   * @param node
+   * @param ray
+   * @param points
+   * @param distances
+   * @param options
+   * @param nodesVisited
+   * @example
+   */
   private rayIntersectionRecursive(
     node: OctreeNode,
     ray: Ray3D,
@@ -842,11 +915,11 @@ export class Octree {
         if (!options.filter || options.filter(point)) {
           points.push(point);
           distances.push(distance);
-          
+
           if (!options.findAll) {
             return nodesVisited;
           }
-          
+
           if (options.maxIntersections && points.length >= options.maxIntersections) {
             return nodesVisited;
           }
@@ -869,6 +942,15 @@ export class Octree {
     return nodesVisited;
   }
 
+  /**
+   *
+   * @param node
+   * @param frustum
+   * @param visiblePoints
+   * @param options
+   * @param nodesVisited
+   * @example
+   */
   private frustumCullingRecursive(
     node: OctreeNode,
     frustum: Frustum3D,
@@ -881,15 +963,15 @@ export class Octree {
 
     // Check if node is inside, outside, or intersecting frustum
     const frustumTest = this.boundsFrustumTest(node.bounds, frustum);
-    
-    if (frustumTest === 'outside') {
+
+    if (frustumTest === "outside") {
       culledCount += node.points.length;
       return { nodesVisited, culledCount };
     }
 
     // Add visible points from this node
     for (const point of node.points) {
-      if (frustumTest === 'inside' || this.pointInFrustum(point, frustum)) {
+      if (frustumTest === "inside" || this.pointInFrustum(point, frustum)) {
         if (!options.filter || options.filter(point)) {
           visiblePoints.push(point);
         }
@@ -912,6 +994,11 @@ export class Octree {
     return { nodesVisited, culledCount };
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private clearRecursive(node: OctreeNode): void {
     node.points = [];
     if (!node.isLeaf) {
@@ -925,35 +1012,80 @@ export class Octree {
     }
   }
 
+  /**
+   *
+   * @param point
+   * @example
+   */
   private isValidPoint(point: Point3D): boolean {
-    if (!point || typeof point.x !== 'number' || typeof point.y !== 'number' || typeof point.z !== 'number') {
+    if (!point || typeof point.x !== "number" || typeof point.y !== "number" || typeof point.z !== "number") {
       return false;
     }
     return isFinite(point.x) && isFinite(point.y) && isFinite(point.z);
   }
 
+  /**
+   *
+   * @param p1
+   * @param p2
+   * @example
+   */
   private pointsEqual(p1: Point3D, p2: Point3D): boolean {
     return p1.x === p2.x && p1.y === p2.y && p1.z === p2.z;
   }
 
+  /**
+   *
+   * @param point
+   * @param bounds
+   * @param inclusive
+   * @example
+   */
   private pointInBounds(point: Point3D, bounds: Bounds3D, inclusive: boolean = true): boolean {
     if (inclusive) {
-      return point.x >= bounds.min.x && point.x <= bounds.max.x &&
-             point.y >= bounds.min.y && point.y <= bounds.max.y &&
-             point.z >= bounds.min.z && point.z <= bounds.max.z;
+      return (
+        point.x >= bounds.min.x &&
+        point.x <= bounds.max.x &&
+        point.y >= bounds.min.y &&
+        point.y <= bounds.max.y &&
+        point.z >= bounds.min.z &&
+        point.z <= bounds.max.z
+      );
     } else {
-      return point.x > bounds.min.x && point.x < bounds.max.x &&
-             point.y > bounds.min.y && point.y < bounds.max.y &&
-             point.z > bounds.min.z && point.z < bounds.max.z;
+      return (
+        point.x > bounds.min.x &&
+        point.x < bounds.max.x &&
+        point.y > bounds.min.y &&
+        point.y < bounds.max.y &&
+        point.z > bounds.min.z &&
+        point.z < bounds.max.z
+      );
     }
   }
 
+  /**
+   *
+   * @param bounds1
+   * @param bounds2
+   * @example
+   */
   private boundsIntersect(bounds1: Bounds3D, bounds2: Bounds3D): boolean {
-    return bounds1.min.x <= bounds2.max.x && bounds1.max.x >= bounds2.min.x &&
-           bounds1.min.y <= bounds2.max.y && bounds1.max.y >= bounds2.min.y &&
-           bounds1.min.z <= bounds2.max.z && bounds1.max.z >= bounds2.min.z;
+    return (
+      bounds1.min.x <= bounds2.max.x &&
+      bounds1.max.x >= bounds2.min.x &&
+      bounds1.min.y <= bounds2.max.y &&
+      bounds1.max.y >= bounds2.min.y &&
+      bounds1.min.z <= bounds2.max.z &&
+      bounds1.max.z >= bounds2.min.z
+    );
   }
 
+  /**
+   *
+   * @param bounds
+   * @param sphere
+   * @example
+   */
   private boundsIntersectSphere(bounds: Bounds3D, sphere: Sphere3D): boolean {
     const closestPoint = {
       x: Math.max(bounds.min.x, Math.min(sphere.center.x, bounds.max.x)),
@@ -963,22 +1095,34 @@ export class Octree {
 
     const distance = Math.sqrt(
       Math.pow(closestPoint.x - sphere.center.x, 2) +
-      Math.pow(closestPoint.y - sphere.center.y, 2) +
-      Math.pow(closestPoint.z - sphere.center.z, 2)
+        Math.pow(closestPoint.y - sphere.center.y, 2) +
+        Math.pow(closestPoint.z - sphere.center.z, 2)
     );
 
     return distance <= sphere.radius;
   }
 
+  /**
+   *
+   * @param point
+   * @param sphere
+   * @example
+   */
   private pointInSphere(point: Point3D, sphere: Sphere3D): boolean {
     const distance = Math.sqrt(
       Math.pow(point.x - sphere.center.x, 2) +
-      Math.pow(point.y - sphere.center.y, 2) +
-      Math.pow(point.z - sphere.center.z, 2)
+        Math.pow(point.y - sphere.center.y, 2) +
+        Math.pow(point.z - sphere.center.z, 2)
     );
     return distance <= sphere.radius;
   }
 
+  /**
+   *
+   * @param ray
+   * @param bounds
+   * @example
+   */
   private rayIntersectsBounds(ray: Ray3D, bounds: Bounds3D): boolean {
     // Simplified ray-AABB intersection test
     const tMin = (bounds.min.x - ray.origin.x) / ray.direction.x;
@@ -1002,6 +1146,12 @@ export class Octree {
     return tNear <= tFar && tFar >= 0;
   }
 
+  /**
+   *
+   * @param ray
+   * @param point
+   * @example
+   */
   private rayPointDistance(ray: Ray3D, point: Point3D): number | null {
     // Calculate distance from point to ray
     const toPoint = {
@@ -1011,7 +1161,7 @@ export class Octree {
     };
 
     const projection = toPoint.x * ray.direction.x + toPoint.y * ray.direction.y + toPoint.z * ray.direction.z;
-    
+
     if (projection < 0) {
       return null; // Point is behind ray origin
     }
@@ -1024,14 +1174,20 @@ export class Octree {
 
     const distance = Math.sqrt(
       Math.pow(point.x - projectedPoint.x, 2) +
-      Math.pow(point.y - projectedPoint.y, 2) +
-      Math.pow(point.z - projectedPoint.z, 2)
+        Math.pow(point.y - projectedPoint.y, 2) +
+        Math.pow(point.z - projectedPoint.z, 2)
     );
 
     return distance;
   }
 
-  private boundsFrustumTest(bounds: Bounds3D, frustum: Frustum3D): 'inside' | 'outside' | 'intersect' {
+  /**
+   *
+   * @param bounds
+   * @param frustum
+   * @example
+   */
+  private boundsFrustumTest(bounds: Bounds3D, frustum: Frustum3D): "inside" | "outside" | "intersect" {
     let inside = true;
 
     for (const plane of frustum.planes) {
@@ -1063,16 +1219,22 @@ export class Octree {
       }
 
       if (pointsOutside === 8) {
-        return 'outside';
+        return "outside";
       }
       if (pointsInside < 8) {
         inside = false;
       }
     }
 
-    return inside ? 'inside' : 'intersect';
+    return inside ? "inside" : "intersect";
   }
 
+  /**
+   *
+   * @param point
+   * @param frustum
+   * @example
+   */
   private pointInFrustum(point: Point3D, frustum: Frustum3D): boolean {
     for (const plane of frustum.planes) {
       const normal = plane.normal;
@@ -1085,6 +1247,10 @@ export class Octree {
     return true;
   }
 
+  /**
+   *
+   * @example
+   */
   private getAllPoints(): Point3D[] {
     const points: Point3D[] = [];
     if (this.root) {
@@ -1093,6 +1259,12 @@ export class Octree {
     return points;
   }
 
+  /**
+   *
+   * @param node
+   * @param points
+   * @example
+   */
   private collectPoints(node: OctreeNode, points: Point3D[]): void {
     points.push(...node.points);
     if (!node.isLeaf) {
@@ -1104,6 +1276,10 @@ export class Octree {
     }
   }
 
+  /**
+   *
+   * @example
+   */
   private updateStats(): void {
     if (this.root) {
       this.stats.nodeCount = this.countNodes(this.root);
@@ -1115,6 +1291,11 @@ export class Octree {
     }
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private countNodes(node: OctreeNode): number {
     let count = 1;
     if (!node.isLeaf) {
@@ -1127,6 +1308,11 @@ export class Octree {
     return count;
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private countLeaves(node: OctreeNode): number {
     if (node.isLeaf) {
       return 1;
@@ -1140,6 +1326,11 @@ export class Octree {
     return count;
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private calculateHeight(node: OctreeNode): number {
     if (node.isLeaf) {
       return 1;
@@ -1153,12 +1344,24 @@ export class Octree {
     return 1 + maxChildHeight;
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private calculateAverageDepth(node: OctreeNode): number {
     const depths: number[] = [];
     this.collectDepths(node, 0, depths);
     return depths.reduce((sum, depth) => sum + depth, 0) / depths.length;
   }
 
+  /**
+   *
+   * @param node
+   * @param depth
+   * @param depths
+   * @example
+   */
   private collectDepths(node: OctreeNode, depth: number, depths: number[]): void {
     if (node.isLeaf) {
       depths.push(depth);
@@ -1171,6 +1374,11 @@ export class Octree {
     }
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private calculateMaxDepth(node: OctreeNode): number {
     if (node.isLeaf) {
       return node.depth;
@@ -1184,6 +1392,10 @@ export class Octree {
     return maxDepth;
   }
 
+  /**
+   *
+   * @example
+   */
   private estimateMemoryUsage(): number {
     // Rough estimate: each node + point data
     const nodeSize = 128; // Approximate size of an OctreeNode
@@ -1191,15 +1403,23 @@ export class Octree {
     return this.stats.nodeCount * nodeSize + this.stats.totalPoints * pointSize;
   }
 
+  /**
+   *
+   * @example
+   */
   private calculatePerformanceScore(): number {
     const maxTime = 100; // 100ms as maximum
     const queryScore = Math.max(0, 100 - (this.stats.averageQueryTime / maxTime) * 100);
     const insertScore = Math.max(0, 100 - (this.stats.averageInsertionTime / maxTime) * 100);
     const removeScore = Math.max(0, 100 - (this.stats.averageRemovalTime / maxTime) * 100);
-    
+
     return (queryScore + insertScore + removeScore) / 3;
   }
 
+  /**
+   *
+   * @example
+   */
   private calculateBalanceRatio(): number {
     if (this.stats.nodeCount === 0) {
       return 1;
@@ -1208,6 +1428,10 @@ export class Octree {
     return Math.max(0, 1 - (this.stats.height - idealHeight) / idealHeight);
   }
 
+  /**
+   *
+   * @example
+   */
   private calculateQueryEfficiency(): number {
     if (this.stats.spatialQueries === 0) {
       return 1;
@@ -1217,6 +1441,10 @@ export class Octree {
     return Math.max(0, 1 - (actualVisits - idealVisits) / idealVisits);
   }
 
+  /**
+   *
+   * @example
+   */
   private calculateLODEfficiency(): number {
     if (!this.config.enableLOD) {
       return 1;
@@ -1225,10 +1453,19 @@ export class Octree {
     return Math.min(1, this.stats.totalPoints / (this.stats.nodeCount * this.config.maxPoints));
   }
 
+  /**
+   *
+   * @example
+   */
   private serializeTreeStructure(): any {
     return this.serializeNode(this.root);
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private serializeNode(node: OctreeNode | null): any {
     if (node === null) {
       return null;
@@ -1243,6 +1480,12 @@ export class Octree {
     };
   }
 
+  /**
+   *
+   * @param type
+   * @param data
+   * @example
+   */
   private emitEvent(type: OctreeEventType, data?: any): void {
     if (this.eventHandlers.length === 0) {
       return;
@@ -1259,7 +1502,7 @@ export class Octree {
         handler(event);
       } catch (error) {
         if (this.enableDebug) {
-          console.error('Error in Octree event handler:', error);
+          console.error("Error in Octree event handler:", error);
         }
       }
     }

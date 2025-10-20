@@ -26,6 +26,7 @@ describe("OBB Performance", () => {
    * @param minY - Minimum Y coordinate.
    * @param maxY - Maximum Y coordinate.
    * @returns Array of random points.
+   * @example
    */
   function generateRandomPoints(
     count: number,
@@ -50,12 +51,9 @@ describe("OBB Performance", () => {
    * @param centerY - Center Y coordinate.
    * @param maxSize - Maximum half-width.
    * @returns Random OBB.
+   * @example
    */
-  function generateRandomOBB(
-    centerX: number = 0,
-    centerY: number = 0,
-    maxSize: number = 5
-  ): OBBData {
+  function generateRandomOBB(centerX: number = 0, centerY: number = 0, maxSize: number = 5): OBBData {
     const halfWidthX = Math.random() * maxSize + 0.1;
     const halfWidthY = Math.random() * maxSize + 0.1;
     const rotation = Math.random() * Math.PI * 2;
@@ -74,7 +72,7 @@ describe("OBB Performance", () => {
   describe("Construction Performance", () => {
     it("should construct OBB from 100 points quickly", () => {
       const points = generateRandomPoints(100);
-      
+
       const startTime = performance.now();
       const result = obb.constructFromPoints(points);
       const endTime = performance.now();
@@ -86,7 +84,7 @@ describe("OBB Performance", () => {
 
     it("should construct OBB from 1000 points in reasonable time", () => {
       const points = generateRandomPoints(1000);
-      
+
       const startTime = performance.now();
       const result = obb.constructFromPoints(points);
       const endTime = performance.now();
@@ -101,18 +99,18 @@ describe("OBB Performance", () => {
 
       for (const size of sizes) {
         const points = generateRandomPoints(size);
-        
+
         const startTime = performance.now();
         obb.constructFromPoints(points);
         const endTime = performance.now();
-        
+
         times.push(endTime - startTime);
       }
 
       // Times should scale roughly linearly
       const ratio1 = times[1] / times[0];
       const ratio2 = times[2] / times[0];
-      
+
       expect(ratio1).toBeLessThan(6); // 5x points should take less than 6x time
       expect(ratio2).toBeLessThan(12); // 10x points should take less than 12x time
     });
@@ -126,7 +124,7 @@ describe("OBB Performance", () => {
         const startTime = performance.now();
         obb.constructFromPoints(points, { method });
         const endTime = performance.now();
-        
+
         times.push(endTime - startTime);
       }
 
@@ -141,7 +139,7 @@ describe("OBB Performance", () => {
     it("should perform 1000 collision tests quickly", () => {
       const obb1Data = generateRandomOBB(0, 0, 2);
       const obb2Data = generateRandomOBB(1, 1, 2);
-      
+
       const startTime = performance.now();
       for (let i = 0; i < 1000; i++) {
         obb.testCollision(obb1Data, obb2Data);
@@ -154,7 +152,7 @@ describe("OBB Performance", () => {
     it("should perform 10000 collision tests in reasonable time", () => {
       const obb1Data = generateRandomOBB(0, 0, 2);
       const obb2Data = generateRandomOBB(1, 1, 2);
-      
+
       const startTime = performance.now();
       for (let i = 0; i < 10000; i++) {
         obb.testCollision(obb1Data, obb2Data);
@@ -167,7 +165,7 @@ describe("OBB Performance", () => {
     it("should handle collision tests with MTV computation", () => {
       const obb1Data = generateRandomOBB(0, 0, 2);
       const obb2Data = generateRandomOBB(1, 1, 2);
-      
+
       const startTime = performance.now();
       for (let i = 0; i < 1000; i++) {
         obb.testCollision(obb1Data, obb2Data, { computeMTV: true });
@@ -180,7 +178,7 @@ describe("OBB Performance", () => {
     it("should handle early exit optimization", () => {
       const obb1Data = generateRandomOBB(0, 0, 2);
       const obb2Data = generateRandomOBB(10, 10, 2); // Far apart - should exit early
-      
+
       const startTime = performance.now();
       for (let i = 0; i < 1000; i++) {
         obb.testCollision(obb1Data, obb2Data, { useEarlyExit: true });
@@ -202,14 +200,14 @@ describe("OBB Performance", () => {
           obb.testCollision(obb1Data, obb2Data);
         }
         const endTime = performance.now();
-        
+
         times.push(endTime - startTime);
       }
 
       // Times should scale roughly linearly
       const ratio1 = times[1] / times[0];
       const ratio2 = times[2] / times[0];
-      
+
       expect(ratio1).toBeLessThan(6); // 5x tests should take less than 6x time
       expect(ratio2).toBeLessThan(12); // 10x tests should take less than 12x time
     });
@@ -219,7 +217,7 @@ describe("OBB Performance", () => {
     it("should test 1000 points quickly", () => {
       const obbData = generateRandomOBB(0, 0, 2);
       const points = generateRandomPoints(1000);
-      
+
       const startTime = performance.now();
       for (const point of points) {
         obb.testPoint(point, obbData);
@@ -232,7 +230,7 @@ describe("OBB Performance", () => {
     it("should test 10000 points in reasonable time", () => {
       const obbData = generateRandomOBB(0, 0, 2);
       const points = generateRandomPoints(10000);
-      
+
       const startTime = performance.now();
       for (const point of points) {
         obb.testPoint(point, obbData);
@@ -249,20 +247,20 @@ describe("OBB Performance", () => {
 
       for (const count of testCounts) {
         const points = generateRandomPoints(count);
-        
+
         const startTime = performance.now();
         for (const point of points) {
           obb.testPoint(point, obbData);
         }
         const endTime = performance.now();
-        
+
         times.push(endTime - startTime);
       }
 
       // Times should scale roughly linearly
       const ratio1 = times[1] / times[0];
       const ratio2 = times[2] / times[0];
-      
+
       expect(ratio1).toBeLessThan(6); // 5x points should take less than 6x time
       expect(ratio2).toBeLessThan(12); // 10x points should take less than 12x time
     });
@@ -271,7 +269,7 @@ describe("OBB Performance", () => {
   describe("Transformation Performance", () => {
     it("should transform OBB quickly", () => {
       const obbData = generateRandomOBB(0, 0, 2);
-      
+
       const startTime = performance.now();
       for (let i = 0; i < 1000; i++) {
         obb.transformOBB(obbData, {
@@ -287,7 +285,7 @@ describe("OBB Performance", () => {
 
     it("should handle translation-only transformations efficiently", () => {
       const obbData = generateRandomOBB(0, 0, 2);
-      
+
       const startTime = performance.now();
       for (let i = 0; i < 1000; i++) {
         obb.transformOBB(obbData, {
@@ -301,7 +299,7 @@ describe("OBB Performance", () => {
 
     it("should handle rotation transformations efficiently", () => {
       const obbData = generateRandomOBB(0, 0, 2);
-      
+
       const startTime = performance.now();
       for (let i = 0; i < 1000; i++) {
         obb.transformOBB(obbData, {
@@ -317,7 +315,7 @@ describe("OBB Performance", () => {
   describe("Validation Performance", () => {
     it("should validate OBB quickly", () => {
       const obbData = generateRandomOBB(0, 0, 2);
-      
+
       const startTime = performance.now();
       for (let i = 0; i < 1000; i++) {
         obb.validateOBB(obbData);
@@ -329,7 +327,7 @@ describe("OBB Performance", () => {
 
     it("should handle validation with all checks efficiently", () => {
       const obbData = generateRandomOBB(0, 0, 2);
-      
+
       const startTime = performance.now();
       for (let i = 0; i < 1000; i++) {
         obb.validateOBB(obbData, {
@@ -348,7 +346,7 @@ describe("OBB Performance", () => {
   describe("Serialization Performance", () => {
     it("should serialize OBB quickly", () => {
       const obbData = generateRandomOBB(0, 0, 2);
-      
+
       const startTime = performance.now();
       for (let i = 0; i < 1000; i++) {
         obb.serialize(obbData);
@@ -360,7 +358,7 @@ describe("OBB Performance", () => {
 
     it("should handle serialization with all options efficiently", () => {
       const obbData = generateRandomOBB(0, 0, 2);
-      
+
       const startTime = performance.now();
       for (let i = 0; i < 1000; i++) {
         obb.serialize(obbData, {
@@ -397,7 +395,7 @@ describe("OBB Performance", () => {
 
     it("should handle large datasets efficiently", () => {
       const largePoints = generateRandomPoints(10000);
-      
+
       const startTime = performance.now();
       const result = obb.constructFromPoints(largePoints);
       const endTime = performance.now();
@@ -411,9 +409,9 @@ describe("OBB Performance", () => {
     it("should handle rapid successive operations", () => {
       const obb1Data = generateRandomOBB(0, 0, 2);
       const obb2Data = generateRandomOBB(1, 1, 2);
-      
+
       const startTime = performance.now();
-      
+
       // Rapidly alternate between different operations
       for (let i = 0; i < 500; i++) {
         obb.testCollision(obb1Data, obb2Data);
@@ -421,7 +419,7 @@ describe("OBB Performance", () => {
         obb.transformOBB(obb1Data, { translation: { x: 0.01, y: 0.01 } });
         obb.validateOBB(obb1Data);
       }
-      
+
       const endTime = performance.now();
 
       expect(endTime - startTime).toBeLessThan(200); // Should handle rapid operations

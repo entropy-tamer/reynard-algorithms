@@ -50,7 +50,7 @@ describe("SpatialCollisionOptimizer", () => {
 
     const _collisions = optimizer.detectCollisions(aabbs);
     const stats = optimizer.getStats();
-    
+
     // Verify collisions were detected
     expect(_collisions.length).toBeGreaterThan(0);
 

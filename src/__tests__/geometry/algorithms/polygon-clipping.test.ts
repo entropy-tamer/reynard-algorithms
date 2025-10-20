@@ -4,7 +4,11 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { PolygonClipping, SutherlandHodgmanClipper, WeilerAthertonClipper } from "../../../geometry/algorithms/polygon-clipping/polygon-clipping-core";
+import {
+  PolygonClipping,
+  SutherlandHodgmanClipper,
+  WeilerAthertonClipper,
+} from "../../../geometry/algorithms/polygon-clipping/polygon-clipping-core";
 import { ClipOperation } from "../../../geometry/algorithms/polygon-clipping/polygon-clipping-types";
 import type { Polygon } from "../../../geometry/algorithms/polygon-clipping/polygon-clipping-types";
 
@@ -53,10 +57,7 @@ describe("PolygonClipping", () => {
 
     it("should validate vertex properties", () => {
       const invalidPolygon = {
-        vertices: [
-          { x: 0, y: 0 },
-          { x: "invalid", y: 0 } as any,
-        ],
+        vertices: [{ x: 0, y: 0 }, { x: "invalid", y: 0 } as any],
       } as Polygon;
       const result = clipper.validatePolygon(invalidPolygon, "test");
       expect(result.isValid).toBe(false);

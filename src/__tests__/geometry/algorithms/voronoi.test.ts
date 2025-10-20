@@ -66,10 +66,7 @@ describe("VoronoiDiagram", () => {
     });
 
     it("should throw error for invalid site format", () => {
-      const invalidSites = [
-        { x: 0, y: 0 },
-        { x: "invalid", y: 0 } as any,
-      ];
+      const invalidSites = [{ x: 0, y: 0 }, { x: "invalid", y: 0 } as any];
       expect(() => voronoi.generate(invalidSites)).toThrow("Invalid site at index 1");
     });
 
@@ -91,7 +88,10 @@ describe("VoronoiDiagram", () => {
 
     it("should handle validation disabled", () => {
       const voronoiNoValidation = new VoronoiDiagram({ validateInput: false });
-      const sites: Point[] = [{ x: 0, y: 0 }, { x: 1, y: 1 }];
+      const sites: Point[] = [
+        { x: 0, y: 0 },
+        { x: 1, y: 1 },
+      ];
       const result = voronoiNoValidation.generate(sites);
       expect(result.stats.success).toBe(true);
     });
@@ -156,7 +156,7 @@ describe("VoronoiDiagram", () => {
       // Check that all sites have corresponding cells
       const sitePositions = sites.map(site => `${site.x},${site.y}`);
       const cellSites = result.cells.map((cell: any) => `${cell.site.x},${cell.site.y}`);
-      
+
       for (const sitePos of sitePositions) {
         expect(cellSites).toContain(sitePos);
       }
@@ -219,7 +219,7 @@ describe("VoronoiDiagram", () => {
       const result = voronoiWithProps.generate(sites);
 
       expect(result.stats.success).toBe(true);
-      
+
       for (const cell of result.cells) {
         if (cell.bounded) {
           expect(typeof cell.area).toBe("number");
@@ -240,7 +240,7 @@ describe("VoronoiDiagram", () => {
       const result = voronoiWithoutProps.generate(sites);
 
       expect(result.stats.success).toBe(true);
-      
+
       for (const cell of result.cells) {
         expect(cell.area).toBe(0);
         expect(cell.centroid).toEqual(cell.site);
@@ -367,7 +367,7 @@ describe("Voronoi Utils", () => {
         c: { x: 1, y: Math.sqrt(3) },
       };
       const circumcenter = calculateCircumcenter(triangle);
-      
+
       expect(circumcenter.x).toBeCloseTo(1, 10);
       expect(circumcenter.y).toBeCloseTo(Math.sqrt(3) / 3, 10);
     });
@@ -379,7 +379,7 @@ describe("Voronoi Utils", () => {
         c: { x: 2, y: 0 },
       };
       const circumcenter = calculateCircumcenter(triangle);
-      
+
       expect(circumcenter.x).toBeCloseTo(1, 10);
       expect(circumcenter.y).toBeCloseTo(0, 10);
     });
@@ -400,7 +400,12 @@ describe("Voronoi Utils", () => {
     it("should return 0 for less than 3 vertices", () => {
       expect(calculatePolygonArea([])).toBe(0);
       expect(calculatePolygonArea([{ x: 0, y: 0 }])).toBe(0);
-      expect(calculatePolygonArea([{ x: 0, y: 0 }, { x: 1, y: 1 }])).toBe(0);
+      expect(
+        calculatePolygonArea([
+          { x: 0, y: 0 },
+          { x: 1, y: 1 },
+        ])
+      ).toBe(0);
     });
   });
 
@@ -456,7 +461,7 @@ describe("Voronoi Utils", () => {
         { x: 1, y: 2 },
       ];
       const result = findNearestSite({ x: 0.1, y: 0.1 }, sites);
-      
+
       expect(result.site).toEqual({ x: 0, y: 0 });
       expect(result.index).toBe(0);
       expect(result.distance).toBeCloseTo(Math.sqrt(0.02), 10);
@@ -513,7 +518,7 @@ describe("Voronoi Utils", () => {
         { x: 1, y: 3 },
       ];
       const bbox = createBoundingBox(points);
-      
+
       expect(bbox.min.x).toBe(0);
       expect(bbox.min.y).toBe(0);
       expect(bbox.max.x).toBe(2);
@@ -550,4 +555,3 @@ describe("Voronoi Utils", () => {
     });
   });
 });
-

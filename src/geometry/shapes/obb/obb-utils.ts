@@ -3,12 +3,7 @@
  * @description Utility functions for Oriented Bounding Box (OBB) operations.
  */
 
-import {
-  Point,
-  Vector,
-  OBBData,
-  OBBProjection,
-} from "./obb-types";
+import { Point, Vector, OBBData, OBBProjection } from "./obb-types";
 
 /**
  * Utility functions for OBB operations.
@@ -18,6 +13,7 @@ export class OBBUtils {
    * Creates a unit vector from an angle.
    * @param angle - Angle in radians.
    * @returns Unit vector.
+   * @example
    */
   static angleToVector(angle: number): Vector {
     return {
@@ -30,6 +26,7 @@ export class OBBUtils {
    * Calculates the angle of a vector.
    * @param vector - The vector.
    * @returns Angle in radians.
+   * @example
    */
   static vectorToAngle(vector: Vector): number {
     return Math.atan2(vector.y, vector.x);
@@ -39,6 +36,7 @@ export class OBBUtils {
    * Normalizes a vector to unit length.
    * @param vector - The vector to normalize.
    * @returns Normalized vector.
+   * @example
    */
   static normalizeVector(vector: Vector): Vector {
     const length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
@@ -56,6 +54,7 @@ export class OBBUtils {
    * @param a - First vector.
    * @param b - Second vector.
    * @returns Dot product.
+   * @example
    */
   static dotProduct(a: Vector, b: Vector): number {
     return a.x * b.x + a.y * b.y;
@@ -66,6 +65,7 @@ export class OBBUtils {
    * @param a - First vector.
    * @param b - Second vector.
    * @returns Cross product (scalar in 2D).
+   * @example
    */
   static crossProduct(a: Vector, b: Vector): number {
     return a.x * b.y - a.y * b.x;
@@ -75,6 +75,7 @@ export class OBBUtils {
    * Calculates the length of a vector.
    * @param vector - The vector.
    * @returns Vector length.
+   * @example
    */
   static vectorLength(vector: Vector): number {
     return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
@@ -84,6 +85,7 @@ export class OBBUtils {
    * Calculates the squared length of a vector.
    * @param vector - The vector.
    * @returns Squared vector length.
+   * @example
    */
   static vectorLengthSquared(vector: Vector): number {
     return vector.x * vector.x + vector.y * vector.y;
@@ -94,6 +96,7 @@ export class OBBUtils {
    * @param a - First point.
    * @param b - Second point.
    * @returns Distance.
+   * @example
    */
   static distance(a: Point, b: Point): number {
     const dx = b.x - a.x;
@@ -106,6 +109,7 @@ export class OBBUtils {
    * @param a - First point.
    * @param b - Second point.
    * @returns Squared distance.
+   * @example
    */
   static distanceSquared(a: Point, b: Point): number {
     const dx = b.x - a.x;
@@ -118,6 +122,7 @@ export class OBBUtils {
    * @param a - First vector.
    * @param b - Second vector.
    * @returns Sum vector.
+   * @example
    */
   static addVectors(a: Vector, b: Vector): Vector {
     return {
@@ -131,6 +136,7 @@ export class OBBUtils {
    * @param a - First vector.
    * @param b - Second vector.
    * @returns Difference vector.
+   * @example
    */
   static subtractVectors(a: Vector, b: Vector): Vector {
     return {
@@ -144,6 +150,7 @@ export class OBBUtils {
    * @param vector - The vector.
    * @param scalar - The scalar.
    * @returns Scaled vector.
+   * @example
    */
   static multiplyVector(vector: Vector, scalar: number): Vector {
     return {
@@ -157,6 +164,7 @@ export class OBBUtils {
    * @param vector - The vector to rotate.
    * @param angle - Rotation angle in radians.
    * @returns Rotated vector.
+   * @example
    */
   static rotateVector(vector: Vector, angle: number): Vector {
     const cos = Math.cos(angle);
@@ -171,6 +179,7 @@ export class OBBUtils {
    * Calculates the perpendicular vector (90-degree rotation).
    * @param vector - The vector.
    * @returns Perpendicular vector.
+   * @example
    */
   static perpendicularVector(vector: Vector): Vector {
     return {
@@ -184,6 +193,7 @@ export class OBBUtils {
    * @param point - The point to project.
    * @param axis - The axis to project onto.
    * @returns Projection value.
+   * @example
    */
   static projectPoint(point: Point, axis: Vector): number {
     return point.x * axis.x + point.y * axis.y;
@@ -194,14 +204,16 @@ export class OBBUtils {
    * @param obb - The OBB to project.
    * @param axis - The axis to project onto.
    * @returns Projection result.
+   * @example
    */
   static projectOBB(obb: OBBData, axis: Vector): OBBProjection {
     const centerProjection = this.projectPoint(obb.center, axis);
-    
+
     // Project the half-widths along the axis
-    const halfWidthProjection = Math.abs(this.dotProduct(obb.axes[0], axis)) * obb.halfWidths.x +
-                               Math.abs(this.dotProduct(obb.axes[1], axis)) * obb.halfWidths.y;
-    
+    const halfWidthProjection =
+      Math.abs(this.dotProduct(obb.axes[0], axis)) * obb.halfWidths.x +
+      Math.abs(this.dotProduct(obb.axes[1], axis)) * obb.halfWidths.y;
+
     return {
       min: centerProjection - halfWidthProjection,
       max: centerProjection + halfWidthProjection,
@@ -216,6 +228,7 @@ export class OBBUtils {
    * @param proj2 - Second projection.
    * @param tolerance - Tolerance for overlap detection.
    * @returns True if projections overlap.
+   * @example
    */
   static projectionsOverlap(proj1: OBBProjection, proj2: OBBProjection, tolerance: number = 1e-10): boolean {
     return proj1.max >= proj2.min - tolerance && proj2.max >= proj1.min - tolerance;
@@ -226,6 +239,7 @@ export class OBBUtils {
    * @param proj1 - First projection.
    * @param proj2 - Second projection.
    * @returns Overlap amount (negative if no overlap).
+   * @example
    */
   static projectionOverlap(proj1: OBBProjection, proj2: OBBProjection): number {
     const overlap = Math.min(proj1.max, proj2.max) - Math.max(proj1.min, proj2.min);
@@ -236,10 +250,11 @@ export class OBBUtils {
    * Gets the vertices of an OBB.
    * @param obb - The OBB.
    * @returns Array of four vertices.
+   * @example
    */
   static getOBBVertices(obb: OBBData): Point[] {
     const vertices: Point[] = [];
-    
+
     // Calculate the four corners
     const corners = [
       { x: -obb.halfWidths.x, y: -obb.halfWidths.y },
@@ -247,7 +262,7 @@ export class OBBUtils {
       { x: obb.halfWidths.x, y: obb.halfWidths.y },
       { x: -obb.halfWidths.x, y: obb.halfWidths.y },
     ];
-    
+
     for (const corner of corners) {
       // Transform corner to world space
       const worldCorner = {
@@ -256,7 +271,7 @@ export class OBBUtils {
       };
       vertices.push(worldCorner);
     }
-    
+
     return vertices;
   }
 
@@ -264,6 +279,7 @@ export class OBBUtils {
    * Calculates the area of an OBB.
    * @param obb - The OBB.
    * @returns Area.
+   * @example
    */
   static calculateOBBArea(obb: OBBData): number {
     return 4 * obb.halfWidths.x * obb.halfWidths.y;
@@ -273,6 +289,7 @@ export class OBBUtils {
    * Calculates the perimeter of an OBB.
    * @param obb - The OBB.
    * @returns Perimeter.
+   * @example
    */
   static calculateOBBPerimeter(obb: OBBData): number {
     return 4 * (obb.halfWidths.x + obb.halfWidths.y);
@@ -282,6 +299,7 @@ export class OBBUtils {
    * Calculates the aspect ratio of an OBB.
    * @param obb - The OBB.
    * @returns Aspect ratio (width/height).
+   * @example
    */
   static calculateOBBAspectRatio(obb: OBBData): number {
     const width = 2 * obb.halfWidths.x;
@@ -295,6 +313,7 @@ export class OBBUtils {
    * @param obb - The OBB.
    * @param tolerance - Tolerance for boundary detection.
    * @returns True if point is inside.
+   * @example
    */
   static isPointInsideOBB(point: Point, obb: OBBData, tolerance: number = 1e-10): boolean {
     // Transform point to OBB local space
@@ -302,13 +321,12 @@ export class OBBUtils {
       x: point.x - obb.center.x,
       y: point.y - obb.center.y,
     };
-    
+
     // Project onto OBB axes
     const projectionX = Math.abs(this.dotProduct(localPoint, obb.axes[0]));
     const projectionY = Math.abs(this.dotProduct(localPoint, obb.axes[1]));
-    
-    return projectionX <= obb.halfWidths.x + tolerance && 
-           projectionY <= obb.halfWidths.y + tolerance;
+
+    return projectionX <= obb.halfWidths.x + tolerance && projectionY <= obb.halfWidths.y + tolerance;
   }
 
   /**
@@ -316,6 +334,7 @@ export class OBBUtils {
    * @param point - The reference point.
    * @param obb - The OBB.
    * @returns Closest point on OBB surface.
+   * @example
    */
   static closestPointOnOBB(point: Point, obb: OBBData): Point {
     // Transform point to OBB local space
@@ -323,15 +342,15 @@ export class OBBUtils {
       x: point.x - obb.center.x,
       y: point.y - obb.center.y,
     };
-    
+
     // Project onto OBB axes
     const projectionX = this.dotProduct(localPoint, obb.axes[0]);
     const projectionY = this.dotProduct(localPoint, obb.axes[1]);
-    
+
     // Clamp to OBB bounds
     const clampedX = Math.max(-obb.halfWidths.x, Math.min(obb.halfWidths.x, projectionX));
     const clampedY = Math.max(-obb.halfWidths.y, Math.min(obb.halfWidths.y, projectionY));
-    
+
     // Transform back to world space
     return {
       x: obb.center.x + clampedX * obb.axes[0].x + clampedY * obb.axes[1].x,
@@ -344,16 +363,17 @@ export class OBBUtils {
    * @param point - The reference point.
    * @param obb - The OBB.
    * @returns Distance (negative if inside).
+   * @example
    */
   static distanceToOBB(point: Point, obb: OBBData): number {
     const closestPoint = this.closestPointOnOBB(point, obb);
     const distance = this.distance(point, closestPoint);
-    
+
     // If point is inside OBB, return negative distance
     if (this.isPointInsideOBB(point, obb)) {
       return -distance;
     }
-    
+
     return distance;
   }
 
@@ -361,21 +381,27 @@ export class OBBUtils {
    * Calculates the covariance matrix of a set of points.
    * @param points - Array of points.
    * @returns Covariance matrix as 2x2 array.
+   * @example
    */
   static calculateCovarianceMatrix(points: Point[]): number[][] {
     if (points.length === 0) {
-      return [[0, 0], [0, 0]];
+      return [
+        [0, 0],
+        [0, 0],
+      ];
     }
-    
+
     // Calculate centroid
     const centroid = {
       x: points.reduce((sum, p) => sum + p.x, 0) / points.length,
       y: points.reduce((sum, p) => sum + p.y, 0) / points.length,
     };
-    
+
     // Calculate covariance matrix
-    let covXX = 0, covXY = 0, covYY = 0;
-    
+    let covXX = 0,
+      covXY = 0,
+      covYY = 0;
+
     for (const point of points) {
       const dx = point.x - centroid.x;
       const dy = point.y - centroid.y;
@@ -383,7 +409,7 @@ export class OBBUtils {
       covXY += dx * dy;
       covYY += dy * dy;
     }
-    
+
     const n = points.length;
     return [
       [covXX / n, covXY / n],
@@ -395,15 +421,16 @@ export class OBBUtils {
    * Calculates the principal components of a covariance matrix.
    * @param covariance - Covariance matrix.
    * @returns Principal components (eigenvectors).
+   * @example
    */
   static calculatePrincipalComponents(covariance: number[][]): Vector[] {
     const [[a, b], [c, d]] = covariance;
-    
+
     // Calculate eigenvalues
     const trace = a + d;
     const det = a * d - b * c;
     const discriminant = trace * trace - 4 * det;
-    
+
     if (discriminant < 0) {
       // No real eigenvalues, return identity
       return [
@@ -411,13 +438,13 @@ export class OBBUtils {
         { x: 0, y: 1 },
       ];
     }
-    
+
     const sqrtDisc = Math.sqrt(discriminant);
     const lambda1 = (trace + sqrtDisc) / 2;
-    
+
     // Calculate eigenvectors
     const eigenvectors: Vector[] = [];
-    
+
     // First eigenvector
     if (Math.abs(b) > 1e-10) {
       eigenvectors.push(this.normalizeVector({ x: lambda1 - d, y: b }));
@@ -426,10 +453,10 @@ export class OBBUtils {
     } else {
       eigenvectors.push({ x: 1, y: 0 });
     }
-    
+
     // Second eigenvector (orthogonal to first)
     eigenvectors.push(this.perpendicularVector(eigenvectors[0]));
-    
+
     return eigenvectors;
   }
 
@@ -439,6 +466,7 @@ export class OBBUtils {
    * @param b - Second vector.
    * @param tolerance - Tolerance for comparison.
    * @returns True if vectors are equal.
+   * @example
    */
   static vectorsEqual(a: Vector, b: Vector, tolerance: number = 1e-10): boolean {
     return Math.abs(a.x - b.x) < tolerance && Math.abs(a.y - b.y) < tolerance;
@@ -450,6 +478,7 @@ export class OBBUtils {
    * @param b - Second point.
    * @param tolerance - Tolerance for comparison.
    * @returns True if points are equal.
+   * @example
    */
   static pointsEqual(a: Point, b: Point, tolerance: number = 1e-10): boolean {
     return Math.abs(a.x - b.x) < tolerance && Math.abs(a.y - b.y) < tolerance;
@@ -460,6 +489,7 @@ export class OBBUtils {
    * @param a - First vector.
    * @param b - Second vector.
    * @returns Angle in radians.
+   * @example
    */
   static angleBetweenVectors(a: Vector, b: Vector): number {
     const dot = this.dotProduct(a, b);
@@ -473,6 +503,7 @@ export class OBBUtils {
    * @param b - Second vector.
    * @param tolerance - Tolerance for orthogonality check.
    * @returns True if vectors are orthogonal.
+   * @example
    */
   static vectorsOrthogonal(a: Vector, b: Vector, tolerance: number = 1e-10): boolean {
     return Math.abs(this.dotProduct(a, b)) < tolerance;
@@ -483,6 +514,7 @@ export class OBBUtils {
    * @param vector - The vector to check.
    * @param tolerance - Tolerance for unit length check.
    * @returns True if vector is unit length.
+   * @example
    */
   static isUnitVector(vector: Vector, tolerance: number = 1e-10): boolean {
     const length = this.vectorLength(vector);
@@ -494,6 +526,7 @@ export class OBBUtils {
    * @param from - Starting point.
    * @param to - Ending point.
    * @returns Vector from first point to second point.
+   * @example
    */
   static vectorFromPoints(from: Point, to: Point): Vector {
     return {
@@ -507,6 +540,7 @@ export class OBBUtils {
    * @param point - The point.
    * @param vector - The vector to add.
    * @returns New point.
+   * @example
    */
   static addVectorToPoint(point: Point, vector: Vector): Point {
     return {
@@ -520,6 +554,7 @@ export class OBBUtils {
    * @param point - The point.
    * @param vector - The vector to subtract.
    * @returns New point.
+   * @example
    */
   static subtractVectorFromPoint(point: Point, vector: Vector): Point {
     return {

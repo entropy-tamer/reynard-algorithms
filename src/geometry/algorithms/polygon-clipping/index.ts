@@ -27,6 +27,3 @@ export type {
   PolygonSerializationOptions,
   PolygonSerialization,
 } from "./polygon-clipping-types";
-
-
-

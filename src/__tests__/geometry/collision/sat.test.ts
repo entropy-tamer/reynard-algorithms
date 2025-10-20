@@ -6,11 +6,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import {
-  SAT,
-  COMMON_POLYGONS,
-  type ConvexPolygon,
-} from "../../../geometry/collision/sat";
+import { SAT, COMMON_POLYGONS, type ConvexPolygon } from "../../../geometry/collision/sat";
 
 describe("Separating Axis Theorem (SAT) Collision Detection", () => {
   let sat: SAT;

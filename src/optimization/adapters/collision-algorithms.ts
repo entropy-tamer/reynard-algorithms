@@ -14,6 +14,9 @@ import { MemoryPool } from "../core/memory-pool";
 
 /**
  * Basic collision detection between two AABBs
+ * @param a
+ * @param b
+ * @example
  */
 export function checkCollision(a: AABB, b: AABB): boolean {
   return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
@@ -21,6 +24,9 @@ export function checkCollision(a: AABB, b: AABB): boolean {
 
 /**
  * Create detailed collision result
+ * @param a
+ * @param b
+ * @example
  */
 export function createCollisionResult(a: AABB, b: AABB): CollisionResult {
   const colliding = checkCollision(a, b);
@@ -59,6 +65,8 @@ export function createCollisionResult(a: AABB, b: AABB): CollisionResult {
 
 /**
  * Naive O(n²) collision detection
+ * @param aabbs
+ * @example
  */
 export function executeNaiveCollisionDetection(aabbs: AABB[]): CollisionPair[] {
   const collisions: CollisionPair[] = [];
@@ -80,6 +88,9 @@ export function executeNaiveCollisionDetection(aabbs: AABB[]): CollisionPair[] {
 
 /**
  * Spatial hash-based collision detection
+ * @param aabbs
+ * @param memoryPool
+ * @example
  */
 export function executeSpatialCollisionDetection(aabbs: AABB[], memoryPool: MemoryPool): CollisionPair[] {
   // For medium datasets, use naive approach as it's faster
@@ -152,6 +163,9 @@ export function executeSpatialCollisionDetection(aabbs: AABB[], memoryPool: Memo
 
 /**
  * Optimized collision detection (currently same as spatial)
+ * @param aabbs
+ * @param memoryPool
+ * @example
  */
 export function executeOptimizedCollisionDetection(aabbs: AABB[], memoryPool: MemoryPool): CollisionPair[] {
   return executeSpatialCollisionDetection(aabbs, memoryPool);

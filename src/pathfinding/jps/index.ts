@@ -31,6 +31,3 @@ export type {
   JPSPerformanceOptions,
   JPSPerformanceResult,
 } from "./jps-types";
-
-
-

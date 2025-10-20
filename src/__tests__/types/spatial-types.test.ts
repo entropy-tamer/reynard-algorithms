@@ -453,10 +453,20 @@ describe("Spatial Types", () => {
 
   describe("type compatibility", () => {
     it("should allow using types in function parameters", () => {
+      /**
+       *
+       * @param obj
+       * @example
+       */
       function processSpatialObject(obj: SpatialObject): number {
         return obj.x + obj.y;
       }
 
+      /**
+       *
+       * @param result
+       * @example
+       */
       function analyzeQueryResult(result: SpatialQueryResult): number {
         return result.objects.length;
       }
@@ -481,6 +491,13 @@ describe("Spatial Types", () => {
     });
 
     it("should allow using types in generic functions", () => {
+      /**
+       *
+       * @param x
+       * @param y
+       * @param data
+       * @example
+       */
       function createTypedSpatialObject<T extends SpatialDataType>(x: number, y: number, data: T): SpatialObject<T> {
         return {
           id: data.id,

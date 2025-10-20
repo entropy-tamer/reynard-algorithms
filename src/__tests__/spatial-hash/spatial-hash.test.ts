@@ -7,12 +7,17 @@ describe("SpatialHash", () => {
   let spatialHash: SpatialHash;
 
   // Helper function to create test spatial data
+  /**
+   *
+   * @param name
+   * @example
+   */
   function createTestSpatialData(name: string): SpatialObjectData {
     return {
       id: name,
       type: "test",
       category: "entity",
-      properties: { name }
+      properties: { name },
     };
   }
 

@@ -51,6 +51,11 @@ export class OptimizedCollisionAdapter {
   private performanceMonitor: PerformanceMonitor;
   private config: OptimizedCollisionConfig;
 
+  /**
+   *
+   * @param config
+   * @example
+   */
   constructor(config: Partial<OptimizedCollisionConfig> = {}) {
     this.config = {
       enableMemoryPooling: true,
@@ -69,6 +74,11 @@ export class OptimizedCollisionAdapter {
     this.performanceMonitor = new PerformanceMonitor(this.config.performanceThresholds);
   }
 
+  /**
+   *
+   * @param aabbs
+   * @example
+   */
   detectCollisions(aabbs: AABB[]): CollisionPair[] {
     const startTime = performance.now();
     const startMemory = this.getCurrentMemoryUsage();
@@ -111,6 +121,11 @@ export class OptimizedCollisionAdapter {
     return result;
   }
 
+  /**
+   *
+   * @param aabbs
+   * @example
+   */
   private executeNaiveWithPool(aabbs: AABB[]): CollisionPair[] {
     const collisions = this.memoryPool.getCollisionArray();
 
@@ -139,6 +154,11 @@ export class OptimizedCollisionAdapter {
     }
   }
 
+  /**
+   *
+   * @param aabbs
+   * @example
+   */
   private executeSpatialDirect(aabbs: AABB[]): CollisionPair[] {
     // For medium datasets, if spatial hash overhead is too much, fall back to naive
     if (aabbs.length < 300) {
@@ -199,6 +219,11 @@ export class OptimizedCollisionAdapter {
     return collisions;
   }
 
+  /**
+   *
+   * @param aabbs
+   * @example
+   */
   private executeOptimizedDirect(aabbs: AABB[]): CollisionPair[] {
     // Direct optimized implementation without memory pool overhead
     const spatialHash = new SpatialHash({ cellSize: 100 });
@@ -254,6 +279,12 @@ export class OptimizedCollisionAdapter {
     return collisions;
   }
 
+  /**
+   *
+   * @param a
+   * @param b
+   * @example
+   */
   private checkCollision(a: AABB, b: AABB): boolean {
     return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
   }
@@ -288,38 +319,67 @@ export class OptimizedCollisionAdapter {
   //   });
   // }
 
+  /**
+   *
+   * @example
+   */
   getPerformanceStats(): CollisionPerformanceStats {
     return this.performanceMonitor.getPerformanceStats();
   }
 
   /**
    * Get current memory usage
+   * @example
    */
   private getCurrentMemoryUsage(): number {
     return this.performanceMonitor.getCurrentMemoryUsage();
   }
 
+  /**
+   *
+   * @example
+   */
   getMemoryPoolStats(): MemoryPoolStats {
     return this.memoryPool.getStatistics();
   }
 
+  /**
+   *
+   * @example
+   */
   getOptimizationRecommendations(): OptimizationRecommendation[] {
     return this.memoryPool.getOptimizationRecommendations();
   }
 
+  /**
+   *
+   * @example
+   */
   isPerformanceDegraded(): boolean {
     return this.performanceMonitor.isPerformanceDegraded();
   }
 
+  /**
+   *
+   * @example
+   */
   getPerformanceReport(): PerformanceReport {
     return this.performanceMonitor.getPerformanceReport(this.getOptimizationRecommendations());
   }
 
+  /**
+   *
+   * @example
+   */
   resetStatistics(): void {
     this.performanceMonitor.resetStatistics();
     this.algorithmSelector.clearPerformanceHistory();
   }
 
+  /**
+   *
+   * @example
+   */
   destroy(): void {
     this.memoryPool.destroy();
   }

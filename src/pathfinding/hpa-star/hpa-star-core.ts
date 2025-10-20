@@ -42,7 +42,7 @@ import { HPAPathRefinement } from "./hpa-path-refinement";
  * const start = { x: 0, y: 0 };
  * const goal = { x: 999, y: 999 };
  * const result = hpaStar.findPath(grid, 1000, 1000, start, goal);
- * 
+ *
  * console.log(result.path); // Hierarchical path from start to goal
  * console.log(result.stats); // Performance statistics
  * ```
@@ -59,6 +59,7 @@ export class HPAStar {
   /**
    * Creates an instance of HPAStar.
    * @param config - Optional configuration for the algorithm.
+   * @example
    */
   constructor(config: Partial<HPAConfig> = {}) {
     this.config = {
@@ -101,6 +102,7 @@ export class HPAStar {
    * @param goal - Goal point.
    * @param options - Pathfinding options.
    * @returns HPA* pathfinding result.
+   * @example
    */
   findPath(
     grid: CellType[],
@@ -153,14 +155,14 @@ export class HPAStar {
 
       // Find abstract path
       const abstractPath = this.findAbstractPath(start, goal, hpaOptions);
-      
+
       if (abstractPath.length === 0) {
         return this.createFailureResult(startTime, "No abstract path found");
       }
 
       // Refine path
       const refinedPath = this.refinePath(abstractPath, grid, hpaOptions);
-      
+
       if (refinedPath.length === 0) {
         return this.createFailureResult(startTime, "Path refinement failed");
       }
@@ -194,10 +196,11 @@ export class HPAStar {
   /**
    * Generates clusters from the grid.
    * @param grid - The grid.
+   * @example
    */
   private generateClusters(grid: CellType[]): void {
     const clusterResult = HPAClustering.generateClusters(grid, this.config);
-    
+
     if (clusterResult.success) {
       this.clusters = clusterResult.clusters;
       this.stats.clustersCreated = clusterResult.stats.clustersCreated;
@@ -213,6 +216,7 @@ export class HPAStar {
    * @param goal - Goal point.
    * @param options - Pathfinding options.
    * @returns Abstract path.
+   * @example
    */
   private findAbstractPath(start: Point, goal: Point, options: HPAOptions): AbstractNode[] {
     const abstractStartTime = performance.now();
@@ -226,17 +230,17 @@ export class HPAStar {
       // Find start and goal clusters
       const startCluster = this.findClusterContainingPoint(start);
       const goalCluster = this.findClusterContainingPoint(goal);
-      
+
       if (!startCluster || !goalCluster) {
         return [];
       }
 
       // Find abstract path using A*
       const abstractPath = this.findAbstractPathWithAStar(startCluster, goalCluster, options);
-      
+
       const abstractEndTime = performance.now();
       this.stats.abstractPathfindingTime = abstractEndTime - abstractStartTime;
-      
+
       return abstractPath;
     } catch (error) {
       return [];
@@ -245,14 +249,11 @@ export class HPAStar {
 
   /**
    * Creates the abstract graph from clusters and entrances.
+   * @example
    */
   private createAbstractGraph(): void {
-    const graphResult = HPAAbstractGraph.constructAbstractGraph(
-      this.clusters,
-      this.entrances,
-      this.config
-    );
-    
+    const graphResult = HPAAbstractGraph.constructAbstractGraph(this.clusters, this.entrances, this.config);
+
     if (graphResult.success) {
       this.abstractNodes = graphResult.nodes;
       this.abstractEdges = graphResult.edges;
@@ -269,12 +270,9 @@ export class HPAStar {
    * @param goalCluster - Goal cluster.
    * @param options - Pathfinding options.
    * @returns Abstract path.
+   * @example
    */
-  private findAbstractPathWithAStar(
-    startCluster: Cluster,
-    goalCluster: Cluster,
-    options: HPAOptions
-  ): AbstractNode[] {
+  private findAbstractPathWithAStar(startCluster: Cluster, goalCluster: Cluster, options: HPAOptions): AbstractNode[] {
     const openSet: AbstractNode[] = [];
     const closedSet = new Set<string>();
     const cameFrom = new Map<string, string>();
@@ -283,7 +281,7 @@ export class HPAStar {
 
     const startNode = this.abstractNodes.find(n => n.clusterId === startCluster.id);
     const goalNode = this.abstractNodes.find(n => n.clusterId === goalCluster.id);
-    
+
     if (!startNode || !goalNode) {
       return [];
     }
@@ -307,12 +305,12 @@ export class HPAStar {
       }
 
       const current = openSet.splice(currentIndex, 1)[0];
-      
+
       if (current.id === goalNode.id) {
         // Reconstruct path
         const path: AbstractNode[] = [];
         let nodeId: string | undefined = goalNode.id;
-        
+
         while (nodeId) {
           const node = this.abstractNodes.find(n => n.id === nodeId);
           if (node) {
@@ -320,7 +318,7 @@ export class HPAStar {
           }
           nodeId = cameFrom.get(nodeId!);
         }
-        
+
         return path;
       }
 
@@ -328,19 +326,19 @@ export class HPAStar {
 
       // Check neighbors
       const neighbors = this.getAbstractNeighbors(current);
-      
+
       for (const neighbor of neighbors) {
         if (closedSet.has(neighbor.id)) {
           continue;
         }
 
         const tentativeG = gScore.get(current.id)! + this.getAbstractEdgeCost(current, neighbor);
-        
+
         if (!gScore.has(neighbor.id) || tentativeG < gScore.get(neighbor.id)!) {
           cameFrom.set(neighbor.id, current.id);
           gScore.set(neighbor.id, tentativeG);
           fScore.set(neighbor.id, tentativeG + this.heuristic(neighbor, goalNode));
-          
+
           // Add to open set if not already there
           if (!openSet.some(node => node.id === neighbor.id)) {
             openSet.push({
@@ -363,6 +361,7 @@ export class HPAStar {
    * @param grid - The grid.
    * @param options - Pathfinding options.
    * @returns Refined path.
+   * @example
    */
   private refinePath(abstractPath: AbstractNode[], grid: CellType[], options: HPAOptions): Point[] {
     const refinementStartTime = performance.now();
@@ -395,11 +394,16 @@ export class HPAStar {
    * Finds the cluster containing a point.
    * @param point - Point to find cluster for.
    * @returns Cluster containing the point or null.
+   * @example
    */
   private findClusterContainingPoint(point: Point): Cluster | null {
     for (const cluster of this.clusters) {
-      if (point.x >= cluster.x && point.x < cluster.x + cluster.width &&
-          point.y >= cluster.y && point.y < cluster.y + cluster.height) {
+      if (
+        point.x >= cluster.x &&
+        point.x < cluster.x + cluster.width &&
+        point.y >= cluster.y &&
+        point.y < cluster.y + cluster.height
+      ) {
         return cluster;
       }
     }
@@ -410,10 +414,11 @@ export class HPAStar {
    * Gets abstract neighbors of a node.
    * @param node - Abstract node.
    * @returns Array of neighbor nodes.
+   * @example
    */
   private getAbstractNeighbors(node: AbstractNode): AbstractNode[] {
     const neighbors: AbstractNode[] = [];
-    
+
     for (const edge of this.abstractEdges) {
       if (edge.from === node.id) {
         const neighbor = this.abstractNodes.find(n => n.id === edge.to);
@@ -422,7 +427,7 @@ export class HPAStar {
         }
       }
     }
-    
+
     return neighbors;
   }
 
@@ -431,6 +436,7 @@ export class HPAStar {
    * @param from - From node.
    * @param to - To node.
    * @returns Edge cost.
+   * @example
    */
   private getAbstractEdgeCost(from: AbstractNode, to: AbstractNode): number {
     const edge = this.abstractEdges.find(e => e.from === from.id && e.to === to.id);
@@ -442,11 +448,12 @@ export class HPAStar {
    * @param from - From node.
    * @param to - To node.
    * @returns Heuristic distance.
+   * @example
    */
   private heuristic(from: AbstractNode, to: AbstractNode): number {
     const dx = Math.abs(to.position.x - from.position.x);
     const dy = Math.abs(to.position.y - from.position.y);
-    
+
     if (this.config.allowDiagonal) {
       return Math.sqrt(dx * dx + dy * dy);
     } else {
@@ -458,6 +465,7 @@ export class HPAStar {
    * Calculates the cost of a path.
    * @param path - Path to calculate cost for.
    * @returns Path cost.
+   * @example
    */
   private calculatePathCost(path: Point[]): number {
     let cost = 0;
@@ -466,7 +474,7 @@ export class HPAStar {
       const to = path[i];
       const dx = Math.abs(to.x - from.x);
       const dy = Math.abs(to.y - from.y);
-      
+
       if (dx === 1 && dy === 1) {
         cost += this.config.diagonalCost;
       } else if (dx === 1 || dy === 1) {
@@ -483,6 +491,7 @@ export class HPAStar {
    * @param startTime - Start time of the operation.
    * @param error - Error message.
    * @returns Failure result.
+   * @example
    */
   private createFailureResult(startTime: number, error: string): HPAResult {
     const executionTime = performance.now() - startTime;
@@ -516,6 +525,7 @@ export class HPAStar {
    * @param start - Starting point.
    * @param goal - Goal point.
    * @returns Validation result.
+   * @example
    */
   private validateInput(
     grid: CellType[],
@@ -563,6 +573,7 @@ export class HPAStar {
    * @param goal - Goal point.
    * @param options - Pathfinding options.
    * @returns Cache key.
+   * @example
    */
   private getCacheKey(
     grid: CellType[],
@@ -572,7 +583,7 @@ export class HPAStar {
     goal: Point,
     options: HPAOptions
   ): string {
-    const gridHash = grid.slice(0, Math.min(100, grid.length)).join(',');
+    const gridHash = grid.slice(0, Math.min(100, grid.length)).join(",");
     const optionsHash = JSON.stringify(options);
     return `hpa-${width}x${height}_${start.x},${start.y}_${goal.x},${goal.y}_${gridHash}_${optionsHash}`;
   }
@@ -580,6 +591,7 @@ export class HPAStar {
   /**
    * Updates the configuration.
    * @param newConfig - New configuration options.
+   * @example
    */
   updateConfig(newConfig: Partial<HPAConfig>): void {
     this.config = { ...this.config, ...newConfig };
@@ -590,6 +602,7 @@ export class HPAStar {
   /**
    * Gets the current configuration.
    * @returns The current configuration.
+   * @example
    */
   getConfig(): HPAConfig {
     return { ...this.config };
@@ -598,6 +611,7 @@ export class HPAStar {
   /**
    * Gets the current statistics.
    * @returns The current statistics.
+   * @example
    */
   getStats(): HPAStats {
     return { ...this.stats };
@@ -605,6 +619,7 @@ export class HPAStar {
 
   /**
    * Resets the statistics.
+   * @example
    */
   resetStats(): void {
     this.stats = {
@@ -622,6 +637,7 @@ export class HPAStar {
 
   /**
    * Clears the cache.
+   * @example
    */
   clearCache(): void {
     this.cache.clear();
@@ -630,6 +646,7 @@ export class HPAStar {
   /**
    * Gets the current clusters.
    * @returns Array of clusters.
+   * @example
    */
   getClusters(): Cluster[] {
     return [...this.clusters];
@@ -638,6 +655,7 @@ export class HPAStar {
   /**
    * Gets the current entrances.
    * @returns Array of entrances.
+   * @example
    */
   getEntrances(): Entrance[] {
     return [...this.entrances];
@@ -646,6 +664,7 @@ export class HPAStar {
   /**
    * Gets the current abstract nodes.
    * @returns Array of abstract nodes.
+   * @example
    */
   getAbstractNodes(): AbstractNode[] {
     return [...this.abstractNodes];
@@ -654,6 +673,7 @@ export class HPAStar {
   /**
    * Gets the current abstract edges.
    * @returns Array of abstract edges.
+   * @example
    */
   getAbstractEdges(): AbstractEdge[] {
     return [...this.abstractEdges];

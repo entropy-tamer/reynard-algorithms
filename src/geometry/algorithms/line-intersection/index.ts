@@ -25,6 +25,3 @@ export type {
   StatusStructure,
   StatusNode,
 } from "./line-intersection-types";
-
-
-

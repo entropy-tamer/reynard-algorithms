@@ -46,9 +46,15 @@ describe("Delaunay Triangulation", () => {
 
     it("should triangulate a regular grid", () => {
       const points: Point[] = [
-        { x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 },
-        { x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 1 },
-        { x: 0, y: 2 }, { x: 1, y: 2 }, { x: 2, y: 2 },
+        { x: 0, y: 0 },
+        { x: 1, y: 0 },
+        { x: 2, y: 0 },
+        { x: 0, y: 1 },
+        { x: 1, y: 1 },
+        { x: 2, y: 1 },
+        { x: 0, y: 2 },
+        { x: 1, y: 2 },
+        { x: 2, y: 2 },
       ];
 
       const result = delaunay.triangulate(points);
@@ -387,10 +393,7 @@ describe("Delaunay Triangulation", () => {
   });
 
   describe("Performance Benchmarks", () => {
-    const runBenchmark = (
-      description: string,
-      pointCount: number
-    ) => {
+    const runBenchmark = (description: string, pointCount: number) => {
       it(`should perform ${description} efficiently`, () => {
         const points: Point[] = [];
         for (let i = 0; i < pointCount; i++) {
@@ -429,7 +432,7 @@ describe("Delaunay Triangulation", () => {
       const result = delaunay.triangulate(points);
 
       expect(result.stats.success).toBe(true);
-      
+
       // Check that all triangles are valid (non-degenerate)
       for (const triangle of result.triangles) {
         expect(triangle.a).toBeDefined();
@@ -450,11 +453,9 @@ describe("Delaunay Triangulation", () => {
       const result = delaunay.triangulate(points);
 
       expect(result.stats.success).toBe(true);
-      
+
       // Check that triangulation completed successfully
       expect(result.triangles.length).toBeGreaterThan(0);
     });
   });
-
 });
-

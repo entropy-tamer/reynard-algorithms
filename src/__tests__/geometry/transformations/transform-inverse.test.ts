@@ -68,10 +68,7 @@ describe("TransformOps - Inverse Operations", () => {
 
     it("should verify inverse property", () => {
       const transform = TransformOps.combine(
-        TransformOps.combine(
-          TransformOps.translate(5, 10),
-          TransformOps.scale(2, 3)
-        ),
+        TransformOps.combine(TransformOps.translate(5, 10), TransformOps.scale(2, 3)),
         TransformOps.rotate(Math.PI / 6)
       );
       const inverse = TransformOps.inverse(transform);

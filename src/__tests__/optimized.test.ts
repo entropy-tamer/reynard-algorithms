@@ -11,12 +11,21 @@ import type { AABB } from "../geometry/collision/aabb/aabb-types";
 import type { SpatialObjectData } from "../types/spatial-types";
 
 // Helper function to create test spatial data
-function createTestSpatialData(id: string, category: "entity" | "obstacle" | "trigger" | "decoration" = "entity"): SpatialObjectData {
+/**
+ *
+ * @param id
+ * @param category
+ * @example
+ */
+function createTestSpatialData(
+  id: string,
+  category: "entity" | "obstacle" | "trigger" | "decoration" = "entity"
+): SpatialObjectData {
   return {
     id,
     type: "test",
     category,
-    properties: { test: true }
+    properties: { test: true },
   };
 }
 
@@ -494,7 +503,11 @@ describe("Optimized Algorithms API", () => {
         configureOptimization({
           enableAlgorithmSelection: Math.random() > 0.5,
           enableMemoryPooling: Math.random() > 0.5,
-          algorithmSelectionStrategy: ["naive", "spatial", "optimized", "adaptive"][Math.floor(Math.random() * 4)] as "naive" | "spatial" | "optimized" | "adaptive",
+          algorithmSelectionStrategy: ["naive", "spatial", "optimized", "adaptive"][Math.floor(Math.random() * 4)] as
+            | "naive"
+            | "spatial"
+            | "optimized"
+            | "adaptive",
         });
       }
       expect(() => detectCollisions([{ x: 0, y: 0, width: 10, height: 10 }])).not.toThrow();

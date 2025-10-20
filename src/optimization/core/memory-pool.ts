@@ -69,6 +69,11 @@ export class MemoryPool {
     memoryUsage: number;
   }> = [];
 
+  /**
+   *
+   * @param config
+   * @example
+   */
   constructor(config: Partial<MemoryPoolConfig> = {}) {
     this.config = {
       spatialHashPoolSize: 20,
@@ -102,6 +107,7 @@ export class MemoryPool {
 
   /**
    * Initialize memory pools with pre-allocated objects
+   * @example
    */
   private initializePools(): void {
     // Initialize spatial hash pool
@@ -151,12 +157,14 @@ export class MemoryPool {
 
   /**
    * Get a pooled spatial hash instance
+   * @param config
+   * @example
    */
   getSpatialHash(config?: any): SpatialHash {
     const startTime = performance.now();
 
     // Try to find an available pooled instance
-    let pooled = this.spatialHashPool.find(p => !p.isInUse);
+    const pooled = this.spatialHashPool.find(p => !p.isInUse);
 
     if (pooled) {
       // Reuse existing instance
@@ -192,12 +200,14 @@ export class MemoryPool {
 
   /**
    * Get a pooled data-structures/union-find instance
+   * @param size
+   * @example
    */
   getUnionFind(size: number): UnionFind {
     const startTime = performance.now();
 
     // Try to find an available pooled instance of the right size
-    let pooled = this.unionFindPool.find(p => !p.isInUse && p.size === size);
+    const pooled = this.unionFindPool.find(p => !p.isInUse && p.size === size);
 
     if (pooled) {
       // Reuse existing instance
@@ -234,12 +244,13 @@ export class MemoryPool {
 
   /**
    * Get a pooled collision array
+   * @example
    */
   getCollisionArray(): CollisionPair[] {
     const startTime = performance.now();
 
     // Try to find an available pooled array
-    let pooled = this.collisionArrayPool.find(p => !p.isInUse);
+    const pooled = this.collisionArrayPool.find(p => !p.isInUse);
 
     if (pooled) {
       // Reuse existing array
@@ -275,12 +286,13 @@ export class MemoryPool {
 
   /**
    * Get a pooled processed set
+   * @example
    */
   getProcessedSet(): Set<number> {
     const startTime = performance.now();
 
     // Try to find an available pooled set
-    let pooled = this.processedSetPool.find(p => !p.isInUse);
+    const pooled = this.processedSetPool.find(p => !p.isInUse);
 
     if (pooled) {
       // Reuse existing set
@@ -316,6 +328,8 @@ export class MemoryPool {
 
   /**
    * Return a spatial hash to the pool
+   * @param hash
+   * @example
    */
   returnSpatialHash(hash: SpatialHash): void {
     const pooled = this.spatialHashPool.find(p => p.object === hash);
@@ -328,6 +342,8 @@ export class MemoryPool {
 
   /**
    * Return a data-structures/union-find to the pool
+   * @param unionFind
+   * @example
    */
   returnUnionFind(unionFind: UnionFind): void {
     const pooled = this.unionFindPool.find(p => p.object === unionFind);
@@ -340,6 +356,8 @@ export class MemoryPool {
 
   /**
    * Return a collision array to the pool
+   * @param array
+   * @example
    */
   returnCollisionArray(array: CollisionPair[]): void {
     const pooled = this.collisionArrayPool.find(p => p.object === array);
@@ -352,6 +370,8 @@ export class MemoryPool {
 
   /**
    * Return a processed set to the pool
+   * @param set
+   * @example
    */
   returnProcessedSet(set: Set<number>): void {
     const pooled = this.processedSetPool.find(p => p.object === set);
@@ -364,6 +384,9 @@ export class MemoryPool {
 
   /**
    * Update pool statistics
+   * @param startTime
+   * @param wasPoolHit
+   * @example
    */
   private updateStats(startTime: number, wasPoolHit: boolean): void {
     const allocationTime = performance.now() - startTime;
@@ -394,6 +417,7 @@ export class MemoryPool {
 
   /**
    * Estimate memory savings from pooling
+   * @example
    */
   private estimateMemorySavings(): number {
     // Rough estimates for memory usage
@@ -407,6 +431,7 @@ export class MemoryPool {
 
   /**
    * Get current pool usage statistics
+   * @example
    */
   getCurrentPoolUsage(): number {
     const spatialHashInUse = this.spatialHashPool.filter(p => p.isInUse).length;
@@ -419,6 +444,7 @@ export class MemoryPool {
 
   /**
    * Get detailed pool information
+   * @example
    */
   getPoolInfo(): {
     spatialHashPool: { total: number; inUse: number; available: number };
@@ -452,6 +478,7 @@ export class MemoryPool {
 
   /**
    * Get pool statistics
+   * @example
    */
   getStatistics(): MemoryPoolStats {
     return { ...this.stats };
@@ -459,6 +486,8 @@ export class MemoryPool {
 
   /**
    * Get optimization recommendations
+   * @param t
+   * @example
    */
   getOptimizationRecommendations(t?: (key: string) => string): OptimizationRecommendation[] {
     const recommendations: OptimizationRecommendation[] = [];
@@ -504,6 +533,7 @@ export class MemoryPool {
 
   /**
    * Record performance history
+   * @example
    */
   private recordPerformanceHistory(): void {
     this.performanceHistory.push({
@@ -521,6 +551,7 @@ export class MemoryPool {
 
   /**
    * Get performance history
+   * @example
    */
   getPerformanceHistory(): Array<{
     timestamp: number;
@@ -533,6 +564,7 @@ export class MemoryPool {
 
   /**
    * Start periodic pool cleanup
+   * @example
    */
   private startCleanup(): void {
     this.cleanupInterval = window.setInterval(() => {
@@ -542,6 +574,7 @@ export class MemoryPool {
 
   /**
    * Clean up unused pools to prevent memory leaks
+   * @example
    */
   private cleanupUnusedPools(): void {
     const now = Date.now();
@@ -582,6 +615,11 @@ export class MemoryPool {
 
   /**
    * Optimize pool configuration based on usage patterns
+   * @param workloadCharacteristics
+   * @param workloadCharacteristics.objectCount
+   * @param workloadCharacteristics.spatialDensity
+   * @param workloadCharacteristics.updateFrequency
+   * @example
    */
   optimizeForWorkload(workloadCharacteristics: {
     objectCount: number;
@@ -607,6 +645,7 @@ export class MemoryPool {
 
   /**
    * Destroy the memory pool and clean up resources
+   * @example
    */
   destroy(): void {
     if (this.cleanupInterval) {

@@ -41,6 +41,7 @@ export class PolygonClipping {
   /**
    * Creates an instance of PolygonClipping.
    * @param config - Optional configuration for the clipping operations.
+   * @example
    */
   constructor(config: Partial<PolygonClippingConfig> = {}) {
     this.config = {
@@ -62,6 +63,7 @@ export class PolygonClipping {
    * @param subject - The subject polygon.
    * @param clipping - The clipping polygon.
    * @returns The result of the intersection operation.
+   * @example
    */
   intersection(subject: Polygon, clipping: Polygon): ClipResult {
     return this.clip(subject, clipping, ClipOperation.INTERSECTION);
@@ -72,6 +74,7 @@ export class PolygonClipping {
    * @param subject - The subject polygon.
    * @param clipping - The clipping polygon.
    * @returns The result of the union operation.
+   * @example
    */
   union(subject: Polygon, clipping: Polygon): ClipResult {
     return this.clip(subject, clipping, ClipOperation.UNION);
@@ -82,6 +85,7 @@ export class PolygonClipping {
    * @param subject - The subject polygon.
    * @param clipping - The clipping polygon.
    * @returns The result of the difference operation.
+   * @example
    */
   difference(subject: Polygon, clipping: Polygon): ClipResult {
     return this.clip(subject, clipping, ClipOperation.DIFFERENCE);
@@ -92,6 +96,7 @@ export class PolygonClipping {
    * @param subject - The subject polygon.
    * @param clipping - The clipping polygon.
    * @returns The result of the XOR operation.
+   * @example
    */
   xor(subject: Polygon, clipping: Polygon): ClipResult {
     return this.clip(subject, clipping, ClipOperation.XOR);
@@ -102,6 +107,7 @@ export class PolygonClipping {
    * @param subject - The subject polygon.
    * @param clipping - The convex clipping polygon.
    * @returns The result of the clipping operation.
+   * @example
    */
   clipConvex(subject: Polygon, clipping: Polygon): ClipResult {
     return this.sutherlandHodgman.clip(subject, clipping);
@@ -113,12 +119,9 @@ export class PolygonClipping {
    * @param clipping - The clipping polygon.
    * @param operation - The clipping operation to perform.
    * @returns The result of the clipping operation.
+   * @example
    */
-  clipGeneral(
-    subject: Polygon,
-    clipping: Polygon,
-    operation: ClipOperation = ClipOperation.INTERSECTION
-  ): ClipResult {
+  clipGeneral(subject: Polygon, clipping: Polygon, operation: ClipOperation = ClipOperation.INTERSECTION): ClipResult {
     return this.weilerAtherton.clip(subject, clipping, operation);
   }
 
@@ -128,12 +131,9 @@ export class PolygonClipping {
    * @param clipping - The clipping polygon.
    * @param operation - The clipping operation to perform.
    * @returns The result of the clipping operation.
+   * @example
    */
-  clip(
-    subject: Polygon,
-    clipping: Polygon,
-    operation: ClipOperation = ClipOperation.INTERSECTION
-  ): ClipResult {
+  clip(subject: Polygon, clipping: Polygon, operation: ClipOperation = ClipOperation.INTERSECTION): ClipResult {
     const startTime = performance.now();
 
     try {
@@ -143,11 +143,17 @@ export class PolygonClipping {
         const clippingValidation = this.validatePolygon(clipping, "clipping");
 
         if (!subjectValidation.isValid) {
-          return this.createEmptyResult(startTime, `Subject polygon validation failed: ${subjectValidation.errors.join(", ")}`);
+          return this.createEmptyResult(
+            startTime,
+            `Subject polygon validation failed: ${subjectValidation.errors.join(", ")}`
+          );
         }
 
         if (!clippingValidation.isValid) {
-          return this.createEmptyResult(startTime, `Clipping polygon validation failed: ${clippingValidation.errors.join(", ")}`);
+          return this.createEmptyResult(
+            startTime,
+            `Clipping polygon validation failed: ${clippingValidation.errors.join(", ")}`
+          );
         }
       }
 
@@ -184,6 +190,7 @@ export class PolygonClipping {
    * @param name - The name of the polygon for error messages.
    * @param options - Validation options.
    * @returns The validation result.
+   * @example
    */
   validatePolygon(
     polygon: Polygon,
@@ -254,11 +261,9 @@ export class PolygonClipping {
    * @param polygon - The polygon to simplify.
    * @param options - Simplification options.
    * @returns The simplified polygon.
+   * @example
    */
-  simplifyPolygon(
-    polygon: Polygon,
-    options: Partial<PolygonSimplificationOptions> = {}
-  ): Polygon {
+  simplifyPolygon(polygon: Polygon, options: Partial<PolygonSimplificationOptions> = {}): Polygon {
     const simplificationOptions: PolygonSimplificationOptions = {
       collinearTolerance: 1e-6,
       duplicateTolerance: 1e-10,
@@ -296,11 +301,9 @@ export class PolygonClipping {
    * @param polygon - The polygon to serialize.
    * @param options - Serialization options.
    * @returns Serialized polygon data.
+   * @example
    */
-  serialize(
-    polygon: Polygon,
-    options: Partial<PolygonSerializationOptions> = {}
-  ): PolygonSerialization {
+  serialize(polygon: Polygon, options: Partial<PolygonSerializationOptions> = {}): PolygonSerialization {
     const serializationOptions: PolygonSerializationOptions = {
       precision: 6,
       includeValidation: false,
@@ -309,8 +312,10 @@ export class PolygonClipping {
     };
 
     const round = (value: number) => {
-      return Math.round(value * Math.pow(10, serializationOptions.precision!)) / 
-             Math.pow(10, serializationOptions.precision!);
+      return (
+        Math.round(value * Math.pow(10, serializationOptions.precision!)) /
+        Math.pow(10, serializationOptions.precision!)
+      );
     };
 
     const roundPoint = (point: Point) => ({
@@ -336,6 +341,7 @@ export class PolygonClipping {
   /**
    * Updates the configuration.
    * @param newConfig - New configuration options.
+   * @example
    */
   updateConfig(newConfig: Partial<PolygonClippingConfig>): void {
     this.config = { ...this.config, ...newConfig };
@@ -346,6 +352,7 @@ export class PolygonClipping {
   /**
    * Gets the current configuration.
    * @returns The current configuration.
+   * @example
    */
   getConfig(): PolygonClippingConfig {
     return { ...this.config };
@@ -354,9 +361,11 @@ export class PolygonClipping {
   /**
    * Selects the appropriate algorithm based on the input polygons and operation.
    * @param subject - The subject polygon.
+   * @param _subject
    * @param clipping - The clipping polygon.
    * @param operation - The clipping operation.
    * @returns The selected algorithm name.
+   * @example
    */
   private selectAlgorithm(
     _subject: Polygon,
@@ -376,6 +385,7 @@ export class PolygonClipping {
    * Checks if a polygon is convex.
    * @param polygon - The polygon to check.
    * @returns True if the polygon is convex.
+   * @example
    */
   private isConvexPolygon(polygon: Polygon): boolean {
     const vertices = polygon.vertices;
@@ -393,7 +403,7 @@ export class PolygonClipping {
 
       if (Math.abs(crossProduct) > this.config.tolerance!) {
         const currentSign = crossProduct > 0 ? 1 : -1;
-        
+
         if (sign === 0) {
           sign = currentSign;
         } else if (sign !== currentSign) {
@@ -409,6 +419,7 @@ export class PolygonClipping {
    * Checks if a polygon has duplicate vertices.
    * @param vertices - The vertices to check.
    * @returns True if there are duplicate vertices.
+   * @example
    */
   private hasDuplicateVertices(vertices: Point[]): boolean {
     for (let i = 0; i < vertices.length; i++) {
@@ -425,6 +436,7 @@ export class PolygonClipping {
    * Checks if a polygon has collinear vertices.
    * @param vertices - The vertices to check.
    * @returns True if there are collinear vertices.
+   * @example
    */
   private hasCollinearVertices(vertices: Point[]): boolean {
     if (vertices.length < 3) return false;
@@ -446,6 +458,7 @@ export class PolygonClipping {
    * Checks if a polygon has self-intersections (simplified check).
    * @param vertices - The vertices to check.
    * @returns True if there are self-intersections.
+   * @example
    */
   private hasSelfIntersections(vertices: Point[]): boolean {
     if (vertices.length < 4) return false;
@@ -477,15 +490,11 @@ export class PolygonClipping {
    * @param p3 - Start of second segment.
    * @param p4 - End of second segment.
    * @returns True if the segments intersect.
+   * @example
    */
-  private lineSegmentsIntersect(
-    p1: Point,
-    p2: Point,
-    p3: Point,
-    p4: Point
-  ): boolean {
+  private lineSegmentsIntersect(p1: Point, p2: Point, p3: Point, p4: Point): boolean {
     const denom = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
-    
+
     if (Math.abs(denom) < this.config.tolerance!) {
       return false; // Lines are parallel
     }
@@ -501,6 +510,7 @@ export class PolygonClipping {
    * @param vertices - The vertices to process.
    * @param tolerance - Tolerance for duplicate detection.
    * @returns Vertices with duplicates removed.
+   * @example
    */
   private removeDuplicateVertices(vertices: Point[], tolerance: number): Point[] {
     if (vertices.length <= 1) return vertices;
@@ -529,6 +539,7 @@ export class PolygonClipping {
    * @param vertices - The vertices to process.
    * @param tolerance - Tolerance for collinearity detection.
    * @returns Vertices with collinear vertices removed.
+   * @example
    */
   private removeCollinearVertices(vertices: Point[], tolerance: number): Point[] {
     if (vertices.length < 3) return vertices;
@@ -553,6 +564,7 @@ export class PolygonClipping {
   /**
    * Ensures a polygon has counter-clockwise orientation.
    * @param vertices - The vertices to reorient.
+   * @example
    */
   private ensureCounterClockwise(vertices: Point[]): void {
     if (vertices.length < 3) return;
@@ -575,11 +587,10 @@ export class PolygonClipping {
    * Simplifies the result of a clipping operation.
    * @param result - The clipping result to simplify.
    * @returns The simplified result.
+   * @example
    */
   private simplifyResult(result: ClipResult): ClipResult {
-    const simplifiedPolygons = result.polygons.map(polygon =>
-      this.simplifyPolygon(polygon)
-    );
+    const simplifiedPolygons = result.polygons.map(polygon => this.simplifyPolygon(polygon));
 
     return {
       ...result,
@@ -594,6 +605,7 @@ export class PolygonClipping {
    * @param p3 - Third point.
    * @param tolerance - Tolerance for collinearity.
    * @returns True if the points are collinear.
+   * @example
    */
   private areCollinearWithTolerance(p1: Point, p2: Point, p3: Point, tolerance: number): boolean {
     const crossProduct = (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x);
@@ -606,12 +618,10 @@ export class PolygonClipping {
    * @param p2 - Second point.
    * @param tolerance - Tolerance for equality.
    * @returns True if the points are equal.
+   * @example
    */
   private pointsEqualWithTolerance(p1: Point, p2: Point, tolerance: number): boolean {
-    return (
-      Math.abs(p1.x - p2.x) < tolerance &&
-      Math.abs(p1.y - p2.y) < tolerance
-    );
+    return Math.abs(p1.x - p2.x) < tolerance && Math.abs(p1.y - p2.y) < tolerance;
   }
 
   /**
@@ -619,6 +629,7 @@ export class PolygonClipping {
    * @param p1 - First point.
    * @param p2 - Second point.
    * @returns True if the points are equal.
+   * @example
    */
   private pointsEqual(p1: Point, p2: Point): boolean {
     return this.pointsEqualWithTolerance(p1, p2, this.config.tolerance!);
@@ -630,6 +641,7 @@ export class PolygonClipping {
    * @param p2 - Second point.
    * @param p3 - Third point.
    * @returns True if the points are collinear.
+   * @example
    */
   private areCollinear(p1: Point, p2: Point, p3: Point): boolean {
     return this.areCollinearWithTolerance(p1, p2, p3, this.config.tolerance!);
@@ -641,12 +653,9 @@ export class PolygonClipping {
    * @param errors - Array of error messages.
    * @param warnings - Array of warning messages.
    * @returns The validation result.
+   * @example
    */
-  private createValidationResult(
-    isValid: boolean,
-    errors: string[],
-    warnings: string[]
-  ): PolygonValidationResult {
+  private createValidationResult(isValid: boolean, errors: string[], warnings: string[]): PolygonValidationResult {
     return {
       isValid,
       errors,
@@ -662,6 +671,7 @@ export class PolygonClipping {
    * @param startTime - Start time for execution time calculation.
    * @param error - Error message.
    * @returns Empty clip result.
+   * @example
    */
   private createEmptyResult(startTime: number, error: string): ClipResult {
     const executionTime = performance.now() - startTime;

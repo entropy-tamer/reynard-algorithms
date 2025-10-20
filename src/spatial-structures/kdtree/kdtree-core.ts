@@ -60,6 +60,11 @@ export class KdTree {
   private enableDebug: boolean;
   private stats: KdTreeStats;
 
+  /**
+   *
+   * @param options
+   * @example
+   */
   constructor(options: Partial<KdTreeOptions> = {}) {
     const opts = { ...DEFAULT_KD_TREE_OPTIONS, ...options };
 
@@ -95,6 +100,8 @@ export class KdTree {
 
   /**
    * Insert a point into the K-d tree.
+   * @param point
+   * @example
    */
   insert(point: Point): KdTreeResult {
     const startTime = performance.now();
@@ -129,7 +136,7 @@ export class KdTree {
       this.updateStats();
 
       const executionTime = performance.now() - startTime;
-      this.stats.averageSearchTime = 
+      this.stats.averageSearchTime =
         (this.stats.averageSearchTime * (this.stats.insertions - 1) + executionTime) / this.stats.insertions;
 
       this.emitEvent(KdTreeEventType.POINT_INSERTED, { point, executionTime });
@@ -152,6 +159,8 @@ export class KdTree {
 
   /**
    * Insert multiple points in batch.
+   * @param points
+   * @example
    */
   insertBatch(points: Point[]): BatchOperationResult {
     const startTime = performance.now();
@@ -163,7 +172,7 @@ export class KdTree {
     for (const point of points) {
       const result = this.insert(point);
       results.push(result);
-      
+
       if (result.success) {
         successful++;
       } else {
@@ -183,6 +192,8 @@ export class KdTree {
 
   /**
    * Search for a point in the tree.
+   * @param point
+   * @example
    */
   search(point: Point): boolean {
     const startTime = performance.now();
@@ -191,7 +202,7 @@ export class KdTree {
     const found = this.searchRecursive(this.root, point, 0);
 
     const executionTime = performance.now() - startTime;
-    this.stats.averageSearchTime = 
+    this.stats.averageSearchTime =
       (this.stats.averageSearchTime * (this.stats.searches - 1) + executionTime) / this.stats.searches;
 
     this.emitEvent(KdTreeEventType.SEARCH_PERFORMED, { point, found, executionTime });
@@ -201,6 +212,8 @@ export class KdTree {
 
   /**
    * Check if the tree contains a point.
+   * @param point
+   * @example
    */
   contains(point: Point): boolean {
     return this.search(point);
@@ -208,6 +221,9 @@ export class KdTree {
 
   /**
    * Find the nearest neighbor to a query point.
+   * @param queryPoint
+   * @param options
+   * @example
    */
   nearestNeighbor(queryPoint: Point, options: NearestNeighborOptions = {}): NearestNeighborResult {
     const startTime = performance.now();
@@ -218,30 +234,22 @@ export class KdTree {
     let nodesVisited = 0;
 
     if (this.root) {
-      const result = this.nearestNeighborRecursive(
-        this.root,
-        queryPoint,
-        0,
-        bestPoint,
-        bestDistance,
-        options,
-        0
-      );
+      const result = this.nearestNeighborRecursive(this.root, queryPoint, 0, bestPoint, bestDistance, options, 0);
       bestPoint = result.point;
       bestDistance = result.distance;
       nodesVisited = result.nodesVisited;
     }
 
     const executionTime = performance.now() - startTime;
-    this.stats.averageNearestNeighborTime = 
-      (this.stats.averageNearestNeighborTime * (this.stats.nearestNeighborQueries - 1) + executionTime) / 
+    this.stats.averageNearestNeighborTime =
+      (this.stats.averageNearestNeighborTime * (this.stats.nearestNeighborQueries - 1) + executionTime) /
       this.stats.nearestNeighborQueries;
 
-    this.emitEvent(KdTreeEventType.NEAREST_NEIGHBOR_QUERY, { 
-      queryPoint, 
-      result: bestPoint, 
-      distance: bestDistance, 
-      executionTime 
+    this.emitEvent(KdTreeEventType.NEAREST_NEIGHBOR_QUERY, {
+      queryPoint,
+      result: bestPoint,
+      distance: bestDistance,
+      executionTime,
     });
 
     return {
@@ -255,6 +263,9 @@ export class KdTree {
 
   /**
    * Find k nearest neighbors to a query point.
+   * @param queryPoint
+   * @param options
+   * @example
    */
   kNearestNeighbors(queryPoint: Point, options: KNearestNeighborsOptions = {}): KNearestNeighborsResult {
     const startTime = performance.now();
@@ -265,15 +276,7 @@ export class KdTree {
     let nodesVisited = 0;
 
     if (this.root) {
-      const result = this.kNearestNeighborsRecursive(
-        this.root,
-        queryPoint,
-        0,
-        neighbors,
-        k,
-        options,
-        0
-      );
+      const result = this.kNearestNeighborsRecursive(this.root, queryPoint, 0, neighbors, k, options, 0);
       nodesVisited = result.nodesVisited;
     }
 
@@ -281,15 +284,15 @@ export class KdTree {
     neighbors.sort((a, b) => a.distance - b.distance);
 
     const executionTime = performance.now() - startTime;
-    this.stats.averageNearestNeighborTime = 
-      (this.stats.averageNearestNeighborTime * (this.stats.nearestNeighborQueries - 1) + executionTime) / 
+    this.stats.averageNearestNeighborTime =
+      (this.stats.averageNearestNeighborTime * (this.stats.nearestNeighborQueries - 1) + executionTime) /
       this.stats.nearestNeighborQueries;
 
-    this.emitEvent(KdTreeEventType.NEAREST_NEIGHBOR_QUERY, { 
-      queryPoint, 
-      k, 
-      results: neighbors, 
-      executionTime 
+    this.emitEvent(KdTreeEventType.NEAREST_NEIGHBOR_QUERY, {
+      queryPoint,
+      k,
+      results: neighbors,
+      executionTime,
     });
 
     return {
@@ -302,6 +305,9 @@ export class KdTree {
 
   /**
    * Perform a range query within a bounding box.
+   * @param bounds
+   * @param options
+   * @example
    */
   rangeQuery(bounds: BoundingBox, options: RangeQueryOptions = {}): RangeQueryResult {
     const startTime = performance.now();
@@ -311,25 +317,17 @@ export class KdTree {
     let nodesVisited = 0;
 
     if (this.root) {
-      nodesVisited = this.rangeQueryRecursive(
-        this.root,
-        bounds,
-        0,
-        points,
-        options,
-        0
-      );
+      nodesVisited = this.rangeQueryRecursive(this.root, bounds, 0, points, options, 0);
     }
 
     const executionTime = performance.now() - startTime;
-    this.stats.averageRangeQueryTime = 
-      (this.stats.averageRangeQueryTime * (this.stats.rangeQueries - 1) + executionTime) / 
-      this.stats.rangeQueries;
+    this.stats.averageRangeQueryTime =
+      (this.stats.averageRangeQueryTime * (this.stats.rangeQueries - 1) + executionTime) / this.stats.rangeQueries;
 
-    this.emitEvent(KdTreeEventType.RANGE_QUERY, { 
-      bounds, 
-      results: points, 
-      executionTime 
+    this.emitEvent(KdTreeEventType.RANGE_QUERY, {
+      bounds,
+      results: points,
+      executionTime,
     });
 
     return {
@@ -343,6 +341,8 @@ export class KdTree {
 
   /**
    * Remove a point from the tree.
+   * @param point
+   * @example
    */
   remove(point: Point): KdTreeResult {
     const startTime = performance.now();
@@ -392,6 +392,7 @@ export class KdTree {
 
   /**
    * Clear all points from the tree.
+   * @example
    */
   clear(): void {
     this.root = null;
@@ -404,6 +405,7 @@ export class KdTree {
 
   /**
    * Get the size of the tree.
+   * @example
    */
   size(): number {
     return this.stats.totalPoints;
@@ -411,6 +413,7 @@ export class KdTree {
 
   /**
    * Check if the tree is empty.
+   * @example
    */
   isEmpty(): boolean {
     return this.root === null;
@@ -418,6 +421,7 @@ export class KdTree {
 
   /**
    * Get statistics about the tree.
+   * @example
    */
   getStats(): KdTreeStats {
     return { ...this.stats };
@@ -425,6 +429,7 @@ export class KdTree {
 
   /**
    * Get performance metrics.
+   * @example
    */
   getPerformanceMetrics(): KdTreePerformanceMetrics {
     return {
@@ -441,6 +446,7 @@ export class KdTree {
 
   /**
    * Rebuild the tree for better balance.
+   * @example
    */
   rebuild(): KdTreeResult {
     const startTime = performance.now();
@@ -471,6 +477,7 @@ export class KdTree {
 
   /**
    * Serialize the tree to JSON.
+   * @example
    */
   serialize(): KdTreeSerialization {
     return {
@@ -491,6 +498,8 @@ export class KdTree {
 
   /**
    * Deserialize a tree from JSON.
+   * @param data
+   * @example
    */
   static deserialize(data: KdTreeSerialization): KdTree {
     const tree = new KdTree({ config: data.config });
@@ -502,6 +511,14 @@ export class KdTree {
 
   // Private helper methods
 
+  /**
+   *
+   * @param node
+   * @param point
+   * @param depth
+   * @param parentDepth
+   * @example
+   */
   private insertRecursive(node: KdNode | null, point: Point, depth: number, parentDepth: number): KdNode {
     if (node === null) {
       const newNode: KdNode = {
@@ -530,6 +547,13 @@ export class KdTree {
     return node;
   }
 
+  /**
+   *
+   * @param node
+   * @param point
+   * @param depth
+   * @example
+   */
   private searchRecursive(node: KdNode | null, point: Point, depth: number): boolean {
     if (node === null) {
       return false;
@@ -550,6 +574,17 @@ export class KdTree {
     }
   }
 
+  /**
+   *
+   * @param node
+   * @param queryPoint
+   * @param depth
+   * @param bestPoint
+   * @param bestDistance
+   * @param options
+   * @param nodesVisited
+   * @example
+   */
   private nearestNeighborRecursive(
     node: KdNode,
     queryPoint: Point,
@@ -625,6 +660,17 @@ export class KdTree {
     return { point: bestPoint, distance: bestDistance, nodesVisited };
   }
 
+  /**
+   *
+   * @param node
+   * @param queryPoint
+   * @param depth
+   * @param neighbors
+   * @param k
+   * @param options
+   * @param nodesVisited
+   * @example
+   */
   private kNearestNeighborsRecursive(
     node: KdNode,
     queryPoint: Point,
@@ -640,7 +686,7 @@ export class KdTree {
       // Skip the query point itself
     } else {
       const distance = this.calculateDistance(node.point, queryPoint, options.distanceFunction);
-      
+
       if (neighbors.length < k) {
         neighbors.push({ point: node.point, distance });
       } else if (distance < neighbors[neighbors.length - 1].distance) {
@@ -682,7 +728,7 @@ export class KdTree {
     if (secondaryChild) {
       const distanceToPlane = Math.abs(queryCoord - nodeCoord);
       const maxDistance = neighbors.length > 0 ? neighbors[neighbors.length - 1].distance : Infinity;
-      
+
       if (distanceToPlane < maxDistance) {
         const result = this.kNearestNeighborsRecursive(
           secondaryChild,
@@ -700,6 +746,16 @@ export class KdTree {
     return { nodesVisited };
   }
 
+  /**
+   *
+   * @param node
+   * @param bounds
+   * @param depth
+   * @param points
+   * @param options
+   * @param nodesVisited
+   * @example
+   */
   private rangeQueryRecursive(
     node: KdNode,
     bounds: BoundingBox,
@@ -735,6 +791,13 @@ export class KdTree {
     return nodesVisited;
   }
 
+  /**
+   *
+   * @param node
+   * @param point
+   * @param depth
+   * @example
+   */
   private removeRecursive(node: KdNode | null, point: Point, depth: number): KdNode | null {
     if (node === null) {
       return null;
@@ -772,6 +835,12 @@ export class KdTree {
     return node;
   }
 
+  /**
+   *
+   * @param node
+   * @param dimension
+   * @example
+   */
   private findMin(node: KdNode, dimension: number): KdNode {
     if (node.dimension === dimension) {
       if (node.left === null) {
@@ -797,6 +866,11 @@ export class KdTree {
     return minNode;
   }
 
+  /**
+   *
+   * @param point
+   * @example
+   */
   private isValidPoint(point: Point): boolean {
     if (!point || !Array.isArray(point.coordinates)) {
       return false;
@@ -804,18 +878,29 @@ export class KdTree {
     if (point.coordinates.length !== this.config.dimensions) {
       return false;
     }
-    return point.coordinates.every(coord => typeof coord === 'number' && isFinite(coord));
+    return point.coordinates.every(coord => typeof coord === "number" && isFinite(coord));
   }
 
+  /**
+   *
+   * @param p1
+   * @param p2
+   * @example
+   */
   private pointsEqual(p1: Point, p2: Point): boolean {
     if (p1.coordinates.length !== p2.coordinates.length) {
       return false;
     }
-    return p1.coordinates.every((coord, i) => 
-      Math.abs(coord - p2.coordinates[i]) < this.config.tolerance
-    );
+    return p1.coordinates.every((coord, i) => Math.abs(coord - p2.coordinates[i]) < this.config.tolerance);
   }
 
+  /**
+   *
+   * @param p1
+   * @param p2
+   * @param customDistance
+   * @example
+   */
   private calculateDistance(p1: Point, p2: Point, customDistance?: (p1: Point, p2: Point) => number): number {
     if (customDistance) {
       return customDistance(p1, p2);
@@ -830,6 +915,13 @@ export class KdTree {
     return Math.sqrt(sum);
   }
 
+  /**
+   *
+   * @param point
+   * @param bounds
+   * @param inclusive
+   * @example
+   */
   private pointInBounds(point: Point, bounds: BoundingBox, inclusive: boolean = true): boolean {
     for (let i = 0; i < point.coordinates.length; i++) {
       const coord = point.coordinates[i];
@@ -849,12 +941,22 @@ export class KdTree {
     return true;
   }
 
+  /**
+   *
+   * @example
+   */
   private getAllPoints(): Point[] {
     const points: Point[] = [];
     this.collectPoints(this.root, points);
     return points;
   }
 
+  /**
+   *
+   * @param node
+   * @param points
+   * @example
+   */
   private collectPoints(node: KdNode | null, points: Point[]): void {
     if (node === null) {
       return;
@@ -864,6 +966,10 @@ export class KdTree {
     this.collectPoints(node.right, points);
   }
 
+  /**
+   *
+   * @example
+   */
   private updateStats(): void {
     this.stats.nodeCount = this.countNodes(this.root);
     this.stats.leafCount = this.countLeaves(this.root);
@@ -873,6 +979,11 @@ export class KdTree {
     this.stats.memoryUsage = this.estimateMemoryUsage();
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private countNodes(node: KdNode | null): number {
     if (node === null) {
       return 0;
@@ -880,6 +991,11 @@ export class KdTree {
     return 1 + this.countNodes(node.left) + this.countNodes(node.right);
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private countLeaves(node: KdNode | null): number {
     if (node === null) {
       return 0;
@@ -890,6 +1006,11 @@ export class KdTree {
     return this.countLeaves(node.left) + this.countLeaves(node.right);
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private calculateHeight(node: KdNode | null): number {
     if (node === null) {
       return 0;
@@ -897,6 +1018,11 @@ export class KdTree {
     return 1 + Math.max(this.calculateHeight(node.left), this.calculateHeight(node.right));
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private calculateAverageDepth(node: KdNode | null): number {
     if (node === null) {
       return 0;
@@ -906,6 +1032,13 @@ export class KdTree {
     return depths.reduce((sum, depth) => sum + depth, 0) / depths.length;
   }
 
+  /**
+   *
+   * @param node
+   * @param depth
+   * @param depths
+   * @example
+   */
   private collectDepths(node: KdNode | null, depth: number, depths: number[]): void {
     if (node === null) {
       return;
@@ -917,6 +1050,11 @@ export class KdTree {
     this.collectDepths(node.right, depth + 1, depths);
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private calculateMaxDepth(node: KdNode | null): number {
     if (node === null) {
       return 0;
@@ -924,6 +1062,10 @@ export class KdTree {
     return 1 + Math.max(this.calculateMaxDepth(node.left), this.calculateMaxDepth(node.right));
   }
 
+  /**
+   *
+   * @example
+   */
   private estimateMemoryUsage(): number {
     // Rough estimate: each node + point data
     const nodeSize = 64; // Approximate size of a KdNode
@@ -931,16 +1073,24 @@ export class KdTree {
     return this.stats.nodeCount * (nodeSize + pointSize);
   }
 
+  /**
+   *
+   * @example
+   */
   private calculatePerformanceScore(): number {
     // Simple performance score based on query times
     const maxTime = 100; // 100ms as maximum
     const searchScore = Math.max(0, 100 - (this.stats.averageSearchTime / maxTime) * 100);
     const nnScore = Math.max(0, 100 - (this.stats.averageNearestNeighborTime / maxTime) * 100);
     const rangeScore = Math.max(0, 100 - (this.stats.averageRangeQueryTime / maxTime) * 100);
-    
+
     return (searchScore + nnScore + rangeScore) / 3;
   }
 
+  /**
+   *
+   * @example
+   */
   private calculateBalanceRatio(): number {
     if (this.stats.nodeCount === 0) {
       return 1;
@@ -949,6 +1099,10 @@ export class KdTree {
     return Math.max(0, 1 - (this.stats.height - idealHeight) / idealHeight);
   }
 
+  /**
+   *
+   * @example
+   */
   private calculateQueryEfficiency(): number {
     if (this.stats.searches === 0) {
       return 1;
@@ -958,10 +1112,19 @@ export class KdTree {
     return Math.max(0, 1 - (actualVisits - idealVisits) / idealVisits);
   }
 
+  /**
+   *
+   * @example
+   */
   private serializeTreeStructure(): any {
     return this.serializeNode(this.root);
   }
 
+  /**
+   *
+   * @param node
+   * @example
+   */
   private serializeNode(node: KdNode | null): any {
     if (node === null) {
       return null;
@@ -975,6 +1138,12 @@ export class KdTree {
     };
   }
 
+  /**
+   *
+   * @param type
+   * @param data
+   * @example
+   */
   private emitEvent(type: KdTreeEventType, data?: any): void {
     if (this.eventHandlers.length === 0) {
       return;
@@ -991,7 +1160,7 @@ export class KdTree {
         handler(event);
       } catch (error) {
         if (this.enableDebug) {
-          console.error('Error in K-d Tree event handler:', error);
+          console.error("Error in K-d Tree event handler:", error);
         }
       }
     }

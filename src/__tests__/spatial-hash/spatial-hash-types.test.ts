@@ -9,22 +9,40 @@ import type { SpatialObjectData, GameEntityData } from "../../types/spatial-type
 
 describe("Spatial Hash Types", () => {
   // Helper function to create test spatial data
-  function createTestSpatialData(id: string, category: "entity" | "obstacle" | "trigger" | "decoration" = "entity"): SpatialObjectData {
+  /**
+   *
+   * @param id
+   * @param category
+   * @example
+   */
+  function createTestSpatialData(
+    id: string,
+    category: "entity" | "obstacle" | "trigger" | "decoration" = "entity"
+  ): SpatialObjectData {
     return {
       id,
       type: "test",
       category,
-      properties: { test: true }
+      properties: { test: true },
     };
   }
 
   // Helper function to create test game entity data
-  function createTestGameEntityData(id: string, entityType: "player" | "enemy" | "npc" | "item" | "projectile" = "player"): GameEntityData {
+  /**
+   *
+   * @param id
+   * @param entityType
+   * @example
+   */
+  function createTestGameEntityData(
+    id: string,
+    entityType: "player" | "enemy" | "npc" | "item" | "projectile" = "player"
+  ): GameEntityData {
     return {
       id,
       type: "game-entity",
       entityType,
-      health: 100
+      health: 100,
     };
   }
   describe("SpatialHashConfig interface", () => {
@@ -338,11 +356,11 @@ describe("Spatial Hash Types", () => {
         id: "custom-object",
         x: 50,
         y: 75,
-        data: { 
+        data: {
           id: "custom-object",
-          type: "custom", 
+          type: "custom",
           category: "entity" as const,
-          value: 42 
+          value: 42,
         },
       };
 

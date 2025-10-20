@@ -8,7 +8,6 @@ import { analyzeWorkload } from "../optimization/adapters/workload-analyzer";
 import { AlgorithmSelector } from "../optimization/core/algorithm-selector";
 import { generateRandomAABBs } from "./paw-optimization-benchmark.test";
 
-
 describe("PAW Debug Investigation", () => {
   beforeEach(() => {
     // Note: Using real timers for PAW debug tests

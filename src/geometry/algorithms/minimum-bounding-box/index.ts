@@ -24,6 +24,3 @@ export type {
   MinimumBoundingBoxOptimizationOptions,
   MinimumBoundingBoxOptimizationResult,
 } from "./minimum-bounding-box-types";
-
-
-

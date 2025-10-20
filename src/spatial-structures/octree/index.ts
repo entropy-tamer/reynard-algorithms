@@ -35,6 +35,3 @@ export type {
 } from "./octree-types";
 export { Octant, OctreeEventType } from "./octree-types";
 export { DEFAULT_OCTREE_CONFIG, DEFAULT_OCTREE_OPTIONS } from "./octree-types";
-
-
-

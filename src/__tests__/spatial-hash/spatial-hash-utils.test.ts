@@ -17,8 +17,8 @@ describe("Spatial Hash Utils", () => {
       id: `obj-${x}-${y}`,
       type: "test",
       category: "entity" as const,
-      properties: { test: true }
-    }
+      properties: { test: true },
+    },
   });
 
   describe("createOptimizedSpatialHash", () => {

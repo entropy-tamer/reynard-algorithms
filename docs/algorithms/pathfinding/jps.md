@@ -34,7 +34,7 @@ For implementation details and usage examples, see the source code in the `src/`
 
 ```typescript
 // Import the algorithm
-import { JPS } from '@entropy-tamer/reynard-algorithms';
+import { JPS } from "@entropy-tamer/reynard-algorithms";
 ```
 
 ## Performance

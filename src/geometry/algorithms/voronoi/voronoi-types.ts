@@ -389,6 +389,3 @@ export interface VoronoiSerialization {
     edges: Edge[];
   };
 }
-
-
-

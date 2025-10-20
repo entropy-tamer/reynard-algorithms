@@ -14,26 +14,42 @@ import { PerformanceTimer } from "../performance/timer";
 import type { AABB, CollisionPair } from "../geometry/collision/aabb/aabb-types";
 
 // Wrapper function to convert batchCollisionDetection return type to CollisionPair[]
+/**
+ *
+ * @param aabbs
+ * @example
+ */
 function batchCollisionDetectionWrapper(aabbs: AABB[]): CollisionPair[] {
   const results = batchCollisionDetection(aabbs);
   return results.map(result => ({
     a: result.index1,
     b: result.index2,
-    result: result.result
+    result: result.result,
   }));
 }
 
 // Wrapper function to convert batchCollisionWithSpatialHash return type to CollisionPair[]
+/**
+ *
+ * @param aabbs
+ * @example
+ */
 function batchCollisionWithSpatialHashWrapper(aabbs: AABB[]): CollisionPair[] {
   const results = batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity });
   return results.map(result => ({
     a: result.index1,
     b: result.index2,
-    result: result.result
+    result: result.result,
   }));
 }
 
 // Test data generators
+/**
+ *
+ * @param count
+ * @param worldSize
+ * @example
+ */
 export function generateRandomAABBs(count: number, worldSize: number = 1000): AABB[] {
   const aabbs: AABB[] = [];
   for (let i = 0; i < count; i++) {
@@ -48,6 +64,12 @@ export function generateRandomAABBs(count: number, worldSize: number = 1000): AA
   return aabbs;
 }
 
+/**
+ *
+ * @param count
+ * @param clusters
+ * @example
+ */
 function generateClusteredAABBs(count: number, clusters: number = 5): AABB[] {
   const aabbs: AABB[] = [];
   const clusterSize = 200;
@@ -70,6 +92,11 @@ function generateClusteredAABBs(count: number, clusters: number = 5): AABB[] {
   return aabbs;
 }
 
+/**
+ *
+ * @param count
+ * @example
+ */
 function generateSequentialAABBs(count: number): AABB[] {
   const aabbs: AABB[] = [];
   const spacing = 100;
@@ -93,6 +120,14 @@ interface BenchmarkResult {
   iterations: number;
 }
 
+/**
+ *
+ * @param algorithm
+ * @param aabbs
+ * @param iterations
+ * @param algorithmName
+ * @example
+ */
 function benchmarkAlgorithm(
   algorithm: (aabbs: AABB[]) => CollisionPair[],
   aabbs: AABB[],

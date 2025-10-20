@@ -21,12 +21,21 @@ import {
 import { findConnectedComponents } from "../../data-structures/union-find";
 
 // Helper function to create test spatial data
-function createTestSpatialData(id: string, category: "entity" | "obstacle" | "trigger" | "decoration" = "entity"): SpatialObjectData {
+/**
+ *
+ * @param id
+ * @param category
+ * @example
+ */
+function createTestSpatialData(
+  id: string,
+  category: "entity" | "obstacle" | "trigger" | "decoration" = "entity"
+): SpatialObjectData {
   return {
     id,
     type: "test",
     category,
-    properties: { test: true }
+    properties: { test: true },
   };
 }
 

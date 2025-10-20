@@ -24,7 +24,7 @@ For implementation details and usage examples, see the source code in the `src/`
 
 ```typescript
 // Import the algorithm
-import { Bresenham } from '@entropy-tamer/reynard-algorithms';
+import { Bresenham } from "@entropy-tamer/reynard-algorithms";
 ```
 
 ## Performance

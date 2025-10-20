@@ -61,11 +61,11 @@ This documentation provides detailed information about all algorithms, data stru
 
 ### [Pathfinding](./algorithms/pathfinding/)
 
-- [A* Pathfinding](./algorithms/pathfinding/astar.md)
+- [A\* Pathfinding](./algorithms/pathfinding/astar.md)
 - [Jump Point Search](./algorithms/pathfinding/jps.md)
-- [Theta*](./algorithms/pathfinding/theta-star.md)
+- [Theta\*](./algorithms/pathfinding/theta-star.md)
 - [Flow Field](./algorithms/pathfinding/flow-field.md)
-- [HPA*](./algorithms/pathfinding/hpa-star.md)
+- [HPA\*](./algorithms/pathfinding/hpa-star.md)
 
 ### [Examples](./examples/)
 

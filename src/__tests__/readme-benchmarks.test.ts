@@ -18,6 +18,11 @@ import { AlgorithmSelector, type WorkloadCharacteristics } from "../optimization
 import type { AABB, CollisionPair } from "../geometry/collision/aabb/aabb-types";
 
 // Deterministic RNG and test data generators
+/**
+ *
+ * @param seed
+ * @example
+ */
 function createSeededRng(seed: number): () => number {
   // Simple LCG (32-bit)
   let s = seed >>> 0;
@@ -27,6 +32,13 @@ function createSeededRng(seed: number): () => number {
   };
 }
 
+/**
+ *
+ * @param count
+ * @param worldSize
+ * @param rng
+ * @example
+ */
 function generateRandomAABBs(count: number, worldSize: number, rng: () => number): AABB[] {
   const aabbs: AABB[] = [];
   for (let i = 0; i < count; i++) {
@@ -41,6 +53,13 @@ function generateRandomAABBs(count: number, worldSize: number, rng: () => number
   return aabbs;
 }
 
+/**
+ *
+ * @param count
+ * @param clusters
+ * @param rng
+ * @example
+ */
 function generateClusteredAABBs(count: number, clusters: number, rng: () => number): AABB[] {
   const aabbs: AABB[] = [];
   const clusterSize = 200;
@@ -63,6 +82,11 @@ function generateClusteredAABBs(count: number, clusters: number, rng: () => numb
   return aabbs;
 }
 
+/**
+ *
+ * @param count
+ * @example
+ */
 function generateDegenerateSpatialHash(count: number): AABB[] {
   // All objects in same cell to stress spatial hash
   const aabbs: AABB[] = [];
@@ -81,6 +105,11 @@ function generateDegenerateSpatialHash(count: number): AABB[] {
   return aabbs;
 }
 
+/**
+ *
+ * @param count
+ * @example
+ */
 function generateDenseOverlap(count: number): AABB[] {
   // All objects overlapping to stress collision detection
   const aabbs: AABB[] = [];
@@ -115,6 +144,14 @@ const adaptBatchToCollisionPairs = (
   return (aabbs: AABB[]) => fn(aabbs).map(({ index1, index2, result }) => ({ a: index1, b: index2, result }));
 };
 
+/**
+ *
+ * @param algorithm
+ * @param aabbs
+ * @param samples
+ * @param iterationsPerSample
+ * @example
+ */
 function collectSamples(
   algorithm: (aabbs: AABB[]) => CollisionPair[],
   aabbs: AABB[],
@@ -147,6 +184,16 @@ function collectSamples(
   return { median, p10, p90, lastCount };
 }
 
+/**
+ *
+ * @param algorithm
+ * @param aabbs
+ * @param algorithmName
+ * @param datasetType
+ * @param samples
+ * @param iterationsPerSample
+ * @example
+ */
 function benchmarkAlgorithm(
   algorithm: (aabbs: AABB[]) => CollisionPair[],
   aabbs: AABB[],
@@ -166,6 +213,10 @@ function benchmarkAlgorithm(
   };
 }
 
+/**
+ *
+ * @example
+ */
 function measureMemoryPoolPerformance(): {
   standardAllocation: number;
   pooledAllocation: number;

@@ -29,7 +29,7 @@ For implementation details and usage examples, see the source code in the `src/`
 
 ```typescript
 // Import the algorithm
-import { UnionFind } from '@entropy-tamer/reynard-algorithms';
+import { UnionFind } from "@entropy-tamer/reynard-algorithms";
 ```
 
 ## Performance

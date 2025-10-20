@@ -45,6 +45,7 @@ export class MinimumBoundingBox {
   /**
    * Creates an instance of MinimumBoundingBox.
    * @param config - Optional configuration for the algorithm.
+   * @example
    */
   constructor(config: Partial<MinimumBoundingBoxConfig> = {}) {
     this.config = {
@@ -72,11 +73,9 @@ export class MinimumBoundingBox {
    * @param points - Array of points to compute bounding box for.
    * @param options - Computation options.
    * @returns Result containing the minimum bounding box and quality metrics.
+   * @example
    */
-  compute(
-    points: Point[],
-    options: Partial<MinimumBoundingBoxOptions> = {}
-  ): MinimumBoundingBoxResult {
+  compute(points: Point[], options: Partial<MinimumBoundingBoxOptions> = {}): MinimumBoundingBoxResult {
     const startTime = performance.now();
     const computeOptions: MinimumBoundingBoxOptions = {
       method: "rotating-calipers",
@@ -166,12 +165,11 @@ export class MinimumBoundingBox {
    * Computes the minimum bounding box using rotating calipers algorithm.
    * @param points - Array of points (should be convex hull).
    * @param options - Computation options.
+   * @param _options
    * @returns Minimum bounding box rectangle.
+   * @example
    */
-  private computeRotatingCalipers(
-    points: Point[],
-    _options: MinimumBoundingBoxOptions
-  ): Rectangle {
+  private computeRotatingCalipers(points: Point[], _options: MinimumBoundingBoxOptions): Rectangle {
     const rotatingCalipersOptions: RotatingCalipersOptions = {
       startAngle: 0,
       angleStep: Math.PI / 180, // 1 degree steps
@@ -184,10 +182,7 @@ export class MinimumBoundingBox {
     this.stats.iterations = 0;
     this.stats.angleTests = 0;
 
-    return MinimumBoundingBoxUtils.calculateMinimumBoundingBoxRotatingCalipers(
-      points,
-      rotatingCalipersOptions
-    );
+    return MinimumBoundingBoxUtils.calculateMinimumBoundingBoxRotatingCalipers(points, rotatingCalipersOptions);
   }
 
   /**
@@ -195,11 +190,9 @@ export class MinimumBoundingBox {
    * @param points - Array of points.
    * @param options - Computation options.
    * @returns Minimum bounding box rectangle.
+   * @example
    */
-  private computeBruteForce(
-    points: Point[],
-    options: MinimumBoundingBoxOptions
-  ): Rectangle {
+  private computeBruteForce(points: Point[], options: MinimumBoundingBoxOptions): Rectangle {
     let bestRectangle: Rectangle | null = null;
     let bestValue = Infinity;
 
@@ -209,8 +202,8 @@ export class MinimumBoundingBox {
     for (let angle = 0; angle <= maxAngle; angle += angleStep) {
       this.stats.angleTests++;
       const rectangle = MinimumBoundingBoxUtils.calculateBoundingBoxAtAngle(points, angle);
-      
-      const value = options.optimizeForArea 
+
+      const value = options.optimizeForArea
         ? MinimumBoundingBoxUtils.calculateArea(rectangle)
         : MinimumBoundingBoxUtils.calculatePerimeter(rectangle);
 
@@ -229,11 +222,9 @@ export class MinimumBoundingBox {
    * @param points - Array of points.
    * @param options - Computation options.
    * @returns Minimum bounding box rectangle.
+   * @example
    */
-  private computeConvexHullMethod(
-    points: Point[],
-    options: MinimumBoundingBoxOptions
-  ): Rectangle {
+  private computeConvexHullMethod(points: Point[], options: MinimumBoundingBoxOptions): Rectangle {
     // This is essentially the same as rotating calipers but with explicit convex hull
     const convexHull = MinimumBoundingBoxUtils.calculateConvexHull(points);
     return this.computeRotatingCalipers(convexHull, options);
@@ -246,6 +237,7 @@ export class MinimumBoundingBox {
    * @param startTime - Start time of computation.
    * @param options - Computation options.
    * @returns Complete result object.
+   * @example
    */
   private createResult(
     rectangle: Rectangle,
@@ -295,6 +287,7 @@ export class MinimumBoundingBox {
    * Normalizes a rectangle to standard form.
    * @param rectangle - Rectangle to normalize.
    * @returns Normalized rectangle.
+   * @example
    */
   private normalizeRectangle(rectangle: Rectangle): Rectangle {
     // Ensure width >= height
@@ -324,6 +317,7 @@ export class MinimumBoundingBox {
    * @param result - Result to validate.
    * @param options - Validation options.
    * @returns Validation result.
+   * @example
    */
   validate(
     result: MinimumBoundingBoxResult,
@@ -392,6 +386,7 @@ export class MinimumBoundingBox {
    * @param box2 - Second bounding box.
    * @param options - Comparison options.
    * @returns Comparison result.
+   * @example
    */
   compare(
     box1: MinimumBoundingBoxResult,
@@ -412,10 +407,11 @@ export class MinimumBoundingBox {
     const aspectRatioDifference = Math.abs(box1.aspectRatio - box2.aspectRatio);
     const rotationDifference = Math.abs(box1.rectangle.rotation - box2.rectangle.rotation);
 
-    const areEqual = areaDifference < comparisonOptions.tolerance &&
-                    perimeterDifference < comparisonOptions.tolerance &&
-                    aspectRatioDifference < comparisonOptions.tolerance &&
-                    rotationDifference < comparisonOptions.tolerance;
+    const areEqual =
+      areaDifference < comparisonOptions.tolerance &&
+      perimeterDifference < comparisonOptions.tolerance &&
+      aspectRatioDifference < comparisonOptions.tolerance &&
+      rotationDifference < comparisonOptions.tolerance;
 
     // Calculate similarity score (0-1, higher is more similar)
     const maxArea = Math.max(box1.area, box2.area);
@@ -442,9 +438,12 @@ export class MinimumBoundingBox {
   /**
    * Optimizes a bounding box using various optimization techniques.
    * @param points - Array of points.
+   * @param _points
    * @param initialBox - Initial bounding box.
    * @param options - Optimization options.
+   * @param _options
    * @returns Optimization result.
+   * @example
    */
   optimize(
     _points: Point[],
@@ -500,6 +499,7 @@ export class MinimumBoundingBox {
    * @param result - Result to serialize.
    * @param options - Serialization options.
    * @returns Serialized result.
+   * @example
    */
   serialize(
     result: MinimumBoundingBoxResult,
@@ -514,8 +514,10 @@ export class MinimumBoundingBox {
     };
 
     const round = (value: number) => {
-      return Math.round(value * Math.pow(10, serializationOptions.precision!)) / 
-             Math.pow(10, serializationOptions.precision!);
+      return (
+        Math.round(value * Math.pow(10, serializationOptions.precision!)) /
+        Math.pow(10, serializationOptions.precision!)
+      );
     };
 
     const roundPoint = (point: Point) => ({
@@ -557,6 +559,7 @@ export class MinimumBoundingBox {
   /**
    * Updates the configuration.
    * @param newConfig - New configuration options.
+   * @example
    */
   updateConfig(newConfig: Partial<MinimumBoundingBoxConfig>): void {
     this.config = { ...this.config, ...newConfig };
@@ -565,6 +568,7 @@ export class MinimumBoundingBox {
   /**
    * Gets the current configuration.
    * @returns The current configuration.
+   * @example
    */
   getConfig(): MinimumBoundingBoxConfig {
     return { ...this.config };
@@ -573,6 +577,7 @@ export class MinimumBoundingBox {
   /**
    * Gets the current statistics.
    * @returns The current statistics.
+   * @example
    */
   getStats(): MinimumBoundingBoxStats {
     return { ...this.stats };
@@ -580,6 +585,7 @@ export class MinimumBoundingBox {
 
   /**
    * Resets the statistics.
+   * @example
    */
   resetStats(): void {
     this.stats = {

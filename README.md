@@ -69,7 +69,7 @@ npm install @entropy-tamer/reynard-algorithms
 ## Quick Start
 
 ```typescript
-import { UnionFind, PriorityQueue, AABB } from '@entropy-tamer/reynard-algorithms';
+import { UnionFind, PriorityQueue, AABB } from "@entropy-tamer/reynard-algorithms";
 
 // Union-Find for connected components
 const uf = new UnionFind(10);
@@ -151,10 +151,25 @@ class LRUCache<K, V> {
 
 ```typescript
 // Basic shapes
-class Point { x: number; y: number; }
-class Vector { x: number; y: number; }
-class Rectangle { x: number; y: number; width: number; height: number; }
-class Circle { x: number; y: number; radius: number; }
+class Point {
+  x: number;
+  y: number;
+}
+class Vector {
+  x: number;
+  y: number;
+}
+class Rectangle {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}
+class Circle {
+  x: number;
+  y: number;
+  radius: number;
+}
 
 // Collision detection
 class AABB {

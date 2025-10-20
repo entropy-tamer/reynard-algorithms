@@ -16,10 +16,20 @@ export class SpatialHash {
   private cells = new Map<string, number[]>();
   private cellSize: number;
 
+  /**
+   *
+   * @param cellSize
+   * @example
+   */
   constructor(cellSize: number) {
     this.cellSize = cellSize;
   }
 
+  /**
+   *
+   * @param aabb
+   * @example
+   */
   private getAABBCells(aabb: AABB): string[] {
     const minCellX = Math.floor(aabb.x / this.cellSize);
     const maxCellX = Math.floor((aabb.x + aabb.width) / this.cellSize);
@@ -35,6 +45,12 @@ export class SpatialHash {
     return cells;
   }
 
+  /**
+   *
+   * @param index
+   * @param aabb
+   * @example
+   */
   insert(index: number, aabb: AABB): void {
     const cells = this.getAABBCells(aabb);
     for (const cell of cells) {
@@ -45,6 +61,11 @@ export class SpatialHash {
     }
   }
 
+  /**
+   *
+   * @param aabb
+   * @example
+   */
   query(aabb: AABB): number[] {
     const cells = this.getAABBCells(aabb);
     const candidates = new Set<number>();
@@ -61,6 +82,10 @@ export class SpatialHash {
     return Array.from(candidates);
   }
 
+  /**
+   *
+   * @example
+   */
   clear(): void {
     this.cells.clear();
   }

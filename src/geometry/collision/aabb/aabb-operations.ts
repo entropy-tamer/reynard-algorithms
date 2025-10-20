@@ -11,6 +11,11 @@ import type { AABB } from "./aabb-types";
 
 /**
  * Check if a point is inside an AABB
+ * @param point
+ * @param point.x
+ * @param point.y
+ * @param aabb
+ * @example
  */
 export function pointInAABB(point: { x: number; y: number }, aabb: AABB): boolean {
   return point.x >= aabb.x && point.x <= aabb.x + aabb.width && point.y >= aabb.y && point.y <= aabb.y + aabb.height;
@@ -18,6 +23,9 @@ export function pointInAABB(point: { x: number; y: number }, aabb: AABB): boolea
 
 /**
  * Get the union of two AABBs
+ * @param a
+ * @param b
+ * @example
  */
 export function unionAABB(a: AABB, b: AABB): AABB {
   const minX = Math.min(a.x, b.x);
@@ -35,6 +43,9 @@ export function unionAABB(a: AABB, b: AABB): AABB {
 
 /**
  * Get the intersection of two AABBs
+ * @param a
+ * @param b
+ * @example
  */
 export function intersectionAABB(a: AABB, b: AABB): AABB | null {
   const overlapX = Math.max(0, Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x));
@@ -55,6 +66,9 @@ export function intersectionAABB(a: AABB, b: AABB): AABB | null {
 
 /**
  * Expand an AABB by a given amount
+ * @param aabb
+ * @param amount
+ * @example
  */
 export function expandAABB(aabb: AABB, amount: number): AABB {
   return {
@@ -67,6 +81,9 @@ export function expandAABB(aabb: AABB, amount: number): AABB {
 
 /**
  * Check if an AABB is completely contained within another
+ * @param container
+ * @param contained
+ * @example
  */
 export function containsAABB(container: AABB, contained: AABB): boolean {
   return (
@@ -79,6 +96,9 @@ export function containsAABB(container: AABB, contained: AABB): boolean {
 
 /**
  * Check if two AABBs are touching (edge contact)
+ * @param a
+ * @param b
+ * @example
  */
 export function areAABBsTouching(a: AABB, b: AABB): boolean {
   // Check if AABBs are touching but not overlapping

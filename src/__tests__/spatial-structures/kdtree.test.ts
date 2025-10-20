@@ -77,7 +77,7 @@ describe("K-d Tree Data Structure", () => {
 
     it("should handle duplicate points based on configuration", () => {
       const point = { coordinates: [1, 1] };
-      
+
       // Default: duplicates not allowed
       kdTree.insert(point);
       const result1 = kdTree.insert(point);
@@ -97,7 +97,7 @@ describe("K-d Tree Data Structure", () => {
     it("should search for points", () => {
       const point = { coordinates: [2, 3] };
       kdTree.insert(point);
-      
+
       expect(kdTree.search(point)).toBe(true);
       expect(kdTree.contains(point)).toBe(true);
       expect(kdTree.search({ coordinates: [1, 1] })).toBe(false);
@@ -177,7 +177,7 @@ describe("K-d Tree Data Structure", () => {
     it("should find the nearest neighbor", () => {
       const query = { coordinates: [1.1, 1.1] };
       const result = kdTree.nearestNeighbor(query);
-      
+
       expect(result.success).toBe(true);
       expect(result.point).toBeDefined();
       expect(result.distance).toBeCloseTo(Math.sqrt(0.02), 2); // Distance to [1,1]
@@ -187,7 +187,7 @@ describe("K-d Tree Data Structure", () => {
     it("should find k nearest neighbors", () => {
       const query = { coordinates: [1.1, 1.1] };
       const result = kdTree.kNearestNeighbors(query, { k: 3 });
-      
+
       expect(result.success).toBe(true);
       expect(result.points.length).toBe(3);
       expect(result.points[0].distance).toBeLessThanOrEqual(result.points[1].distance);
@@ -197,19 +197,18 @@ describe("K-d Tree Data Structure", () => {
     it("should respect max distance constraint", () => {
       const query = { coordinates: [1.1, 1.1] };
       const result = kdTree.nearestNeighbor(query, { maxDistance: 0.1 });
-      
+
       expect(result.success).toBe(false);
       expect(result.point).toBeNull();
     });
 
     it("should handle custom distance function", () => {
       const query = { coordinates: [1.1, 1.1] };
-      const manhattanDistance = (p1: any, p2: any) => 
-        Math.abs(p1.coordinates[0] - p2.coordinates[0]) + 
-        Math.abs(p1.coordinates[1] - p2.coordinates[1]);
-      
+      const manhattanDistance = (p1: any, p2: any) =>
+        Math.abs(p1.coordinates[0] - p2.coordinates[0]) + Math.abs(p1.coordinates[1] - p2.coordinates[1]);
+
       const result = kdTree.nearestNeighbor(query, { distanceFunction: manhattanDistance });
-      
+
       expect(result.success).toBe(true);
       expect(result.point).toBeDefined();
     });
@@ -217,7 +216,7 @@ describe("K-d Tree Data Structure", () => {
     it("should exclude query point when includeSelf is false", () => {
       const query = { coordinates: [1, 1] };
       const result = kdTree.nearestNeighbor(query, { includeSelf: false });
-      
+
       expect(result.success).toBe(true);
       expect(result.point).not.toEqual(query);
     });
@@ -240,9 +239,9 @@ describe("K-d Tree Data Structure", () => {
         min: [1, 1],
         max: [3, 3],
       };
-      
+
       const result = kdTree.rangeQuery(bounds);
-      
+
       expect(result.success).toBe(true);
       expect(result.count).toBe(9); // 3x3 grid
       expect(result.points.length).toBe(9);
@@ -253,9 +252,9 @@ describe("K-d Tree Data Structure", () => {
         min: [1, 1],
         max: [3, 3],
       };
-      
+
       const result = kdTree.rangeQuery(bounds, { inclusive: false });
-      
+
       expect(result.success).toBe(true);
       expect(result.count).toBe(4); // 2x2 grid (excluding boundaries)
     });
@@ -265,11 +264,11 @@ describe("K-d Tree Data Structure", () => {
         min: [0, 0],
         max: [4, 4],
       };
-      
+
       const result = kdTree.rangeQuery(bounds, {
-        filter: (point) => point.coordinates[0] === point.coordinates[1], // Diagonal points
+        filter: point => point.coordinates[0] === point.coordinates[1], // Diagonal points
       });
-      
+
       expect(result.success).toBe(true);
       expect(result.count).toBe(5); // Points [0,0], [1,1], [2,2], [3,3], [4,4]
     });
@@ -279,9 +278,9 @@ describe("K-d Tree Data Structure", () => {
         min: [10, 10],
         max: [20, 20],
       };
-      
+
       const result = kdTree.rangeQuery(bounds);
-      
+
       expect(result.success).toBe(true);
       expect(result.count).toBe(0);
       expect(result.points.length).toBe(0);
@@ -293,12 +292,12 @@ describe("K-d Tree Data Structure", () => {
       const treeWithStats = new KdTree({
         config: { enableStats: true },
       });
-      
+
       treeWithStats.insert({ coordinates: [1, 1] });
       treeWithStats.insert({ coordinates: [2, 2] });
       treeWithStats.search({ coordinates: [1, 1] });
       treeWithStats.nearestNeighbor({ coordinates: [1.5, 1.5] });
-      
+
       const stats = treeWithStats.getStats();
       expect(stats.totalPoints).toBe(2);
       expect(stats.insertions).toBe(2);
@@ -311,12 +310,12 @@ describe("K-d Tree Data Structure", () => {
       const treeWithStats = new KdTree({
         config: { enableStats: true },
       });
-      
+
       // Insert some points and perform operations
       for (let i = 0; i < 10; i++) {
         treeWithStats.insert({ coordinates: [i, i] });
       }
-      
+
       const metrics = treeWithStats.getPerformanceMetrics();
       expect(metrics.memoryUsage).toBeGreaterThan(0);
       expect(metrics.performanceScore).toBeGreaterThanOrEqual(0);
@@ -332,7 +331,7 @@ describe("K-d Tree Data Structure", () => {
         { coordinates: [3, 3] },
       ];
       kdTree.insertBatch(points);
-      
+
       const stats = kdTree.getStats();
       expect(stats.height).toBeGreaterThan(0);
       expect(stats.nodeCount).toBe(4);
@@ -349,11 +348,11 @@ describe("K-d Tree Data Structure", () => {
         points.push({ coordinates: [i, 0] }); // All on x-axis
       }
       kdTree.insertBatch(points);
-      
+
       const result = kdTree.rebuild();
       expect(result.success).toBe(true);
       expect(kdTree.size()).toBe(10);
-      
+
       // Verify all points are still accessible
       for (const point of points) {
         expect(kdTree.contains(point)).toBe(true);
@@ -369,12 +368,12 @@ describe("K-d Tree Data Structure", () => {
         { coordinates: [2, 2], data: "diagonal" },
       ];
       kdTree.insertBatch(points);
-      
+
       const serialized = kdTree.serialize();
       expect(serialized.version).toBe("1.0.0");
       expect(serialized.data.points.length).toBe(3);
       expect(serialized.metadata.totalPoints).toBe(3);
-      
+
       const deserialized = KdTree.deserialize(serialized);
       expect(deserialized.size()).toBe(3);
       expect(deserialized.contains({ coordinates: [0, 0] })).toBe(true);
@@ -385,13 +384,13 @@ describe("K-d Tree Data Structure", () => {
     it("should emit events when operations are performed", () => {
       const events: any[] = [];
       const treeWithEvents = new KdTree({
-        eventHandlers: [(event) => events.push(event)],
+        eventHandlers: [event => events.push(event)],
       });
-      
+
       treeWithEvents.insert({ coordinates: [1, 1] });
       treeWithEvents.search({ coordinates: [1, 1] });
       treeWithEvents.nearestNeighbor({ coordinates: [1.5, 1.5] });
-      
+
       expect(events.length).toBe(3);
       expect(events[0].type).toBe(KdTreeEventType.POINT_INSERTED);
       expect(events[1].type).toBe(KdTreeEventType.SEARCH_PERFORMED);
@@ -404,16 +403,12 @@ describe("K-d Tree Data Structure", () => {
       const tree3D = new KdTree({
         config: { dimensions: 3 },
       });
-      
-      const points = [
-        { coordinates: [0, 0, 0] },
-        { coordinates: [1, 1, 1] },
-        { coordinates: [2, 2, 2] },
-      ];
-      
+
+      const points = [{ coordinates: [0, 0, 0] }, { coordinates: [1, 1, 1] }, { coordinates: [2, 2, 2] }];
+
       tree3D.insertBatch(points);
       expect(tree3D.size()).toBe(3);
-      
+
       const result = tree3D.nearestNeighbor({ coordinates: [0.5, 0.5, 0.5] });
       expect(result.success).toBe(true);
       expect(result.point?.coordinates).toEqual([0, 0, 0]);
@@ -423,7 +418,7 @@ describe("K-d Tree Data Structure", () => {
   describe("Edge Cases", () => {
     it("should handle single point", () => {
       kdTree.insert({ coordinates: [1, 1] });
-      
+
       const result = kdTree.nearestNeighbor({ coordinates: [2, 2] });
       expect(result.success).toBe(true);
       expect(result.point?.coordinates).toEqual([1, 1]);
@@ -436,7 +431,7 @@ describe("K-d Tree Data Structure", () => {
 
     it("should handle points with tolerance", () => {
       kdTree.insert({ coordinates: [1.0, 1.0] });
-      
+
       // Point very close to existing point
       const closePoint = { coordinates: [1.0000000001, 1.0000000001] };
       expect(kdTree.contains(closePoint)).toBe(true);

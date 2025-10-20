@@ -20,6 +20,7 @@ export class MinimumBoundingBoxUtils {
    * @param a - First vector.
    * @param b - Second vector.
    * @returns Dot product.
+   * @example
    */
   static dotProduct(a: Vector, b: Vector): number {
     return a.x * b.x + a.y * b.y;
@@ -30,6 +31,7 @@ export class MinimumBoundingBoxUtils {
    * @param a - First vector.
    * @param b - Second vector.
    * @returns Cross product (scalar in 2D).
+   * @example
    */
   static crossProduct(a: Vector, b: Vector): number {
     return a.x * b.y - a.y * b.x;
@@ -39,6 +41,7 @@ export class MinimumBoundingBoxUtils {
    * Calculates the magnitude of a vector.
    * @param v - Vector.
    * @returns Magnitude.
+   * @example
    */
   static magnitude(v: Vector): number {
     return Math.sqrt(v.x * v.x + v.y * v.y);
@@ -48,6 +51,7 @@ export class MinimumBoundingBoxUtils {
    * Normalizes a vector to unit length.
    * @param v - Vector to normalize.
    * @returns Normalized vector.
+   * @example
    */
   static normalize(v: Vector): Vector {
     const mag = this.magnitude(v);
@@ -60,6 +64,7 @@ export class MinimumBoundingBoxUtils {
    * @param a - First point.
    * @param b - Second point.
    * @returns Distance.
+   * @example
    */
   static distance(a: Point, b: Point): number {
     const dx = b.x - a.x;
@@ -72,6 +77,7 @@ export class MinimumBoundingBoxUtils {
    * @param a - First point.
    * @param b - Second point.
    * @returns Squared distance.
+   * @example
    */
   static distanceSquared(a: Point, b: Point): number {
     const dx = b.x - a.x;
@@ -84,6 +90,7 @@ export class MinimumBoundingBoxUtils {
    * @param from - Starting point.
    * @param to - Ending point.
    * @returns Vector from first point to second point.
+   * @example
    */
   static vectorFromPoints(from: Point, to: Point): Vector {
     return { x: to.x - from.x, y: to.y - from.y };
@@ -94,6 +101,7 @@ export class MinimumBoundingBoxUtils {
    * @param point - Point.
    * @param vector - Vector to add.
    * @returns New point.
+   * @example
    */
   static addVectorToPoint(point: Point, vector: Vector): Point {
     return { x: point.x + vector.x, y: point.y + vector.y };
@@ -104,6 +112,7 @@ export class MinimumBoundingBoxUtils {
    * @param vector - Vector.
    * @param scalar - Scalar multiplier.
    * @returns Scaled vector.
+   * @example
    */
   static multiplyVector(vector: Vector, scalar: number): Vector {
     return { x: vector.x * scalar, y: vector.y * scalar };
@@ -114,6 +123,7 @@ export class MinimumBoundingBoxUtils {
    * @param vector - Vector to rotate.
    * @param angle - Angle in radians.
    * @returns Rotated vector.
+   * @example
    */
   static rotateVector(vector: Vector, angle: number): Vector {
     const cos = Math.cos(angle);
@@ -128,6 +138,7 @@ export class MinimumBoundingBoxUtils {
    * Converts an angle to a unit vector.
    * @param angle - Angle in radians.
    * @returns Unit vector.
+   * @example
    */
   static angleToVector(angle: number): Vector {
     return { x: Math.cos(angle), y: Math.sin(angle) };
@@ -137,6 +148,7 @@ export class MinimumBoundingBoxUtils {
    * Converts a vector to an angle.
    * @param vector - Vector.
    * @returns Angle in radians.
+   * @example
    */
   static vectorToAngle(vector: Vector): number {
     return Math.atan2(vector.y, vector.x);
@@ -146,6 +158,7 @@ export class MinimumBoundingBoxUtils {
    * Calculates the area of a rectangle.
    * @param rectangle - Rectangle.
    * @returns Area.
+   * @example
    */
   static calculateArea(rectangle: Rectangle): number {
     return rectangle.width * rectangle.height;
@@ -155,6 +168,7 @@ export class MinimumBoundingBoxUtils {
    * Calculates the perimeter of a rectangle.
    * @param rectangle - Rectangle.
    * @returns Perimeter.
+   * @example
    */
   static calculatePerimeter(rectangle: Rectangle): number {
     return 2 * (rectangle.width + rectangle.height);
@@ -164,6 +178,7 @@ export class MinimumBoundingBoxUtils {
    * Calculates the aspect ratio of a rectangle.
    * @param rectangle - Rectangle.
    * @returns Aspect ratio (width/height).
+   * @example
    */
   static calculateAspectRatio(rectangle: Rectangle): number {
     return rectangle.height === 0 ? Infinity : rectangle.width / rectangle.height;
@@ -173,6 +188,7 @@ export class MinimumBoundingBoxUtils {
    * Calculates the bounding box of a set of points.
    * @param points - Array of points.
    * @returns Bounding box rectangle.
+   * @example
    */
   static calculateBoundingBox(points: Point[]): Rectangle {
     if (points.length === 0) {
@@ -202,6 +218,7 @@ export class MinimumBoundingBoxUtils {
    * Calculates the convex hull of a set of points using Graham scan.
    * @param points - Array of points.
    * @returns Array of points forming the convex hull.
+   * @example
    */
   static calculateConvexHull(points: Point[]): Point[] {
     if (points.length < 3) return points;
@@ -209,8 +226,10 @@ export class MinimumBoundingBoxUtils {
     // Find the bottom-most point (and leftmost in case of tie)
     let bottomMost = 0;
     for (let i = 1; i < points.length; i++) {
-      if (points[i].y < points[bottomMost].y || 
-          (points[i].y === points[bottomMost].y && points[i].x < points[bottomMost].x)) {
+      if (
+        points[i].y < points[bottomMost].y ||
+        (points[i].y === points[bottomMost].y && points[i].x < points[bottomMost].x)
+      ) {
         bottomMost = i;
       }
     }
@@ -234,11 +253,13 @@ export class MinimumBoundingBoxUtils {
     const hull: Point[] = [points[0], points[1]];
 
     for (let i = 2; i < points.length; i++) {
-      while (hull.length > 1 && 
-             this.crossProduct(
-               this.vectorFromPoints(hull[hull.length - 2], hull[hull.length - 1]),
-               this.vectorFromPoints(hull[hull.length - 1], points[i])
-             ) <= 0) {
+      while (
+        hull.length > 1 &&
+        this.crossProduct(
+          this.vectorFromPoints(hull[hull.length - 2], hull[hull.length - 1]),
+          this.vectorFromPoints(hull[hull.length - 1], points[i])
+        ) <= 0
+      ) {
         hull.pop();
       }
       hull.push(points[i]);
@@ -252,6 +273,7 @@ export class MinimumBoundingBoxUtils {
    * @param points - Array of points (should be convex hull).
    * @param options - Rotating calipers options.
    * @returns Minimum bounding box rectangle.
+   * @example
    */
   static calculateMinimumBoundingBoxRotatingCalipers(
     points: Point[],
@@ -349,6 +371,7 @@ export class MinimumBoundingBoxUtils {
    * @param points - Array of points.
    * @param angle - Angle in radians.
    * @returns Area of the bounding box.
+   * @example
    */
   static calculateBoundingBoxArea(points: Point[], angle: number): number {
     const rectangle = this.calculateBoundingBoxAtAngle(points, angle);
@@ -360,6 +383,7 @@ export class MinimumBoundingBoxUtils {
    * @param points - Array of points.
    * @param angle - Angle in radians.
    * @returns Bounding box rectangle.
+   * @example
    */
   static calculateBoundingBoxAtAngle(points: Point[], angle: number): Rectangle {
     if (points.length === 0) {
@@ -405,12 +429,9 @@ export class MinimumBoundingBoxUtils {
    * @param rectangle - Rectangle to test.
    * @param tolerance - Numerical tolerance.
    * @returns Fit quality (0-1, higher is better).
+   * @example
    */
-  static calculateFitQuality(
-    points: Point[],
-    rectangle: Rectangle,
-    tolerance: number = 1e-10
-  ): number {
+  static calculateFitQuality(points: Point[], rectangle: Rectangle, tolerance: number = 1e-10): number {
     if (points.length === 0) return 0;
 
     let insideCount = 0;
@@ -429,12 +450,9 @@ export class MinimumBoundingBoxUtils {
    * @param rectangle - Rectangle.
    * @param tolerance - Numerical tolerance.
    * @returns True if point is inside rectangle.
+   * @example
    */
-  static isPointInsideRectangle(
-    point: Point,
-    rectangle: Rectangle,
-    tolerance: number = 1e-10
-  ): boolean {
+  static isPointInsideRectangle(point: Point, rectangle: Rectangle, tolerance: number = 1e-10): boolean {
     // Transform point to rectangle's local coordinate system
     const cos = Math.cos(-rectangle.rotation);
     const sin = Math.sin(-rectangle.rotation);
@@ -445,8 +463,7 @@ export class MinimumBoundingBoxUtils {
     const halfWidth = rectangle.width / 2;
     const halfHeight = rectangle.height / 2;
 
-    return Math.abs(localX) <= halfWidth + tolerance && 
-           Math.abs(localY) <= halfHeight + tolerance;
+    return Math.abs(localX) <= halfWidth + tolerance && Math.abs(localY) <= halfHeight + tolerance;
   }
 
   /**
@@ -454,6 +471,7 @@ export class MinimumBoundingBoxUtils {
    * @param rectangle - Rectangle.
    * @param aabb - Axis-aligned bounding box.
    * @returns Efficiency (0-1, higher is better).
+   * @example
    */
   static calculateEfficiency(rectangle: Rectangle, aabb: Rectangle): number {
     const rectangleArea = this.calculateArea(rectangle);
@@ -467,6 +485,7 @@ export class MinimumBoundingBoxUtils {
    * Calculates the compactness of a rectangle.
    * @param rectangle - Rectangle.
    * @returns Compactness measure.
+   * @example
    */
   static calculateCompactness(rectangle: Rectangle): number {
     const area = this.calculateArea(rectangle);
@@ -480,7 +499,9 @@ export class MinimumBoundingBoxUtils {
    * Validates a set of points.
    * @param points - Array of points to validate.
    * @param config - Configuration options.
+   * @param _config
    * @returns True if points are valid.
+   * @example
    */
   static validatePoints(points: Point[], _config: MinimumBoundingBoxConfig): boolean {
     if (!Array.isArray(points)) return false;
@@ -498,7 +519,9 @@ export class MinimumBoundingBoxUtils {
    * Validates a rectangle.
    * @param rectangle - Rectangle to validate.
    * @param config - Configuration options.
+   * @param _config
    * @returns True if rectangle is valid.
+   * @example
    */
   static validateRectangle(rectangle: Rectangle, _config: MinimumBoundingBoxConfig): boolean {
     if (typeof rectangle.width !== "number" || typeof rectangle.height !== "number") return false;
@@ -514,6 +537,7 @@ export class MinimumBoundingBoxUtils {
    * @param points - Array of points.
    * @param tolerance - Tolerance for considering points as duplicates.
    * @returns Array of unique points.
+   * @example
    */
   static removeDuplicatePoints(points: Point[], tolerance: number = 1e-10): Point[] {
     const unique: Point[] = [];
@@ -539,6 +563,7 @@ export class MinimumBoundingBoxUtils {
    * @param points - Array of points.
    * @param reference - Reference point.
    * @returns Sorted array of points.
+   * @example
    */
   static sortPointsByAngle(points: Point[], reference: Point): Point[] {
     return points.slice().sort((a, b) => {
@@ -552,6 +577,7 @@ export class MinimumBoundingBoxUtils {
    * Calculates the centroid of a set of points.
    * @param points - Array of points.
    * @returns Centroid point.
+   * @example
    */
   static calculateCentroid(points: Point[]): Point {
     if (points.length === 0) return { x: 0, y: 0 };

@@ -3,11 +3,7 @@
  * @description Line-of-sight checking algorithms for Theta* pathfinding.
  */
 
-import type {
-  Point,
-  LineOfSightOptions,
-  LineOfSightResult,
-} from "./theta-star-types";
+import type { Point, LineOfSightOptions, LineOfSightResult } from "./theta-star-types";
 import { CellType } from "./theta-star-types";
 
 /**
@@ -23,6 +19,7 @@ export class LineOfSight {
    * @param height - Grid height.
    * @param options - Line-of-sight options.
    * @returns Line-of-sight result.
+   * @example
    */
   static checkBresenham(
     grid: CellType[],
@@ -36,20 +33,15 @@ export class LineOfSight {
       useRayCasting: false,
       checkEndpoints: true,
       useEarlyTermination: true,
-      maxDistance: Math.max(width, height)
+      maxDistance: Math.max(width, height),
     }
   ): LineOfSightResult {
-    const {
-      checkEndpoints = true,
-      useEarlyTermination = true,
-      maxDistance = Math.max(width, height),
-    } = options;
+    const { checkEndpoints = true, useEarlyTermination = true, maxDistance = Math.max(width, height) } = options;
 
     try {
       // Check if endpoints are walkable
       if (checkEndpoints) {
-        if (!this.isWalkable(grid, from, width, height) || 
-            !this.isWalkable(grid, to, width, height)) {
+        if (!this.isWalkable(grid, from, width, height) || !this.isWalkable(grid, to, width, height)) {
           return {
             hasLineOfSight: false,
             distanceToObstacle: 0,
@@ -70,10 +62,10 @@ export class LineOfSight {
 
       // Use Bresenham's line algorithm
       const points = this.bresenhamLine(from, to);
-      
+
       for (let i = 0; i < points.length; i++) {
         const point = points[i];
-        
+
         // Skip endpoints if not checking them
         if (!checkEndpoints && (this.pointsEqual(point, from) || this.pointsEqual(point, to))) {
           continue;
@@ -118,6 +110,7 @@ export class LineOfSight {
    * @param height - Grid height.
    * @param options - Line-of-sight options.
    * @returns Line-of-sight result.
+   * @example
    */
   static checkDDA(
     grid: CellType[],
@@ -131,20 +124,15 @@ export class LineOfSight {
       useRayCasting: false,
       checkEndpoints: true,
       useEarlyTermination: true,
-      maxDistance: Math.max(width, height)
+      maxDistance: Math.max(width, height),
     }
   ): LineOfSightResult {
-    const {
-      checkEndpoints = true,
-      useEarlyTermination = true,
-      maxDistance = Math.max(width, height),
-    } = options;
+    const { checkEndpoints = true, useEarlyTermination = true, maxDistance = Math.max(width, height) } = options;
 
     try {
       // Check if endpoints are walkable
       if (checkEndpoints) {
-        if (!this.isWalkable(grid, from, width, height) || 
-            !this.isWalkable(grid, to, width, height)) {
+        if (!this.isWalkable(grid, from, width, height) || !this.isWalkable(grid, to, width, height)) {
           return {
             hasLineOfSight: false,
             distanceToObstacle: 0,
@@ -167,7 +155,7 @@ export class LineOfSight {
       const dx = to.x - from.x;
       const dy = to.y - from.y;
       const steps = Math.max(Math.abs(dx), Math.abs(dy));
-      
+
       if (steps === 0) {
         return {
           hasLineOfSight: true,
@@ -185,7 +173,7 @@ export class LineOfSight {
 
       for (let i = 0; i <= steps; i++) {
         const point = { x: Math.round(x), y: Math.round(y) };
-        
+
         // Skip endpoints if not checking them
         if (!checkEndpoints && (this.pointsEqual(point, from) || this.pointsEqual(point, to))) {
           x += xIncrement;
@@ -237,6 +225,7 @@ export class LineOfSight {
    * @param height - Grid height.
    * @param options - Line-of-sight options.
    * @returns Line-of-sight result.
+   * @example
    */
   static checkRayCasting(
     grid: CellType[],
@@ -250,20 +239,15 @@ export class LineOfSight {
       useRayCasting: false,
       checkEndpoints: true,
       useEarlyTermination: true,
-      maxDistance: Math.max(width, height)
+      maxDistance: Math.max(width, height),
     }
   ): LineOfSightResult {
-    const {
-      checkEndpoints = true,
-      useEarlyTermination = true,
-      maxDistance = Math.max(width, height),
-    } = options;
+    const { checkEndpoints = true, useEarlyTermination = true, maxDistance = Math.max(width, height) } = options;
 
     try {
       // Check if endpoints are walkable
       if (checkEndpoints) {
-        if (!this.isWalkable(grid, from, width, height) || 
-            !this.isWalkable(grid, to, width, height)) {
+        if (!this.isWalkable(grid, from, width, height) || !this.isWalkable(grid, to, width, height)) {
           return {
             hasLineOfSight: false,
             distanceToObstacle: 0,
@@ -284,10 +268,10 @@ export class LineOfSight {
 
       // Use ray casting algorithm
       const ray = this.castRay(from, to, distance);
-      
+
       for (let i = 0; i < ray.length; i++) {
         const point = ray[i];
-        
+
         // Skip endpoints if not checking them
         if (!checkEndpoints && (this.pointsEqual(point, from) || this.pointsEqual(point, to))) {
           continue;
@@ -332,6 +316,7 @@ export class LineOfSight {
    * @param height - Grid height.
    * @param options - Line-of-sight options.
    * @returns Line-of-sight result.
+   * @example
    */
   static check(
     grid: CellType[],
@@ -345,14 +330,10 @@ export class LineOfSight {
       useRayCasting: false,
       checkEndpoints: true,
       useEarlyTermination: true,
-      maxDistance: Math.max(width, height)
+      maxDistance: Math.max(width, height),
     }
   ): LineOfSightResult {
-    const {
-      useBresenham = true,
-      useDDA = false,
-      useRayCasting = false,
-    } = options;
+    const { useBresenham = true, useDDA = false, useRayCasting = false } = options;
 
     if (useBresenham) {
       return this.checkBresenham(grid, from, to, width, height, options);
@@ -371,6 +352,7 @@ export class LineOfSight {
    * @param from - Starting point.
    * @param to - Ending point.
    * @returns Array of points along the line.
+   * @example
    */
   private static bresenhamLine(from: Point, to: Point): Point[] {
     const points: Point[] = [];
@@ -409,14 +391,16 @@ export class LineOfSight {
    * @param from - Starting point.
    * @param to - Ending point.
    * @param maxDistance - Maximum distance to cast.
+   * @param _maxDistance
    * @returns Array of points along the ray.
+   * @example
    */
   private static castRay(from: Point, to: Point, _maxDistance: number): Point[] {
     const points: Point[] = [];
     const dx = to.x - from.x;
     const dy = to.y - from.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
-    
+
     if (distance === 0) {
       return [from];
     }
@@ -439,6 +423,7 @@ export class LineOfSight {
    * @param a - First point.
    * @param b - Second point.
    * @returns Distance.
+   * @example
    */
   private static distance(a: Point, b: Point): number {
     const dx = b.x - a.x;
@@ -452,6 +437,7 @@ export class LineOfSight {
    * @param b - Second point.
    * @param tolerance - Numerical tolerance.
    * @returns True if points are equal.
+   * @example
    */
   private static pointsEqual(a: Point, b: Point, tolerance: number = 1e-10): boolean {
     return Math.abs(a.x - b.x) < tolerance && Math.abs(a.y - b.y) < tolerance;
@@ -463,6 +449,7 @@ export class LineOfSight {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns True if point is within bounds.
+   * @example
    */
   private static isWithinBounds(point: Point, width: number, height: number): boolean {
     return point.x >= 0 && point.x < width && point.y >= 0 && point.y < height;
@@ -475,16 +462,14 @@ export class LineOfSight {
    * @param width - Grid width.
    * @param height - Grid height.
    * @returns True if cell is walkable.
+   * @example
    */
   private static isWalkable(grid: CellType[], point: Point, width: number, height: number): boolean {
     if (!this.isWithinBounds(point, width, height)) {
       return false;
     }
-    
+
     const index = point.y * width + point.x;
-    return grid[index] === CellType.WALKABLE || 
-           grid[index] === CellType.START || 
-           grid[index] === CellType.GOAL;
+    return grid[index] === CellType.WALKABLE || grid[index] === CellType.START || grid[index] === CellType.GOAL;
   }
 }
-

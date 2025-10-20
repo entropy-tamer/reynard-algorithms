@@ -12,6 +12,9 @@ import { pointInAABB, areAABBsTouching } from "./aabb-operations";
 
 /**
  * Check if two AABBs overlap
+ * @param a
+ * @param b
+ * @example
  */
 export function checkCollision(a: AABB, b: AABB): CollisionResult {
   const overlapX = Math.max(0, Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x));

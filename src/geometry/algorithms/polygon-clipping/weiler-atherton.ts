@@ -22,6 +22,11 @@ import {
 export class WeilerAthertonClipper {
   private config: WeilerAthertonOptions;
 
+  /**
+   *
+   * @param config
+   * @example
+   */
   constructor(config: Partial<WeilerAthertonOptions> = {}) {
     this.config = {
       tolerance: 1e-10,
@@ -43,12 +48,9 @@ export class WeilerAthertonClipper {
    * @param clipping - The clipping polygon.
    * @param operation - The clipping operation to perform.
    * @returns The result of the clipping operation.
+   * @example
    */
-  clip(
-    subject: Polygon,
-    clipping: Polygon,
-    operation: ClipOperation = this.config.operation!
-  ): ClipResult {
+  clip(subject: Polygon, clipping: Polygon, operation: ClipOperation = this.config.operation!): ClipResult {
     const startTime = performance.now();
 
     try {
@@ -118,6 +120,7 @@ export class WeilerAthertonClipper {
    * @param polygon - The polygon to convert.
    * @param isSubject - Whether this is the subject polygon.
    * @returns The Weiler-Atherton polygon.
+   * @example
    */
   private polygonToWA(polygon: Polygon, isSubject: boolean): WAPolygon {
     const vertices: WAVertex[] = polygon.vertices.map((point, _index) => ({
@@ -145,8 +148,12 @@ export class WeilerAthertonClipper {
    * @param subject - The subject polygon.
    * @param clipping - The clipping polygon.
    * @returns Array of intersection points with metadata.
+   * @example
    */
-  private findIntersections(subject: WAPolygon, clipping: WAPolygon): Array<{
+  private findIntersections(
+    subject: WAPolygon,
+    clipping: WAPolygon
+  ): Array<{
     point: Point;
     subjectEdge: { start: WAVertex; end: WAVertex };
     clippingEdge: { start: WAVertex; end: WAVertex };
@@ -160,10 +167,10 @@ export class WeilerAthertonClipper {
     // Check each edge of subject against each edge of clipping
     for (const subjectVertex of subject.vertices) {
       const subjectNext = subjectVertex.next!;
-      
+
       for (const clippingVertex of clipping.vertices) {
         const clippingNext = clippingVertex.next!;
-        
+
         const intersection = this.lineIntersection(
           subjectVertex.point,
           subjectNext.point,
@@ -191,15 +198,11 @@ export class WeilerAthertonClipper {
    * @param p3 - Start of second line segment.
    * @param p4 - End of second line segment.
    * @returns The intersection point, or null if no intersection.
+   * @example
    */
-  private lineIntersection(
-    p1: Point,
-    p2: Point,
-    p3: Point,
-    p4: Point
-  ): Point | null {
+  private lineIntersection(p1: Point, p2: Point, p3: Point, p4: Point): Point | null {
     const denom = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
-    
+
     if (Math.abs(denom) < this.config.tolerance!) {
       return null; // Lines are parallel
     }
@@ -208,8 +211,12 @@ export class WeilerAthertonClipper {
     const u = -((p1.x - p2.x) * (p1.y - p3.y) - (p1.y - p2.y) * (p1.x - p3.x)) / denom;
 
     // Check if intersection is within both line segments
-    if (t >= -this.config.tolerance! && t <= 1 + this.config.tolerance! &&
-        u >= -this.config.tolerance! && u <= 1 + this.config.tolerance!) {
+    if (
+      t >= -this.config.tolerance! &&
+      t <= 1 + this.config.tolerance! &&
+      u >= -this.config.tolerance! &&
+      u <= 1 + this.config.tolerance!
+    ) {
       return {
         x: p1.x + t * (p2.x - p1.x),
         y: p1.y + t * (p2.y - p1.y),
@@ -223,7 +230,10 @@ export class WeilerAthertonClipper {
    * Inserts intersection points into both polygons.
    * @param subject - The subject polygon.
    * @param clipping - The clipping polygon.
+   * @param _subject
+   * @param _clipping
    * @param intersections - Array of intersection points.
+   * @example
    */
   private insertIntersectionPoints(
     _subject: WAPolygon,
@@ -266,11 +276,11 @@ export class WeilerAthertonClipper {
    * Inserts a vertex into an edge of a polygon.
    * @param vertex - The vertex to insert.
    * @param edge - The edge to insert into.
+   * @param edge.start
+   * @param edge.end
+   * @example
    */
-  private insertVertexInEdge(
-    vertex: WAVertex,
-    edge: { start: WAVertex; end: WAVertex }
-  ): void {
+  private insertVertexInEdge(vertex: WAVertex, edge: { start: WAVertex; end: WAVertex }): void {
     // Update the edge to point to the new vertex
     edge.start.next = vertex;
     vertex.previous = edge.start;
@@ -282,6 +292,7 @@ export class WeilerAthertonClipper {
    * Marks vertices as inside or outside the other polygon.
    * @param polygon - The polygon whose vertices to mark.
    * @param otherPolygon - The other polygon to test against.
+   * @example
    */
   private markVerticesInside(polygon: WAPolygon, otherPolygon: WAPolygon): void {
     for (const vertex of polygon.vertices) {
@@ -294,6 +305,7 @@ export class WeilerAthertonClipper {
    * @param point - The point to test.
    * @param polygon - The polygon to test against.
    * @returns True if the point is inside the polygon.
+   * @example
    */
   private isPointInPolygon(point: Point, polygon: WAPolygon): boolean {
     let inside = false;
@@ -301,17 +313,16 @@ export class WeilerAthertonClipper {
 
     do {
       const next = current.next!;
-      
+
       if (
         current.point.y > point.y !== next.point.y > point.y &&
         point.x <
-          ((next.point.x - current.point.x) * (point.y - current.point.y)) /
-            (next.point.y - current.point.y) +
+          ((next.point.x - current.point.x) * (point.y - current.point.y)) / (next.point.y - current.point.y) +
             current.point.x
       ) {
         inside = !inside;
       }
-      
+
       current = next;
     } while (current !== polygon.vertices[0]);
 
@@ -324,12 +335,9 @@ export class WeilerAthertonClipper {
    * @param clipping - The clipping polygon.
    * @param operation - The operation to perform.
    * @returns Array of result polygons.
+   * @example
    */
-  private performClippingOperation(
-    subject: WAPolygon,
-    clipping: WAPolygon,
-    operation: ClipOperation
-  ): WAPolygon[] {
+  private performClippingOperation(subject: WAPolygon, clipping: WAPolygon, operation: ClipOperation): WAPolygon[] {
     const resultPolygons: WAPolygon[] = [];
 
     switch (operation) {
@@ -354,15 +362,15 @@ export class WeilerAthertonClipper {
    * Performs intersection operation.
    * @param subject - The subject polygon.
    * @param clipping - The clipping polygon.
+   * @param _clipping
    * @returns Array of result polygons.
+   * @example
    */
   private performIntersection(subject: WAPolygon, _clipping: WAPolygon): WAPolygon[] {
     const resultPolygons: WAPolygon[] = [];
 
     // Find intersection vertices that are entry points
-    const entryPoints = subject.vertices.filter(
-      vertex => vertex.isIntersection && !vertex.isInside
-    );
+    const entryPoints = subject.vertices.filter(vertex => vertex.isIntersection && !vertex.isInside);
 
     for (const entryPoint of entryPoints) {
       if (!entryPoint.processed) {
@@ -381,14 +389,13 @@ export class WeilerAthertonClipper {
    * @param subject - The subject polygon.
    * @param clipping - The clipping polygon.
    * @returns Array of result polygons.
+   * @example
    */
   private performUnion(subject: WAPolygon, clipping: WAPolygon): WAPolygon[] {
     const resultPolygons: WAPolygon[] = [];
 
     // Find entry points for union (intersection vertices that are outside)
-    const entryPoints = subject.vertices.filter(
-      vertex => vertex.isIntersection && !vertex.isInside
-    );
+    const entryPoints = subject.vertices.filter(vertex => vertex.isIntersection && !vertex.isInside);
 
     for (const entryPoint of entryPoints) {
       if (!entryPoint.processed) {
@@ -400,9 +407,7 @@ export class WeilerAthertonClipper {
     }
 
     // Also trace from clipping polygon entry points
-    const clippingEntryPoints = clipping.vertices.filter(
-      vertex => vertex.isIntersection && !vertex.isInside
-    );
+    const clippingEntryPoints = clipping.vertices.filter(vertex => vertex.isIntersection && !vertex.isInside);
 
     for (const entryPoint of clippingEntryPoints) {
       if (!entryPoint.processed) {
@@ -420,15 +425,15 @@ export class WeilerAthertonClipper {
    * Performs difference operation.
    * @param subject - The subject polygon.
    * @param clipping - The clipping polygon.
+   * @param _clipping
    * @returns Array of result polygons.
+   * @example
    */
   private performDifference(subject: WAPolygon, _clipping: WAPolygon): WAPolygon[] {
     const resultPolygons: WAPolygon[] = [];
 
     // Find entry points for difference (intersection vertices that are outside)
-    const entryPoints = subject.vertices.filter(
-      vertex => vertex.isIntersection && !vertex.isInside
-    );
+    const entryPoints = subject.vertices.filter(vertex => vertex.isIntersection && !vertex.isInside);
 
     for (const entryPoint of entryPoints) {
       if (!entryPoint.processed) {
@@ -447,11 +452,12 @@ export class WeilerAthertonClipper {
    * @param subject - The subject polygon.
    * @param clipping - The clipping polygon.
    * @returns Array of result polygons.
+   * @example
    */
   private performXOR(subject: WAPolygon, clipping: WAPolygon): WAPolygon[] {
     // XOR is equivalent to union minus intersection
     const unionResult = this.performUnion(subject, clipping);
-    
+
     // This is a simplified implementation
     // In practice, you'd need to perform the actual set difference
     return unionResult;
@@ -462,6 +468,7 @@ export class WeilerAthertonClipper {
    * @param entryPoint - The starting point.
    * @param isEntry - Whether this is an entry point.
    * @returns The traced polygon.
+   * @example
    */
   private tracePolygon(entryPoint: WAVertex, isEntry: boolean): WAPolygon {
     const vertices: WAVertex[] = [];
@@ -493,6 +500,7 @@ export class WeilerAthertonClipper {
    * Converts Weiler-Atherton polygons back to standard polygon format.
    * @param waPolygons - Array of Weiler-Atherton polygons.
    * @returns Array of standard polygons.
+   * @example
    */
   private wasToPolygons(waPolygons: WAPolygon[]): Polygon[] {
     return waPolygons.map(waPolygon => ({
@@ -504,6 +512,7 @@ export class WeilerAthertonClipper {
    * Post-processes the result polygons.
    * @param polygons - The result polygons.
    * @returns Processed polygons.
+   * @example
    */
   private postProcessResult(polygons: Polygon[]): Polygon[] {
     let result = polygons;
@@ -532,6 +541,7 @@ export class WeilerAthertonClipper {
    * Removes duplicate vertices from a polygon.
    * @param vertices - The vertices to process.
    * @returns Vertices with duplicates removed.
+   * @example
    */
   private removeDuplicateVertices(vertices: Point[]): Point[] {
     if (vertices.length <= 1) return vertices;
@@ -559,6 +569,7 @@ export class WeilerAthertonClipper {
    * Simplifies a polygon by removing collinear vertices.
    * @param vertices - The vertices to simplify.
    * @returns Simplified vertices.
+   * @example
    */
   private simplifyPolygon(vertices: Point[]): Point[] {
     if (vertices.length < 3) return vertices;
@@ -586,6 +597,7 @@ export class WeilerAthertonClipper {
    * @param p2 - Second point.
    * @param p3 - Third point.
    * @returns True if the points are collinear.
+   * @example
    */
   private areCollinear(p1: Point, p2: Point, p3: Point): boolean {
     const crossProduct = (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x);
@@ -597,12 +609,10 @@ export class WeilerAthertonClipper {
    * @param p1 - First point.
    * @param p2 - Second point.
    * @returns True if the points are equal.
+   * @example
    */
   private pointsEqual(p1: Point, p2: Point): boolean {
-    return (
-      Math.abs(p1.x - p2.x) < this.config.tolerance! &&
-      Math.abs(p1.y - p2.y) < this.config.tolerance!
-    );
+    return Math.abs(p1.x - p2.x) < this.config.tolerance! && Math.abs(p1.y - p2.y) < this.config.tolerance!;
   }
 
   /**
@@ -610,6 +620,7 @@ export class WeilerAthertonClipper {
    * @param polygon - The polygon to validate.
    * @param name - The name of the polygon for error messages.
    * @throws Error if validation fails.
+   * @example
    */
   private validatePolygon(polygon: Polygon, name: string): void {
     if (!polygon || !Array.isArray(polygon.vertices)) {
@@ -637,6 +648,7 @@ export class WeilerAthertonClipper {
    * @param startTime - Start time for execution time calculation.
    * @param error - Error message.
    * @returns Empty clip result.
+   * @example
    */
   private createEmptyResult(startTime: number, error: string): ClipResult {
     const executionTime = performance.now() - startTime;

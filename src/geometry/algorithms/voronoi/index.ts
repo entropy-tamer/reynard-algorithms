@@ -33,6 +33,3 @@ export {
   pointsEqual,
   lineIntersection,
 } from "./voronoi-utils";
-
-
-

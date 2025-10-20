@@ -4,21 +4,17 @@
  */
 
 import { Point, Triangle } from "../delaunay/delaunay-types";
-import {
-  VoronoiCell,
-  VoronoiConfig,
-  LloydRelaxationOptions,
-  LloydRelaxationResult,
-} from "./voronoi-types";
+import { VoronoiCell, VoronoiConfig, LloydRelaxationOptions, LloydRelaxationResult } from "./voronoi-types";
 
 /**
  * Calculates the circumcenter of a triangle.
  * @param triangle - The triangle to calculate the circumcenter for.
  * @returns The circumcenter point.
+ * @example
  */
 export function calculateCircumcenter(triangle: Triangle): Point {
   const { a, b, c } = triangle;
-  
+
   const ax = a.x;
   const ay = a.y;
   const bx = b.x;
@@ -27,7 +23,7 @@ export function calculateCircumcenter(triangle: Triangle): Point {
   const cy = c.y;
 
   const d = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by));
-  
+
   if (Math.abs(d) < 1e-10) {
     // Degenerate triangle - return centroid
     return {
@@ -36,13 +32,9 @@ export function calculateCircumcenter(triangle: Triangle): Point {
     };
   }
 
-  const ux = ((ax * ax + ay * ay) * (by - cy) + 
-              (bx * bx + by * by) * (cy - ay) + 
-              (cx * cx + cy * cy) * (ay - by)) / d;
-  
-  const uy = ((ax * ax + ay * ay) * (cx - bx) + 
-              (bx * bx + by * by) * (ax - cx) + 
-              (cx * cx + cy * cy) * (bx - ax)) / d;
+  const ux = ((ax * ax + ay * ay) * (by - cy) + (bx * bx + by * by) * (cy - ay) + (cx * cx + cy * cy) * (ay - by)) / d;
+
+  const uy = ((ax * ax + ay * ay) * (cx - bx) + (bx * bx + by * by) * (ax - cx) + (cx * cx + cy * cy) * (bx - ax)) / d;
 
   return { x: ux, y: uy };
 }
@@ -51,6 +43,7 @@ export function calculateCircumcenter(triangle: Triangle): Point {
  * Calculates the area of a polygon defined by vertices.
  * @param vertices - Array of vertices forming the polygon.
  * @returns The area of the polygon.
+ * @example
  */
 export function calculatePolygonArea(vertices: Point[]): number {
   if (vertices.length < 3) return 0;
@@ -68,6 +61,7 @@ export function calculatePolygonArea(vertices: Point[]): number {
  * Calculates the centroid of a polygon defined by vertices.
  * @param vertices - Array of vertices forming the polygon.
  * @returns The centroid point.
+ * @example
  */
 export function calculatePolygonCentroid(vertices: Point[]): Point {
   if (vertices.length === 0) return { x: 0, y: 0 };
@@ -113,6 +107,7 @@ export function calculatePolygonCentroid(vertices: Point[]): Point {
  * @param point - The point to test.
  * @param vertices - Array of vertices forming the polygon.
  * @returns True if the point is inside the polygon.
+ * @example
  */
 export function isPointInPolygon(point: Point, vertices: Point[]): boolean {
   if (vertices.length < 3) return false;
@@ -122,9 +117,7 @@ export function isPointInPolygon(point: Point, vertices: Point[]): boolean {
     if (
       vertices[i].y > point.y !== vertices[j].y > point.y &&
       point.x <
-        ((vertices[j].x - vertices[i].x) * (point.y - vertices[i].y)) /
-          (vertices[j].y - vertices[i].y) +
-          vertices[i].x
+        ((vertices[j].x - vertices[i].x) * (point.y - vertices[i].y)) / (vertices[j].y - vertices[i].y) + vertices[i].x
     ) {
       inside = !inside;
     }
@@ -137,11 +130,9 @@ export function isPointInPolygon(point: Point, vertices: Point[]): boolean {
  * @param point - The query point.
  * @param sites - Array of sites.
  * @returns The nearest site and its distance.
+ * @example
  */
-export function findNearestSite(
-  point: Point,
-  sites: Point[]
-): { site: Point; distance: number; index: number } {
+export function findNearestSite(point: Point, sites: Point[]): { site: Point; distance: number; index: number } {
   if (sites.length === 0) {
     throw new Error("No sites provided");
   }
@@ -167,6 +158,7 @@ export function findNearestSite(
  * @param p1 - First point.
  * @param p2 - Second point.
  * @returns The Euclidean distance.
+ * @example
  */
 export function distance(p1: Point, p2: Point): number {
   const dx = p2.x - p1.x;
@@ -179,6 +171,7 @@ export function distance(p1: Point, p2: Point): number {
  * @param p1 - First point.
  * @param p2 - Second point.
  * @returns The squared Euclidean distance.
+ * @example
  */
 export function distanceSquared(p1: Point, p2: Point): number {
   const dx = p2.x - p1.x;
@@ -190,12 +183,12 @@ export function distanceSquared(p1: Point, p2: Point): number {
  * Clips a Voronoi cell to a bounding box.
  * @param cell - The Voronoi cell to clip.
  * @param boundingBox - The bounding box to clip to.
+ * @param boundingBox.min
+ * @param boundingBox.max
  * @returns The clipped cell vertices.
+ * @example
  */
-export function clipCellToBounds(
-  cell: VoronoiCell,
-  boundingBox: { min: Point; max: Point }
-): Point[] {
+export function clipCellToBounds(cell: VoronoiCell, boundingBox: { min: Point; max: Point }): Point[] {
   if (cell.bounded) {
     return cell.vertices;
   }
@@ -204,7 +197,7 @@ export function clipCellToBounds(
   // This is a simplified implementation - in practice, you'd use
   // a proper polygon clipping algorithm like Sutherland-Hodgman
   const clippedVertices: Point[] = [];
-  
+
   for (const vertex of cell.vertices) {
     if (
       vertex.x >= boundingBox.min.x &&
@@ -224,7 +217,9 @@ export function clipCellToBounds(
  * @param sites - Initial sites.
  * @param options - Relaxation options.
  * @param config - Voronoi configuration.
+ * @param _config
  * @returns The result of Lloyd's relaxation.
+ * @example
  */
 export function performLloydRelaxation(
   sites: Point[],
@@ -239,11 +234,11 @@ export function performLloydRelaxation(
 
   for (let iter = 0; iter < options.maxIterations; iter++) {
     iterations = iter + 1;
-    
+
     // Generate Voronoi diagram for current sites
     // This would typically call the main Voronoi generation function
     // For now, we'll simulate the process
-    
+
     const newSites: Point[] = [];
     let maxMovement = 0;
 
@@ -259,24 +254,18 @@ export function performLloydRelaxation(
 
       // Clip to bounds if specified
       if (options.clipToBounds && options.boundingBox) {
-        newSite.x = Math.max(
-          options.boundingBox.min.x,
-          Math.min(options.boundingBox.max.x, newSite.x)
-        );
-        newSite.y = Math.max(
-          options.boundingBox.min.y,
-          Math.min(options.boundingBox.max.y, newSite.y)
-        );
+        newSite.x = Math.max(options.boundingBox.min.x, Math.min(options.boundingBox.max.x, newSite.x));
+        newSite.y = Math.max(options.boundingBox.min.y, Math.min(options.boundingBox.max.y, newSite.y));
       }
 
       newSites.push(newSite);
-      
+
       const movement = distance(site, newSite);
       maxMovement = Math.max(maxMovement, movement);
     }
 
     convergence = maxMovement;
-    
+
     if (convergence < options.tolerance) {
       converged = true;
       break;
@@ -301,11 +290,9 @@ export function performLloydRelaxation(
  * @param points - Array of points to validate.
  * @param tolerance - Tolerance for collinearity check.
  * @returns True if points are valid for triangulation.
+ * @example
  */
-export function validatePointsForTriangulation(
-  points: Point[],
-  tolerance: number = 1e-10
-): boolean {
+export function validatePointsForTriangulation(points: Point[], tolerance: number = 1e-10): boolean {
   if (points.length < 3) return true;
 
   // Check for duplicate points
@@ -332,11 +319,9 @@ export function validatePointsForTriangulation(
  * @param points - Array of points.
  * @param padding - Padding to add around the points.
  * @returns Bounding box with min and max points.
+ * @example
  */
-export function createBoundingBox(
-  points: Point[],
-  padding: number = 0
-): { min: Point; max: Point } {
+export function createBoundingBox(points: Point[], padding: number = 0): { min: Point; max: Point } {
   if (points.length === 0) {
     return {
       min: { x: 0, y: 0 },
@@ -366,6 +351,7 @@ export function createBoundingBox(
  * Sorts points by x-coordinate, then by y-coordinate.
  * @param points - Array of points to sort.
  * @returns Sorted array of points.
+ * @example
  */
 export function sortPoints(points: Point[]): Point[] {
   return [...points].sort((a, b) => {
@@ -382,12 +368,10 @@ export function sortPoints(points: Point[]): Point[] {
  * @param p2 - Second point.
  * @param tolerance - Tolerance for comparison.
  * @returns True if points are approximately equal.
+ * @example
  */
 export function pointsEqual(p1: Point, p2: Point, tolerance: number = 1e-10): boolean {
-  return (
-    Math.abs(p1.x - p2.x) < tolerance &&
-    Math.abs(p1.y - p2.y) < tolerance
-  );
+  return Math.abs(p1.x - p2.x) < tolerance && Math.abs(p1.y - p2.y) < tolerance;
 }
 
 /**
@@ -397,21 +381,17 @@ export function pointsEqual(p1: Point, p2: Point, tolerance: number = 1e-10): bo
  * @param p3 - First point of second line.
  * @param p4 - Second point of second line.
  * @returns The intersection point, or null if lines don't intersect.
+ * @example
  */
-export function lineIntersection(
-  p1: Point,
-  p2: Point,
-  p3: Point,
-  p4: Point
-): Point | null {
+export function lineIntersection(p1: Point, p2: Point, p3: Point, p4: Point): Point | null {
   const denom = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
-  
+
   if (Math.abs(denom) < 1e-10) {
     return null; // Lines are parallel
   }
 
   const t = ((p1.x - p3.x) * (p3.y - p4.y) - (p1.y - p3.y) * (p3.x - p4.x)) / denom;
-  
+
   return {
     x: p1.x + t * (p2.x - p1.x),
     y: p1.y + t * (p2.y - p1.y),

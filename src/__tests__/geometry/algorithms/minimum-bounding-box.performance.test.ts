@@ -26,6 +26,7 @@ describe("MinimumBoundingBox Performance", () => {
    * @param minY - Minimum Y coordinate.
    * @param maxY - Maximum Y coordinate.
    * @returns Array of random points.
+   * @example
    */
   function generateRandomPoints(
     count: number,
@@ -51,6 +52,7 @@ describe("MinimumBoundingBox Performance", () => {
    * @param centerX - Center X coordinate.
    * @param centerY - Center Y coordinate.
    * @returns Array of points forming a regular polygon.
+   * @example
    */
   function generateRegularPolygon(
     sides: number,
@@ -77,6 +79,7 @@ describe("MinimumBoundingBox Performance", () => {
    * @param centerY - Center Y coordinate.
    * @param rotation - Rotation angle in radians.
    * @returns Array of points forming a rectangle.
+   * @example
    */
   function generateRectangle(
     width: number,
@@ -106,7 +109,7 @@ describe("MinimumBoundingBox Performance", () => {
   describe("Basic Performance", () => {
     it("should compute minimum bounding box for 100 points quickly", () => {
       const points = generateRandomPoints(100);
-      
+
       const startTime = performance.now();
       const result = mbb.compute(points);
       const endTime = performance.now();
@@ -118,7 +121,7 @@ describe("MinimumBoundingBox Performance", () => {
 
     it("should compute minimum bounding box for 1000 points in reasonable time", () => {
       const points = generateRandomPoints(1000);
-      
+
       const startTime = performance.now();
       const result = mbb.compute(points);
       const endTime = performance.now();
@@ -129,7 +132,7 @@ describe("MinimumBoundingBox Performance", () => {
 
     it("should compute minimum bounding box for 10000 points", () => {
       const points = generateRandomPoints(10000);
-      
+
       const startTime = performance.now();
       const result = mbb.compute(points);
       const endTime = performance.now();
@@ -144,18 +147,18 @@ describe("MinimumBoundingBox Performance", () => {
 
       for (const size of sizes) {
         const points = generateRandomPoints(size);
-        
+
         const startTime = performance.now();
         mbb.compute(points);
         const endTime = performance.now();
-        
+
         times.push(endTime - startTime);
       }
 
       // Times should scale roughly linearly
       const ratio1 = times[1] / times[0];
       const ratio2 = times[2] / times[0];
-      
+
       expect(ratio1).toBeLessThan(6); // 5x points should take less than 6x time
       expect(ratio2).toBeLessThan(12); // 10x points should take less than 12x time
     });
@@ -171,7 +174,7 @@ describe("MinimumBoundingBox Performance", () => {
         const startTime = performance.now();
         mbb.compute(points, { method });
         const endTime = performance.now();
-        
+
         times.push(endTime - startTime);
       }
 
@@ -186,7 +189,7 @@ describe("MinimumBoundingBox Performance", () => {
 
     it("should handle convex hull preprocessing efficiently", () => {
       const points = generateRandomPoints(1000);
-      
+
       const startTimeWithHull = performance.now();
       mbb.compute(points, { useConvexHull: true });
       const endTimeWithHull = performance.now();
@@ -211,11 +214,11 @@ describe("MinimumBoundingBox Performance", () => {
 
       for (const sides of polygonSides) {
         const points = generateRegularPolygon(sides);
-        
+
         const startTime = performance.now();
         mbb.compute(points);
         const endTime = performance.now();
-        
+
         times.push(endTime - startTime);
       }
 
@@ -236,7 +239,7 @@ describe("MinimumBoundingBox Performance", () => {
 
       for (const rect of rectangles) {
         const points = generateRectangle(rect.width, rect.height);
-        
+
         const startTime = performance.now();
         const result = mbb.compute(points);
         const endTime = performance.now();
@@ -248,10 +251,10 @@ describe("MinimumBoundingBox Performance", () => {
 
     it("should handle rotated shapes efficiently", () => {
       const rotations = [0, Math.PI / 4, Math.PI / 2, Math.PI, Math.PI * 1.5];
-      
+
       for (const rotation of rotations) {
         const points = generateRectangle(4, 2, 0, 0, rotation);
-        
+
         const startTime = performance.now();
         const result = mbb.compute(points);
         const endTime = performance.now();
@@ -424,7 +427,7 @@ describe("MinimumBoundingBox Performance", () => {
 
     it("should handle large datasets efficiently", () => {
       const largePoints = generateRandomPoints(10000);
-      
+
       const startTime = performance.now();
       const result = mbb.compute(largePoints);
       const endTime = performance.now();
@@ -437,9 +440,9 @@ describe("MinimumBoundingBox Performance", () => {
   describe("Stress Tests", () => {
     it("should handle rapid successive operations", () => {
       const points = generateRandomPoints(100);
-      
+
       const startTime = performance.now();
-      
+
       // Rapidly alternate between different operations
       for (let i = 0; i < 100; i++) {
         mbb.compute(points);
@@ -452,7 +455,7 @@ describe("MinimumBoundingBox Performance", () => {
           rotation: 0,
         });
       }
-      
+
       const endTime = performance.now();
 
       expect(endTime - startTime).toBeLessThan(500); // Should handle rapid operations
@@ -462,7 +465,7 @@ describe("MinimumBoundingBox Performance", () => {
       const points = generateRegularPolygon(8, 5);
 
       // Perform many computations
-      let results: any[] = [];
+      const results: any[] = [];
       for (let i = 0; i < 100; i++) {
         results.push(mbb.compute(points));
       }
@@ -511,7 +514,7 @@ describe("MinimumBoundingBox Performance", () => {
   describe("Algorithm-Specific Performance", () => {
     it("should handle rotating calipers efficiently", () => {
       const points = generateRandomPoints(500);
-      
+
       const startTime = performance.now();
       mbb.compute(points, { method: "rotating-calipers" });
       const endTime = performance.now();
@@ -521,7 +524,7 @@ describe("MinimumBoundingBox Performance", () => {
 
     it("should handle brute force method efficiently", () => {
       const points = generateRandomPoints(200);
-      
+
       const startTime = performance.now();
       mbb.compute(points, { method: "brute-force" });
       const endTime = performance.now();
@@ -531,7 +534,7 @@ describe("MinimumBoundingBox Performance", () => {
 
     it("should handle convex hull method efficiently", () => {
       const points = generateRandomPoints(500);
-      
+
       const startTime = performance.now();
       mbb.compute(points, { method: "convex-hull" });
       const endTime = performance.now();

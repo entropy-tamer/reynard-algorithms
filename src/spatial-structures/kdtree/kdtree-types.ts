@@ -270,21 +270,21 @@ export interface KdTreeOptions {
  */
 export enum KdTreeEventType {
   /** Point inserted */
-  POINT_INSERTED = 'point_inserted',
+  POINT_INSERTED = "point_inserted",
   /** Point removed */
-  POINT_REMOVED = 'point_removed',
+  POINT_REMOVED = "point_removed",
   /** Tree rebuilt */
-  TREE_REBUILT = 'tree_rebuilt',
+  TREE_REBUILT = "tree_rebuilt",
   /** Query performed */
-  QUERY_PERFORMED = 'query_performed',
+  QUERY_PERFORMED = "query_performed",
   /** Search performed */
-  SEARCH_PERFORMED = 'search_performed',
+  SEARCH_PERFORMED = "search_performed",
   /** Nearest neighbor query performed */
-  NEAREST_NEIGHBOR_QUERY = 'nearest_neighbor_query',
+  NEAREST_NEIGHBOR_QUERY = "nearest_neighbor_query",
   /** Range query performed */
-  RANGE_QUERY = 'range_query',
+  RANGE_QUERY = "range_query",
   /** Performance threshold exceeded */
-  PERFORMANCE_THRESHOLD_EXCEEDED = 'performance_threshold_exceeded',
+  PERFORMANCE_THRESHOLD_EXCEEDED = "performance_threshold_exceeded",
 }
 
 /**

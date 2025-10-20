@@ -33,7 +33,7 @@ For implementation details and usage examples, see the source code in the `src/`
 
 ```typescript
 // Import the algorithm
-import { Octree } from '@entropy-tamer/reynard-algorithms';
+import { Octree } from "@entropy-tamer/reynard-algorithms";
 ```
 
 ## Performance

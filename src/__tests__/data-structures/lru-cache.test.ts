@@ -1,8 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import {
-  LRUCache,
-  LRUCacheEvent,
-} from "../../data-structures/lru-cache";
+import { LRUCache, LRUCacheEvent } from "../../data-structures/lru-cache";
 
 describe("LRUCache", () => {
   let cache: LRUCache<string, number>;

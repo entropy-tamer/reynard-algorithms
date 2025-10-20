@@ -1,8 +1,5 @@
 import { describe, expect, it, beforeEach } from "vitest";
-import {
-  AlgorithmSelector,
-  WorkloadCharacteristics,
-} from "../../optimization/core/algorithm-selector";
+import { AlgorithmSelector, WorkloadCharacteristics } from "../../optimization/core/algorithm-selector";
 
 describe("AlgorithmSelector", () => {
   let selector: AlgorithmSelector;

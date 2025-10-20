@@ -22,6 +22,8 @@ export interface WorkloadAnalysisResult {
 
 /**
  * Analyze workload characteristics for algorithm selection
+ * @param aabbs
+ * @example
  */
 export function analyzeWorkload(aabbs: AABB[]): WorkloadCharacteristics {
   const objectCount = aabbs.length;
@@ -41,6 +43,8 @@ export function analyzeWorkload(aabbs: AABB[]): WorkloadCharacteristics {
 
 /**
  * Calculate spatial density of objects
+ * @param aabbs
+ * @example
  */
 export function calculateSpatialDensity(aabbs: AABB[]): number {
   if (aabbs.length === 0) return 0;
@@ -66,6 +70,8 @@ export function calculateSpatialDensity(aabbs: AABB[]): number {
 
 /**
  * Calculate overlap ratio between objects
+ * @param aabbs
+ * @example
  */
 export function calculateOverlapRatio(aabbs: AABB[]): number {
   if (aabbs.length < 2) return 0;
@@ -91,6 +97,8 @@ export function calculateOverlapRatio(aabbs: AABB[]): number {
 
 /**
  * Analyze query pattern based on spatial distribution
+ * @param aabbs
+ * @example
  */
 export function analyzeQueryPattern(aabbs: AABB[]): "random" | "clustered" | "sequential" {
   if (aabbs.length < 3) return "random";
@@ -105,6 +113,8 @@ export function analyzeQueryPattern(aabbs: AABB[]): "random" | "clustered" | "se
 
 /**
  * Get algorithm recommendation based on workload analysis
+ * @param characteristics
+ * @example
  */
 export function getAlgorithmRecommendation(
   characteristics: WorkloadCharacteristics

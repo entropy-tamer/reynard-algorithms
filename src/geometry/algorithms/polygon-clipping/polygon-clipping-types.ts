@@ -401,6 +401,3 @@ export interface PolygonSerialization {
    */
   stats?: ClippingStats;
 }
-
-
-

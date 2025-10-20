@@ -40,6 +40,8 @@ let globalCollisionAdapter: OptimizedCollisionAdapter | null = null;
 
 /**
  * Configure the global optimization settings
+ * @param config
+ * @example
  */
 export function configureOptimization(config: Partial<OptimizedCollisionConfig>): void {
   globalOptimizationConfig = { ...globalOptimizationConfig, ...config };
@@ -53,6 +55,7 @@ export function configureOptimization(config: Partial<OptimizedCollisionConfig>)
 
 /**
  * Get the global collision adapter instance
+ * @example
  */
 function getGlobalCollisionAdapter(): OptimizedCollisionAdapter {
   if (!globalCollisionAdapter) {
@@ -117,6 +120,7 @@ export function detectCollisions(aabbs: AABB[]): CollisionPair[] {
  * @param queryAABB The AABB to query against
  * @param spatialObjects Array of spatial objects
  * @returns Array of nearby objects
+ * @example
  */
 export function performSpatialQuery<T extends SpatialDataType>(
   queryAABB: AABB,
@@ -145,12 +149,17 @@ export function performSpatialQuery<T extends SpatialDataType>(
 export class PerformanceMonitor {
   private adapter: OptimizedCollisionAdapter;
 
+  /**
+   *
+   * @example
+   */
   constructor() {
     this.adapter = getGlobalCollisionAdapter();
   }
 
   /**
    * Get current performance statistics
+   * @example
    */
   getPerformanceStats() {
     return this.adapter.getPerformanceStats();
@@ -158,6 +167,7 @@ export class PerformanceMonitor {
 
   /**
    * Get memory pool statistics
+   * @example
    */
   getMemoryPoolStats() {
     return this.adapter.getMemoryPoolStats();
@@ -165,6 +175,7 @@ export class PerformanceMonitor {
 
   /**
    * Get optimization recommendations
+   * @example
    */
   getOptimizationRecommendations() {
     return this.adapter.getOptimizationRecommendations();
@@ -172,6 +183,7 @@ export class PerformanceMonitor {
 
   /**
    * Check if performance is degraded
+   * @example
    */
   isPerformanceDegraded(): boolean {
     return this.adapter.isPerformanceDegraded();
@@ -179,6 +191,7 @@ export class PerformanceMonitor {
 
   /**
    * Get comprehensive performance report
+   * @example
    */
   getPerformanceReport() {
     return this.adapter.getPerformanceReport();
@@ -186,6 +199,7 @@ export class PerformanceMonitor {
 
   /**
    * Reset performance statistics
+   * @example
    */
   resetStatistics(): void {
     this.adapter.resetStatistics();
@@ -198,12 +212,19 @@ export class PerformanceMonitor {
 export class OptimizationConfig {
   private config: OptimizedCollisionConfig;
 
+  /**
+   *
+   * @param config
+   * @example
+   */
   constructor(config: Partial<OptimizedCollisionConfig> = {}) {
     this.config = { ...globalOptimizationConfig, ...config };
   }
 
   /**
    * Update configuration
+   * @param config
+   * @example
    */
   update(config: Partial<OptimizedCollisionConfig>): void {
     this.config = { ...this.config, ...config };
@@ -212,6 +233,7 @@ export class OptimizationConfig {
 
   /**
    * Get current configuration
+   * @example
    */
   getConfig(): OptimizedCollisionConfig {
     return { ...this.config };
@@ -219,6 +241,7 @@ export class OptimizationConfig {
 
   /**
    * Enable memory pooling
+   * @example
    */
   enableMemoryPooling(): void {
     this.update({ enableMemoryPooling: true });
@@ -226,6 +249,7 @@ export class OptimizationConfig {
 
   /**
    * Disable memory pooling
+   * @example
    */
   disableMemoryPooling(): void {
     this.update({ enableMemoryPooling: false });
@@ -233,6 +257,7 @@ export class OptimizationConfig {
 
   /**
    * Enable algorithm selection
+   * @example
    */
   enableAlgorithmSelection(): void {
     this.update({ enableAlgorithmSelection: true });
@@ -240,6 +265,7 @@ export class OptimizationConfig {
 
   /**
    * Disable algorithm selection
+   * @example
    */
   disableAlgorithmSelection(): void {
     this.update({ enableAlgorithmSelection: false });
@@ -247,6 +273,8 @@ export class OptimizationConfig {
 
   /**
    * Set algorithm selection strategy
+   * @param strategy
+   * @example
    */
   setAlgorithmStrategy(strategy: "naive" | "spatial" | "optimized" | "adaptive"): void {
     this.update({ algorithmSelectionStrategy: strategy });
@@ -254,6 +282,11 @@ export class OptimizationConfig {
 
   /**
    * Set performance thresholds
+   * @param thresholds
+   * @param thresholds.maxExecutionTime
+   * @param thresholds.maxMemoryUsage
+   * @param thresholds.minHitRate
+   * @example
    */
   setPerformanceThresholds(thresholds: {
     maxExecutionTime?: number;
@@ -275,6 +308,7 @@ export class OptimizationConfig {
 
 /**
  * Cleanup function to destroy global instances
+ * @example
  */
 export function cleanup(): void {
   if (globalCollisionAdapter) {

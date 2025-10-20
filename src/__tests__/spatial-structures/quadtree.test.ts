@@ -1,9 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import {
-  Quadtree,
-  Rectangle,
-  QuadtreeEvent,
-} from "../../spatial-structures/quadtree";
+import { Quadtree, Rectangle, QuadtreeEvent } from "../../spatial-structures/quadtree";
 describe("Quadtree", () => {
   let quadtree: Quadtree<string>;
   const bounds: Rectangle = { x: 0, y: 0, width: 1000, height: 1000 };

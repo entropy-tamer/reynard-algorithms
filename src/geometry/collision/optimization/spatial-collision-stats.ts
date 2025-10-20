@@ -26,6 +26,8 @@ export interface SpatialCollisionStats {
 
 /**
  * Create default configuration
+ * @param overrides
+ * @example
  */
 export function createDefaultConfig(overrides: Partial<SpatialCollisionConfig> = {}): SpatialCollisionConfig {
   return {
@@ -40,6 +42,7 @@ export function createDefaultConfig(overrides: Partial<SpatialCollisionConfig> =
 
 /**
  * Create initial statistics
+ * @example
  */
 export function createInitialStats(): SpatialCollisionStats {
   return {
@@ -54,6 +57,9 @@ export function createInitialStats(): SpatialCollisionStats {
 
 /**
  * Update average query time
+ * @param stats
+ * @param duration
+ * @example
  */
 export function updateAverageQueryTime(stats: SpatialCollisionStats, duration: number): void {
   stats.averageQueryTime = (stats.averageQueryTime * (stats.totalQueries - 1) + duration) / stats.totalQueries;
