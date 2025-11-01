@@ -9,6 +9,7 @@
  */
 
 import type { Point, AStarHeuristic } from "./astar-types";
+import { adaptiveMemo } from "../../utils";
 
 /**
  * Manhattan Distance Heuristic
@@ -40,11 +41,14 @@ export const manhattanDistance: AStarHeuristic = (from: Point, to: Point): numbe
  * @param to Goal point
  * @returns Euclidean distance between points
  */
-export const euclideanDistance: AStarHeuristic = (from: Point, to: Point): number => {
-  const dx = from.x - to.x;
-  const dy = from.y - to.y;
-  return Math.sqrt(dx * dx + dy * dy);
-};
+export const euclideanDistance: AStarHeuristic = (() => {
+  const memo = adaptiveMemo((from: Point, to: Point) => {
+    const dx = from.x - to.x;
+    const dy = from.y - to.y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }, { name: 'euclideanDistance', maxSize: 4096, minHitRate: 0.6, windowSize: 500, minSamples: 200 }, (from: Point, to: Point) => `${from.x}|${from.y}|${to.x}|${to.y}`);
+  return (from: Point, to: Point) => memo(from, to);
+})();
 
 /**
  * Chebyshev Distance Heuristic

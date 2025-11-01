@@ -509,6 +509,7 @@ export class Trie {
     }
 
     return {
+      success: failed === 0,
       successful,
       failed,
       errors,

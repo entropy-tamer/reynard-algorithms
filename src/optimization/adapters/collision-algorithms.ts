@@ -11,6 +11,8 @@ import type { AABB, CollisionPair, CollisionResult } from "../../geometry/collis
 import type { CollisionObjectData } from "../../types/spatial-types";
 // import { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-structures/spatial-hash-core";
 import { MemoryPool } from "../core/memory-pool";
+import { validateAABBsForCollision, assertValidAABB } from "../../geometry/collision/aabb/aabb-validation";
+import { getAlgorithmConfig } from "../../config/algorithm-config";
 
 /**
  * Basic collision detection between two AABBs
@@ -19,6 +21,12 @@ import { MemoryPool } from "../core/memory-pool";
  * @example
  */
 export function checkCollision(a: AABB, b: AABB): boolean {
+  // Validate AABBs before collision detection
+  const validation = validateAABBsForCollision(a, b);
+  if (!validation.isValid) {
+    throw new Error(`Invalid AABBs for collision detection: ${validation.errors.join(', ')}`);
+  }
+
   return !(a.x + a.width <= b.x || b.x + b.width <= a.x || a.y + a.height <= b.y || b.y + b.height <= a.y);
 }
 
@@ -29,6 +37,12 @@ export function checkCollision(a: AABB, b: AABB): boolean {
  * @example
  */
 export function createCollisionResult(a: AABB, b: AABB): CollisionResult {
+  // Validate AABBs before creating collision result
+  const validation = validateAABBsForCollision(a, b);
+  if (!validation.isValid) {
+    throw new Error(`Invalid AABBs for collision result: ${validation.errors.join(', ')}`);
+  }
+
   const colliding = checkCollision(a, b);
 
   if (!colliding) {
@@ -69,6 +83,28 @@ export function createCollisionResult(a: AABB, b: AABB): CollisionResult {
  * @example
  */
 export function executeNaiveCollisionDetection(aabbs: AABB[]): CollisionPair[] {
+  // Validate input array
+  if (!Array.isArray(aabbs)) {
+    throw new Error('AABBs must be provided as an array');
+  }
+
+  if (aabbs.length === 0) {
+    return [];
+  }
+
+  if (aabbs.length === 1) {
+    return [];
+  }
+
+  // Validate each AABB in the array
+  for (let i = 0; i < aabbs.length; i++) {
+    try {
+      assertValidAABB(aabbs[i]);
+    } catch (error) {
+      throw new Error(`Invalid AABB at index ${i}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
   const collisions: CollisionPair[] = [];
 
   for (let i = 0; i < aabbs.length; i++) {
@@ -93,8 +129,34 @@ export function executeNaiveCollisionDetection(aabbs: AABB[]): CollisionPair[] {
  * @example
  */
 export function executeSpatialCollisionDetection(aabbs: AABB[], memoryPool: MemoryPool): CollisionPair[] {
+  // Validate input array
+  if (!Array.isArray(aabbs)) {
+    throw new Error('AABBs must be provided as an array');
+  }
+
+  if (aabbs.length === 0) {
+    return [];
+  }
+
+  if (aabbs.length === 1) {
+    return [];
+  }
+
+  // Validate each AABB in the array
+  for (let i = 0; i < aabbs.length; i++) {
+    try {
+      assertValidAABB(aabbs[i]);
+    } catch (error) {
+      throw new Error(`Invalid AABB at index ${i}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  // Get configurable threshold from algorithm config
+  const config = getAlgorithmConfig();
+  const spatialThreshold = config.thresholds.naiveToSpatial;
+  
   // For medium datasets, use naive approach as it's faster
-  if (aabbs.length < 300) {
+  if (aabbs.length < spatialThreshold) {
     return executeNaiveCollisionDetection(aabbs);
   }
 

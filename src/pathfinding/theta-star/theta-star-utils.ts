@@ -6,9 +6,6 @@
 import type {
   Point,
   Vector,
-  Direction,
-  MovementType,
-  CellType,
   GridCell,
   ThetaStarConfig,
   ThetaStarOptions,
@@ -16,6 +13,7 @@ import type {
   GridValidationOptions,
   PathOptimizationOptions,
 } from "./theta-star-types";
+import { Direction, MovementType, CellType } from "./theta-star-types";
 
 /**
  * Utility functions for Theta* pathfinding.

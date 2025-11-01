@@ -148,6 +148,7 @@ export interface ConvexHullOptions {
  * Options for validation.
  */
 export interface MinimumBoundingBoxValidationOptions {
+  [key: string]: unknown;
   /** Whether to check point validity */
   checkPoints: boolean;
   /** Whether to check rectangle validity */
@@ -169,17 +170,17 @@ export interface MinimumBoundingBoxValidationResult {
   /** Whether the result is valid */
   isValid: boolean;
   /** List of validation errors */
-  errors: string[];
+  errors: unknown[];
   /** List of validation warnings */
-  warnings: string[];
+  warnings: unknown[];
   /** Whether points are valid */
-  hasValidPoints: boolean;
+  hasValidPoints?: boolean;
   /** Whether rectangle is valid */
-  hasValidRectangle: boolean;
+  hasValidRectangle?: boolean;
   /** Whether area is valid */
-  hasValidArea: boolean;
+  hasValidArea?: boolean;
   /** Whether perimeter is valid */
-  hasValidPerimeter: boolean;
+  hasValidPerimeter?: boolean;
 }
 
 /**

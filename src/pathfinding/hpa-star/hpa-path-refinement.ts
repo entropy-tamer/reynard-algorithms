@@ -5,7 +5,6 @@
 
 import type {
   Point,
-  CellType,
   GridCell,
   Cluster,
   Entrance,
@@ -15,6 +14,7 @@ import type {
   PathRefinementOptions,
   PathRefinementResult,
 } from "./hpa-star-types";
+import { CellType } from "./hpa-star-types";
 
 /**
  * Path refinement utilities for HPA*.

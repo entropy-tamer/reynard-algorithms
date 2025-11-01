@@ -1,3 +1,7 @@
+/* eslint-disable max-lines, @typescript-eslint/no-explicit-any */
+/**
+ * @file Wave Function Collapse type definitions
+ */
 /**
  * @module algorithms/geometry/algorithms/wave-function-collapse/types
  * @description Defines the types and interfaces for the Wave Function Collapse algorithm.
@@ -41,6 +45,22 @@ export interface Tile {
    * Symmetry information for the tile.
    */
   symmetry?: TileSymmetry;
+  /**
+   * Optional 2D sprite atlas metadata for rendering and socket-based constraints.
+   */
+  atlasKey?: string;
+  uvRect?: { x: number; y: number; w: number; h: number };
+  sockets2D?: { north?: string; south?: string; east?: string; west?: string };
+  /**
+   * Optional 3D tile data for socket-based constraints and 3D rendering.
+   */
+  sockets3D?: {
+    px?: Socket3D; nx?: Socket3D; py?: Socket3D; ny?: Socket3D; pz?: Socket3D; nz?: Socket3D;
+  };
+  rotations3D?: Array<{ yaw: number; pitch: number; roll: number }>;
+  gltfUrl?: string;
+  meshKey?: string;
+  transform?: number[]; // 4x4 matrix as 16-length array (row-major)
 }
 
 /**
@@ -57,6 +77,16 @@ export interface TileSymmetry {
    */
   rotations?: number;
 }
+
+/** Socket definition for 3D faces */
+export interface Socket3D {
+  id: string | number;
+  symmetry: "flip" | "noflip" | "symmetric" | "rotInv";
+  rotationIndex?: 0 | 1 | 2 | 3;
+}
+
+/** Rendering/generation modes (hints for frontends) */
+export type GenerationMode = "2d-color" | "2d-sprite" | "3d-voxel" | "3d-mesh" | "3d-gltf";
 
 /**
  * Represents a constraint between two tiles.
@@ -293,6 +323,18 @@ export interface Pattern {
    */
   data: string[][];
   /**
+   * The width of the pattern.
+   */
+  width: number;
+  /**
+   * The height of the pattern.
+   */
+  height: number;
+  /**
+   * The depth of the pattern (for 3D).
+   */
+  depth?: number;
+  /**
    * The weight of this pattern.
    * @default 1.0
    */
@@ -327,6 +369,11 @@ export interface WaveFunctionCollapseAnalysisOptions {
    * @default false
    */
   computePatternAnalysis?: boolean;
+  /**
+   * Additional analysis options.
+   */
+  analyzePatterns?: boolean;
+  patternSize?: number;
 }
 
 /**
@@ -372,6 +419,14 @@ export interface WaveFunctionCollapseAnalysis {
    * The time taken for the analysis in milliseconds.
    */
   executionTime: number;
+  /**
+   * Additional analysis properties.
+   */
+  uniqueTiles?: string[];
+  tileFrequencies?: Record<string, number>;
+  entropy?: number;
+  patternCount?: number;
+  width?: number;
 }
 
 /**

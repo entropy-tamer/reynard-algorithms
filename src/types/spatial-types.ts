@@ -1,7 +1,6 @@
 /**
- * Spatial Data Types
- *
- * Comprehensive type definitions for spatial algorithms and data structures
+ * @file Spatial Data Types
+ * Comprehensive type definitions for spatial algorithms and data structures.
  */
 
 export interface SpatialData {

@@ -7,6 +7,8 @@
  * @module algorithms/point-algorithms
  */
 
+import { memoizeGeometry } from "../../utils/memoization";
+
 export interface Point {
   x: number;
   y: number;
@@ -16,6 +18,11 @@ export interface Point {
  * Point operations
  */
 export class PointOps {
+  // Memoized mathematical operations for performance
+  private static readonly memoizedDistance = memoizeGeometry((x1: number, y1: number, x2: number, y2: number) => 
+    Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+  );
+
   static create(x: number, y: number): Point {
     return { x, y };
   }
@@ -40,9 +47,7 @@ export class PointOps {
   }
 
   static distance(a: Point, b: Point): number {
-    const dx = b.x - a.x;
-    const dy = b.y - a.y;
-    return Math.sqrt(dx * dx + dy * dy);
+    return PointOps.memoizedDistance(a.x, a.y, b.x, b.y);
   }
 
   static distanceSquared(a: Point, b: Point): number {

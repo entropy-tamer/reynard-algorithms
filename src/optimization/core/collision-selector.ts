@@ -7,28 +7,41 @@
  */
 
 import type { WorkloadAnalysis, AlgorithmSelection } from "./algorithm-selector-types";
+import { getAlgorithmConfig } from "../../config/algorithm-config";
+import { memoizeMath, MathMemo } from "../../utils/memoization";
 
 /**
  * Selects optimal collision detection algorithms
  */
 export class CollisionSelector {
-  private thresholds = {
-    naiveVsSpatial: 100, // Based on PAW findings - naive good for <100 objects
-    spatialVsOptimized: 500, // Based on PAW findings - spatial good for 100-500 objects
-  };
+  // Memoized mathematical operations for performance
+  private static readonly memoizedSquare = MathMemo.square;
+  private static readonly memoizedLog = memoizeMath((x: number) => Math.log(x + 1));
+  private static readonly memoizedSqrt = MathMemo.sqrt;
+  private static readonly memoizedMultiply = MathMemo.multiply;
+  private static readonly memoizedAdd = MathMemo.add;
+
+  private getThresholds() {
+    const config = getAlgorithmConfig();
+    return {
+      naiveVsSpatial: config.thresholds.naiveToSpatial,
+      spatialVsOptimized: config.thresholds.spatialToOptimized,
+    };
+  }
 
   /**
    * Select optimal collision detection algorithm
    */
   selectOptimalCollisionAlgorithm(analysis: WorkloadAnalysis, t?: (key: string) => string): AlgorithmSelection {
     const { objectCount } = analysis.workload;
+    const thresholds = this.getThresholds();
 
-    // Based on PAW findings: crossover points at 100 and 500 objects
-    if (objectCount < this.thresholds.naiveVsSpatial) {
+    // Use configurable thresholds instead of hardcoded values
+    if (objectCount < thresholds.naiveVsSpatial) {
       return this.selectNaiveAlgorithm(analysis, t);
     }
 
-    if (objectCount < this.thresholds.spatialVsOptimized) {
+    if (objectCount < thresholds.spatialVsOptimized) {
       return this.selectSpatialAlgorithm(analysis, t);
     }
 
@@ -42,12 +55,15 @@ export class CollisionSelector {
     const { complexity } = analysis;
     const { objectCount } = analysis.workload;
 
+    // Provide fallback complexity if not available - use memoized square operation
+    const naiveComplexity = complexity?.naive || CollisionSelector.memoizedSquare(objectCount);
+
     return {
       algorithm: "naive",
       confidence: 0.9,
       expectedPerformance: {
-        executionTime: complexity.naive * 0.001, // Rough estimate
-        memoryUsage: objectCount * 16,
+        executionTime: CollisionSelector.memoizedMultiply(naiveComplexity, 0.001), // Rough estimate
+        memoryUsage: CollisionSelector.memoizedMultiply(objectCount, 16),
       },
       reasoning: [
         t
@@ -70,12 +86,15 @@ export class CollisionSelector {
     const { complexity } = analysis;
     const { objectCount } = analysis.workload;
 
+    // Provide fallback complexity if not available - use memoized log operation
+    const spatialComplexity = complexity?.spatial || CollisionSelector.memoizedMultiply(objectCount, CollisionSelector.memoizedLog(objectCount));
+
     return {
       algorithm: "spatial",
       confidence: 0.8,
       expectedPerformance: {
-        executionTime: complexity.spatial * 0.001,
-        memoryUsage: objectCount * 32,
+        executionTime: CollisionSelector.memoizedMultiply(spatialComplexity, 0.001),
+        memoryUsage: CollisionSelector.memoizedMultiply(objectCount, 32),
       },
       reasoning: [
         t
@@ -98,12 +117,15 @@ export class CollisionSelector {
     const { complexity } = analysis;
     const { objectCount } = analysis.workload;
 
+    // Provide fallback complexity if not available - use memoized log operation
+    const optimizedComplexity = complexity?.optimized || CollisionSelector.memoizedMultiply(CollisionSelector.memoizedMultiply(objectCount, CollisionSelector.memoizedLog(objectCount)), 0.5);
+
     return {
       algorithm: "optimized",
       confidence: 0.95,
       expectedPerformance: {
-        executionTime: complexity.optimized * 0.001,
-        memoryUsage: objectCount * 16 + 1024,
+        executionTime: CollisionSelector.memoizedMultiply(optimizedComplexity, 0.001),
+        memoryUsage: CollisionSelector.memoizedAdd(CollisionSelector.memoizedMultiply(objectCount, 16), 1024),
       },
       reasoning: [
         t

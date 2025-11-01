@@ -21,6 +21,13 @@ import {
   MinimumBoundingBoxOptimizationResult,
 } from "./minimum-bounding-box-types";
 import { MinimumBoundingBoxUtils } from "./minimum-bounding-box-utils";
+import { 
+  UnifiedValidationResult, 
+  createUnifiedValidationResult, 
+  createValidationMessage, 
+  createDetailedValidationResult,
+  ValidationSeverity 
+} from "../../../types/validation-types";
 
 /**
  * The MinimumBoundingBox class provides functionality for computing the minimum
@@ -322,7 +329,7 @@ export class MinimumBoundingBox {
   validate(
     result: MinimumBoundingBoxResult,
     options: Partial<MinimumBoundingBoxValidationOptions> = {}
-  ): MinimumBoundingBoxValidationResult {
+  ): UnifiedValidationResult {
     const validationOptions: MinimumBoundingBoxValidationOptions = {
       checkPoints: true,
       checkRectangle: true,
@@ -333,51 +340,111 @@ export class MinimumBoundingBox {
       ...options,
     };
 
-    const errors: string[] = [];
-    const warnings: string[] = [];
+    const startTime = performance.now();
+    const errors: any[] = [];
+    const warnings: any[] = [];
+    const info: any[] = [];
+    const detailedResults: any[] = [];
 
     // Check rectangle validity
     if (validationOptions.checkRectangle) {
+      const rectangleErrors: any[] = [];
+      
       if (!MinimumBoundingBoxUtils.validateRectangle(result.rectangle, this.config)) {
-        errors.push("Invalid rectangle in result");
+        rectangleErrors.push(createValidationMessage(
+          'invalid-rectangle',
+          ValidationSeverity.ERROR,
+          'Invalid rectangle in result',
+          { field: 'rectangle', context: { rectangle: result.rectangle } }
+        ));
       }
+      
+      errors.push(...rectangleErrors);
+      
+      const rectangleResult = createDetailedValidationResult(
+        'rectangle',
+        rectangleErrors.length === 0,
+        rectangleErrors,
+        [],
+        { rectangle: result.rectangle }
+      );
+      detailedResults.push(rectangleResult);
     }
 
     // Check area validity
     if (validationOptions.checkArea) {
+      const areaErrors: any[] = [];
+      
       if (result.area < validationOptions.minArea!) {
-        errors.push(`Area ${result.area} is below minimum ${validationOptions.minArea}`);
+        areaErrors.push(createValidationMessage(
+          'area-too-small',
+          ValidationSeverity.ERROR,
+          `Area ${result.area} is below minimum ${validationOptions.minArea}`,
+          { field: 'area', context: { area: result.area, minArea: validationOptions.minArea } }
+        ));
       }
       if (result.area > validationOptions.maxArea!) {
-        errors.push(`Area ${result.area} is above maximum ${validationOptions.maxArea}`);
+        areaErrors.push(createValidationMessage(
+          'area-too-large',
+          ValidationSeverity.ERROR,
+          `Area ${result.area} is above maximum ${validationOptions.maxArea}`,
+          { field: 'area', context: { area: result.area, maxArea: validationOptions.maxArea } }
+        ));
       }
+      
+      errors.push(...areaErrors);
     }
 
     // Check perimeter validity
     if (validationOptions.checkPerimeter) {
+      const perimeterErrors: any[] = [];
+      
       if (result.perimeter < 0) {
-        errors.push("Negative perimeter");
+        perimeterErrors.push(createValidationMessage(
+          'negative-perimeter',
+          ValidationSeverity.ERROR,
+          'Negative perimeter',
+          { field: 'perimeter', context: { perimeter: result.perimeter } }
+        ));
       }
+      
+      errors.push(...perimeterErrors);
     }
 
     // Check quality metrics
     if (result.quality.fitQuality < 0 || result.quality.fitQuality > 1) {
-      warnings.push("Fit quality should be between 0 and 1");
+      warnings.push(createValidationMessage(
+        'invalid-fit-quality',
+        ValidationSeverity.WARNING,
+        'Fit quality should be between 0 and 1',
+        { field: 'fitQuality', context: { fitQuality: result.quality.fitQuality } }
+      ));
     }
 
     if (result.quality.efficiency < 0 || result.quality.efficiency > 1) {
-      warnings.push("Efficiency should be between 0 and 1");
+      warnings.push(createValidationMessage(
+        'invalid-efficiency',
+        ValidationSeverity.WARNING,
+        'Efficiency should be between 0 and 1',
+        { field: 'efficiency', context: { efficiency: result.quality.efficiency } }
+      ));
     }
 
-    return {
-      isValid: errors.length === 0,
+    const endTime = performance.now();
+    const duration = endTime - startTime;
+
+    return createUnifiedValidationResult(
+      errors.length === 0,
       errors,
       warnings,
-      hasValidPoints: true, // Points are validated during computation
-      hasValidRectangle: errors.length === 0 || !errors.some(e => e.includes("rectangle")),
-      hasValidArea: errors.length === 0 || !errors.some(e => e.includes("Area")),
-      hasValidPerimeter: errors.length === 0 || !errors.some(e => e.includes("perimeter")),
-    };
+      info,
+      detailedResults,
+      {
+        duration,
+        componentCount: detailedResults.length,
+        config: validationOptions,
+      }
+    );
   }
 
   /**

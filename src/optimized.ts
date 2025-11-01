@@ -20,36 +20,50 @@ import {
 import { checkCollision } from "./geometry/collision/aabb/aabb-collision";
 import type { AABB, CollisionPair } from "./geometry/collision/aabb/aabb-types";
 
-// Global optimization configuration
-let globalOptimizationConfig: OptimizedCollisionConfig = {
+import { getImmutableOptimizationConfig, updateImmutableConfig, addConfigChangeListener } from './config/immutable-config';
+
+// Provide a local default optimization config matching adapter defaults
+const DEFAULT_OPTIMIZATION_CONFIG: OptimizedCollisionConfig = {
   enableMemoryPooling: true,
   enableAlgorithmSelection: true,
   enablePerformanceMonitoring: true,
+  memoryPoolConfig: undefined,
   algorithmSelectionStrategy: "adaptive",
   performanceThresholds: {
-    maxExecutionTime: 16, // 16ms for 60fps
-    maxMemoryUsage: 50 * 1024 * 1024, // 50MB
+    maxExecutionTime: 16,
+    maxMemoryUsage: 50 * 1024 * 1024,
     minHitRate: 90,
   },
 };
 
 // Global instances
 let globalCollisionAdapter: OptimizedCollisionAdapter | null = null;
+
+// Initialize configuration change listener
+addConfigChangeListener((event) => {
+  if (event.changedKeys.some(key => key.startsWith('optimization'))) {
+    // Reinitialize global collision adapter when optimization config changes
+    if (globalCollisionAdapter) {
+      globalCollisionAdapter.destroy();
+      globalCollisionAdapter = new OptimizedCollisionAdapter(getImmutableOptimizationConfig());
+    }
+  }
+});
 // let globalMemoryPool: MemoryPool | null = null;
 // let globalAlgorithmSelector: AlgorithmSelector | null = null;
 
 /**
- * Configure the global optimization settings
+ * Configure the global optimization settings (now immutable and thread-safe)
  * @param config
  * @example
  */
-export function configureOptimization(config: Partial<OptimizedCollisionConfig>): void {
-  globalOptimizationConfig = { ...globalOptimizationConfig, ...config };
+export async function configureOptimization(config: Partial<OptimizedCollisionConfig>): Promise<void> {
+  await updateImmutableConfig(undefined, config);
 
   // Reinitialize global instances if they exist
   if (globalCollisionAdapter) {
     globalCollisionAdapter.destroy();
-    globalCollisionAdapter = new OptimizedCollisionAdapter(globalOptimizationConfig);
+    globalCollisionAdapter = new OptimizedCollisionAdapter(getImmutableOptimizationConfig());
   }
 }
 
@@ -59,7 +73,7 @@ export function configureOptimization(config: Partial<OptimizedCollisionConfig>)
  */
 function getGlobalCollisionAdapter(): OptimizedCollisionAdapter {
   if (!globalCollisionAdapter) {
-    globalCollisionAdapter = new OptimizedCollisionAdapter(globalOptimizationConfig);
+    globalCollisionAdapter = new OptimizedCollisionAdapter(getImmutableOptimizationConfig());
   }
   return globalCollisionAdapter;
 }
@@ -110,6 +124,68 @@ function getGlobalCollisionAdapter(): OptimizedCollisionAdapter {
  * ```
  */
 export function detectCollisions(aabbs: AABB[]): CollisionPair[] {
+  // Comprehensive input validation
+  if (aabbs === null || aabbs === undefined) {
+    throw new Error('AABBs array cannot be null or undefined');
+  }
+  
+  if (!Array.isArray(aabbs)) {
+    throw new Error('AABBs must be provided as an array');
+  }
+  
+  if (aabbs.length === 0) {
+    return [];
+  }
+  
+  if (aabbs.length === 1) {
+    return [];
+  }
+  
+  // Validate each AABB in the array
+  for (let i = 0; i < aabbs.length; i++) {
+    const aabb = aabbs[i];
+    
+    if (aabb === null || aabb === undefined) {
+      throw new Error(`AABB at index ${i} cannot be null or undefined`);
+    }
+    
+    if (typeof aabb !== 'object') {
+      throw new Error(`AABB at index ${i} must be an object`);
+    }
+    
+    // Validate required properties
+    const requiredProps = ['x', 'y', 'width', 'height'];
+    for (const prop of requiredProps) {
+      if (!(prop in aabb)) {
+        throw new Error(`AABB at index ${i} is missing required property '${prop}'`);
+      }
+    }
+    
+    // Validate property types and values
+    if (typeof aabb.x !== 'number' || !Number.isFinite(aabb.x)) {
+      throw new Error(`AABB at index ${i} has invalid x coordinate: ${aabb.x}`);
+    }
+    
+    if (typeof aabb.y !== 'number' || !Number.isFinite(aabb.y)) {
+      throw new Error(`AABB at index ${i} has invalid y coordinate: ${aabb.y}`);
+    }
+    
+    if (typeof aabb.width !== 'number' || !Number.isFinite(aabb.width) || aabb.width < 0) {
+      throw new Error(`AABB at index ${i} has invalid width: ${aabb.width}. Width must be a finite number >= 0`);
+    }
+    
+    if (typeof aabb.height !== 'number' || !Number.isFinite(aabb.height) || aabb.height < 0) {
+      throw new Error(`AABB at index ${i} has invalid height: ${aabb.height}. Height must be a finite number >= 0`);
+    }
+    
+    // Check for very large values that might cause precision issues
+    const maxSafeValue = Number.MAX_SAFE_INTEGER / 2;
+    if (Math.abs(aabb.x) > maxSafeValue || Math.abs(aabb.y) > maxSafeValue ||
+        aabb.width > maxSafeValue || aabb.height > maxSafeValue) {
+      console.warn(`AABB at index ${i} has very large coordinate values that may cause precision issues`);
+    }
+  }
+  
   const adapter = getGlobalCollisionAdapter();
   return adapter.detectCollisions(aabbs);
 }
@@ -218,7 +294,7 @@ export class OptimizationConfig {
    * @example
    */
   constructor(config: Partial<OptimizedCollisionConfig> = {}) {
-    this.config = { ...globalOptimizationConfig, ...config };
+    this.config = { ...DEFAULT_OPTIMIZATION_CONFIG, ...config };
   }
 
   /**

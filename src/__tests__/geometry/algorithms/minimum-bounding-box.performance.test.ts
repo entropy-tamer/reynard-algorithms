@@ -6,6 +6,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { MinimumBoundingBox } from "../../../geometry/algorithms/minimum-bounding-box/minimum-bounding-box-core";
 import type { Point } from "../../../geometry/algorithms/minimum-bounding-box/minimum-bounding-box-types";
+import { runBenchmark, assertPerformance } from "../../utils/benchmark-utils";
 
 describe("MinimumBoundingBox Performance", () => {
   let mbb: MinimumBoundingBox;
@@ -512,34 +513,64 @@ describe("MinimumBoundingBox Performance", () => {
   });
 
   describe("Algorithm-Specific Performance", () => {
-    it("should handle rotating calipers efficiently", () => {
+    it("should handle rotating calipers efficiently", async () => {
       const points = generateRandomPoints(500);
 
-      const startTime = performance.now();
-      mbb.compute(points, { method: "rotating-calipers" });
-      const endTime = performance.now();
+      const report = await runBenchmark(
+        'mbb-rotating-calipers-performance',
+        () => mbb.compute(points, { method: "rotating-calipers" }),
+        { samples: 10 }
+      );
 
-      expect(endTime - startTime).toBeLessThan(100);
+      // Use statistical assertions instead of hard-coded thresholds
+      assertPerformance(report, {
+        maxTime: 100, // Should complete in under 100ms
+        maxCoefficientOfVariation: 0.3, // Less than 30% variance
+        failOnOutliers: false, // Don't fail on occasional outliers
+      });
+
+      expect(report.statistics.median).toBeLessThan(100);
+      expect(report.assertions.stablePerformance).toBe(true);
     });
 
-    it("should handle brute force method efficiently", () => {
+    it("should handle brute force method efficiently", async () => {
       const points = generateRandomPoints(200);
 
-      const startTime = performance.now();
-      mbb.compute(points, { method: "brute-force" });
-      const endTime = performance.now();
+      const report = await runBenchmark(
+        'mbb-brute-force-performance',
+        () => mbb.compute(points, { method: "brute-force" }),
+        { samples: 10 }
+      );
 
-      expect(endTime - startTime).toBeLessThan(200);
+      // Use statistical assertions instead of hard-coded thresholds
+      assertPerformance(report, {
+        maxTime: 200, // Should complete in under 200ms
+        maxCoefficientOfVariation: 0.4, // Allow more variance for brute force
+        failOnOutliers: false,
+      });
+
+      expect(report.statistics.median).toBeLessThan(200);
+      expect(report.assertions.stablePerformance).toBe(true);
     });
 
-    it("should handle convex hull method efficiently", () => {
+    it("should handle convex hull method efficiently", async () => {
       const points = generateRandomPoints(500);
 
-      const startTime = performance.now();
-      mbb.compute(points, { method: "convex-hull" });
-      const endTime = performance.now();
+      const report = await runBenchmark(
+        'mbb-convex-hull-performance',
+        () => mbb.compute(points, { method: "convex-hull" }),
+        { samples: 10 }
+      );
 
-      expect(endTime - startTime).toBeLessThan(150);
+      // Use statistical assertions instead of hard-coded thresholds
+      assertPerformance(report, {
+        maxTime: 150, // Should complete in under 150ms
+        maxCoefficientOfVariation: 0.3,
+        failOnOutliers: false,
+      });
+
+      expect(report.statistics.median).toBeLessThan(150);
+      expect(report.assertions.stablePerformance).toBe(true);
     });
   });
 });

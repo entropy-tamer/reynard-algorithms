@@ -230,6 +230,10 @@ export type BloomFilterEventHandler = (event: BloomFilterEvent) => void;
  */
 export interface BatchOperationResult {
   /**
+   * Whether the batch operation was successful overall.
+   */
+  success: boolean;
+  /**
    * Number of successful operations.
    */
   successful: number;

@@ -41,6 +41,7 @@ import {
   QuadtreeNearestNeighborResult,
   QuadtreePerformanceMetrics,
 } from "./quadtree-types";
+import { adaptiveMemo } from "../../utils";
 
 /**
  * Quadtree Implementation
@@ -799,10 +800,21 @@ export class Quadtree<T> {
    * @returns Euclidean distance
    */
   private distance(p1: Point, p2: Point): number {
-    const dx = p2.x - p1.x;
-    const dy = p2.y - p1.y;
-    return Math.sqrt(dx * dx + dy * dy);
+    if (!this._distanceMemo) {
+      this._distanceMemo = adaptiveMemo(
+        (x1: number, y1: number, x2: number, y2: number) => {
+          const dx = x2 - x1;
+          const dy = y2 - y1;
+          return Math.sqrt(dx * dx + dy * dy);
+        },
+        { maxSize: 2048, minHitRate: 0.6, windowSize: 300, minSamples: 150 },
+        (x1: number, y1: number, x2: number, y2: number) => `${x1}|${y1}|${x2}|${y2}`
+      );
+    }
+    return this._distanceMemo(p1.x, p1.y, p2.x, p2.y);
   }
+
+  private _distanceMemo?: (x1: number, y1: number, x2: number, y2: number) => number;
 
   /**
    * Calculates minimum distance from a point to a rectangle

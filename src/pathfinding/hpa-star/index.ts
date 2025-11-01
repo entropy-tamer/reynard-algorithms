@@ -5,9 +5,9 @@
 
 export { HPAStar } from "./hpa-star-core";
 export { HPAStarUtils } from "./hpa-star-utils";
-export { HPAStarClustering } from "./hpa-clustering";
-export { HPAStarAbstractGraph } from "./hpa-abstract-graph";
-export { HPAStarPathRefinement } from "./hpa-path-refinement";
+export { HPAClustering } from "./hpa-clustering";
+export { HPAAbstractGraph } from "./hpa-abstract-graph";
+export { HPAPathRefinement } from "./hpa-path-refinement";
 
 export type {
   Point,
@@ -20,7 +20,6 @@ export type {
   ClusterGenerationOptions,
   Entrance,
   EntranceDetectionOptions,
-  AbstractGraph,
   AbstractGraphOptions,
   AbstractNode,
   AbstractEdge,
@@ -31,12 +30,4 @@ export type {
   HPAComparisonResult,
   HPASerializationOptions,
   HPASerialization,
-  HPAOptimizationOptions,
-  HPAOptimizationResult,
-  HPAVisualizationOptions,
-  HPAVisualizationResult,
-  HPAPerformanceOptions,
-  HPAPerformanceResult,
-  HPAAdvancedOptions,
-  HPAAdvancedResult,
 } from "./hpa-star-types";

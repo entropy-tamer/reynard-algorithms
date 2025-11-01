@@ -237,6 +237,15 @@ export type {
   MultiLineResult,
 } from "./geometry/algorithms/bresenham/bresenham-types";
 
+// Additional Line Algorithms
+export { DDALine } from "./geometry/algorithms/dda/dda-core";
+export type { Point2D as DDAPoint, DDALineResult } from "./geometry/algorithms/dda/dda-core";
+export { SupercoverLine } from "./geometry/algorithms/supercover/supercover-core";
+export type {
+  Point2D as SupercoverPoint,
+  SupercoverLineResult,
+} from "./geometry/algorithms/supercover/supercover-core";
+
 // Delaunay Triangulation
 export { DelaunayTriangulation } from "./geometry/algorithms/delaunay/delaunay-core";
 export type {
@@ -383,7 +392,7 @@ export type {
   Vector as JPSVector,
   Direction,
   MovementType,
-  CellType,
+  CellType as JPSCellType,
   GridCell,
   JumpPoint,
   JPSConfig,
@@ -406,9 +415,7 @@ export type {
 } from "./pathfinding/jps/jps-types";
 
 // Theta* Any-Angle Pathfinding
-export { ThetaStar } from "./pathfinding/theta-star/theta-star-core";
-export { ThetaStarUtils } from "./pathfinding/theta-star/theta-star-utils";
-export { LineOfSight } from "./pathfinding/theta-star/line-of-sight";
+export { ThetaStar, ThetaStarUtils, LineOfSight, CellType } from "./pathfinding/theta-star";
 export type {
   Point as ThetaStarPoint,
   Vector as ThetaStarVector,
@@ -434,6 +441,9 @@ export type {
   LazyEvaluationOptions,
   LazyEvaluationResult,
 } from "./pathfinding/theta-star/theta-star-types";
+
+// Visibility (Shadowcasting FOV)
+export { shadowcastingFOV } from "./pathfinding/visibility/shadowcasting";
 
 // Flow Field Pathfinding
 export { FlowField } from "./pathfinding/flow-field/flow-field-core";
@@ -662,6 +672,27 @@ export {
 
 // Spatial collision optimization
 export { SpatialCollisionOptimizer } from "./geometry/collision/optimization";
+
+// ============================================================================
+// UTILITIES
+// ============================================================================
+
+// Memoization utilities
+export {
+  memoize,
+  memoizeMath,
+  memoizeGeometry,
+  weakMemoize,
+  batchMemoize,
+  MathMemo,
+  clearMathMemo,
+  getMathMemoStats,
+} from "./utils/memoization";
+export type {
+  MemoizationConfig,
+  MemoizedResult,
+  MemoizationStats,
+} from "./utils/memoization";
 
 // ============================================================================
 // OPTIMIZATION FRAMEWORK

@@ -1,16 +1,30 @@
 /**
  * Core Spatial Hashing Algorithm Implementation
  *
- * A highly optimized spatial partitioning system for efficient spatial queries,
- * nearest neighbor searches, and collision detection optimization.
- *
+ * @file Core class and public API for the spatial hash
  * @module algorithms/spatialHashCore
  */
 
 import { SpatialHashConfig, SpatialHashStats, SpatialObject, QueryResult } from "./spatial-hash-types";
-import { estimateMemoryUsage } from "./spatial-hash-utils";
+// utils imported indirectly by ops
 import type { SpatialDataType } from "../../types/spatial-types";
+import { getRectCells } from "./spatial-hash-geometry";
+import {
+  queryRectImpl,
+  queryRadiusImpl,
+  findNearestImpl,
+  getAllObjectsImpl,
+  getStatsImpl,
+  cleanupEmptyCells,
+  resizeReindexImpl,
+  insertImpl,
+  removeImpl,
+} from "./spatial-hash-ops";
+import { checkAutoResizeImpl, checkCleanupImpl } from "./spatial-hash-maintenance";
 
+/**
+ * SpatialHash provides efficient spatial partitioning for 2D objects.
+ */
 export class SpatialHash<T extends SpatialDataType = SpatialDataType> {
   private cells = new Map<string, Array<SpatialObject<T>>>();
   private objectToCells = new Map<string | number, Set<string>>();
@@ -22,6 +36,11 @@ export class SpatialHash<T extends SpatialDataType = SpatialDataType> {
   };
   private lastCleanup = Date.now();
 
+  /**
+   * Create a SpatialHash instance.
+   *
+   * @param config Partial configuration overriding defaults
+   */
   constructor(config: Partial<SpatialHashConfig> = {}) {
     this.config = {
       cellSize: 100,
@@ -34,52 +53,31 @@ export class SpatialHash<T extends SpatialDataType = SpatialDataType> {
   }
 
   /**
-   * Insert an object into the spatial hash
+   * Insert an object into the spatial hash.
+   *
+   * @param object The spatial object to insert
    */
   insert(object: SpatialObject & { data: T }): void {
-    const cellKeys = this.getObjectCells(object);
-
-    for (const cellKey of Array.from(cellKeys)) {
-      if (!this.cells.has(cellKey)) {
-        this.cells.set(cellKey, []);
-      }
-      this.cells.get(cellKey)!.push(object);
-    }
-
-    this.objectToCells.set(object.id, cellKeys);
-    this.stats.insertCount++;
-
+    insertImpl<T>({ cells: this.cells, objectToCells: this.objectToCells, config: this.config, stats: this.stats }, object);
     this.checkAutoResize();
     this.checkCleanup();
   }
 
   /**
-   * Remove an object from the spatial hash
+   * Remove an object from the spatial hash.
+   *
+   * @param objectId Unique object identifier
+   * @returns True when object was removed, false if not found
    */
   remove(objectId: string | number): boolean {
-    const cellKeys = this.objectToCells.get(objectId);
-    if (!cellKeys) return false;
-
-    for (const cellKey of Array.from(cellKeys)) {
-      const cell = this.cells.get(cellKey);
-      if (cell) {
-        const index = cell.findIndex(obj => obj.id === objectId);
-        if (index !== -1) {
-          cell.splice(index, 1);
-          if (cell.length === 0) {
-            this.cells.delete(cellKey);
-          }
-        }
-      }
-    }
-
-    this.objectToCells.delete(objectId);
-    this.stats.removeCount++;
-    return true;
+    return removeImpl<T>({ cells: this.cells, objectToCells: this.objectToCells, config: this.config, stats: this.stats }, objectId);
   }
 
   /**
-   * Update an object's position in the spatial hash
+   * Update an object's position in the spatial hash.
+   *
+   * @param object The updated object
+   * @returns True when object existed and was updated
    */
   update(object: SpatialObject & { data: T }): boolean {
     if (this.remove(object.id)) {
@@ -90,89 +88,69 @@ export class SpatialHash<T extends SpatialDataType = SpatialDataType> {
   }
 
   /**
-   * Query for objects in a rectangular area
+   * Query for objects in a rectangular area.
+   *
+   * @param x Rectangle left coordinate
+   * @param y Rectangle top coordinate
+   * @param width Rectangle width
+   * @param height Rectangle height
+   * @returns Array of objects intersecting the rectangle
    */
   queryRect(x: number, y: number, width: number, height: number): Array<SpatialObject & { data: T }> {
-    const cellKeys = this.getRectCells(x, y, width, height);
-    const results = new Map<string | number, SpatialObject & { data: T }>();
-
-    for (const cellKey of Array.from(cellKeys)) {
-      const cell = this.cells.get(cellKey);
-      if (cell) {
-        for (const obj of cell) {
-          if (this.isObjectInRect(obj, x, y, width, height) && obj.data !== undefined) {
-            results.set(obj.id, obj as SpatialObject & { data: T });
-          }
-        }
-      }
-    }
-
-    this.stats.queryCount++;
-    return Array.from(results.values());
+    return queryRectImpl<T>(
+      { cells: this.cells, objectToCells: this.objectToCells, config: this.config, stats: this.stats },
+      x,
+      y,
+      width,
+      height
+    );
   }
 
   /**
-   * Query for objects within a radius of a point
+   * Query for objects within a radius of a point.
+   *
+   * @param centerX Query center x
+   * @param centerY Query center y
+   * @param radius Query radius
+   * @returns Array of objects with distances and cell keys, sorted nearest first
    */
   queryRadius(centerX: number, centerY: number, radius: number): Array<QueryResult<T>> {
-    const cellKeys = this.getRadiusCells(centerX, centerY, radius);
-    const results: Array<QueryResult<T>> = [];
-
-    for (const cellKey of Array.from(cellKeys)) {
-      const cell = this.cells.get(cellKey);
-      if (cell) {
-        for (const obj of cell) {
-          const distance = this.getDistance(centerX, centerY, obj.x, obj.y);
-          if (distance <= radius) {
-            results.push({
-              object: obj,
-              distance,
-              cellKey,
-            });
-          }
-        }
-      }
-    }
-
-    this.stats.queryCount++;
-    return results.sort((a, b) => a.distance - b.distance);
+    return queryRadiusImpl<T>(
+      { cells: this.cells, objectToCells: this.objectToCells, config: this.config, stats: this.stats },
+      centerX,
+      centerY,
+      radius
+    );
   }
 
   /**
-   * Find the nearest object to a point
+   * Find the nearest object to a point.
+   *
+   * @param x Query x
+   * @param y Query y
+   * @param maxDistance Optional maximum search radius
+   * @returns Nearest query result or null if none found
    */
   findNearest(x: number, y: number, maxDistance?: number): QueryResult<T> | null {
-    const radius = maxDistance || this.config.cellSize * 2;
-    const results = this.queryRadius(x, y, radius);
-
-    if (results.length === 0) {
-      // Expand search if no results found
-      const expandedResults = this.queryRadius(x, y, radius * 2);
-      return expandedResults[0] || null;
-    }
-
-    return results[0];
+    return findNearestImpl<T>(
+      { cells: this.cells, objectToCells: this.objectToCells, config: this.config, stats: this.stats },
+      x,
+      y,
+      maxDistance
+    );
   }
 
   /**
-   * Get all objects in the spatial hash
+   * Get all objects currently stored in the hash.
+   *
+   * @returns Array of unique objects
    */
   getAllObjects(): Array<SpatialObject & { data: T }> {
-    const objects = new Map<string | number, SpatialObject & { data: T }>();
-
-    for (const cell of Array.from(this.cells.values())) {
-      for (const obj of cell) {
-        if (obj.data !== undefined) {
-          objects.set(obj.id, obj as SpatialObject & { data: T });
-        }
-      }
-    }
-
-    return Array.from(objects.values());
+    return getAllObjectsImpl<T>({ cells: this.cells, objectToCells: this.objectToCells, config: this.config, stats: this.stats });
   }
 
   /**
-   * Clear all objects from the spatial hash
+   * Clear all objects and statistics.
    */
   clear(): void {
     this.cells.clear();
@@ -183,142 +161,65 @@ export class SpatialHash<T extends SpatialDataType = SpatialDataType> {
   }
 
   /**
-   * Get statistics about the spatial hash
+   * Gather statistics about the current hash state.
+   *
+   * @returns Snapshot statistics
    */
   getStats(): SpatialHashStats {
-    let totalObjects = 0;
-    let maxObjectsInCell = 0;
-    let emptyCells = 0;
-
-    for (const cell of Array.from(this.cells.values())) {
-      totalObjects += cell.length;
-      maxObjectsInCell = Math.max(maxObjectsInCell, cell.length);
-    }
-
-    emptyCells = this.cells.size === 0 ? 0 : Array.from(this.cells.values()).filter(cell => cell.length === 0).length;
-
-    return {
-      totalCells: this.cells.size,
-      totalObjects,
-      averageObjectsPerCell: this.cells.size > 0 ? totalObjects / this.cells.size : 0,
-      maxObjectsInCell,
-      emptyCells,
-      memoryUsage: estimateMemoryUsage(this.cells.size, totalObjects, this.objectToCells.size),
-      queryCount: this.stats.queryCount,
-      insertCount: this.stats.insertCount,
-      removeCount: this.stats.removeCount,
-    };
+    return getStatsImpl<T>({ cells: this.cells, objectToCells: this.objectToCells, config: this.config, stats: this.stats });
   }
 
   /**
-   * Resize the spatial hash with a new cell size
+   * Resize the spatial hash with a new cell size.
+   *
+   * @param newCellSize New cell size in world units
    */
   resize(newCellSize: number): void {
     if (newCellSize === this.config.cellSize) return;
-
     const oldCells = this.cells;
     const oldObjectToCells = this.objectToCells;
-
     this.config.cellSize = newCellSize;
     this.cells = new Map();
     this.objectToCells = new Map();
-
-    // Reinsert all objects with new cell size
-    for (const [objectId, cellKeys] of Array.from(oldObjectToCells.entries())) {
-      const firstCellKey = Array.from(cellKeys)[0];
-      const object = oldCells.get(firstCellKey)?.find((obj: SpatialObject<T>) => obj.id === objectId);
-      if (object && object.data !== undefined) {
-        this.insert(object as SpatialObject<T> & { data: T });
-      }
-    }
+    resizeReindexImpl<T>(oldCells, oldObjectToCells, (o) => this.insert(o));
   }
 
+  /**
+   * Compute the set of cell keys an object occupies.
+   *
+   * @param object Spatial object with position and optional size
+   * @returns Set of cell keys in "x,y" form
+   */
   private getObjectCells(object: SpatialObject): Set<string> {
     const width = object.width || 0;
     const height = object.height || 0;
-    return this.getRectCells(object.x, object.y, width, height);
+    return getRectCells(this.config.cellSize, object.x, object.y, width, height);
   }
 
-  private getRectCells(x: number, y: number, width: number, height: number): Set<string> {
-    const minCellX = Math.floor(x / this.config.cellSize);
-    const maxCellX = Math.floor((x + width) / this.config.cellSize);
-    const minCellY = Math.floor(y / this.config.cellSize);
-    const maxCellY = Math.floor((y + height) / this.config.cellSize);
-
-    const cellKeys = new Set<string>();
-    for (let cellX = minCellX; cellX <= maxCellX; cellX++) {
-      for (let cellY = minCellY; cellY <= maxCellY; cellY++) {
-        cellKeys.add(`${cellX},${cellY}`);
-      }
-    }
-    return cellKeys;
-  }
-
-  private getRadiusCells(centerX: number, centerY: number, radius: number): Set<string> {
-    const minCellX = Math.floor((centerX - radius) / this.config.cellSize);
-    const maxCellX = Math.floor((centerX + radius) / this.config.cellSize);
-    const minCellY = Math.floor((centerY - radius) / this.config.cellSize);
-    const maxCellY = Math.floor((centerY + radius) / this.config.cellSize);
-
-    const cellKeys = new Set<string>();
-    for (let cellX = minCellX; cellX <= maxCellX; cellX++) {
-      for (let cellY = minCellY; cellY <= maxCellY; cellY++) {
-        cellKeys.add(`${cellX},${cellY}`);
-      }
-    }
-    return cellKeys;
-  }
-
-  private isObjectInRect(
-    object: SpatialObject,
-    rectX: number,
-    rectY: number,
-    rectWidth: number,
-    rectHeight: number
-  ): boolean {
-    const objWidth = object.width || 0;
-    const objHeight = object.height || 0;
-
-    return (
-      object.x < rectX + rectWidth &&
-      object.x + objWidth > rectX &&
-      object.y < rectY + rectHeight &&
-      object.y + objHeight > rectY
-    );
-  }
-
-  private getDistance(x1: number, y1: number, x2: number, y2: number): number {
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    return Math.sqrt(dx * dx + dy * dy);
-  }
-
+  /**
+   * Evaluate auto-resize conditions.
+   */
   private checkAutoResize(): void {
     if (!this.config.enableAutoResize) return;
 
-    const stats = this.getStats();
-    const loadFactor = stats.averageObjectsPerCell / this.config.maxObjectsPerCell;
-
-    if (loadFactor > this.config.resizeThreshold) {
-      const newCellSize = this.config.cellSize * 1.5;
-      this.resize(newCellSize);
-    }
+    checkAutoResizeImpl(this.config, {
+      getAverageObjectsPerCell: () => this.getStats().averageObjectsPerCell,
+      resize: (s: number) => this.resize(s),
+    });
   }
 
+  /**
+   * Run periodic cleanup based on configured interval.
+   */
   private checkCleanup(): void {
     const now = Date.now();
-    if (now - this.lastCleanup > this.config.cleanupInterval) {
-      this.cleanup();
-      this.lastCleanup = now;
-    }
+    this.lastCleanup = checkCleanupImpl(now, this.lastCleanup, this.config.cleanupInterval, () => this.cleanup());
   }
 
+  /**
+   * Remove empty cells to keep memory usage low.
+   */
   private cleanup(): void {
-    // Remove empty cells
-    for (const [cellKey, cell] of Array.from(this.cells.entries())) {
-      if (cell.length === 0) {
-        this.cells.delete(cellKey);
-      }
-    }
+    cleanupEmptyCells({ cells: this.cells, objectToCells: this.objectToCells, config: this.config, stats: this.stats });
   }
 }

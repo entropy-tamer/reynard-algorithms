@@ -246,6 +246,10 @@ export type SegmentTreeEventHandler = (event: SegmentTreeEvent) => void;
  */
 export interface BatchOperationResult {
   /**
+   * Whether the batch operation was successful overall.
+   */
+  success: boolean;
+  /**
    * Number of successful operations.
    */
   successful: number;

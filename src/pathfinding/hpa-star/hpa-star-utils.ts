@@ -5,7 +5,6 @@
 
 import type {
   Point,
-  CellType,
   HPAConfig,
   HPAOptions,
   ClusterGenerationOptions,
@@ -14,6 +13,7 @@ import type {
   PathRefinementOptions,
   HPAValidationOptions,
 } from "./hpa-star-types";
+import { CellType } from "./hpa-star-types";
 
 /**
  * Utility functions for HPA* pathfinding.

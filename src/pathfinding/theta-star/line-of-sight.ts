@@ -4,6 +4,7 @@
  */
 
 import type { Point, LineOfSightOptions, LineOfSightResult } from "./theta-star-types";
+import { adaptiveMemo } from "../../utils";
 import { CellType } from "./theta-star-types";
 
 /**
@@ -426,10 +427,21 @@ export class LineOfSight {
    * @example
    */
   private static distance(a: Point, b: Point): number {
-    const dx = b.x - a.x;
-    const dy = b.y - a.y;
-    return Math.sqrt(dx * dx + dy * dy);
+    if (!this._memoDistance) {
+      this._memoDistance = adaptiveMemo(
+        (p1: Point, p2: Point) => {
+          const dx = p2.x - p1.x;
+          const dy = p2.y - p1.y;
+          return Math.sqrt(dx * dx + dy * dy);
+        },
+        { maxSize: 8192, minHitRate: 0.6, windowSize: 500, minSamples: 200 },
+        (p1: Point, p2: Point) => `${p1.x}|${p1.y}|${p2.x}|${p2.y}`
+      );
+    }
+    return this._memoDistance(a, b);
   }
+
+  private static _memoDistance?: (a: Point, b: Point) => number;
 
   /**
    * Checks if two points are equal.

@@ -128,6 +128,16 @@ export interface FlowFieldResult {
   success: boolean;
   /** Statistics about the computation */
   stats: FlowFieldStats;
+  /** Total execution time in milliseconds (optional convenience) */
+  executionTime?: number;
+  /** Error message if failed (optional) */
+  error?: string;
+  /** Grid width (optional convenience) */
+  width?: number;
+  /** Grid height (optional convenience) */
+  height?: number;
+  /** Goal cells (optional convenience) */
+  goals?: Point[];
 }
 
 /**
@@ -162,6 +172,8 @@ export interface AgentPathfindingOptions {
   useIntegrationField: boolean;
   /** Whether to use A* as fallback */
   useAStarFallback: boolean;
+  /** Optional alias used in some call sites */
+  useAStar?: boolean;
   /** Maximum path length */
   maxPathLength: number;
   /** Whether to smooth the path */
@@ -279,19 +291,27 @@ export interface DynamicObstacleResult {
  */
 export interface FlowFieldValidationOptions {
   /** Whether to check flow field validity */
-  checkFlowFieldValidity: boolean;
+  checkFlowFieldValidity?: boolean;
   /** Whether to check integration field validity */
-  checkIntegrationFieldValidity: boolean;
+  checkIntegrationFieldValidity?: boolean;
   /** Whether to check for unreachable areas */
-  checkUnreachableAreas: boolean;
+  checkUnreachableAreas?: boolean;
   /** Whether to check for invalid flow vectors */
-  checkInvalidFlowVectors: boolean;
+  checkInvalidFlowVectors?: boolean;
   /** Maximum allowed flow vector magnitude */
   maxFlowVectorMagnitude: number;
   /** Minimum allowed flow vector magnitude */
   minFlowVectorMagnitude: number;
   /** Whether to check for circular flows */
-  checkCircularFlows: boolean;
+  checkCircularFlows?: boolean;
+  /** Optional tolerance for magnitude/direction checks */
+  tolerance?: number;
+  /** Optional magnitude check toggle */
+  checkMagnitude?: boolean;
+  /** Optional direction check toggle */
+  checkDirection?: boolean;
+  /** Optional consistency check toggle */
+  checkConsistency?: boolean;
 }
 
 /**
@@ -314,6 +334,8 @@ export interface FlowFieldValidationResult {
   hasInvalidFlowVectors: boolean;
   /** Whether there are circular flows */
   hasCircularFlows: boolean;
+  /** Optional stats bag */
+  stats?: Record<string, unknown>;
 }
 
 /**
@@ -321,15 +343,15 @@ export interface FlowFieldValidationResult {
  */
 export interface FlowFieldSerializationOptions {
   /** Number of decimal places for coordinates */
-  precision: number;
+  precision?: number;
   /** Whether to include statistics */
   includeStats: boolean;
   /** Whether to include integration field */
-  includeIntegrationField: boolean;
+  includeIntegrationField?: boolean;
   /** Whether to include flow field */
-  includeFlowField: boolean;
+  includeFlowField?: boolean;
   /** Whether to include grid data */
-  includeGrid: boolean;
+  includeGrid?: boolean;
   /** Whether to compress the data */
   compress: boolean;
 }
@@ -343,6 +365,9 @@ export interface FlowFieldSerialization {
     width: number;
     height: number;
   };
+  /** Optional convenience duplicates for some call sites */
+  width?: number;
+  height?: number;
   /** Whether generation was successful */
   success: boolean;
   /** Statistics (if included) */
@@ -355,6 +380,10 @@ export interface FlowFieldSerialization {
   grid?: {
     cells: GridCell[];
   };
+  /** Optional goals (if included) */
+  goals?: Point[];
+  /** Optional version tag */
+  version?: string;
 }
 
 /**
@@ -364,15 +393,21 @@ export interface FlowFieldComparisonOptions {
   /** Whether to compare integration fields */
   compareIntegrationFields: boolean;
   /** Whether to compare flow fields */
-  compareFlowFields: boolean;
+  compareFlowFields?: boolean;
   /** Whether to compare statistics */
-  compareStats: boolean;
+  compareStats?: boolean;
   /** Tolerance for comparisons */
   tolerance: number;
   /** Whether to compare execution times */
-  compareExecutionTimes: boolean;
+  compareExecutionTimes?: boolean;
   /** Whether to compare memory usage */
-  compareMemoryUsage: boolean;
+  compareMemoryUsage?: boolean;
+  /** Optional: compare flow vector directions */
+  compareDirections?: boolean;
+  /** Optional: compare vector magnitudes */
+  compareMagnitudes?: boolean;
+  /** Optional: include detailed analysis */
+  detailedAnalysis?: boolean;
 }
 
 /**
@@ -381,6 +416,10 @@ export interface FlowFieldComparisonOptions {
 export interface FlowFieldComparisonResult {
   /** Whether flow fields are equivalent */
   areEquivalent: boolean;
+  /** Optional strict identical flag for convenience */
+  identical?: boolean;
+  /** Optional overall similarity metric (0-1) */
+  similarity?: number;
   /** Integration field similarity score (0-1) */
   integrationFieldSimilarity: number;
   /** Flow field similarity score (0-1) */
@@ -395,6 +434,8 @@ export interface FlowFieldComparisonResult {
   differencesCount: number;
   /** List of differences */
   differences: string[];
+  /** Optional stats bag */
+  stats?: Record<string, unknown>;
 }
 
 /**

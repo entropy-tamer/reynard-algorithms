@@ -480,6 +480,7 @@ export class FenwickTree {
     }
 
     return {
+      success: failed === 0,
       successful,
       failed,
       errors,

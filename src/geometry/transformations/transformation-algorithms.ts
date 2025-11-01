@@ -10,6 +10,7 @@
 import { Point } from "../shapes/point-algorithms";
 import { Rectangle } from "../shapes/shapes";
 import { RectangleOps } from "../shapes/rectangle-algorithms";
+import { memoizeMath } from "../../utils/memoization";
 
 export interface Transform {
   translateX: number;
@@ -23,6 +24,10 @@ export interface Transform {
  * Transform operations
  */
 export class TransformOps {
+  // Memoized mathematical operations for performance
+  private static readonly memoizedCos = memoizeMath((x: number) => Math.cos(x));
+  private static readonly memoizedSin = memoizeMath((x: number) => Math.sin(x));
+
   static identity(): Transform {
     return { translateX: 0, translateY: 0, scaleX: 1, scaleY: 1, rotation: 0 };
   }
@@ -46,8 +51,8 @@ export class TransformOps {
   }
 
   static combine(a: Transform, b: Transform): Transform {
-    const cos = Math.cos(a.rotation);
-    const sin = Math.sin(a.rotation);
+    const cos = TransformOps.memoizedCos(a.rotation);
+    const sin = TransformOps.memoizedSin(a.rotation);
 
     return {
       translateX: a.translateX + b.translateX * a.scaleX * cos - b.translateY * a.scaleY * sin,
@@ -59,8 +64,8 @@ export class TransformOps {
   }
 
   static applyToPoint(transform: Transform, point: Point): Point {
-    const cos = Math.cos(transform.rotation);
-    const sin = Math.sin(transform.rotation);
+    const cos = TransformOps.memoizedCos(transform.rotation);
+    const sin = TransformOps.memoizedSin(transform.rotation);
 
     return {
       x: point.x * transform.scaleX * cos - point.y * transform.scaleY * sin + transform.translateX,
@@ -94,8 +99,8 @@ export class TransformOps {
   }
 
   static inverse(transform: Transform): Transform {
-    const cos = Math.cos(-transform.rotation);
-    const sin = Math.sin(-transform.rotation);
+    const cos = TransformOps.memoizedCos(-transform.rotation);
+    const sin = TransformOps.memoizedSin(-transform.rotation);
 
     return {
       translateX: -(transform.translateX * cos - transform.translateY * sin) / transform.scaleX,

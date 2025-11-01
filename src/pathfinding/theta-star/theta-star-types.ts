@@ -142,6 +142,12 @@ export interface ThetaStarResult {
   explored: ThetaStarNode[];
   /** Statistics about the computation */
   stats: ThetaStarStats;
+  /** Optional success flag for convenience */
+  success?: boolean;
+  /** Optional execution time for convenience */
+  executionTime?: number;
+  /** Optional metadata bag */
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -149,21 +155,29 @@ export interface ThetaStarResult {
  */
 export interface ThetaStarOptions {
   /** Whether to return explored nodes */
-  returnExplored: boolean;
+  returnExplored?: boolean;
   /** Whether to return line-of-sight information */
-  returnLineOfSight: boolean;
+  returnLineOfSight?: boolean;
   /** Whether to use Manhattan distance heuristic */
-  useManhattanHeuristic: boolean;
+  useManhattanHeuristic?: boolean;
   /** Whether to use Euclidean distance heuristic */
-  useEuclideanHeuristic: boolean;
+  useEuclideanHeuristic?: boolean;
   /** Custom heuristic function */
   customHeuristic?: (from: Point, to: Point) => number;
   /** Whether to optimize path by removing redundant points */
-  optimizePath: boolean;
+  optimizePath?: boolean;
   /** Whether to use goal bounding */
-  useGoalBounding: boolean;
+  useGoalBounding?: boolean;
   /** Maximum path length */
-  maxPathLength: number;
+  maxPathLength?: number;
+  /** Optional: whether to use Euclidean distance (alias) */
+  useEuclideanDistance?: boolean;
+  /** Optional: whether to use tie-breaking (alias) */
+  useTieBreaking?: boolean;
+  /** Optional: whether to use lazy evaluation (alias) */
+  useLazyEvaluation?: boolean;
+  /** Optional: maximum iterations (alias) */
+  maxIterations?: number;
 }
 
 /**
@@ -287,6 +301,8 @@ export interface ThetaStarSerializationOptions {
   includeLineOfSight: boolean;
   /** Whether to include grid data */
   includeGrid: boolean;
+  /** Whether to include extra metadata */
+  includeMetadata?: boolean;
 }
 
 /**
@@ -313,6 +329,8 @@ export interface ThetaStarSerialization {
     height: number;
     cells: GridCell[];
   };
+  /** Optional version tag */
+  version?: string;
 }
 
 /**
@@ -331,6 +349,8 @@ export interface PathComparisonOptions {
   compareLineOfSight: boolean;
   /** Tolerance for comparisons */
   tolerance: number;
+  /** Optional: whether to compare smoothness */
+  compareSmoothness?: boolean;
 }
 
 /**
@@ -351,6 +371,8 @@ export interface PathComparisonResult {
   lineOfSightDifference: number;
   /** Overall similarity score (0-1) */
   similarity: number;
+  /** Optional identical flag */
+  identical?: boolean;
 }
 
 /**

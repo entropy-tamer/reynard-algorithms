@@ -8,6 +8,8 @@
  */
 
 import { Point } from "../shapes/point-algorithms";
+import { memoizeMath, memoizeGeometry } from "../../utils/memoization";
+import { adaptiveMemo } from "../../utils";
 
 export interface Vector {
   x: number;
@@ -18,6 +20,14 @@ export interface Vector {
  * Vector operations
  */
 export class VectorOps {
+  // Memoized mathematical operations for performance
+  private static readonly memoizedSqrt = memoizeMath((x: number) => Math.sqrt(x));
+  private static readonly memoizedCos = memoizeMath((x: number) => Math.cos(x));
+  private static readonly memoizedSin = memoizeMath((x: number) => Math.sin(x));
+  private static readonly memoizedAtan2 = memoizeGeometry((y: number, x: number) => Math.atan2(y, x));
+  private static readonly memoizedAcos = memoizeMath((x: number) => Math.acos(x));
+  private static readonly memoizedMagnitude = memoizeGeometry((x: number, y: number) => Math.sqrt(x * x + y * y));
+
   static create(x: number, y: number): Vector {
     return { x, y };
   }
@@ -54,7 +64,7 @@ export class VectorOps {
   }
 
   static magnitude(vector: Vector): number {
-    return Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+    return VectorOps.memoizedMagnitude(vector.x, vector.y);
   }
 
   static magnitudeSquared(vector: Vector): number {
@@ -62,14 +72,25 @@ export class VectorOps {
   }
 
   static normalize(vector: Vector): Vector {
-    const mag = this.magnitude(vector);
-    if (mag === 0) return { x: 0, y: 0 };
-    return { x: vector.x / mag, y: vector.y / mag };
+    if (!this._normalizeMemo) {
+      this._normalizeMemo = adaptiveMemo(
+        (x: number, y: number) => {
+          const mag = Math.sqrt(x * x + y * y);
+          if (mag === 0) return { x: 0, y: 0 };
+          return { x: x / mag, y: y / mag };
+        },
+        { maxSize: 2048, minHitRate: 0.6, windowSize: 300, minSamples: 150 },
+        (x: number, y: number) => `${x}|${y}`
+      );
+    }
+    return this._normalizeMemo(vector.x, vector.y);
   }
 
+  private static _normalizeMemo?: (x: number, y: number) => Vector;
+
   static rotate(vector: Vector, angle: number): Vector {
-    const cos = Math.cos(angle);
-    const sin = Math.sin(angle);
+    const cos = VectorOps.memoizedCos(angle);
+    const sin = VectorOps.memoizedSin(angle);
     return {
       x: vector.x * cos - vector.y * sin,
       y: vector.x * sin + vector.y * cos,
@@ -77,13 +98,13 @@ export class VectorOps {
   }
 
   static angle(vector: Vector): number {
-    return Math.atan2(vector.y, vector.x);
+    return VectorOps.memoizedAtan2(vector.y, vector.x);
   }
 
   static angleBetween(a: Vector, b: Vector): number {
     const dot = this.dot(a, b);
     const magA = this.magnitude(a);
     const magB = this.magnitude(b);
-    return Math.acos(dot / (magA * magB));
+    return VectorOps.memoizedAcos(dot / (magA * magB));
   }
 }

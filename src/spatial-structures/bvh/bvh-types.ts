@@ -151,6 +151,10 @@ export interface BVHNode {
    * Number of primitives in this subtree.
    */
   primitiveCount: number;
+  /** Optional split axis for internal nodes */
+  splitAxis?: number;
+  /** Optional split position for internal nodes */
+  splitPosition?: number;
 }
 
 /**
@@ -197,6 +201,8 @@ export interface BVHBuildConfig {
    * @default false
    */
   enableDebug?: boolean;
+  /** Number of split candidates to consider per axis */
+  splitCandidates?: number;
 }
 
 /**
@@ -255,6 +261,16 @@ export interface BVHStats {
    * Average primitives tested per ray intersection.
    */
   averagePrimitivesTestedPerRay: number;
+  /** Total insertions performed */
+  insertions?: number;
+  /** Total removals performed */
+  removals?: number;
+  /** Average query time across operations */
+  averageQueryTime?: number;
+  /** Average build time */
+  averageBuildTime?: number;
+  /** Average refit time */
+  averageRefitTime?: number;
 }
 
 /**
@@ -460,6 +476,10 @@ export interface BVHPerformanceMetrics {
  */
 export interface BatchOperationResult {
   /**
+   * Whether the batch operation was successful overall.
+   */
+  success: boolean;
+  /**
    * Number of successful operations.
    */
   successful: number;
@@ -514,7 +534,7 @@ export interface SAHSplitCandidate {
   /**
    * Cost of this split.
    */
-  cost: number;
+  cost?: number;
   /**
    * Number of primitives on the left side.
    */

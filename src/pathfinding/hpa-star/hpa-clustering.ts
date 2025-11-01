@@ -5,10 +5,8 @@
 
 import type {
   Point,
-  CellType,
   GridCell,
   Cluster,
-  ClusterType,
   Entrance,
   HPAConfig,
   ClusterGenerationOptions,
@@ -16,6 +14,7 @@ import type {
   EntranceDetectionOptions,
   EntranceDetectionResult,
 } from "./hpa-star-types";
+import { CellType, ClusterType } from "./hpa-star-types";
 
 /**
  * Cluster generation and management utilities for HPA*.

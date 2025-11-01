@@ -25,15 +25,10 @@ export default defineConfig({
     // Environment for tests
     environment: "happy-dom",
     // Test timeout
-    testTimeout: 5000,
+    testTimeout: 2000,
     // Hook timeout
-    hookTimeout: 5000,
+    hookTimeout: 2000,
     // Reduce memory usage
     pool: "forks",
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
   },
 });

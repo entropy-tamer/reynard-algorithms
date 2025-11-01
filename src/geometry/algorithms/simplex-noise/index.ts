@@ -1,5 +1,5 @@
 /**
- * @module algorithms/geometry/algorithms/simplex-noise
+ * @file algorithms/geometry/algorithms/simplex-noise
  * @description Provides the Simplex Noise algorithm for procedural noise generation.
  */
 

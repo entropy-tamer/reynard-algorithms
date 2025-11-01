@@ -8,17 +8,17 @@ export default defineConfig({
       entry: resolve(__dirname, "src/index.ts"),
       name: "ReynardAlgorithms",
       fileName: "index",
-      formats: ["es", "cjs", "umd"],
+      formats: ["es", "cjs"],
     },
     rollupOptions: {
-      external: [],
+      external: ["fs", "path", "os", "node:os"],
       output: {
-        globals: {},
+        globals: {
+          fs: "fs",
+          path: "path",
+          os: "os"
+        },
       },
     },
-  },
-  test: {
-    environment: "happy-dom",
-    globals: true,
   },
 });

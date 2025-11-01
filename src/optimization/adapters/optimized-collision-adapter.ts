@@ -15,6 +15,7 @@ import {
   type OptimizationRecommendation,
 } from "../core/memory-pool";
 import type { AABB, CollisionPair } from "../../geometry/collision/aabb/aabb-types";
+import { getAlgorithmConfig } from "../../config/algorithm-config";
 import {
   // executeNaiveCollisionDetection,
   // executeSpatialCollisionDetection,
@@ -160,8 +161,12 @@ export class OptimizedCollisionAdapter {
    * @example
    */
   private executeSpatialDirect(aabbs: AABB[]): CollisionPair[] {
+    // Get configurable threshold from algorithm config
+    const config = getAlgorithmConfig();
+    const spatialThreshold = config.thresholds.naiveToSpatial;
+    
     // For medium datasets, if spatial hash overhead is too much, fall back to naive
-    if (aabbs.length < 300) {
+    if (aabbs.length < spatialThreshold) {
       return this.executeNaiveWithPool(aabbs);
     }
 

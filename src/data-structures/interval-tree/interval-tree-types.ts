@@ -18,6 +18,7 @@ export interface Interval {
 export interface IntervalTreeNode {
   interval: Interval;
   max: number; // Maximum end point in the subtree rooted at this node
+  maxEnd: number; // Alias for max for compatibility
   left: IntervalTreeNode | null;
   right: IntervalTreeNode | null;
   height: number; // For AVL balancing
@@ -60,6 +61,10 @@ export interface IntervalTreeConfig {
  */
 export interface IntervalSearchResult {
   /**
+   * Whether the search operation was successful.
+   */
+  success: boolean;
+  /**
    * Array of intervals that match the search criteria.
    */
   intervals: Interval[];
@@ -75,6 +80,10 @@ export interface IntervalSearchResult {
    * Number of nodes visited during the search.
    */
   nodesVisited: number;
+  /**
+   * Additional metadata about the search.
+   */
+  metadata?: Record<string, any>;
 }
 
 /**
@@ -93,12 +102,20 @@ export interface IntervalOverlapResult {
    * Time taken for the overlap check in milliseconds.
    */
   executionTime: number;
+  /**
+   * Additional metadata about the overlap check.
+   */
+  metadata?: Record<string, any>;
 }
 
 /**
  * Result of an interval tree traversal.
  */
 export interface IntervalTreeTraversalResult {
+  /**
+   * Whether the traversal operation was successful.
+   */
+  success: boolean;
   /**
    * Array of intervals in traversal order.
    */
@@ -115,6 +132,10 @@ export interface IntervalTreeTraversalResult {
    * Number of nodes visited.
    */
   nodesVisited: number;
+  /**
+   * Additional metadata about the traversal.
+   */
+  metadata?: Record<string, any>;
 }
 
 /**
@@ -154,6 +175,14 @@ export interface IntervalTreeStats {
    */
   averageSearchTime: number;
   /**
+   * Average insert time in milliseconds.
+   */
+  averageInsertTime: number;
+  /**
+   * Average delete time in milliseconds.
+   */
+  averageDeleteTime: number;
+  /**
    * Memory usage in bytes.
    */
   memoryUsage: number;
@@ -163,6 +192,10 @@ export interface IntervalTreeStats {
  * Performance metrics for the interval tree.
  */
 export interface IntervalTreePerformanceMetrics {
+  /**
+   * Total number of operations performed.
+   */
+  totalOperations: number;
   /**
    * Memory usage in bytes.
    */
@@ -183,6 +216,22 @@ export interface IntervalTreePerformanceMetrics {
    * Performance score (0-100).
    */
   performanceScore: number;
+  /**
+   * Height of the tree.
+   */
+  treeHeight?: number;
+  /**
+   * Number of nodes in the tree.
+   */
+  nodeCount?: number;
+  /**
+   * Total number of intervals in the tree.
+   */
+  totalIntervals?: number;
+  /**
+   * Average interval length.
+   */
+  averageIntervalLength?: number;
   /**
    * Tree balance factor.
    */
@@ -226,6 +275,10 @@ export enum IntervalTreeEventType {
   INTERVAL_SEARCHED = "interval_searched",
   TREE_REBALANCED = "tree_rebalanced",
   TREE_CLEARED = "tree_cleared",
+  ROTATION_PERFORMED = "rotation_performed",
+  SEARCH_PERFORMED = "search_performed",
+  OVERLAP_CHECKED = "overlap_checked",
+  TRAVERSAL_PERFORMED = "traversal_performed",
 }
 
 /**
@@ -278,6 +331,10 @@ export interface TraversalOptions {
  */
 export interface BatchOperationResult {
   /**
+   * Whether the batch operation was successful overall.
+   */
+  success: boolean;
+  /**
    * Number of successful operations.
    */
   successful: number;
@@ -297,6 +354,10 @@ export interface BatchOperationResult {
    * Array of operation results.
    */
   results: boolean[];
+  /**
+   * Additional metadata about the batch operation.
+   */
+  metadata?: Record<string, any>;
 }
 
 /**
@@ -312,9 +373,17 @@ export interface IntervalTreeSerialization {
    */
   config: IntervalTreeConfig;
   /**
+   * Root node of the tree.
+   */
+  root: IntervalTreeNode | null;
+  /**
    * Serialized tree data.
    */
   data: any;
+  /**
+   * Statistics about the tree.
+   */
+  stats: IntervalTreeStats;
   /**
    * Metadata about the tree.
    */
@@ -323,6 +392,9 @@ export interface IntervalTreeSerialization {
     totalNodes: number;
     height: number;
     createdAt: number;
+    timestamp?: number;
+    version?: string;
+    config?: IntervalTreeConfig;
   };
 }
 

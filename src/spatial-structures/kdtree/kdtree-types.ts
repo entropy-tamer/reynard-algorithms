@@ -12,10 +12,12 @@
  *
  * Represents a k-dimensional point in space.
  */
-export interface Point {
-  /** Array of coordinates for each dimension */
-  coordinates: number[];
-}
+export type Point = {
+  /** Index or key-based coordinate access */
+  [key: string]: number;
+} & {
+  [index: number]: number;
+};
 
 /**
  * 2D Point Interface
@@ -179,6 +181,10 @@ export interface KNearestNeighborsResult<T = any> {
   count: number;
   /** Maximum distance among results */
   maxDistance: number;
+  /** Optional convenience flags and metadata used by callers */
+  success?: boolean;
+  executionTime?: number;
+  metadata?: any;
 }
 
 /**
@@ -197,6 +203,8 @@ export interface RangeQueryResult<T = any> {
   nodesVisited?: number;
   /** Whether the operation was successful */
   success?: boolean;
+  /** Optional metadata bag */
+  metadata?: any;
 }
 
 /**
@@ -271,18 +279,34 @@ export interface KdTreeOptions {
 export enum KdTreeEventType {
   /** Point inserted */
   POINT_INSERTED = "point_inserted",
+  /** Alias used in some modules */
+  KD_TREE_INSERTED = "point_inserted",
   /** Point removed */
   POINT_REMOVED = "point_removed",
+  /** Alias used in some modules */
+  KD_TREE_REMOVED = "point_removed",
   /** Tree rebuilt */
   TREE_REBUILT = "tree_rebuilt",
+  /** Alias used in some modules */
+  KD_TREE_REBUILT = "tree_rebuilt",
   /** Query performed */
   QUERY_PERFORMED = "query_performed",
+  /** Alias used in some modules */
+  KD_TREE_SEARCHED = "search_performed",
   /** Search performed */
   SEARCH_PERFORMED = "search_performed",
   /** Nearest neighbor query performed */
   NEAREST_NEIGHBOR_QUERY = "nearest_neighbor_query",
+  /** Alias used in some modules */
+  KD_TREE_NEAREST_NEIGHBOR = "nearest_neighbor_query",
   /** Range query performed */
   RANGE_QUERY = "range_query",
+  /** Alias used in some modules */
+  KD_TREE_RANGE_QUERY = "range_query",
+  /** Tree cleared (alias used in some modules) */
+  KD_TREE_CLEARED = "tree_cleared",
+  /** KNN query alias */
+  KD_TREE_K_NEAREST_NEIGHBORS = "k_nearest_neighbors_query",
   /** Performance threshold exceeded */
   PERFORMANCE_THRESHOLD_EXCEEDED = "performance_threshold_exceeded",
 }
@@ -332,6 +356,14 @@ export interface KdTreePerformanceMetrics {
   balanceRatio?: number;
   /** Query efficiency */
   queryEfficiency?: number;
+  /** Tree height (compat convenience) */
+  treeHeight?: number;
+  /** Average depth (compat convenience) */
+  averageDepth?: number;
+  /** Node count (compat convenience) */
+  nodeCount?: number;
+  /** Leaf count (compat convenience) */
+  leafCount?: number;
 }
 
 /**
@@ -358,18 +390,20 @@ export interface BatchOperationResult {
  * K-d Tree Serialization
  */
 export interface KdTreeSerialization {
+  /** Optional serialization version */
+  version?: string;
   /** Tree configuration */
   config: KdTreeConfig;
-  /** Serialized tree data */
-  data: any;
+  /** Serialized tree root or data */
+  root?: any;
+  /** Optional full stats */
+  stats?: KdTreeStats;
   /** Metadata */
   metadata: {
-    version: string;
     timestamp: number;
-    stats: KdTreeStats;
     totalPoints: number;
-    nodeCount: number;
-    height: number;
+    nodeCount?: number;
+    height?: number;
     createdAt?: number;
   };
 }

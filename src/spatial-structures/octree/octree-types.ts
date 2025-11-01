@@ -437,6 +437,8 @@ export interface OctreeOptions {
    * Event handlers for monitoring operations.
    */
   eventHandlers?: OctreeEventHandler[];
+  /** Enable debug event emission */
+  enableDebug?: boolean;
 }
 
 /**
@@ -451,6 +453,7 @@ export enum OctreeEventType {
   RAY_INTERSECTION = "ray_intersection",
   FRUSTUM_CULLING = "frustum_culling",
   STATS_UPDATED = "stats_updated",
+  OCTREE_CLEARED = "octree_cleared",
 }
 
 /**
@@ -509,6 +512,10 @@ export interface OctreePerformanceMetrics {
  * Result of a batch operation.
  */
 export interface BatchOperationResult {
+  /**
+   * Whether the batch operation was successful overall.
+   */
+  success: boolean;
   /**
    * Number of successful operations.
    */

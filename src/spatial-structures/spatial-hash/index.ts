@@ -12,6 +12,7 @@
  * - Performance monitoring
  * - Automatic cleanup
  *
+ * @file Public entrypoint for the spatial hash module API
  * @module algorithms/spatialHash
  */
 

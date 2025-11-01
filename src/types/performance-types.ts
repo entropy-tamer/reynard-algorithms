@@ -1,5 +1,5 @@
 /**
- * Performance and Memory Management Types
+ * @file Performance and Memory Management Types
  *
  * Type definitions for performance monitoring, memory management, and optimization
  */
@@ -14,11 +14,11 @@ export interface PerformanceMemoryAPI {
   readonly memory?: PerformanceMemoryInfo;
 }
 
-export interface ExtendedPerformance extends Performance {
+export interface ExtendedPerformance extends globalThis.Performance {
   readonly memory?: PerformanceMemoryInfo;
 }
 
-export interface ExtendedGlobal extends Window {
+export interface ExtendedGlobal extends globalThis.Window {
   readonly performance: ExtendedPerformance;
 }
 

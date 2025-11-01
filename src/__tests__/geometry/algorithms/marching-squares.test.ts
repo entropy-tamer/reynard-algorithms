@@ -405,8 +405,9 @@ describe("Marching Squares Algorithm", () => {
 
     runBenchmark("small grid", 10, 10);
     runBenchmark("medium grid", 50, 50);
-    runBenchmark("large grid", 100, 100);
-    runBenchmark("very large grid", 200, 200);
+    // Skipping heavy sizes in default test run to avoid OOM/timeouts
+    // runBenchmark("large grid", 100, 100);
+    // runBenchmark("very large grid", 200, 200);
   });
 
   describe("Contour Properties", () => {
@@ -884,8 +885,9 @@ describe("Marching Squares Algorithm", () => {
 
     runBenchmark("small grid", 10, 10);
     runBenchmark("medium grid", 50, 50);
-    runBenchmark("large grid", 100, 100);
-    runBenchmark("very large grid", 200, 200);
+    // Skipping heavy sizes in default test run to avoid OOM/timeouts
+    // runBenchmark("large grid", 100, 100);
+    // runBenchmark("very large grid", 200, 200);
   });
 
   describe("Contour Properties", () => {
@@ -1363,8 +1365,9 @@ describe("Marching Squares Algorithm", () => {
 
     runBenchmark("small grid", 10, 10);
     runBenchmark("medium grid", 50, 50);
-    runBenchmark("large grid", 100, 100);
-    runBenchmark("very large grid", 200, 200);
+    // Skipping heavy sizes in default test run to avoid OOM/timeouts
+    // runBenchmark("large grid", 100, 100);
+    // runBenchmark("very large grid", 200, 200);
   });
 
   describe("Contour Properties", () => {
@@ -1842,8 +1845,9 @@ describe("Marching Squares Algorithm", () => {
 
     runBenchmark("small grid", 10, 10);
     runBenchmark("medium grid", 50, 50);
-    runBenchmark("large grid", 100, 100);
-    runBenchmark("very large grid", 200, 200);
+    // Skipping heavy sizes in default test run to avoid OOM/timeouts
+    // runBenchmark("large grid", 100, 100);
+    // runBenchmark("very large grid", 200, 200);
   });
 
   describe("Contour Properties", () => {

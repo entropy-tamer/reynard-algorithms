@@ -254,6 +254,8 @@ export interface TraversalResult {
  * Batch operation result
  */
 export interface BatchOperationResult {
+  /** Whether the batch operation was successful overall */
+  success: boolean;
   /** Number of successful operations */
   successful: number;
   /** Number of failed operations */

@@ -6,13 +6,14 @@
 export { ThetaStar } from "./theta-star-core";
 export { ThetaStarUtils } from "./theta-star-utils";
 export { LineOfSight } from "./line-of-sight";
+// Export enum as value (enums are both types and values in TypeScript)
+export { CellType } from "./theta-star-types";
 
 export type {
   Point,
   Vector,
   Direction,
   MovementType,
-  CellType,
   GridCell,
   ThetaStarNode,
   ThetaStarConfig,
