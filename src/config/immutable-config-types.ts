@@ -1,10 +1,8 @@
 /**
- * Types and interfaces for immutable configuration system
- * 
- * @file
+ * @file Types and interfaces for immutable configuration system
  */
 
-import { AlgorithmConfig } from './algorithm-config';
+import { AlgorithmConfig } from "./algorithm-config";
 
 /**
  * Immutable configuration snapshot
@@ -36,7 +34,7 @@ export interface OptimizedCollisionConfig {
  * Configuration change event
  */
 export interface ConfigChangeEvent {
-  readonly type: 'config_changed';
+  readonly type: "config_changed";
   readonly oldSnapshot: ImmutableConfigSnapshot;
   readonly newSnapshot: ImmutableConfigSnapshot;
   readonly changedKeys: string[];
@@ -47,4 +45,3 @@ export interface ConfigChangeEvent {
  * Configuration change listener
  */
 export type ConfigChangeListener = (event: ConfigChangeEvent) => void;
-

@@ -1,26 +1,27 @@
 /**
- * Flow Field Validation Tests
- * 
+ * @file Flow Field Validation Tests
+ *
  * Comprehensive tests for flow field validation logic, including the fix
  * for Issue #1 - Flow Field Validation Logic Error.
- * 
+ *
  * @module algorithms/flowFieldValidationTests
  */
+/* eslint-disable max-lines, max-lines-per-function */
 
-import { FlowField } from '../../pathfinding/flow-field/flow-field-core';
-import { FlowFieldGenerator } from '../../pathfinding/flow-field/flow-field-generator';
-import { CellType, FlowCell, IntegrationCell } from '../../pathfinding/flow-field/flow-field-types';
-import { runBenchmark, assertPerformance } from '../utils/benchmark-utils';
+import { FlowField } from "../../algorithms/pathfinding/flow-field/flow-field-core";
+import { FlowFieldGenerator } from "../../algorithms/pathfinding/flow-field/flow-field-generator";
+import { CellType, FlowCell, IntegrationCell } from "../../algorithms/pathfinding/flow-field/flow-field-types";
+import { runBenchmark, assertPerformance } from "../utils/benchmark-utils";
 
-describe('Flow Field Validation Logic', () => {
+describe("Flow Field Validation Logic", () => {
   let flowField: FlowField;
 
   beforeEach(() => {
     flowField = new FlowField();
   });
 
-  describe('Issue #1: Flow Field Validation Logic Error', () => {
-    it('should correctly identify valid cells with zero magnitude as errors', () => {
+  describe("Issue #1: Flow Field Validation Logic Error", () => {
+    it("should correctly identify valid cells with zero magnitude as errors", () => {
       // Create a flow field with a valid cell that has zero magnitude (inconsistent state)
       const flowFieldCells: FlowCell[] = [
         {
@@ -47,10 +48,10 @@ describe('Flow Field Validation Logic', () => {
       const validation = flowField.validateFlowField(flowFieldCells, integrationField);
 
       expect(validation.isValid).toBe(false);
-      expect(validation.errors).toContain('Valid flow cell at (0, 0) has zero magnitude');
+      expect(validation.errors).toContain("Valid flow cell at (0, 0) has zero magnitude");
     });
 
-    it('should correctly identify invalid cells with non-zero magnitude as errors', () => {
+    it("should correctly identify invalid cells with non-zero magnitude as errors", () => {
       // Create a flow field with an invalid cell that has non-zero magnitude (inconsistent state)
       const flowFieldCells: FlowCell[] = [
         {
@@ -77,10 +78,10 @@ describe('Flow Field Validation Logic', () => {
       const validation = flowField.validateFlowField(flowFieldCells, integrationField);
 
       expect(validation.isValid).toBe(false);
-      expect(validation.errors).toContain('Invalid flow cell at (0, 0) has non-zero magnitude 1');
+      expect(validation.errors).toContain("Invalid flow cell at (0, 0) has non-zero magnitude 1");
     });
 
-    it('should pass validation for correctly structured flow field', () => {
+    it("should pass validation for correctly structured flow field", () => {
       // Create a properly structured flow field
       const flowFieldCells: FlowCell[] = [
         {
@@ -110,7 +111,7 @@ describe('Flow Field Validation Logic', () => {
       expect(validation.errors).toHaveLength(0);
     });
 
-    it('should handle edge cases correctly', () => {
+    it("should handle edge cases correctly", () => {
       // Test with cells at boundaries and special values
       const flowFieldCells: FlowCell[] = [
         {
@@ -145,12 +146,12 @@ describe('Flow Field Validation Logic', () => {
       const validation = flowField.validateFlowField(flowFieldCells, integrationField);
 
       expect(validation.isValid).toBe(false);
-      expect(validation.errors).toContain('Valid flow cell at (2, 0) has zero magnitude');
+      expect(validation.errors).toContain("Valid flow cell at (2, 0) has zero magnitude");
     });
   });
 
-  describe('Flow Field Validation Performance', () => {
-    it('should validate large flow fields efficiently', async () => {
+  describe("Flow Field Validation Performance", () => {
+    it("should validate large flow fields efficiently", async () => {
       // Create a large flow field for performance testing
       const width = 100;
       const height = 100;
@@ -177,7 +178,7 @@ describe('Flow Field Validation Logic', () => {
       }
 
       const report = await runBenchmark(
-        'flow-field-validation-large',
+        "flow-field-validation-large",
         () => flowField.validateFlowField(flowFieldCells, integrationField),
         { samples: 10 }
       );
@@ -192,7 +193,7 @@ describe('Flow Field Validation Logic', () => {
       expect(report.assertions.stablePerformance).toBe(true);
     });
 
-    it('should handle validation of mixed valid/invalid cells efficiently', async () => {
+    it("should handle validation of mixed valid/invalid cells efficiently", async () => {
       // Create a flow field with mixed validity states
       const flowFieldCells: FlowCell[] = [];
       const integrationField: IntegrationCell[] = [];
@@ -200,7 +201,7 @@ describe('Flow Field Validation Logic', () => {
       for (let i = 0; i < 1000; i++) {
         const isValid = i % 3 === 0; // Every third cell is valid
         const hasMagnitude = i % 2 === 0; // Every second cell has magnitude
-        
+
         flowFieldCells.push({
           x: i % 50,
           y: Math.floor(i / 50),
@@ -208,7 +209,7 @@ describe('Flow Field Validation Logic', () => {
           magnitude: hasMagnitude ? Math.random() : 0,
           valid: isValid,
         });
-        
+
         integrationField.push({
           x: i % 50,
           y: Math.floor(i / 50),
@@ -218,7 +219,7 @@ describe('Flow Field Validation Logic', () => {
       }
 
       const report = await runBenchmark(
-        'flow-field-validation-mixed',
+        "flow-field-validation-mixed",
         () => flowField.validateFlowField(flowFieldCells, integrationField),
         { samples: 10 }
       );
@@ -233,8 +234,8 @@ describe('Flow Field Validation Logic', () => {
     });
   });
 
-  describe('Integration with Flow Field Generation', () => {
-    it('should validate generated flow fields correctly', () => {
+  describe("Integration with Flow Field Generation", () => {
+    it("should validate generated flow fields correctly", () => {
       // Generate a real flow field and validate it
       const grid = new Array(10 * 10).fill(CellType.WALKABLE);
       const goals = [{ x: 9, y: 9 }];
@@ -253,20 +254,15 @@ describe('Flow Field Validation Logic', () => {
         tolerance: 1e-6,
       };
 
-      const result = FlowFieldGenerator.generateFlowField(
-        grid,
-        goals,
-        config,
-        {
-          returnIntegrationField: true,
-          returnFlowField: true,
-          normalizeFlowVectors: true,
-          useEarlyTermination: true,
-          maxIterations: 100,
-          useGoalBounding: false,
-          useMultiGoal: false,
-        }
-      );
+      const result = FlowFieldGenerator.generateFlowField(grid, goals, config, {
+        returnIntegrationField: true,
+        returnFlowField: true,
+        normalizeFlowVectors: true,
+        useEarlyTermination: true,
+        maxIterations: 100,
+        useGoalBounding: false,
+        useMultiGoal: false,
+      });
 
       // Validate the generated flow field
       const validation = flowField.validateFlowField(result.flowField, result.integrationField);
@@ -276,7 +272,7 @@ describe('Flow Field Validation Logic', () => {
       expect(validation.errors).toHaveLength(0);
     });
 
-    it('should detect issues in corrupted flow fields', () => {
+    it("should detect issues in corrupted flow fields", () => {
       // Generate a valid flow field, then corrupt it
       const grid = new Array(5 * 5).fill(CellType.WALKABLE);
       const goals = [{ x: 4, y: 4 }];
@@ -295,20 +291,15 @@ describe('Flow Field Validation Logic', () => {
         tolerance: 1e-6,
       };
 
-      const result = FlowFieldGenerator.generateFlowField(
-        grid,
-        goals,
-        config,
-        {
-          returnIntegrationField: true,
-          returnFlowField: true,
-          normalizeFlowVectors: true,
-          useEarlyTermination: true,
-          maxIterations: 25,
-          useGoalBounding: false,
-          useMultiGoal: false,
-        }
-      );
+      const result = FlowFieldGenerator.generateFlowField(grid, goals, config, {
+        returnIntegrationField: true,
+        returnFlowField: true,
+        normalizeFlowVectors: true,
+        useEarlyTermination: true,
+        maxIterations: 25,
+        useGoalBounding: false,
+        useMultiGoal: false,
+      });
 
       // Corrupt the flow field by making a valid cell have zero magnitude
       result.flowField[0].magnitude = 0;
@@ -320,12 +311,12 @@ describe('Flow Field Validation Logic', () => {
       // Should detect the corruption
       expect(validation.isValid).toBe(false);
       expect(validation.errors.length).toBeGreaterThan(0);
-      expect(validation.errors.some(error => error.includes('zero magnitude'))).toBe(true);
+      expect(validation.errors.some(error => error.includes("zero magnitude"))).toBe(true);
     });
   });
 
-  describe('Validation Options', () => {
-    it('should respect validation options', () => {
+  describe("Validation Options", () => {
+    it("should respect validation options", () => {
       const flowFieldCells: FlowCell[] = [
         {
           x: 0,
@@ -336,26 +327,20 @@ describe('Flow Field Validation Logic', () => {
         },
       ];
 
-      const integrationField: IntegrationCell[] = [
-        { x: 0, y: 0, cost: 0, processed: true },
-      ];
+      const integrationField: IntegrationCell[] = [{ x: 0, y: 0, cost: 0, processed: true }];
 
       // Test with flow field validation disabled
-      const validationDisabled = flowField.validateFlowField(
-        flowFieldCells,
-        integrationField,
-        { checkFlowFieldValidity: false }
-      );
+      const validationDisabled = flowField.validateFlowField(flowFieldCells, integrationField, {
+        checkFlowFieldValidity: false,
+      });
 
       expect(validationDisabled.isValid).toBe(true);
       expect(validationDisabled.errors).toHaveLength(0);
 
       // Test with flow field validation enabled
-      const validationEnabled = flowField.validateFlowField(
-        flowFieldCells,
-        integrationField,
-        { checkFlowFieldValidity: true }
-      );
+      const validationEnabled = flowField.validateFlowField(flowFieldCells, integrationField, {
+        checkFlowFieldValidity: true,
+      });
 
       expect(validationEnabled.isValid).toBe(false);
       expect(validationEnabled.errors.length).toBeGreaterThan(0);

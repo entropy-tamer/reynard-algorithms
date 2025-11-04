@@ -1,6 +1,7 @@
 /**
- * @vitest-environment happy-dom
+ * @file Extended tests for memory pool utilities
  */
+// @vitest-environment happy-dom
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import {
@@ -10,8 +11,8 @@ import {
   createVectorPool,
   MemoryPoolManager,
   globalPoolManager,
-} from "../../performance/memory-pool-utils";
-import type { PerformanceMemoryPoolConfig } from "../../performance/memory-pool-core";
+} from "../../utils/memory/memory-pool-utils";
+import type { PerformanceMemoryPoolConfig } from "../../utils/memory/memory-pool-core";
 
 describe("Memory Pool Utils Extended Coverage", () => {
   describe("createSpatialObjectPool", () => {

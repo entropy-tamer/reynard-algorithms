@@ -3,13 +3,13 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { ThetaStar, ThetaStarUtils } from "../../pathfinding/theta-star/theta-star-core";
-import { LineOfSight } from "../../pathfinding/theta-star/line-of-sight";
-import type { Point, CellType, Direction, MovementType } from "../../pathfinding/theta-star/theta-star-types";
+import { ThetaStar, ThetaStarUtils } from "../../algorithms/pathfinding/theta-star/theta-star-core";
+import { LineOfSight } from "../../algorithms/pathfinding/theta-star/line-of-sight";
+import type { Point, CellType, Direction, MovementType } from "../../algorithms/pathfinding/theta-star/theta-star-types";
 import {
   Direction as ThetaStarDirection,
   MovementType as ThetaStarMovementType,
-} from "../../pathfinding/theta-star/theta-star-types";
+} from "../../algorithms/pathfinding/theta-star/theta-star-types";
 
 describe("ThetaStar", () => {
   let thetaStar: ThetaStar;

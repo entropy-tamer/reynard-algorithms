@@ -1,5 +1,9 @@
+/**
+ * @file Fenwick Tree tests
+ */
+/* eslint-disable max-lines, max-lines-per-function */
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { FenwickTree } from "../../data-structures/fenwick-tree/fenwick-tree-core";
+import { FenwickTree } from "../../data-structures/trees/fenwick-tree/fenwick-tree-core";
 
 describe("Fenwick Tree (Binary Indexed Tree) Data Structure", () => {
   let fenwickTree: FenwickTree;

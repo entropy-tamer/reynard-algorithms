@@ -7,7 +7,7 @@
  * @module algorithms/optimization/workloadAnalyzer
  */
 
-import type { AABB } from "../../geometry/collision/aabb/aabb-types";
+import type { AABB } from "../../algorithms/collision/narrow-phase/aabb/aabb-types";
 import type { WorkloadCharacteristics } from "../core/algorithm-selector-types";
 import { checkCollision } from "./collision-algorithms";
 

@@ -4,8 +4,8 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { JPS, JPSUtils } from "../../pathfinding/jps/jps-core";
-import type { Point, CellType } from "../../pathfinding/jps/jps-types";
+import { JPS, JPSUtils } from "../../algorithms/pathfinding/jps/jps-core";
+import type { Point, CellType } from "../../algorithms/pathfinding/jps/jps-types";
 
 describe("JPS Performance", () => {
   let jps: JPS;

@@ -21,6 +21,10 @@ export class CollisionSelector {
   private static readonly memoizedMultiply = MathMemo.multiply;
   private static readonly memoizedAdd = MathMemo.add;
 
+  /**
+   *
+   * @example
+   */
   private getThresholds() {
     const config = getAlgorithmConfig();
     return {
@@ -31,6 +35,9 @@ export class CollisionSelector {
 
   /**
    * Select optimal collision detection algorithm
+   * @param analysis
+   * @param t
+   * @example
    */
   selectOptimalCollisionAlgorithm(analysis: WorkloadAnalysis, t?: (key: string) => string): AlgorithmSelection {
     const { objectCount } = analysis.workload;
@@ -50,6 +57,9 @@ export class CollisionSelector {
 
   /**
    * Select naive collision algorithm for small datasets
+   * @param analysis
+   * @param t
+   * @example
    */
   private selectNaiveAlgorithm(analysis: WorkloadAnalysis, t?: (key: string) => string): AlgorithmSelection {
     const { complexity } = analysis;
@@ -81,13 +91,18 @@ export class CollisionSelector {
 
   /**
    * Select spatial collision algorithm for medium datasets
+   * @param analysis
+   * @param t
+   * @example
    */
   private selectSpatialAlgorithm(analysis: WorkloadAnalysis, t?: (key: string) => string): AlgorithmSelection {
     const { complexity } = analysis;
     const { objectCount } = analysis.workload;
 
     // Provide fallback complexity if not available - use memoized log operation
-    const spatialComplexity = complexity?.spatial || CollisionSelector.memoizedMultiply(objectCount, CollisionSelector.memoizedLog(objectCount));
+    const spatialComplexity =
+      complexity?.spatial ||
+      CollisionSelector.memoizedMultiply(objectCount, CollisionSelector.memoizedLog(objectCount));
 
     return {
       algorithm: "spatial",
@@ -112,13 +127,21 @@ export class CollisionSelector {
 
   /**
    * Select optimized collision algorithm for large datasets
+   * @param analysis
+   * @param t
+   * @example
    */
   private selectOptimizedAlgorithm(analysis: WorkloadAnalysis, t?: (key: string) => string): AlgorithmSelection {
     const { complexity } = analysis;
     const { objectCount } = analysis.workload;
 
     // Provide fallback complexity if not available - use memoized log operation
-    const optimizedComplexity = complexity?.optimized || CollisionSelector.memoizedMultiply(CollisionSelector.memoizedMultiply(objectCount, CollisionSelector.memoizedLog(objectCount)), 0.5);
+    const optimizedComplexity =
+      complexity?.optimized ||
+      CollisionSelector.memoizedMultiply(
+        CollisionSelector.memoizedMultiply(objectCount, CollisionSelector.memoizedLog(objectCount)),
+        0.5
+      );
 
     return {
       algorithm: "optimized",

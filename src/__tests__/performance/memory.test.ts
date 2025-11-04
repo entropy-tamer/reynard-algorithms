@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { MemoryMonitor } from "../../performance/memory";
+import { MemoryMonitor } from "../../utils/memory/memory";
 
 describe("MemoryMonitor", () => {
   let monitor: MemoryMonitor;

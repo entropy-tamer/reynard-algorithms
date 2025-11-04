@@ -14,6 +14,10 @@ import type { WorkloadCharacteristics, ComplexityAnalysis, MemoryPressureAnalysi
 export class RecommendationGenerator {
   /**
    * Generate optimization recommendations
+   * @param workload
+   * @param _complexity
+   * @param memoryPressure
+   * @example
    */
   generateRecommendations(
     workload: WorkloadCharacteristics,

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { FrameRateMonitor } from "../../performance/framerate";
+import { FrameRateMonitor } from "../../utils/performance/framerate";
 
 // Mock performance.now and requestAnimationFrame
 const mockPerformanceNow = vi.fn();

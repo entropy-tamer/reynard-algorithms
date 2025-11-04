@@ -1,16 +1,42 @@
-import { performance } from 'node:perf_hooks';
-import { ThetaStar } from '../src/pathfinding/theta-star/theta-star-core';
-import { OptimizedThetaStar } from '../src/pathfinding/theta-star/theta-star-optimized';
+/**
+ * @file Benchmark comparison between ThetaStar and OptimizedThetaStar algorithms
+ */
+/* eslint-disable max-lines-per-function */
+
+import { performance } from "node:perf_hooks";
+import { ThetaStar } from "../src/algorithms/pathfinding/theta-star/theta-star-core";
+import { OptimizedThetaStar } from "../src/algorithms/pathfinding/theta-star/theta-star-optimized";
 
 type CellType = 0 | 1 | 2 | 3;
 
 type Point = { x: number; y: number };
 
+/**
+ * Linear congruential generator for deterministic random numbers
+ *
+ * @param seed - Initial seed value
+ * @returns Function that returns next random number [0, 1)
+ * @example
+ * const rng = lcg(12345);
+ * const value = rng(); // Returns deterministic random value
+ */
 function lcg(seed: number) {
   let s = seed >>> 0;
   return () => (s = (1664525 * s + 1013904223) >>> 0) / 0xffffffff;
 }
 
+/**
+ * Generate a random grid with obstacles for pathfinding tests
+ *
+ * @param width - Grid width in cells
+ * @param height - Grid height in cells
+ * @param obstacleProb - Probability of obstacle in each cell (0-1)
+ * @param seed - Random seed for reproducible grids
+ * @returns Array of cell types (0=free, 1=obstacle)
+ * @example
+ * const grid = generateGrid(100, 100, 0.2, 42);
+ * // Creates a 100x100 grid with ~20% obstacles
+ */
 function generateGrid(width: number, height: number, obstacleProb: number, seed: number): CellType[] {
   const rand = lcg(seed);
   const grid = new Array<CellType>(width * height);
@@ -26,18 +52,32 @@ function generateGrid(width: number, height: number, obstacleProb: number, seed:
   return grid;
 }
 
+/**
+ * Calculate median value from array of numbers
+ *
+ * @param values - Array of numeric values
+ * @returns Median value
+ * @example
+ * const med = median([1, 3, 5, 7, 9]); // Returns 5
+ */
 function median(values: number[]): number {
   const arr = [...values].sort((a, b) => a - b);
   const mid = Math.floor(arr.length / 2);
   return arr.length % 2 ? arr[mid] : (arr[mid - 1] + arr[mid]) / 2;
 }
 
-async function runCase(
-  width: number,
-  height: number,
-  obstacleProb: number,
-  repeats: number,
-) {
+/**
+ * Run benchmark case comparing base and optimized ThetaStar
+ *
+ * @param width - Grid width
+ * @param height - Grid height
+ * @param obstacleProb - Obstacle probability
+ * @param repeats - Number of test iterations
+ * @returns Performance metrics for both implementations
+ * @example
+ * const results = await runCase(100, 100, 0.2, 5);
+ */
+async function runCase(width: number, height: number, obstacleProb: number, repeats: number) {
   const start: Point = { x: 0, y: 0 };
   const goal: Point = { x: width - 1, y: height - 1 };
   const base = new ThetaStar();
@@ -54,24 +94,24 @@ async function runCase(
     base.findPath(grid, width, height, start, goal);
     opt.findPath(grid, width, height, start, goal);
 
-    let t1 = performance.now();
-    let r1: any = null;
+    const t1 = performance.now();
+    let r1: { found: boolean } | null = null;
     for (let k = 0; k < innerIters; k++) {
       r1 = base.findPath(grid, width, height, start, goal);
     }
-    let t2 = performance.now();
+    const t2 = performance.now();
     baseTimes.push((t2 - t1) / innerIters);
 
-    let t3 = performance.now();
-    let r2: any = null;
+    const t3 = performance.now();
+    let r2: { found: boolean } | null = null;
     for (let k = 0; k < innerIters; k++) {
       r2 = opt.findPath(grid, width, height, start, goal);
     }
-    let t4 = performance.now();
+    const t4 = performance.now();
     optTimes.push((t4 - t3) / innerIters);
 
     // Basic correctness sanity
-    if (!r1.found && (r2 as any).found === false) {
+    if (!r1?.found && !r2?.found) {
       // both failed, acceptable in dense grids
     }
   }
@@ -84,6 +124,13 @@ async function runCase(
   };
 }
 
+/**
+ * Main benchmark function that runs all test cases and prints results
+ *
+ * @example
+ * await main();
+ * // Outputs formatted table with benchmark results
+ */
 async function main() {
   const cases = [
     { w: 100, h: 100, p: 0.2, r: 7 },
@@ -120,8 +167,16 @@ async function main() {
 
   // Print table
   const pad = (s: string, n: number) => s.padEnd(n);
-  console.log('\nTheta* Benchmark (ms)');
-  console.log(pad('Size', 10), pad('Obstacle', 10), pad('BaseMed', 10), pad('OptMed', 10), pad('BaseMean', 10), pad('OptMean', 10), pad('Speedup', 8));
+  console.log("\nTheta* Benchmark (ms)");
+  console.log(
+    pad("Size", 10),
+    pad("Obstacle", 10),
+    pad("BaseMed", 10),
+    pad("OptMed", 10),
+    pad("BaseMean", 10),
+    pad("OptMean", 10),
+    pad("Speedup", 8)
+  );
   for (const r of rows) {
     console.log(
       pad(r.size, 10),
@@ -130,11 +185,9 @@ async function main() {
       pad(r.optMedianMs.toString(), 10),
       pad(r.baseMeanMs.toString(), 10),
       pad(r.optMeanMs.toString(), 10),
-      pad(`${r.speedup}x`, 8),
+      pad(`${r.speedup}x`, 8)
     );
   }
 }
 
 main();
-
-

@@ -1,19 +1,14 @@
 /**
- * Configuration manager implementation for algorithm configuration system
- * 
- * @file
+ * @file Configuration manager implementation for algorithm configuration system
  */
 
-import type {
-  AlgorithmConfig,
-  MachineFingerprint,
-} from './algorithm-config-types';
-import { DEFAULT_CONFIG } from './algorithm-config-defaults';
-import { getFs, getPath, isNodeEnvironment } from './algorithm-config-node-utils';
-import { generateMachineFingerprint } from './algorithm-config-fingerprint';
-import { mergeConfigs } from './algorithm-config-utils';
-import { loadMachineConfig, saveMachineConfig as saveMachineConfigUtil } from './algorithm-config-machine';
-import { validateConfig as validateConfigUtil } from './algorithm-config-utils';
+import type { AlgorithmConfig, MachineFingerprint } from "./algorithm-config-types";
+import { DEFAULT_CONFIG } from "./algorithm-config-defaults";
+import { getFs, getPath, isNodeEnvironment } from "./algorithm-config-node-utils";
+import { generateMachineFingerprint } from "./algorithm-config-fingerprint";
+import { mergeConfigs } from "./algorithm-config-utils";
+import { loadMachineConfig, saveMachineConfig as saveMachineConfigUtil } from "./algorithm-config-machine";
+import { validateConfig as validateConfigUtil } from "./algorithm-config-utils";
 
 /**
  * Configuration manager class
@@ -23,7 +18,12 @@ export class AlgorithmConfigManager {
   private configPath: string;
   private machineFingerprint: MachineFingerprint | null = null;
 
-  constructor(configPath: string = './algorithm-config.json') {
+  /**
+   *
+   * @param configPath
+   * @example
+   */
+  constructor(configPath: string = "./algorithm-config.json") {
     this.configPath = configPath;
     this.config = this.loadConfig();
     this.machineFingerprint = generateMachineFingerprint();
@@ -31,15 +31,16 @@ export class AlgorithmConfigManager {
 
   /**
    * Load configuration from file or create default
-   * 
+   *
    * @returns Loaded or default configuration
+   * @example
    */
   private loadConfig(): AlgorithmConfig {
     const fs = getFs();
     if (fs && isNodeEnvironment()) {
       try {
         if (fs.existsSync(this.configPath)) {
-          const configData = fs.readFileSync(this.configPath, 'utf-8');
+          const configData = fs.readFileSync(this.configPath, "utf-8");
           const loadedConfig = JSON.parse(configData) as AlgorithmConfig;
           return mergeConfigs(DEFAULT_CONFIG, loadedConfig);
         }
@@ -53,6 +54,7 @@ export class AlgorithmConfigManager {
 
   /**
    * Save configuration to file
+   * @example
    */
   public saveConfig(): void {
     const fs = getFs();
@@ -71,8 +73,9 @@ export class AlgorithmConfigManager {
 
   /**
    * Get current configuration
-   * 
+   *
    * @returns Current configuration copy
+   * @example
    */
   public getConfig(): AlgorithmConfig {
     return { ...this.config };
@@ -80,8 +83,9 @@ export class AlgorithmConfigManager {
 
   /**
    * Update configuration
-   * 
+   *
    * @param updates - Partial configuration updates
+   * @example
    */
   public updateConfig(updates: Partial<AlgorithmConfig>): void {
     this.config = mergeConfigs(this.config, updates);
@@ -89,8 +93,9 @@ export class AlgorithmConfigManager {
 
   /**
    * Get machine-specific configuration
-   * 
+   *
    * @returns Machine-specific configuration
+   * @example
    */
   public getMachineConfig(): AlgorithmConfig {
     return loadMachineConfig(this.config, this.machineFingerprint);
@@ -98,8 +103,9 @@ export class AlgorithmConfigManager {
 
   /**
    * Save machine-specific configuration
-   * 
+   *
    * @param machineConfig - Machine-specific configuration to save
+   * @example
    */
   public saveMachineConfig(machineConfig: Partial<AlgorithmConfig>): void {
     saveMachineConfigUtil(machineConfig, this.config, this.machineFingerprint);
@@ -107,16 +113,17 @@ export class AlgorithmConfigManager {
 
   /**
    * Get machine fingerprint
-   * 
+   *
    * @returns Machine fingerprint or null if not available
+   * @example
    */
   public getMachineFingerprint(): MachineFingerprint | null {
     return this.machineFingerprint;
   }
 
-
   /**
    * Reset configuration to defaults
+   * @example
    */
   public resetToDefaults(): void {
     this.config = { ...DEFAULT_CONFIG };
@@ -124,11 +131,11 @@ export class AlgorithmConfigManager {
 
   /**
    * Validate configuration
-   * 
+   *
    * @returns Validation result with errors array
+   * @example
    */
   public validateConfig(): { isValid: boolean; errors: string[] } {
     return validateConfigUtil(this.config);
   }
 }
-

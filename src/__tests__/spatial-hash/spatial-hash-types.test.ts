@@ -4,8 +4,8 @@ import type {
   SpatialHashStats,
   SpatialObject,
   QueryResult,
-} from "../../spatial-structures/spatial-hash/spatial-hash-types";
-import type { SpatialObjectData, GameEntityData } from "../../types/spatial-types";
+} from "../../data-structures/spatial/spatial-hash/spatial-hash-types";
+import type { SpatialObjectData, GameEntityData } from "../../core/types/spatial-types";
 
 describe("Spatial Hash Types", () => {
   // Helper function to create test spatial data

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { RTree } from "../../spatial-structures/rtree/rtree-core";
-import { RTreeEntry, Rectangle, Point } from "../../spatial-structures/rtree/rtree-types";
+import { RTree } from "../../data-structures/spatial/rtree/rtree-core";
+import { RTreeEntry, Rectangle, Point } from "../../data-structures/spatial/rtree/rtree-types";
 
 describe("RTree Spatial Data Structure", () => {
   let rtree: RTree<string>;

@@ -1,3 +1,6 @@
+/**
+ * @file Tests for geometry module exports
+ */
 import { describe, expect, it } from "vitest";
 import * as Geometry from "../geometry";
 

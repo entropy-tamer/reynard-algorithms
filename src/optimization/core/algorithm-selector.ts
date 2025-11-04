@@ -33,6 +33,10 @@ export class AlgorithmSelector {
   private algorithmSelectorCore: AlgorithmSelectorCore;
   private performanceTracker: PerformanceTracker;
 
+  /**
+   *
+   * @example
+   */
   constructor() {
     this.workloadAnalyzer = new WorkloadAnalyzer();
     this.algorithmSelectorCore = new AlgorithmSelectorCore();
@@ -41,6 +45,8 @@ export class AlgorithmSelector {
 
   /**
    * Select optimal collision detection algorithm
+   * @param workload
+   * @example
    */
   selectCollisionAlgorithm(workload: WorkloadCharacteristics): AlgorithmSelection {
     const analysis = this.workloadAnalyzer.analyzeWorkload(workload);
@@ -52,6 +58,8 @@ export class AlgorithmSelector {
 
   /**
    * Select optimal spatial algorithm
+   * @param workload
+   * @example
    */
   selectSpatialAlgorithm(workload: WorkloadCharacteristics): AlgorithmSelection {
     const analysis = this.workloadAnalyzer.analyzeWorkload(workload);
@@ -63,6 +71,8 @@ export class AlgorithmSelector {
 
   /**
    * Select optimal Union-Find algorithm
+   * @param workload
+   * @example
    */
   selectUnionFindAlgorithm(workload: WorkloadCharacteristics): AlgorithmSelection {
     const analysis = this.workloadAnalyzer.analyzeWorkload(workload);
@@ -74,6 +84,8 @@ export class AlgorithmSelector {
 
   /**
    * Update performance model with new results
+   * @param result
+   * @example
    */
   updatePerformanceModel(result: PerformanceRecord): void {
     this.performanceTracker.updatePerformanceModel(result);
@@ -81,6 +93,7 @@ export class AlgorithmSelector {
 
   /**
    * Get selection statistics
+   * @example
    */
   getSelectionStats(): SelectionStats {
     return this.performanceTracker.getSelectionStats();
@@ -88,6 +101,7 @@ export class AlgorithmSelector {
 
   /**
    * Get performance history
+   * @example
    */
   getPerformanceHistory(): PerformanceRecord[] {
     return this.performanceTracker.getPerformanceHistory();
@@ -95,6 +109,7 @@ export class AlgorithmSelector {
 
   /**
    * Clear performance history
+   * @example
    */
   clearPerformanceHistory(): void {
     this.performanceTracker.clearPerformanceHistory();

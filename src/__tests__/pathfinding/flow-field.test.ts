@@ -3,9 +3,9 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { FlowField, FlowFieldUtils, FlowFieldGenerator } from "../../pathfinding/flow-field/flow-field-core";
-import type { Point, CellType } from "../../pathfinding/flow-field/flow-field-types";
-import { CellType as FlowFieldCellType } from "../../pathfinding/flow-field/flow-field-types";
+import { FlowField, FlowFieldUtils, FlowFieldGenerator } from "../../algorithms/pathfinding/flow-field/flow-field-core";
+import type { Point, CellType } from "../../algorithms/pathfinding/flow-field/flow-field-types";
+import { CellType as FlowFieldCellType } from "../../algorithms/pathfinding/flow-field/flow-field-types";
 
 describe("FlowField", () => {
   let flowField: FlowField;

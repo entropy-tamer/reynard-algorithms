@@ -1,14 +1,14 @@
 /**
  * Statistical Benchmark Framework
- * 
+ *
  * Provides comprehensive benchmarking utilities with statistical analysis,
  * outlier detection, and performance regression testing for the algorithms package.
- * 
+ *
  * @module algorithms/benchmarkUtils
  */
 
-import { performance } from 'perf_hooks';
-import { getAlgorithmConfig } from '../../config/algorithm-config';
+import { performance } from "perf_hooks";
+import { getAlgorithmConfig } from "../../config/algorithm-config";
 
 /**
  * Benchmark result for a single run
@@ -133,11 +133,11 @@ export class BenchmarkUtils {
 
   /**
    * Run a function multiple times and collect statistical data
+   * @param fn
+   * @param options
+   * @example
    */
-  public async runBenchmark<T>(
-    fn: () => T | Promise<T>,
-    options: BenchmarkOptions = {}
-  ): Promise<BenchmarkResult[]> {
+  public async runBenchmark<T>(fn: () => T | Promise<T>, options: BenchmarkOptions = {}): Promise<BenchmarkResult[]> {
     const {
       samples = this.config.performance.statistics.sampleCount,
       warmupIterations = 2,
@@ -171,11 +171,11 @@ export class BenchmarkUtils {
 
   /**
    * Run a function with timeout and collect performance data
+   * @param fn
+   * @param timeout
+   * @example
    */
-  private async runWithTimeout<T>(
-    fn: () => T | Promise<T>,
-    timeout: number
-  ): Promise<BenchmarkResult> {
+  private async runWithTimeout<T>(fn: () => T | Promise<T>, timeout: number): Promise<BenchmarkResult> {
     return new Promise((resolve, reject) => {
       const startTime = performance.now();
       const startMemory = process.memoryUsage();
@@ -189,14 +189,14 @@ export class BenchmarkUtils {
           clearTimeout(timer);
           const endTime = performance.now();
           const endMemory = process.memoryUsage();
-          
+
           resolve({
             executionTime: endTime - startTime,
             memoryUsage: endMemory.heapUsed - startMemory.heapUsed,
             timestamp: Date.now(),
           });
         })
-        .catch((error) => {
+        .catch(error => {
           clearTimeout(timer);
           reject(error);
         });
@@ -205,11 +205,11 @@ export class BenchmarkUtils {
 
   /**
    * Perform statistical analysis on benchmark results
+   * @param results
+   * @param options
+   * @example
    */
-  public analyzeResults(
-    results: BenchmarkResult[],
-    options: BenchmarkOptions = {}
-  ): StatisticalAnalysis {
+  public analyzeResults(results: BenchmarkResult[], options: BenchmarkOptions = {}): StatisticalAnalysis {
     const {
       removeOutliers = this.config.performance.statistics.removeOutliers,
       outlierThreshold = this.config.performance.statistics.outlierThreshold,
@@ -257,6 +257,9 @@ export class BenchmarkUtils {
 
   /**
    * Remove outliers from benchmark results
+   * @param results
+   * @param threshold
+   * @example
    */
   private removeOutliers(
     results: BenchmarkResult[],
@@ -283,16 +286,19 @@ export class BenchmarkUtils {
 
   /**
    * Calculate median of sorted array
+   * @param sorted
+   * @example
    */
   private calculateMedian(sorted: number[]): number {
     const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 === 0
-      ? (sorted[mid - 1] + sorted[mid]) / 2
-      : sorted[mid];
+    return sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
   }
 
   /**
    * Calculate standard deviation
+   * @param values
+   * @param mean
+   * @example
    */
   private calculateStandardDeviation(values: number[], mean: number): number {
     const variance = values.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) / values.length;
@@ -301,6 +307,9 @@ export class BenchmarkUtils {
 
   /**
    * Calculate percentile
+   * @param sorted
+   * @param percentile
+   * @example
    */
   private calculatePercentile(sorted: number[], percentile: number): number {
     const index = (percentile / 100) * (sorted.length - 1);
@@ -316,6 +325,10 @@ export class BenchmarkUtils {
 
   /**
    * Calculate 95% confidence interval
+   * @param values
+   * @param mean
+   * @param stdDev
+   * @example
    */
   private calculateConfidenceInterval(
     values: number[],
@@ -334,20 +347,21 @@ export class BenchmarkUtils {
 
   /**
    * Create comprehensive benchmark report
+   * @param testName
+   * @param results
+   * @param options
+   * @example
    */
-  public createReport(
-    testName: string,
-    results: BenchmarkResult[],
-    options: BenchmarkOptions = {}
-  ): BenchmarkReport {
+  public createReport(testName: string, results: BenchmarkResult[], options: BenchmarkOptions = {}): BenchmarkReport {
     const startTime = Math.min(...results.map(r => r.timestamp));
     const endTime = Math.max(...results.map(r => r.timestamp));
     const totalDuration = endTime - startTime;
 
     const statistics = this.analyzeResults(results, options);
-    const cleanedResults = options.removeOutliers !== false
-      ? this.removeOutliers(results, options.outlierThreshold || 2.0).cleaned
-      : results;
+    const cleanedResults =
+      options.removeOutliers !== false
+        ? this.removeOutliers(results, options.outlierThreshold || 2.0).cleaned
+        : results;
 
     const assertions = this.evaluateAssertions(statistics, {});
 
@@ -368,14 +382,15 @@ export class BenchmarkUtils {
 
   /**
    * Evaluate performance assertions
+   * @param statistics
+   * @param options
+   * @example
    */
   private evaluateAssertions(
     statistics: StatisticalAnalysis,
     options: PerformanceAssertionOptions = {}
-  ): BenchmarkReport['assertions'] {
-    const {
-      maxCoefficientOfVariation = this.config.performance.statistics.maxCoefficientOfVariation,
-    } = options;
+  ): BenchmarkReport["assertions"] {
+    const { maxCoefficientOfVariation = this.config.performance.statistics.maxCoefficientOfVariation } = options;
 
     return {
       withinTolerance: true, // Will be set by specific test assertions
@@ -386,6 +401,9 @@ export class BenchmarkUtils {
 
   /**
    * Compare two benchmark reports
+   * @param baseline
+   * @param current
+   * @example
    */
   public compareReports(
     baseline: BenchmarkReport,
@@ -398,7 +416,7 @@ export class BenchmarkUtils {
   } {
     const performanceChange = (current.statistics.median - baseline.statistics.median) / baseline.statistics.median;
     const stabilityChange = current.statistics.coefficientOfVariation - baseline.statistics.coefficientOfVariation;
-    
+
     const regression = performanceChange > 0.1; // 10% slower
     const improvement = performanceChange < -0.05; // 5% faster
 
@@ -412,26 +430,31 @@ export class BenchmarkUtils {
 
   /**
    * Save benchmark report to file
+   * @param report
+   * @param filePath
+   * @example
    */
   public saveReport(report: BenchmarkReport, filePath: string): void {
-    const fs = require('fs');
-    const path = require('path');
-    
+    const fs = require("fs");
+    const path = require("path");
+
     const dir = path.dirname(filePath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    
+
     fs.writeFileSync(filePath, JSON.stringify(report, null, 2));
   }
 
   /**
    * Load benchmark report from file
+   * @param filePath
+   * @example
    */
   public loadReport(filePath: string): BenchmarkReport | null {
     try {
-      const fs = require('fs');
-      const data = fs.readFileSync(filePath, 'utf-8');
+      const fs = require("fs");
+      const data = fs.readFileSync(filePath, "utf-8");
       return JSON.parse(data) as BenchmarkReport;
     } catch (error) {
       console.warn(`Failed to load benchmark report from ${filePath}:`, error);
@@ -447,6 +470,10 @@ export const benchmarkUtils = new BenchmarkUtils();
 
 /**
  * Convenience function to run a benchmark
+ * @param testName
+ * @param fn
+ * @param options
+ * @example
  */
 export async function runBenchmark<T>(
   testName: string,
@@ -459,11 +486,11 @@ export async function runBenchmark<T>(
 
 /**
  * Convenience function for performance assertions
+ * @param report
+ * @param options
+ * @example
  */
-export function assertPerformance(
-  report: BenchmarkReport,
-  options: PerformanceAssertionOptions = {}
-): void {
+export function assertPerformance(report: BenchmarkReport, options: PerformanceAssertionOptions = {}): void {
   const {
     maxTime = report.metadata.config.performance.baselines.largeDataset,
     maxCoefficientOfVariation = report.metadata.config.performance.statistics.maxCoefficientOfVariation,
@@ -483,10 +510,6 @@ export function assertPerformance(
   }
 
   if (failOnOutliers && report.assertions.hasSignificantOutliers) {
-    throw new Error(
-      `Outlier assertion failed: ${report.statistics.outliersRemoved} outliers detected`
-    );
+    throw new Error(`Outlier assertion failed: ${report.statistics.outliersRemoved} outliers detected`);
   }
 }
-
-

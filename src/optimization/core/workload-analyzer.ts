@@ -21,6 +21,10 @@ export class WorkloadAnalyzer {
   private performanceAnalyzer: PerformanceAnalyzer;
   private recommendationGenerator: RecommendationGenerator;
 
+  /**
+   *
+   * @example
+   */
   constructor() {
     this.complexityAnalyzer = new ComplexityAnalyzer();
     this.memoryAnalyzer = new MemoryAnalyzer();
@@ -30,6 +34,8 @@ export class WorkloadAnalyzer {
 
   /**
    * Analyze workload characteristics
+   * @param workload
+   * @example
    */
   analyzeWorkload(workload: WorkloadCharacteristics): WorkloadAnalysis {
     const complexity = this.complexityAnalyzer.calculateComplexity(workload);
@@ -47,6 +53,8 @@ export class WorkloadAnalyzer {
 
   /**
    * Set performance history for analysis
+   * @param history
+   * @example
    */
   setPerformanceHistory(history: PerformanceRecord[]): void {
     this.performanceAnalyzer.setPerformanceHistory(history);

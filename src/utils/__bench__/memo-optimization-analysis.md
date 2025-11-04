@@ -4,7 +4,7 @@
 
 Based on the microbenchmark execution, here are the performance characteristics:
 
-### 1. Heuristics (A* Pathfinding)
+### 1. Heuristics (A\* Pathfinding)
 
 - **Execution Time**: 13.891ms
 - **Configuration**: maxSize=4096, minHitRate=0.6
@@ -48,7 +48,7 @@ Based on the microbenchmark execution, here are the performance characteristics:
 
 - **euclideanDistance**: maxSize=4096, minHitRate=0.6
 - **unionAABB/intersectionAABB**: maxSize=4096, minHitRate=0.6
-- **Theta* distance**: maxSize=8192, minHitRate=0.6
+- **Theta\* distance**: maxSize=8192, minHitRate=0.6
 
 #### Medium-Volume Operations (Medium Cache)
 
@@ -107,10 +107,10 @@ Quadtree.distance: {
 ```typescript
 // Add TTL for memory-bound operations
 const memoryBoundConfig = {
-  ttlMs: 30000,         // 30 second TTL
-  maxSize: 2048,        // Smaller cache
-  minHitRate: 0.7       // Higher hit rate requirement
-}
+  ttlMs: 30000, // 30 second TTL
+  maxSize: 2048, // Smaller cache
+  minHitRate: 0.7, // Higher hit rate requirement
+};
 ```
 
 #### Cache Size Optimization
@@ -120,8 +120,8 @@ const memoryBoundConfig = {
 const dynamicConfig = {
   maxSize: Math.min(8192, Math.floor(performance.memory?.jsHeapSizeLimit / 1000000) || 4096),
   minHitRate: 0.6,
-  windowSize: 500
-}
+  windowSize: 500,
+};
 ```
 
 ### 3. Performance Monitoring
@@ -165,7 +165,7 @@ if (hitRate < 0.5 && cacheUtilization < 0.3) {
 
 ### 🔄 Current Optimizations
 
-- **Pathfinding**: A* heuristics with 4K cache
+- **Pathfinding**: A\* heuristics with 4K cache
 - **Collision Detection**: AABB operations with 4K cache
 - **Spatial Structures**: Quadtree distance with 2K cache
 - **Geometry**: Vector normalization with 2K cache

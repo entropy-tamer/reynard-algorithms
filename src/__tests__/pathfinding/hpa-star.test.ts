@@ -1,11 +1,11 @@
 /**
- * @module algorithms/pathfinding/hpa-star/hpa-star.test
- * @description Unit tests for HPA* hierarchical pathfinding algorithm.
+ * @file Unit tests for HPA* hierarchical pathfinding algorithm
  */
+/* eslint-disable max-lines, max-lines-per-function */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { HPAStar, HPAStarUtils } from "../../pathfinding/hpa-star";
-import type { Point, CellType, HPAConfig, HPAOptions } from "../../pathfinding/hpa-star/hpa-star-types";
+import { HPAStar, HPAStarUtils } from "../../algorithms/pathfinding/hpa-star";
+import type { Point, CellType, HPAConfig, HPAOptions } from "../../algorithms/pathfinding/hpa-star/hpa-star-types";
 
 describe("HPAStar", () => {
   let hpaStar: HPAStar;

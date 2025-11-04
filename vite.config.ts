@@ -11,12 +11,14 @@ export default defineConfig({
       formats: ["es", "cjs"],
     },
     rollupOptions: {
-      external: ["fs", "path", "os", "node:os"],
+      // Externalize Node.js built-ins to prevent bundling issues in browser environments
+      external: ["fs", "path", "os", "node:os", "module", "node:module"],
       output: {
         globals: {
           fs: "fs",
           path: "path",
-          os: "os"
+          os: "os",
+          module: "module",
         },
       },
     },

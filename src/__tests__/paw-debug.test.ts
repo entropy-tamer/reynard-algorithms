@@ -1,5 +1,5 @@
 /**
- * PAW Debug Test - Investigate algorithm selection
+ * @file PAW Debug Test - Investigate algorithm selection
  */
 
 import { describe, it, expect, beforeEach } from "vitest";

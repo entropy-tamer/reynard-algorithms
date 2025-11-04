@@ -1,6 +1,10 @@
 /** Microbench: Geometry operations memoization (CI-safe) */
-import { VectorOps } from "../../geometry/vectors/vector-algorithms";
+import { VectorOps } from "../../core/geometry/vector";
 
+/**
+ *
+ * @example
+ */
 function run() {
   const vectors = Array.from({ length: 200 }, (_, i) => ({
     x: (i % 20) * 0.5,
@@ -23,7 +27,7 @@ function run() {
     }
   }
   const t1 = performance.now();
-  // eslint-disable-next-line no-console
+   
   console.log(`[memo-geometry] totalMs=${(t1 - t0).toFixed(3)}`);
 }
 

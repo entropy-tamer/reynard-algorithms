@@ -1,14 +1,15 @@
 /**
- * Optimized Algorithms Test Suite
+ * @file Optimized Algorithms Test Suite
  *
  * This test suite validates the refactored algorithms package with
  * PAW optimization integration and automatic algorithm selection.
  */
+/* eslint-disable max-lines, max-lines-per-function, jsdoc/require-description, jsdoc/require-returns, jsdoc/require-param-description, jsdoc/require-example */
 
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { checkCollision } from "../../geometry/collision/aabb";
-import type { AABB } from "../../geometry/collision/aabb/aabb-types";
-import type { SpatialObjectData } from "../../types/spatial-types";
+import { checkCollision } from "../../algorithms/collision/narrow-phase/aabb/aabb-collision";
+import type { AABB } from "../../algorithms/collision/narrow-phase/aabb/aabb-types";
+import type { SpatialObjectData } from "../../core/types/spatial-types";
 import { AlgorithmSelector, MemoryPool as MemoryPool } from "../../optimization";
 import {
   OptimizationConfig,
@@ -18,7 +19,7 @@ import {
   detectCollisions,
   performSpatialQuery,
 } from "../../optimized";
-import { findConnectedComponents } from "../../data-structures/union-find";
+import { findConnectedComponents } from "../../data-structures/basic/union-find/union-find-utils";
 
 // Helper function to create test spatial data
 /**

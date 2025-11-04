@@ -1,7 +1,5 @@
 /**
- * Type definitions for algorithm configuration system
- * 
- * @file
+ * @file Type definitions for algorithm configuration system
  */
 
 /**
@@ -136,5 +134,6 @@ export interface AlgorithmConfig {
   /** Configuration version for migration */
   version: string;
 }
+
 
 

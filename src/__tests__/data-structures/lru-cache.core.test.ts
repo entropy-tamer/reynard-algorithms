@@ -1,5 +1,9 @@
+/**
+ * @file LRU Cache core tests
+ */
+/* eslint-disable max-lines, max-lines-per-function */
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { LRUCache, LRUCacheEvent } from "../../data-structures/lru-cache";
+import { LRUCache, LRUCacheEvent } from "../../../data-structures/basic/lru-cache";
 
 describe("LRUCache Core Operations", () => {
   let cache: LRUCache<string, number>;

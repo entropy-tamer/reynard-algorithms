@@ -1,23 +1,23 @@
 /**
- * Machine fingerprint generation utilities for algorithm configuration
- * 
- * @file
+ * @file Machine fingerprint generation utilities for algorithm configuration
  */
 
-import type { MachineFingerprint } from './algorithm-config-types';
-import { getOs, isNodeEnvironment } from './algorithm-config-node-utils';
+import type { MachineFingerprint } from "./algorithm-config-types";
+import { getOs } from "./algorithm-config-node-utils";
 
 /**
  * Simple hash function for fingerprint
- * 
+ *
  * @param str - String to hash
  * @returns Hash string
+ * @example
+ * simpleHash("test-string") // Returns: "1abc2def"
  */
 function simpleHash(str: string): string {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     const char = str.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Convert to 32-bit integer
   }
   return Math.abs(hash).toString(36);
@@ -25,21 +25,24 @@ function simpleHash(str: string): string {
 
 /**
  * Generate machine fingerprint
- * 
+ *
  * @returns Machine fingerprint
+ * @example
+ * const fingerprint = generateMachineFingerprint();
+ * console.log(fingerprint.hash); // Unique hash for this machine
  */
 export function generateMachineFingerprint(): MachineFingerprint {
   const os = getOs();
   if (!os) {
     // Browser-safe fingerprint (minimal)
     const fingerprint = {
-      arch: 'browser',
-      platform: 'browser',
+      arch: "browser",
+      platform: "browser",
       cores: 0,
       totalMemory: 0,
-      cpuModel: 'unknown',
-      nodeVersion: 'n/a',
-      hash: '',
+      cpuModel: "unknown",
+      nodeVersion: "n/a",
+      hash: "",
     } as MachineFingerprint;
     const fingerprintString = JSON.stringify(fingerprint);
     fingerprint.hash = simpleHash(fingerprintString);
@@ -54,9 +57,9 @@ export function generateMachineFingerprint(): MachineFingerprint {
     platform: os.platform(),
     cores: cpus.length,
     totalMemory,
-    cpuModel: cpus[0]?.model || 'unknown',
+    cpuModel: cpus[0]?.model || "unknown",
     nodeVersion: process.version,
-    hash: '',
+    hash: "",
   } as MachineFingerprint;
 
   // Generate hash from fingerprint data
@@ -65,5 +68,6 @@ export function generateMachineFingerprint(): MachineFingerprint {
 
   return fingerprint;
 }
+
 
 

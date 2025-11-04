@@ -1,7 +1,7 @@
 /**
  * @file Calculation helpers for verification report generation
  */
-import { IssueStatus, type IssueVerification, type PerformanceSummary, type TestCoverage } from './verification-types';
+import { IssueStatus, type IssueVerification, type PerformanceSummary, type TestCoverage } from "./verification-types";
 
 /**
  * Compute summary counts and success rate from issues
@@ -36,9 +36,7 @@ export function calculateTestCoverage(issues: IssueVerification[]): TestCoverage
     for (const file of issue.affectedFiles) {
       const module = extractModuleName(file);
       if (!moduleCoverage[module]) moduleCoverage[module] = 0;
-      const pct = issue.testResults.total > 0
-        ? (issue.testResults.passed / issue.testResults.total) * 100
-        : 0;
+      const pct = issue.testResults.total > 0 ? (issue.testResults.passed / issue.testResults.total) * 100 : 0;
       moduleCoverage[module] += pct;
       totalCoverage += pct;
       moduleCount++;
@@ -69,23 +67,30 @@ export function calculatePerformanceSummary(issues: IssueVerification[]): Perfor
   const improvements = performanceIssues.filter(i => i.performanceImpact.improvement > 0).length;
   const regressions = performanceIssues.filter(i => i.performanceImpact.regression).length;
 
-  const averageChange = performanceIssues.length > 0
-    ? performanceIssues.reduce((sum, i) => sum + i.performanceImpact.improvement, 0) / performanceIssues.length
-    : 0;
+  const averageChange =
+    performanceIssues.length > 0
+      ? performanceIssues.reduce((sum, i) => sum + i.performanceImpact.improvement, 0) / performanceIssues.length
+      : 0;
 
-  const bestImprovement = performanceIssues.reduce((best, issue) => {
-    if (issue.performanceImpact.improvement > best.improvement) {
-      return { issue: issue.issueNumber, improvement: issue.performanceImpact.improvement };
-    }
-    return best;
-  }, { issue: 0, improvement: 0 });
+  const bestImprovement = performanceIssues.reduce(
+    (best, issue) => {
+      if (issue.performanceImpact.improvement > best.improvement) {
+        return { issue: issue.issueNumber, improvement: issue.performanceImpact.improvement };
+      }
+      return best;
+    },
+    { issue: 0, improvement: 0 }
+  );
 
-  const worstRegression = performanceIssues.reduce((worst, issue) => {
-    if (issue.performanceImpact.improvement < worst.regression) {
-      return { issue: issue.issueNumber, regression: issue.performanceImpact.improvement };
-    }
-    return worst;
-  }, { issue: 0, regression: 0 });
+  const worstRegression = performanceIssues.reduce(
+    (worst, issue) => {
+      if (issue.performanceImpact.improvement < worst.regression) {
+        return { issue: issue.issueNumber, regression: issue.performanceImpact.improvement };
+      }
+      return worst;
+    },
+    { issue: 0, regression: 0 }
+  );
 
   return {
     totalBenchmarks: performanceIssues.length,
@@ -105,10 +110,8 @@ export function calculatePerformanceSummary(issues: IssueVerification[]): Perfor
  * extractModuleName('packages/core/algorithms/src/utils/file.ts');
  */
 function extractModuleName(filePath: string): string {
-  const parts = filePath.split('/');
-  const srcIndex = parts.indexOf('src');
+  const parts = filePath.split("/");
+  const srcIndex = parts.indexOf("src");
   if (srcIndex >= 0 && srcIndex < parts.length - 1) return parts[srcIndex + 1];
-  return 'unknown';
+  return "unknown";
 }
-
-

@@ -1,9 +1,10 @@
 /**
- * A* Pathfinding Algorithm Tests
+ * @file A* Pathfinding Algorithm Tests
  *
  * Comprehensive test suite for the A* pathfinding algorithm implementation.
  * Tests mathematical correctness, performance, edge cases, and integration.
  */
+/* eslint-disable max-lines, max-lines-per-function */
 
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
@@ -15,7 +16,7 @@ import {
   createHeuristic,
   type Point,
   type AStarGrid,
-} from "../../pathfinding/astar";
+} from "../../algorithms/pathfinding/astar";
 
 describe("A* Pathfinding Algorithm", () => {
   let astar: AStar;

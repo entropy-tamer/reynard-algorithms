@@ -6,7 +6,7 @@
  * benefit is not realized over sliding windows.
  */
 
-import { LRUCache } from "../../data-structures/lru-cache";
+import { LRUCache } from "../../data-structures/basic/lru-cache";
 
 export interface MemoTuningPolicy {
   name?: string; // Optional name for the policy
@@ -39,6 +39,9 @@ const DEFAULT_POLICY: MemoTuningPolicy = {
   enabled: true,
 };
 
+/**
+ *
+ */
 export class AdaptiveMemoController<TArgs extends any[], TResult> {
   private cache: LRUCache<string, TResult>;
   private policy: MemoTuningPolicy;
@@ -52,10 +55,13 @@ export class AdaptiveMemoController<TArgs extends any[], TResult> {
   private winExecMs = 0;
   private winOverheadMs = 0;
 
-  constructor(
-    policy?: Partial<MemoTuningPolicy>,
-    keygen?: (...args: TArgs) => string
-  ) {
+  /**
+   *
+   * @param policy
+   * @param keygen
+   * @example
+   */
+  constructor(policy?: Partial<MemoTuningPolicy>, keygen?: (...args: TArgs) => string) {
     this.policy = { ...DEFAULT_POLICY, ...policy };
     const memoEnv = typeof process !== "undefined" && process?.env ? process.env.ALG_MEMO_ON : undefined;
     this.enabled = this.policy.enabled && (memoEnv ?? "1") !== "0";
@@ -68,6 +74,11 @@ export class AdaptiveMemoController<TArgs extends any[], TResult> {
     });
   }
 
+  /**
+   *
+   * @param fn
+   * @example
+   */
   wrap(fn: (...a: TArgs) => TResult): (...a: TArgs) => TResult {
     return (...a: TArgs) => {
       const startWall = performance.now();
@@ -95,9 +106,17 @@ export class AdaptiveMemoController<TArgs extends any[], TResult> {
     };
   }
 
+  /**
+   *
+   * @param hit
+   * @param execMs
+   * @param overheadMs
+   * @example
+   */
   private record(hit: boolean, execMs: number, overheadMs: number) {
     this.winCalls++;
-    if (hit) this.winHits++; else this.winMisses++;
+    if (hit) this.winHits++;
+    else this.winMisses++;
     this.winExecMs += execMs;
     this.winOverheadMs += overheadMs;
 
@@ -115,10 +134,19 @@ export class AdaptiveMemoController<TArgs extends any[], TResult> {
     }
   }
 
+  /**
+   *
+   * @param policy
+   * @example
+   */
   setPolicy(policy: Partial<MemoTuningPolicy>) {
     this.policy = { ...this.policy, ...policy };
   }
 
+  /**
+   *
+   * @example
+   */
   getStats(): AdaptiveStats {
     const calls = this.winCalls;
     const hits = this.winHits;
@@ -130,24 +158,33 @@ export class AdaptiveMemoController<TArgs extends any[], TResult> {
   }
 }
 
+/**
+ *
+ * @param fn
+ * @param policy
+ * @param keygen
+ * @example
+ */
 export function adaptiveMemo<TArgs extends any[], TResult>(
   fn: (...a: TArgs) => TResult,
   policy?: Partial<MemoTuningPolicy>,
   keygen?: (...args: TArgs) => string
 ): (...a: TArgs) => TResult {
   const ctl = new AdaptiveMemoController<TArgs, TResult>(policy, keygen);
-  
+
   // Auto-register with memo registry if name is provided
-  if (policy?.name && typeof window === 'undefined') {
-    try {
-      const { memoRegistry } = require('../memo-registry');
-      memoRegistry.register(policy.name, ctl);
-    } catch (e) {
-      // Ignore if registry not available
-    }
+  if (policy?.name && typeof window === "undefined") {
+    // Use dynamic import for ES module compatibility (fire-and-forget)
+    import("../memo-registry")
+      .then((memoModule) => {
+        if (memoModule.memoRegistry) {
+          memoModule.memoRegistry.register(policy.name!, ctl);
+        }
+      })
+      .catch(() => {
+        // Ignore if registry not available
+      });
   }
-  
+
   return ctl.wrap(fn);
 }
-
-

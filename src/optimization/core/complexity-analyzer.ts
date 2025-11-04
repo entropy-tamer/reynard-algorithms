@@ -14,6 +14,8 @@ import type { WorkloadCharacteristics, ComplexityAnalysis } from "./algorithm-se
 export class ComplexityAnalyzer {
   /**
    * Calculate workload complexity based on PAW findings
+   * @param workload
+   * @example
    */
   calculateComplexity(workload: WorkloadCharacteristics): ComplexityAnalysis {
     const { objectCount, spatialDensity, overlapRatio } = workload;
@@ -34,6 +36,9 @@ export class ComplexityAnalyzer {
 
   /**
    * Find crossover point between algorithms
+   * @param naiveComplexity
+   * @param spatialComplexity
+   * @example
    */
   private findCrossoverPoint(naiveComplexity: number, spatialComplexity: number): number {
     // Based on PAW findings, crossover occurs around 50-100 objects
@@ -42,6 +47,10 @@ export class ComplexityAnalyzer {
 
   /**
    * Get complexity-based recommendation
+   * @param naive
+   * @param spatial
+   * @param optimized
+   * @example
    */
   private getComplexityRecommendation(naive: number, spatial: number, optimized: number): string {
     if (naive < spatial && naive < optimized) return "naive";

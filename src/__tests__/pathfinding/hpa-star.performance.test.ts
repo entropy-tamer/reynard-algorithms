@@ -4,8 +4,8 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { HPAStar, HPAStarUtils } from "../../pathfinding/hpa-star";
-import type { Point, CellType, HPAConfig, HPAOptions } from "../../pathfinding/hpa-star/hpa-star-types";
+import { HPAStar, HPAStarUtils } from "../../algorithms/pathfinding/hpa-star";
+import type { Point, CellType, HPAConfig, HPAOptions } from "../../algorithms/pathfinding/hpa-star/hpa-star-types";
 
 describe("HPAStar Performance", () => {
   let hpaStar: HPAStar;

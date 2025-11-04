@@ -9,9 +9,9 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { detectCollisions, PerformanceMonitor, configureOptimization, cleanup } from "../optimized";
-import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../geometry/collision/aabb";
-import { PerformanceTimer } from "../performance/timer";
-import type { AABB, CollisionPair } from "../geometry/collision/aabb/aabb-types";
+import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../../algorithms/collision/aabb";
+import { PerformanceTimer } from "../utils/performance/timer";
+import type { AABB, CollisionPair } from "../../algorithms/collision/aabb/aabb-types";
 
 // Wrapper function to convert batchCollisionDetection return type to CollisionPair[]
 /**

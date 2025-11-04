@@ -21,6 +21,8 @@ export class PerformanceAnalyzer {
 
   /**
    * Get performance profile from historical data
+   * @param workload
+   * @example
    */
   getPerformanceProfile(workload: WorkloadCharacteristics): PerformanceProfile {
     const similarWorkloads = this.findSimilarWorkloads(workload);
@@ -45,6 +47,8 @@ export class PerformanceAnalyzer {
 
   /**
    * Find similar workloads in performance history
+   * @param workload
+   * @example
    */
   private findSimilarWorkloads(workload: WorkloadCharacteristics): PerformanceRecord[] {
     return this.performanceHistory.filter(record => {
@@ -55,6 +59,9 @@ export class PerformanceAnalyzer {
 
   /**
    * Calculate similarity between workloads
+   * @param workload1
+   * @param workload2
+   * @example
    */
   private calculateWorkloadSimilarity(workload1: WorkloadCharacteristics, workload2: WorkloadCharacteristics): number {
     const objectCountSimilarity =
@@ -68,6 +75,8 @@ export class PerformanceAnalyzer {
 
   /**
    * Calculate average performance from historical data
+   * @param records
+   * @example
    */
   private calculateAveragePerformance(records: PerformanceRecord[]): PerformanceMetrics {
     const avgExecutionTime =
@@ -87,6 +96,8 @@ export class PerformanceAnalyzer {
 
   /**
    * Get default performance estimates
+   * @param workload
+   * @example
    */
   private getDefaultPerformance(workload: WorkloadCharacteristics): PerformanceMetrics {
     return {
@@ -99,6 +110,8 @@ export class PerformanceAnalyzer {
 
   /**
    * Set performance history for analysis
+   * @param history
+   * @example
    */
   setPerformanceHistory(history: PerformanceRecord[]): void {
     this.performanceHistory = [...history];

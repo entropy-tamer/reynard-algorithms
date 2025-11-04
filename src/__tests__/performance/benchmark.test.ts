@@ -1,5 +1,8 @@
+/**
+ * @file Tests for PerformanceBenchmark class
+ */
 import { describe, it, expect, beforeEach } from "vitest";
-import { PerformanceBenchmark } from "../../performance/benchmark";
+import { PerformanceBenchmark } from "../../utils/performance/benchmark";
 
 describe("PerformanceBenchmark", () => {
   let benchmark: PerformanceBenchmark;

@@ -14,6 +14,8 @@ import type { WorkloadAnalysis, AlgorithmSelection } from "./algorithm-selector-
 export class UnionFindSelector {
   /**
    * Select optimal Union-Find algorithm
+   * @param analysis
+   * @example
    */
   selectOptimalUnionFindAlgorithm(analysis: WorkloadAnalysis): AlgorithmSelection {
     const { objectCount } = analysis.workload;

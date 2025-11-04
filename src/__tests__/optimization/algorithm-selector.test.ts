@@ -1,3 +1,7 @@
+/**
+ * @file Tests for algorithm selector
+ */
+/* eslint-disable max-lines, max-lines-per-function */
 import { describe, expect, it, beforeEach } from "vitest";
 import { AlgorithmSelector, WorkloadCharacteristics } from "../../optimization/core/algorithm-selector";
 

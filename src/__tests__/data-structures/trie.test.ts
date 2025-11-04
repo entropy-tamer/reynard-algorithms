@@ -1,5 +1,9 @@
+/**
+ * @file Trie tests
+ */
+/* eslint-disable max-lines, max-lines-per-function */
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { Trie } from "../../data-structures/trie/trie-core";
+import { Trie } from "../../data-structures/basic/trie/trie-core";
 
 describe("Trie (Prefix Tree) Data Structure", () => {
   let trie: Trie;
@@ -443,11 +447,13 @@ describe("Trie (Prefix Tree) Data Structure", () => {
 
       debugTrie.addEventHandler(eventHandler);
       debugTrie.insert("test");
-      expect(eventHandler).toHaveBeenCalled();
+      const firstCallCount = eventHandler.mock.calls.length;
+      expect(firstCallCount).toBeGreaterThan(0); // Should be called (NODE_CREATED events + WORD_INSERTED)
 
       debugTrie.removeEventHandler(eventHandler);
       debugTrie.insert("test2");
-      expect(eventHandler).toHaveBeenCalledTimes(1); // Only called once
+      // Handler should not be called after removal
+      expect(eventHandler).toHaveBeenCalledTimes(firstCallCount); // Same number of calls as before removal
     });
   });
 
@@ -465,8 +471,9 @@ describe("Trie (Prefix Tree) Data Structure", () => {
         config: { maxDepth: 3 },
       });
 
-      expect(limitedTrie.insert("hello")).toBe(true); // 5 chars
-      expect(limitedTrie.insert("a".repeat(10))).toBe(false); // 10 chars
+      expect(limitedTrie.insert("abc")).toBe(true); // 3 chars (at max depth)
+      expect(limitedTrie.insert("hello")).toBe(false); // 5 chars (exceeds max depth)
+      expect(limitedTrie.insert("a".repeat(10))).toBe(false); // 10 chars (exceeds max depth)
     });
 
     it("should respect empty string configuration", () => {

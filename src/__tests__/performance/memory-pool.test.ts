@@ -5,13 +5,20 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { MemoryPool, PooledObject } from "../../performance/memory-pool-core";
-import { createSpatialObjectPool, createAABBPool, globalPoolManager } from "../../performance/memory-pool-utils";
+import { MemoryPool, PooledObject } from "../../utils/memory/memory-pool-core";
+import { createSpatialObjectPool, createAABBPool, globalPoolManager } from "../../utils/memory/memory-pool-utils";
 
+/**
+ *
+ */
 class TestObject implements PooledObject {
   value: number = 0;
   name: string = "";
 
+  /**
+   *
+   * @example
+   */
   reset(): void {
     this.value = 0;
     this.name = "";

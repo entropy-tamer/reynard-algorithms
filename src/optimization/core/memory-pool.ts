@@ -7,9 +7,9 @@
  * @module algorithms/optimization/memoryPool
  */
 
-import type { CollisionPair } from "../../geometry/collision/aabb/aabb-types";
-import { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-hash-core";
-import { UnionFind } from "../../data-structures/union-find/union-find-core";
+import type { CollisionPair } from "../../algorithms/collision/narrow-phase/aabb/aabb-types";
+import { SpatialHash } from "../../data-structures/spatial/spatial-hash/spatial-hash-core";
+import { UnionFind } from "../../data-structures/basic/union-find/union-find-core";
 
 export interface MemoryPoolConfig {
   spatialHashPoolSize: number;

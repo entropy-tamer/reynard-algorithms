@@ -1,7 +1,7 @@
 /**
  * @file Markdown rendering for verification reports
  */
-import type { VerificationReport } from './verification-types';
+import type { VerificationReport } from "./verification-types";
 
 /**
  * Convert a verification report into a human-readable markdown document
@@ -60,5 +60,3 @@ export function generateMarkdown(report: VerificationReport): string {
 
   return markdown;
 }
-
-

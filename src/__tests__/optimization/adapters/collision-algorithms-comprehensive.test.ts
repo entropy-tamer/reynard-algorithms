@@ -1,13 +1,15 @@
 /**
- * @vitest-environment happy-dom
+ * @file Comprehensive tests for collision algorithms
  */
+/* eslint-disable max-lines, max-lines-per-function */
+// @vitest-environment happy-dom
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import {
   executeSpatialCollisionDetection,
   executeOptimizedCollisionDetection,
 } from "../../../optimization/adapters/collision-algorithms";
-import { MemoryPool } from "../../../optimization/core/enhanced-memory-pool";
+import { MemoryPool } from "../../../optimization/core/memory-pool";
 
 describe("Collision Algorithms Comprehensive Coverage", () => {
   let memoryPool: MemoryPool;

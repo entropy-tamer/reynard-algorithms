@@ -1,6 +1,10 @@
 /** Microbench: AABB operations memoization (CI-safe) */
-import { unionAABB, intersectionAABB } from "../../geometry/collision/aabb/aabb-operations";
+import { unionAABB, intersectionAABB } from "../../../algorithms/collision/aabb/aabb-operations";
 
+/**
+ *
+ * @example
+ */
 function run() {
   const aabbs = Array.from({ length: 100 }, (_, i) => ({
     x: i % 10,
@@ -8,7 +12,10 @@ function run() {
     width: 5,
     height: 5,
   }));
-  const pairs: Array<[number, number]> = Array.from({ length: 50 }, (_, i) => [i % aabbs.length, (i * 3) % aabbs.length]);
+  const pairs: Array<[number, number]> = Array.from({ length: 50 }, (_, i) => [
+    i % aabbs.length,
+    (i * 3) % aabbs.length,
+  ]);
 
   // warm
   for (let r = 0; r < 5; r++) {
@@ -26,7 +33,7 @@ function run() {
     }
   }
   const t1 = performance.now();
-  // eslint-disable-next-line no-console
+   
   console.log(`[memo-aabb] totalMs=${(t1 - t0).toFixed(3)}`);
 }
 

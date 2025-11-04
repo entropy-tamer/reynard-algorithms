@@ -1,6 +1,10 @@
+/**
+ * @file Segment Tree tests
+ */
+/* eslint-disable max-lines, max-lines-per-function */
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { SegmentTree } from "../../data-structures/segment-tree/segment-tree-core";
-import { TraversalOrder } from "../../data-structures/segment-tree/segment-tree-types";
+import { SegmentTree } from "../../data-structures/trees/segment-tree/segment-tree-core";
+import { TraversalOrder } from "../../data-structures/trees/segment-tree/segment-tree-types";
 
 describe("Segment Tree Data Structure", () => {
   let segmentTree: SegmentTree<number>;

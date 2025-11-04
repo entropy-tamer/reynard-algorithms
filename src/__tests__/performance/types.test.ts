@@ -6,7 +6,7 @@ import type {
   ThrottleOptions,
   DebounceOptions,
   FrameRateMetrics,
-} from "../../performance/types";
+} from "../../utils/performance/types";
 
 describe("Performance Types", () => {
   describe("PerformanceMetrics interface", () => {

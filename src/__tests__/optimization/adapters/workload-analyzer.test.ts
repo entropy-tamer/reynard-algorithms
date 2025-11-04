@@ -1,6 +1,8 @@
 /**
- * @vitest-environment happy-dom
+ * @file Tests for workload analyzer
  */
+/* eslint-disable max-lines-per-function */
+// @vitest-environment happy-dom
 
 import { describe, it, expect } from "vitest";
 import {
@@ -9,7 +11,7 @@ import {
   calculateSpatialDensity,
   analyzeQueryPattern,
 } from "../../../optimization/adapters/workload-analyzer";
-import type { AABB } from "../../../geometry/collision/aabb/aabb-types";
+import type { AABB } from "../../../core/geometry/collision/aabb/aabb-types";
 
 describe("WorkloadAnalyzer", () => {
   describe("calculateSpatialDensity", () => {

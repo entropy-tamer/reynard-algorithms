@@ -1,6 +1,6 @@
 # reynard-algorithms
 
-> Algorithm primitives and data structures for Reynard applications
+> Algorithms, data structures, and computational utilities for spatial computing, collision detection, pathfinding, and procedural generation
 
 A comprehensive collection of reusable algorithmic building blocks with automatic optimization, memory pooling, and performance monitoring. Built with the PAW optimization framework for maximum efficiency.
 

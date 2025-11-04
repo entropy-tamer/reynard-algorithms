@@ -11,7 +11,7 @@ import type {
   SpatialQueryResult,
   SpatialHashConfig,
   MemoryPoolStats,
-} from "../../types/spatial-types";
+} from "../../core/types/spatial-types";
 
 describe("Spatial Types", () => {
   describe("SpatialData", () => {

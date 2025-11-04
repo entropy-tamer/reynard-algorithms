@@ -12,7 +12,7 @@ import type {
   MemoryPoolStats,
   SpatialHashConfig,
   SpatialHashStats,
-} from "../../types/performance-types";
+} from "../../core/types/performance-types";
 
 describe("Performance Types", () => {
   describe("PerformanceMemoryInfo", () => {

@@ -7,16 +7,16 @@
  * @module algorithms/utils/memoization.test
  */
 
-import { describe, it, expect, beforeEach } from 'vitest';
-import { memoize, memoizeMath, memoizeGeometry, MathMemo, clearMathMemo, getMathMemoStats } from '../memoization';
+import { describe, it, expect, beforeEach } from "vitest";
+import { memoize, memoizeMath, memoizeGeometry, MathMemo, clearMathMemo, getMathMemoStats } from "../memoization";
 
-describe('Memoization Utilities', () => {
+describe("Memoization Utilities", () => {
   beforeEach(() => {
     clearMathMemo();
   });
 
-  describe('memoize', () => {
-    it('should cache function results', () => {
+  describe("memoize", () => {
+    it("should cache function results", () => {
       let callCount = 0;
       const expensiveFunction = (x: number) => {
         callCount++;
@@ -38,7 +38,7 @@ describe('Memoization Utilities', () => {
       expect(callCount).toBe(2);
     });
 
-    it('should provide statistics', () => {
+    it("should provide statistics", () => {
       const expensiveFunction = (x: number) => x * x;
       const memoizedFn = memoize(expensiveFunction);
 
@@ -53,7 +53,7 @@ describe('Memoization Utilities', () => {
       expect(stats.totalCalls).toBe(2); // totalCalls tracks function executions (cache misses)
     });
 
-    it('should support clear method', () => {
+    it("should support clear method", () => {
       const expensiveFunction = (x: number) => x * x;
       const memoizedFn = memoize(expensiveFunction);
 
@@ -65,8 +65,8 @@ describe('Memoization Utilities', () => {
     });
   });
 
-  describe('memoizeMath', () => {
-    it('should memoize mathematical functions', () => {
+  describe("memoizeMath", () => {
+    it("should memoize mathematical functions", () => {
       let callCount = 0;
       const square = (x: number) => {
         callCount++;
@@ -80,7 +80,7 @@ describe('Memoization Utilities', () => {
       expect(callCount).toBe(1);
     });
 
-    it('should use numeric key generation', () => {
+    it("should use numeric key generation", () => {
       const add = (x: number, y: number) => x + y;
       const memoizedAdd = memoizeMath(add);
 
@@ -90,10 +90,9 @@ describe('Memoization Utilities', () => {
     });
   });
 
-  describe('memoizeGeometry', () => {
-    it('should memoize geometric calculations', () => {
-      const distance = (x1: number, y1: number, x2: number, y2: number) => 
-        Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+  describe("memoizeGeometry", () => {
+    it("should memoize geometric calculations", () => {
+      const distance = (x1: number, y1: number, x2: number, y2: number) => Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
 
       const memoizedDistance = memoizeGeometry(distance);
 
@@ -102,9 +101,8 @@ describe('Memoization Utilities', () => {
       expect(memoizedDistance.stats.hits).toBe(1);
     });
 
-    it('should handle floating point precision in keys', () => {
-      const distance = (x1: number, y1: number, x2: number, y2: number) => 
-        Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
+    it("should handle floating point precision in keys", () => {
+      const distance = (x1: number, y1: number, x2: number, y2: number) => Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
 
       const memoizedDistance = memoizeGeometry(distance);
 
@@ -114,8 +112,8 @@ describe('Memoization Utilities', () => {
     });
   });
 
-  describe('MathMemo', () => {
-    it('should provide predefined memoized mathematical functions', () => {
+  describe("MathMemo", () => {
+    it("should provide predefined memoized mathematical functions", () => {
       expect(MathMemo.square(5)).toBe(25);
       expect(MathMemo.square(5)).toBe(25);
       expect(MathMemo.square.stats.hits).toBe(1);
@@ -129,21 +127,21 @@ describe('Memoization Utilities', () => {
       expect(MathMemo.distance.stats.hits).toBe(1);
     });
 
-    it('should support trigonometric functions', () => {
+    it("should support trigonometric functions", () => {
       expect(MathMemo.sin(Math.PI / 2)).toBeCloseTo(1, 5);
       expect(MathMemo.cos(0)).toBe(1);
       expect(MathMemo.tan(0)).toBe(0);
     });
 
-    it('should support vector operations', () => {
+    it("should support vector operations", () => {
       expect(MathMemo.magnitude2D(3, 4)).toBe(5);
       expect(MathMemo.magnitude3D(2, 3, 6)).toBe(7);
       expect(MathMemo.dot2D(1, 0, 0, 1)).toBe(0);
     });
   });
 
-  describe('clearMathMemo', () => {
-    it('should clear all predefined mathematical caches', () => {
+  describe("clearMathMemo", () => {
+    it("should clear all predefined mathematical caches", () => {
       MathMemo.square(5);
       MathMemo.sqrt(16);
       expect(MathMemo.square.stats.cacheSize).toBe(1);
@@ -155,24 +153,24 @@ describe('Memoization Utilities', () => {
     });
   });
 
-  describe('getMathMemoStats', () => {
-    it('should return statistics for all predefined functions', () => {
+  describe("getMathMemoStats", () => {
+    it("should return statistics for all predefined functions", () => {
       MathMemo.square(5);
       MathMemo.sqrt(16);
       MathMemo.distance(0, 0, 3, 4);
 
       const stats = getMathMemoStats();
-      expect(stats).toHaveProperty('square');
-      expect(stats).toHaveProperty('sqrt');
-      expect(stats).toHaveProperty('distance');
+      expect(stats).toHaveProperty("square");
+      expect(stats).toHaveProperty("sqrt");
+      expect(stats).toHaveProperty("distance");
       expect(stats.square.cacheSize).toBe(1);
       expect(stats.sqrt.cacheSize).toBe(1);
       expect(stats.distance.cacheSize).toBe(1);
     });
   });
 
-  describe('Performance', () => {
-    it('should provide performance benefits for repeated calculations', () => {
+  describe("Performance", () => {
+    it("should provide performance benefits for repeated calculations", () => {
       const expensiveCalculation = (x: number) => {
         // Simulate expensive calculation
         let result = 0;

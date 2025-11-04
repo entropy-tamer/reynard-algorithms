@@ -1,19 +1,18 @@
 /**
- * Machine-specific configuration utilities for algorithm configuration system
- * 
- * @file
+ * @file Machine-specific configuration utilities for algorithm configuration system
  */
 
-import type { AlgorithmConfig, MachineFingerprint } from './algorithm-config-types';
-import { getFs, getPath } from './algorithm-config-node-utils';
-import { mergeConfigs } from './algorithm-config-utils';
+import type { AlgorithmConfig, MachineFingerprint } from "./algorithm-config-types";
+import { getFs, getPath } from "./algorithm-config-node-utils";
+import { mergeConfigs } from "./algorithm-config-utils";
 
 /**
  * Get machine-specific configuration from file
- * 
+ *
  * @param baseConfig - Base configuration to merge with
  * @param machineFingerprint - Machine fingerprint for file lookup
  * @returns Machine-specific configuration or base config if unavailable
+ * @example
  */
 export function loadMachineConfig(
   baseConfig: AlgorithmConfig,
@@ -34,7 +33,7 @@ export function loadMachineConfig(
 
   try {
     if (fs.existsSync(machineConfigPath)) {
-      const machineData = fs.readFileSync(machineConfigPath, 'utf-8');
+      const machineData = fs.readFileSync(machineConfigPath, "utf-8");
       const machineConfig = JSON.parse(machineData) as Partial<AlgorithmConfig>;
       return mergeConfigs(baseConfig, machineConfig);
     }
@@ -47,10 +46,11 @@ export function loadMachineConfig(
 
 /**
  * Save machine-specific configuration to file
- * 
+ *
  * @param machineConfig - Machine-specific configuration to save
  * @param baseConfig - Base configuration for cache directory
  * @param machineFingerprint - Machine fingerprint for file naming
+ * @example
  */
 export function saveMachineConfig(
   machineConfig: Partial<AlgorithmConfig>,
@@ -80,5 +80,6 @@ export function saveMachineConfig(
     console.error(`Failed to save machine config to ${machineConfigPath}:`, error);
   }
 }
+
 
 

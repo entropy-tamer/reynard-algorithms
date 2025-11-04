@@ -1,27 +1,26 @@
 /**
- * Immutable Global Configuration System
- * 
+ * @file Immutable Global Configuration System
+ *
  * Provides thread-safe, immutable configuration management to prevent race conditions.
  * Addresses Issue #8 - Race Conditions in Global Config.
- * 
- * @file
+ *
  * @module algorithmsImmutableConfig
  */
 
-import { AlgorithmConfig, AlgorithmConfigManager } from './algorithm-config';
+import { AlgorithmConfig, AlgorithmConfigManager } from "./algorithm-config";
 import type {
   ImmutableConfigSnapshot,
   OptimizedCollisionConfig,
   ConfigChangeEvent,
   ConfigChangeListener,
-} from './immutable-config-types';
+} from "./immutable-config-types";
 import {
   getConfigDiff as getConfigDiffHelper,
   validateConfig as validateConfigHelper,
   createSnapshot as createSnapshotHelper,
   DEFAULT_OPTIMIZATION_CONFIG,
   trackChanges,
-} from './immutable-config-helpers';
+} from "./immutable-config-helpers";
 
 // Re-export types for backwards compatibility
 export type {
@@ -29,11 +28,11 @@ export type {
   OptimizedCollisionConfig,
   ConfigChangeEvent,
   ConfigChangeListener,
-} from './immutable-config-types';
+} from "./immutable-config-types";
 
 /**
  * Immutable Global Configuration Manager
- * 
+ *
  * Provides thread-safe configuration management with immutable snapshots
  * and change event notifications to prevent race conditions.
  */
@@ -45,7 +44,7 @@ export class ImmutableConfigManager {
 
   /**
    * Create a new immutable configuration manager
-   * 
+   *
    * @param configManager - The algorithm configuration manager to use
    * @example
    * const configManager = new AlgorithmConfigManager();
@@ -58,7 +57,7 @@ export class ImmutableConfigManager {
 
   /**
    * Get current immutable configuration snapshot
-   * 
+   *
    * @returns The current immutable configuration snapshot
    * @example
    * const snapshot = manager.getCurrentSnapshot();
@@ -70,7 +69,7 @@ export class ImmutableConfigManager {
 
   /**
    * Get algorithm configuration (immutable)
-   * 
+   *
    * @returns The current immutable algorithm configuration
    * @example
    * const config = manager.getAlgorithmConfig();
@@ -82,7 +81,7 @@ export class ImmutableConfigManager {
 
   /**
    * Get optimization configuration (immutable)
-   * 
+   *
    * @returns The current immutable optimization configuration
    * @example
    * const config = manager.getOptimizationConfig();
@@ -94,7 +93,7 @@ export class ImmutableConfigManager {
 
   /**
    * Update configuration atomically
-   * 
+   *
    * @param algorithmUpdates - Partial algorithm configuration updates
    * @param optimizationUpdates - Partial optimization configuration updates
    * @returns Promise resolving to the new configuration snapshot
@@ -108,11 +107,11 @@ export class ImmutableConfigManager {
     algorithmUpdates?: Partial<AlgorithmConfig>,
     optimizationUpdates?: Partial<OptimizedCollisionConfig>
   ): Promise<ImmutableConfigSnapshot> {
-    const lockKey = 'config_update';
-    
+    const lockKey = "config_update";
+
     // Acquire lock to prevent race conditions
     if (this.lock.get(lockKey)) {
-      throw new Error('Configuration update already in progress');
+      throw new Error("Configuration update already in progress");
     }
 
     try {
@@ -150,7 +149,7 @@ export class ImmutableConfigManager {
 
   /**
    * Add configuration change listener
-   * 
+   *
    * @param listener - Function to call when configuration changes
    * @example
    * manager.addChangeListener((event) => {
@@ -163,7 +162,7 @@ export class ImmutableConfigManager {
 
   /**
    * Remove configuration change listener
-   * 
+   *
    * @param listener - Function to remove from change listeners
    * @example
    * const listener = (event) => console.log(event);
@@ -176,7 +175,7 @@ export class ImmutableConfigManager {
 
   /**
    * Create immutable configuration snapshot
-   * 
+   *
    * @returns A new immutable configuration snapshot
    * @example
    * const snapshot = this.createSnapshot();
@@ -190,7 +189,7 @@ export class ImmutableConfigManager {
 
   /**
    * Update algorithm configuration and track changes
-   * 
+   *
    * @param updates - Partial algorithm configuration updates
    * @returns Array of changed key paths
    * @example
@@ -201,14 +200,14 @@ export class ImmutableConfigManager {
     const updated = { ...current, ...updates };
     const currentRecord = current as unknown as Record<string, unknown>;
     const newRecord = updated as unknown as Record<string, unknown>;
-    const changedKeys = trackChanges(updates, currentRecord, newRecord, 'algorithm');
+    const changedKeys = trackChanges(updates, currentRecord, newRecord, "algorithm");
     this.configManager.updateConfig(updated);
     return changedKeys;
   }
 
   /**
    * Update optimization configuration and track changes
-   * 
+   *
    * @param updates - Partial optimization configuration updates
    * @returns Array of changed key paths
    * @example
@@ -219,7 +218,7 @@ export class ImmutableConfigManager {
     const updated = { ...current, ...updates };
     const currentRecord = current as unknown as Record<string, unknown>;
     const newRecord = updated as unknown as Record<string, unknown>;
-    const changedKeys = trackChanges(updates, currentRecord, newRecord, 'optimization');
+    const changedKeys = trackChanges(updates, currentRecord, newRecord, "optimization");
     this.currentSnapshot = {
       ...this.currentSnapshot,
       optimizationConfig: Object.freeze(updated),
@@ -229,7 +228,7 @@ export class ImmutableConfigManager {
 
   /**
    * Notify listeners of configuration changes
-   * 
+   *
    * @param oldSnapshot - Previous configuration snapshot
    * @param newSnapshot - New configuration snapshot
    * @param changedKeys - Array of keys that changed
@@ -242,7 +241,7 @@ export class ImmutableConfigManager {
     changedKeys: string[]
   ): void {
     const event: ConfigChangeEvent = {
-      type: 'config_changed',
+      type: "config_changed",
       oldSnapshot,
       newSnapshot,
       changedKeys,
@@ -253,14 +252,14 @@ export class ImmutableConfigManager {
       try {
         listener(event);
       } catch (error) {
-        console.error('Error in configuration change listener:', error);
+        console.error("Error in configuration change listener:", error);
       }
     }
   }
 
   /**
    * Validate configuration consistency
-   * 
+   *
    * @returns Validation result with isValid flag and error messages
    * @example
    * const result = manager.validateConfig();
@@ -274,7 +273,7 @@ export class ImmutableConfigManager {
 
   /**
    * Get configuration diff between two snapshots
-   * 
+   *
    * @param oldSnapshot - Previous configuration snapshot
    * @param newSnapshot - New configuration snapshot
    * @returns Object containing algorithm and optimization changes
@@ -283,7 +282,10 @@ export class ImmutableConfigManager {
    * console.log('Algorithm changes:', diff.algorithmChanges);
    * console.log('Optimization changes:', diff.optimizationChanges);
    */
-  getConfigDiff(oldSnapshot: ImmutableConfigSnapshot, newSnapshot: ImmutableConfigSnapshot): {
+  getConfigDiff(
+    oldSnapshot: ImmutableConfigSnapshot,
+    newSnapshot: ImmutableConfigSnapshot
+  ): {
     algorithmChanges: Record<string, { old: unknown; new: unknown }>;
     optimizationChanges: Record<string, { old: unknown; new: unknown }>;
   } {
@@ -300,4 +302,4 @@ export {
   updateImmutableConfig,
   addConfigChangeListener,
   removeConfigChangeListener,
-} from './immutable-config-utils';
+} from "./immutable-config-utils";

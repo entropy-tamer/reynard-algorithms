@@ -17,15 +17,15 @@ The Reynard algorithms package includes a hybrid adaptive memoization system tha
 ### Basic Integration
 
 ```typescript
-import { adaptiveMemo } from '@reynard/algorithms/utils';
+import { adaptiveMemo } from "@reynard/algorithms/utils";
 
 // Wrap expensive functions with adaptive memo
 const expensiveCalc = adaptiveMemo(
   (x: number, y: number) => Math.sqrt(x * x + y * y),
-  { 
-    maxSize: 1024, 
-    minHitRate: 0.7, 
-    windowSize: 500 
+  {
+    maxSize: 1024,
+    minHitRate: 0.7,
+    windowSize: 500,
   },
   (x: number, y: number) => `${x}|${y}` // custom key generator
 );
@@ -34,17 +34,17 @@ const expensiveCalc = adaptiveMemo(
 ### Policy Configuration
 
 ```typescript
-import { setMemoPolicy, getMemoStats } from '@reynard/algorithms/utils';
+import { setMemoPolicy, getMemoStats } from "@reynard/algorithms/utils";
 
 // Adjust policy at runtime
-setMemoPolicy('euclideanDistance', {
+setMemoPolicy("euclideanDistance", {
   maxSize: 2048,
   minHitRate: 0.8,
-  overheadBudgetMs: 0.01
+  overheadBudgetMs: 0.01,
 });
 
 // Monitor performance
-const stats = getMemoStats('euclideanDistance');
+const stats = getMemoStats("euclideanDistance");
 console.log(`Hit rate: ${stats.hitRate}, Overhead: ${stats.avgOverheadMs}ms`);
 ```
 
@@ -52,7 +52,7 @@ console.log(`Hit rate: ${stats.hitRate}, Overhead: ${stats.avgOverheadMs}ms`);
 
 ### ✅ Good Candidates
 
-- **Heuristics**: A* pathfinding distance calculations
+- **Heuristics**: A\* pathfinding distance calculations
 - **Collision Detection**: AABB union/intersection, SAT projections
 - **Spatial Queries**: Repeated nearest neighbor searches
 - **Geometry**: Vector normalization, distance calculations
@@ -78,15 +78,15 @@ console.log(`Hit rate: ${stats.hitRate}, Overhead: ${stats.avgOverheadMs}ms`);
 ### Monitoring
 
 ```typescript
-import { memoRegistry } from '@reynard/algorithms/utils';
+import { memoRegistry } from "@reynard/algorithms/utils";
 
 // Get all memo statistics
 const allStats = memoRegistry.getAllStats();
 
 // Check specific function
-const distanceStats = memoRegistry.getStats('euclideanDistance');
+const distanceStats = memoRegistry.getStats("euclideanDistance");
 if (distanceStats.hitRate < 0.5) {
-  console.warn('Low hit rate detected, consider disabling memo');
+  console.warn("Low hit rate detected, consider disabling memo");
 }
 ```
 
@@ -167,7 +167,7 @@ RUN_MEMO_BENCH=1 pnpm tsx packages/core/algorithms/src/utils/__bench__/memo-*.be
 
 Available benchmarks:
 
-- `memo-heuristics.bench.ts`: A* pathfinding heuristics
-- `memo-aabb.bench.ts`: AABB collision operations  
+- `memo-heuristics.bench.ts`: A\* pathfinding heuristics
+- `memo-aabb.bench.ts`: AABB collision operations
 - `memo-sat.bench.ts`: SAT collision detection
 - `memo-geometry.bench.ts`: Vector operations

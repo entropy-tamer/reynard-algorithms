@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { UnionFindNode, UnionFindStats } from "../../data-structures/union-find/union-find-types";
+import type { UnionFindNode, UnionFindStats } from "../../../data-structures/basic/union-find/union-find-types";
 
 describe("Union-Find Types", () => {
   describe("UnionFindNode", () => {

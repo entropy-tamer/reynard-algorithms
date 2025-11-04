@@ -1,6 +1,8 @@
 /**
- * @vitest-environment happy-dom
+ * @file Extended tests for optimized collision adapter
  */
+/* eslint-disable max-lines, max-lines-per-function */
+// @vitest-environment happy-dom
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { OptimizedCollisionAdapter } from "../../../optimization/adapters/optimized-collision-adapter";

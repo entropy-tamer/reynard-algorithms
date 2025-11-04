@@ -1,6 +1,10 @@
 /** Microbench: SAT projection memoization (CI-safe) */
-import { SAT } from "../../geometry/collision/sat/sat-core";
+import { SAT } from "../../../algorithms/collision/sat/sat-core";
 
+/**
+ *
+ * @example
+ */
 function run() {
   const polygons = Array.from({ length: 20 }, (_, i) => ({
     vertices: [
@@ -15,7 +19,10 @@ function run() {
   }));
 
   const sat = new SAT({ enableCaching: true });
-  const pairs: Array<[number, number]> = Array.from({ length: 30 }, (_, i) => [i % polygons.length, (i * 2) % polygons.length]);
+  const pairs: Array<[number, number]> = Array.from({ length: 30 }, (_, i) => [
+    i % polygons.length,
+    (i * 2) % polygons.length,
+  ]);
 
   // warm
   for (let r = 0; r < 3; r++) {
@@ -31,7 +38,7 @@ function run() {
     }
   }
   const t1 = performance.now();
-  // eslint-disable-next-line no-console
+   
   console.log(`[memo-sat] totalMs=${(t1 - t0).toFixed(3)}`);
 }
 

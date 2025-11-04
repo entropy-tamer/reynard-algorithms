@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { KdTree } from "../../spatial-structures/kdtree/kdtree-core";
-import type { Point } from "../../spatial-structures/kdtree/kdtree-types";
+import { KdTree } from "../../data-structures/spatial/kdtree/kdtree-core";
+import type { Point } from "../../data-structures/spatial/kdtree/kdtree-types";
 
 describe("K-d Tree Performance Tests", () => {
   let kdTree: KdTree;

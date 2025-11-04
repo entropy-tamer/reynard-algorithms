@@ -1,5 +1,9 @@
+/**
+ * @file Priority Queue tests
+ */
+/* eslint-disable max-lines, max-lines-per-function */
 import { describe, it, expect, beforeEach } from "vitest";
-import { PriorityQueue, PriorityQueueComparator, PriorityQueueEvent } from "../../data-structures/priority-queue";
+import { PriorityQueue, PriorityQueueComparator, PriorityQueueEvent } from "../../data-structures/basic/priority-queue";
 
 describe("PriorityQueue", () => {
   let pq: PriorityQueue<number>;
@@ -53,13 +57,15 @@ describe("PriorityQueue", () => {
       // For min-heap: parent priority <= children priority
       for (let i = 0; i < heap.length; i++) {
         const parent = heap[i];
+        if (!parent) continue;
+        
         const leftChildIndex = 2 * i + 1;
         const rightChildIndex = 2 * i + 2;
 
-        if (leftChildIndex < heap.length) {
+        if (leftChildIndex < heap.length && heap[leftChildIndex]) {
           expect(parent.priority).toBeLessThanOrEqual(heap[leftChildIndex].priority);
         }
-        if (rightChildIndex < heap.length) {
+        if (rightChildIndex < heap.length && heap[rightChildIndex]) {
           expect(parent.priority).toBeLessThanOrEqual(heap[rightChildIndex].priority);
         }
       }

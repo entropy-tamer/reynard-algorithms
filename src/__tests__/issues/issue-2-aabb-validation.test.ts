@@ -1,19 +1,27 @@
 /**
+ * @file Issue #2 - AABB validation tests
+ */
+/* eslint-disable max-lines, max-lines-per-function, jsdoc/require-description, jsdoc/require-returns, jsdoc/require-param-description, jsdoc/require-example */
+/**
  * Issue #2: AABB Validation Missing - Micro-Benchmark
- * 
+ *
  * This test suite specifically addresses Issue #2 and provides comprehensive
  * benchmarking and verification of the AABB input validation fix.
- * 
+ *
  * @module algorithms/issue2AABBValidationTests
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { checkCollision, createCollisionResult, executeNaiveCollisionDetection } from '../../optimization/adapters/collision-algorithms';
-import { validateAABB, validateAABBArray } from '../../geometry/collision/aabb/aabb-validation';
-import { runBenchmark, BenchmarkReport } from '../utils/benchmark-utils';
-import { verificationReportGenerator, IssueStatus } from '../utils/verification-report';
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import {
+  checkCollision,
+  createCollisionResult,
+  executeNaiveCollisionDetection,
+} from "../../optimization/adapters/collision-algorithms";
+import { validateAABB, validateAABBArray } from "../../../algorithms/collision/aabb/aabb-validation";
+import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
+import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 
-describe('Issue #2: AABB Validation Missing', () => {
+describe("Issue #2: AABB Validation Missing", () => {
   let beforeReport: BenchmarkReport | null = null;
   let afterReport: BenchmarkReport | null = null;
 
@@ -21,22 +29,24 @@ describe('Issue #2: AABB Validation Missing', () => {
     // Register this issue with the verification report generator
     verificationReportGenerator.addIssue({
       issueNumber: 2,
-      title: 'AABB Validation Missing',
-      description: 'AABBs with negative dimensions are accepted without validation, which could lead to incorrect collision results. The implementation should validate that width >= 0 and height >= 0.',
+      title: "AABB Validation Missing",
+      description:
+        "AABBs with negative dimensions are accepted without validation, which could lead to incorrect collision results. The implementation should validate that width >= 0 and height >= 0.",
       affectedFiles: [
-        'src/optimization/adapters/collision-algorithms.ts',
-        'src/geometry/collision/aabb/aabb-validation.ts',
-        'src/__tests__/geometry/collision/aabb-validation.test.ts',
+        "src/optimization/adapters/collision-algorithms.ts",
+        "src/geometry/collision/aabb/aabb-validation.ts",
+        "src/__tests__/geometry/collision/aabb-validation.test.ts",
       ],
-      fixDescription: 'Added comprehensive AABB input validation to all collision detection functions, including validation for negative dimensions, NaN values, Infinity, and missing properties.',
+      fixDescription:
+        "Added comprehensive AABB input validation to all collision detection functions, including validation for negative dimensions, NaN values, Infinity, and missing properties.",
       verificationTests: [
-        'should validate AABB objects correctly',
-        'should detect negative dimensions',
-        'should detect NaN values',
-        'should detect Infinity values',
-        'should detect missing properties',
-        'should warn about zero dimensions',
-        'should warn about extra properties',
+        "should validate AABB objects correctly",
+        "should detect negative dimensions",
+        "should detect NaN values",
+        "should detect Infinity values",
+        "should detect missing properties",
+        "should warn about zero dimensions",
+        "should warn about extra properties",
       ],
       testResults: {
         passed: 0,
@@ -51,14 +61,14 @@ describe('Issue #2: AABB Validation Missing', () => {
         regression: false,
       },
       breakingChanges: [
-        'Collision detection functions now throw errors for invalid AABBs instead of silently producing incorrect results',
+        "Collision detection functions now throw errors for invalid AABBs instead of silently producing incorrect results",
       ],
       notes: [],
     });
   });
 
-  describe('Before Fix Simulation', () => {
-    it('should demonstrate the original buggy behavior', () => {
+  describe("Before Fix Simulation", () => {
+    it("should demonstrate the original buggy behavior", () => {
       // Simulate the original behavior where invalid AABBs were accepted
       const invalidAABB = { x: 0, y: 0, width: -10, height: 10 };
       const validAABB = { x: 5, y: 5, width: 10, height: 10 };
@@ -73,20 +83,22 @@ describe('Issue #2: AABB Validation Missing', () => {
       expect(incorrectResult).toBe(false); // This is correct behavior, but no validation was done
     });
 
-    it('should benchmark performance before fix', async () => {
+    it("should benchmark performance before fix", async () => {
       const aabbs = generateTestAABBs(1000, { includeInvalid: false });
 
       beforeReport = await runBenchmark(
-        'aabb-collision-before-fix',
+        "aabb-collision-before-fix",
         () => {
           // Simulate original collision detection without validation
           const collisions = [];
           for (let i = 0; i < aabbs.length; i++) {
             for (let j = i + 1; j < aabbs.length; j++) {
-              const colliding = !(aabbs[i].x + aabbs[i].width <= aabbs[j].x || 
-                                aabbs[j].x + aabbs[j].width <= aabbs[i].x || 
-                                aabbs[i].y + aabbs[i].height <= aabbs[j].y || 
-                                aabbs[j].y + aabbs[j].height <= aabbs[i].y);
+              const colliding = !(
+                aabbs[i].x + aabbs[i].width <= aabbs[j].x ||
+                aabbs[j].x + aabbs[j].width <= aabbs[i].x ||
+                aabbs[i].y + aabbs[i].height <= aabbs[j].y ||
+                aabbs[j].y + aabbs[j].height <= aabbs[i].y
+              );
               if (colliding) {
                 collisions.push({ a: i, b: j });
               }
@@ -101,8 +113,8 @@ describe('Issue #2: AABB Validation Missing', () => {
     });
   });
 
-  describe('After Fix Verification', () => {
-    it('should correctly validate AABBs and reject invalid ones', () => {
+  describe("After Fix Verification", () => {
+    it("should correctly validate AABBs and reject invalid ones", () => {
       const validAABB = { x: 0, y: 0, width: 10, height: 10 };
       const invalidAABB = { x: 0, y: 0, width: -10, height: 10 };
 
@@ -114,24 +126,24 @@ describe('Issue #2: AABB Validation Missing', () => {
       const invalidValidation = validateAABB(invalidAABB);
       expect(invalidValidation.isValid).toBe(false);
       expect(invalidValidation.errors).toHaveLength(1);
-      expect(invalidValidation.errors[0].field).toBe('width');
+      expect(invalidValidation.errors[0].field).toBe("width");
     });
 
-    it('should throw errors for invalid AABBs in collision detection', () => {
+    it("should throw errors for invalid AABBs in collision detection", () => {
       const validAABB = { x: 0, y: 0, width: 10, height: 10 };
       const invalidAABB = { x: 0, y: 0, width: -10, height: 10 };
 
       // Should throw for invalid AABBs
       expect(() => {
         checkCollision(validAABB, invalidAABB);
-      }).toThrow('Invalid AABBs for collision detection');
+      }).toThrow("Invalid AABBs for collision detection");
 
       expect(() => {
         createCollisionResult(validAABB, invalidAABB);
-      }).toThrow('Invalid AABBs for collision result');
+      }).toThrow("Invalid AABBs for collision result");
     });
 
-    it('should handle arrays with mixed valid/invalid AABBs', () => {
+    it("should handle arrays with mixed valid/invalid AABBs", () => {
       const mixedAABBs = [
         { x: 0, y: 0, width: 10, height: 10 }, // valid
         { x: 10, y: 10, width: -5, height: 5 }, // invalid
@@ -144,27 +156,26 @@ describe('Issue #2: AABB Validation Missing', () => {
       expect(validation.invalidIndices).toEqual([1]);
     });
 
-    it.skip('should benchmark performance after fix', async () => {
+    it.skip("should benchmark performance after fix", async () => {
       const aabbs = generateTestAABBs(1000, { includeInvalid: false });
 
-      afterReport = await runBenchmark(
-        'aabb-collision-after-fix',
-        () => executeNaiveCollisionDetection(aabbs),
-        { samples: 20 }
-      );
+      afterReport = await runBenchmark("aabb-collision-after-fix", () => executeNaiveCollisionDetection(aabbs), {
+        samples: 20,
+      });
 
       expect(afterReport.statistics.median).toBeLessThan(200); // Should be fast (more realistic threshold)
     });
 
-    it('should have minimal performance overhead', () => {
+    it("should have minimal performance overhead", () => {
       if (beforeReport && afterReport) {
         // Performance overhead should be less than 100% (very realistic for validation)
-        const overhead = (afterReport.statistics.median - beforeReport.statistics.median) / beforeReport.statistics.median;
+        const overhead =
+          (afterReport.statistics.median - beforeReport.statistics.median) / beforeReport.statistics.median;
         expect(overhead).toBeLessThan(5.0); // Allow higher overhead in CI/low-perf envs
       }
     });
 
-    it('should handle edge cases correctly', () => {
+    it("should handle edge cases correctly", () => {
       const edgeCases = [
         // Zero dimensions
         { x: 0, y: 0, width: 0, height: 0 },
@@ -183,24 +194,22 @@ describe('Issue #2: AABB Validation Missing', () => {
       for (const edgeCase of edgeCases) {
         const validation = validateAABB(edgeCase);
         expect(validation).toBeDefined();
-        expect(typeof validation.isValid).toBe('boolean');
+        expect(typeof validation.isValid).toBe("boolean");
         expect(Array.isArray(validation.errors)).toBe(true);
         expect(Array.isArray(validation.warnings)).toBe(true);
       }
     });
 
-    it.skip('should handle large datasets efficiently', async () => {
+    it.skip("should handle large datasets efficiently", async () => {
       const sizes = [100, 500, 1000]; // Reduced sizes to avoid timeout
       const results: BenchmarkReport[] = [];
 
       for (const size of sizes) {
         const aabbs = generateTestAABBs(size, { includeInvalid: false });
 
-        const report = await runBenchmark(
-          `aabb-validation-size-${size}`,
-          () => executeNaiveCollisionDetection(aabbs),
-          { samples: 10 }
-        );
+        const report = await runBenchmark(`aabb-validation-size-${size}`, () => executeNaiveCollisionDetection(aabbs), {
+          samples: 10,
+        });
 
         results.push(report);
       }
@@ -209,36 +218,36 @@ describe('Issue #2: AABB Validation Missing', () => {
       for (let i = 1; i < results.length; i++) {
         const sizeRatio = sizes[i] / sizes[i - 1];
         const timeRatio = results[i].statistics.median / results[i - 1].statistics.median;
-        
+
         // Time should not increase more than quadratically (with some tolerance)
         expect(timeRatio).toBeLessThan(sizeRatio * sizeRatio * 1.5);
       }
     });
 
-    it('should fail fast on invalid input', async () => {
+    it("should fail fast on invalid input", async () => {
       const invalidAABBs = [
         { x: 0, y: 0, width: 10, height: 10 },
         { x: 5, y: 5, width: -10, height: 10 }, // invalid
       ];
 
       const startTime = performance.now();
-      
+
       try {
         executeNaiveCollisionDetection(invalidAABBs);
       } catch (error) {
         // Expected to throw
       }
-      
+
       const endTime = performance.now();
       const duration = endTime - startTime;
-      
+
       // Should fail quickly (within 1ms)
       expect(duration).toBeLessThan(1);
     });
   });
 
-  describe('Regression Testing', () => {
-    it('should not break existing valid collision detection', () => {
+  describe("Regression Testing", () => {
+    it("should not break existing valid collision detection", () => {
       const validAABBs = [
         { x: 0, y: 0, width: 10, height: 10 },
         { x: 5, y: 5, width: 10, height: 10 },
@@ -252,33 +261,33 @@ describe('Issue #2: AABB Validation Missing', () => {
       }).not.toThrow();
     });
 
-    it('should maintain backward compatibility for valid AABBs', () => {
+    it("should maintain backward compatibility for valid AABBs", () => {
       const a = { x: 0, y: 0, width: 10, height: 10 };
       const b = { x: 5, y: 5, width: 10, height: 10 };
 
       // Should work the same as before for valid AABBs
       expect(() => {
         const colliding = checkCollision(a, b);
-        expect(typeof colliding).toBe('boolean');
+        expect(typeof colliding).toBe("boolean");
       }).not.toThrow();
 
       expect(() => {
         const result = createCollisionResult(a, b);
-        expect(result).toHaveProperty('colliding');
-        expect(result).toHaveProperty('overlap');
-        expect(result).toHaveProperty('overlapArea');
-        expect(result).toHaveProperty('distance');
+        expect(result).toHaveProperty("colliding");
+        expect(result).toHaveProperty("overlap");
+        expect(result).toHaveProperty("overlapArea");
+        expect(result).toHaveProperty("distance");
       }).not.toThrow();
     });
 
-    it('should handle empty arrays', () => {
+    it("should handle empty arrays", () => {
       expect(() => {
         const collisions = executeNaiveCollisionDetection([]);
         expect(collisions).toEqual([]);
       }).not.toThrow();
     });
 
-    it('should handle single AABB arrays', () => {
+    it("should handle single AABB arrays", () => {
       expect(() => {
         const collisions = executeNaiveCollisionDetection([{ x: 0, y: 0, width: 10, height: 10 }]);
         expect(collisions).toEqual([]);
@@ -305,20 +314,28 @@ describe('Issue #2: AABB Validation Missing', () => {
   });
 
   // Helper functions
+  /**
+   *
+   * @param count
+   * @param options
+   * @param options.includeInvalid
+   * @example
+   */
   function generateTestAABBs(count: number, options: { includeInvalid?: boolean } = {}): any[] {
     const aabbs: any[] = [];
-    
+
     for (let i = 0; i < count; i++) {
       const x = Math.random() * 1000;
       const y = Math.random() * 1000;
-      const width = options.includeInvalid && Math.random() < 0.1 
-        ? -Math.random() * 20 // 10% chance of negative width
-        : Math.random() * 20 + 1;
+      const width =
+        options.includeInvalid && Math.random() < 0.1
+          ? -Math.random() * 20 // 10% chance of negative width
+          : Math.random() * 20 + 1;
       const height = Math.random() * 20 + 1;
-      
+
       aabbs.push({ x, y, width, height });
     }
-    
+
     return aabbs;
   }
 });

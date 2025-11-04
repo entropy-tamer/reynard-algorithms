@@ -1,10 +1,8 @@
 /**
- * Default configuration values for algorithm configuration system
- * 
- * @file
+ * @file Default configuration values for algorithm configuration system
  */
 
-import type { AlgorithmConfig } from './algorithm-config-types';
+import type { AlgorithmConfig } from "./algorithm-config-types";
 
 /**
  * Default configuration values
@@ -40,7 +38,7 @@ export const DEFAULT_CONFIG: AlgorithmConfig = {
   },
   autoTuning: {
     enabled: true,
-    calibrationCacheDir: './.algorithm-cache',
+    calibrationCacheDir: "./.algorithm-cache",
     runOnStartup: false,
     calibration: {
       iterationsPerThreshold: 5,
@@ -60,7 +58,8 @@ export const DEFAULT_CONFIG: AlgorithmConfig = {
       minSamples: 200,
     },
   },
-  version: '1.0.0',
+  version: "1.0.0",
 };
+
 
 

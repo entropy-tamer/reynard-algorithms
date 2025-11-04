@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { ThetaStar, ThetaStarUtils } from "../../pathfinding/theta-star/theta-star-core";
-import type { Point, CellType } from "../../pathfinding/theta-star/theta-star-types";
+import { ThetaStar, ThetaStarUtils } from "../../algorithms/pathfinding/theta-star/theta-star-core";
+import type { Point, CellType } from "../../algorithms/pathfinding/theta-star/theta-star-types";
 
 describe("ThetaStar Performance", () => {
   let thetaStar: ThetaStar;

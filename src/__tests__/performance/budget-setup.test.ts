@@ -7,8 +7,8 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { PerformanceBudgetChecker } from "../../performance/budget";
-import { createTestBudget, createTestMetrics } from "../../performance/test-utils";
+import { PerformanceBudgetChecker } from "../../utils/performance/budget";
+import { createTestBudget, createTestMetrics } from "../../utils/performance/test-utils";
 
 describe("PerformanceBudgetChecker - Setup", () => {
   let checker: PerformanceBudgetChecker;

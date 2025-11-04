@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { Quadtree } from "../../spatial-structures/quadtree";
-import type { Rectangle } from "../../geometry/shapes/shapes";
+import { Quadtree } from "../../data-structures/spatial/quadtree";
+import type { Rectangle } from "../../core/geometry/shapes";
 
 // Setup shared bounds and quadtree instance per test
 const bounds: Rectangle = { x: 0, y: 0, width: 1000, height: 1000 };

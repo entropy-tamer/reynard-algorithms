@@ -1,3 +1,7 @@
+/**
+ * @file Tests for collision algorithms
+ */
+/* eslint-disable max-lines, max-lines-per-function */
 import { describe, expect, it, beforeEach } from "vitest";
 import {
   checkCollision,
@@ -6,8 +10,8 @@ import {
   executeSpatialCollisionDetection,
   executeOptimizedCollisionDetection,
 } from "../../../optimization/adapters/collision-algorithms";
-import { MemoryPool } from "../../../optimization/core/enhanced-memory-pool";
-import type { AABB } from "../../../geometry/collision/aabb/aabb-types";
+import { MemoryPool } from "../../../optimization/core/memory-pool";
+import type { AABB } from "../../../core/geometry/collision/aabb/aabb-types";
 
 describe("Collision Algorithms", () => {
   let memoryPool: MemoryPool;

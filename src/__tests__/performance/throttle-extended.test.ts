@@ -1,9 +1,10 @@
 /**
- * @vitest-environment happy-dom
+ * @file Extended tests for throttle utilities
  */
+// @vitest-environment happy-dom
 
 import { describe, it, expect, vi } from "vitest";
-import { throttle, debounce } from "../../performance/throttle";
+import { throttle, debounce } from "../../utils/performance/throttle";
 
 describe("Throttle Extended Coverage", () => {
   // Note: These tests use real timers because throttle/debounce functions

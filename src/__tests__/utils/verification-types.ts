@@ -1,15 +1,15 @@
 /**
  * @file Shared types and enums for verification reports
  */
-import type { BenchmarkReport } from './benchmark-utils';
+import type { BenchmarkReport } from "./benchmark-utils";
 
 export enum IssueStatus {
-  PENDING = 'pending',
-  IN_PROGRESS = 'in_progress',
-  FIXED = 'fixed',
-  VERIFIED = 'verified',
-  FAILED = 'failed',
-  SKIPPED = 'skipped',
+  PENDING = "pending",
+  IN_PROGRESS = "in_progress",
+  FIXED = "fixed",
+  VERIFIED = "verified",
+  FAILED = "failed",
+  SKIPPED = "skipped",
 }
 
 export interface IssueVerification {
@@ -73,5 +73,3 @@ export interface VerificationReport {
   recommendations: string[];
   nextSteps: string[];
 }
-
-

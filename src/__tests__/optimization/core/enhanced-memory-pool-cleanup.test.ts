@@ -1,9 +1,11 @@
 /**
- * @vitest-environment happy-dom
+ * @file Tests for enhanced memory pool cleanup
  */
+/* eslint-disable max-lines-per-function */
+// @vitest-environment happy-dom
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { MemoryPool } from "../../../optimization/core/enhanced-memory-pool";
+import { MemoryPool } from "../../../optimization/core/memory-pool";
 
 describe("Enhanced Memory Pool Cleanup Coverage", () => {
   let memoryPool: MemoryPool;

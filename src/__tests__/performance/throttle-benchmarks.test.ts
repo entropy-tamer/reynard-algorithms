@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect } from "vitest";
-import { throttle, debounce } from "../../performance/throttle";
+import { throttle, debounce } from "../../utils/performance/throttle";
 
 describe("Throttle/Debounce Performance Benchmarks", () => {
   const iterations = 10000;

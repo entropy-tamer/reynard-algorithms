@@ -1,28 +1,29 @@
 /**
- * Comprehensive Pathfinding Validation Tests
- * 
+ * @file Comprehensive Pathfinding Validation Tests
+ *
  * Tests for consistent validation across all pathfinding algorithms.
  * Addresses Issue #7 - Test Coverage Gaps.
- * 
+ *
  * @module algorithms/pathfindingComprehensiveValidationTests
  */
+/* eslint-disable max-lines, max-lines-per-function, jsdoc/require-description, jsdoc/require-returns, jsdoc/require-param-description, jsdoc/require-example */
 
-import { JPS } from '../../pathfinding/jps/jps-core';
-import { ThetaStar } from '../../pathfinding/theta-star/theta-star-core';
-import { HPAStar } from '../../pathfinding/hpa-star/hpa-star-core';
-import { AStar } from '../../pathfinding/astar/astar-core';
-import { FlowField } from '../../pathfinding/flow-field/flow-field-core';
-import { runBenchmark, BenchmarkReport } from '../utils/benchmark-utils';
-import { verificationReportGenerator, IssueStatus } from '../utils/verification-report';
+import { JPS } from "../../algorithms/pathfinding/jps/jps-core";
+import { ThetaStar } from "../../algorithms/pathfinding/theta-star/theta-star-core";
+import { HPAStar } from "../../algorithms/pathfinding/hpa-star/hpa-star-core";
+import { AStar } from "../../algorithms/pathfinding/astar/astar-core";
+import { FlowField } from "../../algorithms/pathfinding/flow-field/flow-field-core";
+import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
+import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 
-describe('Comprehensive Pathfinding Validation', () => {
+describe("Comprehensive Pathfinding Validation", () => {
   let jps: JPS;
   let thetaStar: ThetaStar;
   let hpaStar: HPAStar;
   let astar: AStar;
   let flowField: FlowField;
   let beforeReport: BenchmarkReport | null = null;
-  let afterReport: BenchmarkReport | null = null;
+  const afterReport: BenchmarkReport | null = null;
 
   beforeAll(() => {
     jps = new JPS();
@@ -30,25 +31,27 @@ describe('Comprehensive Pathfinding Validation', () => {
     hpaStar = new HPAStar();
     astar = new AStar();
     flowField = new FlowField();
-    
+
     // Register this issue with the verification report generator
     verificationReportGenerator.addIssue({
       issueNumber: 7,
-      title: 'Test Coverage Gaps',
-      description: 'JPS pathfinding tests check for disconnected start/goal, but similar validation is missing in other pathfinding algorithms like Theta*.',
+      title: "Test Coverage Gaps",
+      description:
+        "JPS pathfinding tests check for disconnected start/goal, but similar validation is missing in other pathfinding algorithms like Theta*.",
       affectedFiles: [
-        'src/__tests__/pathfinding/jps.test.ts',
-        'src/__tests__/pathfinding/theta-star.test.ts',
-        'src/__tests__/pathfinding/astar.test.ts',
-        'src/__tests__/pathfinding/hpa-star.test.ts',
-        'src/__tests__/pathfinding/flow-field.test.ts',
+        "src/__tests__/pathfinding/jps.test.ts",
+        "src/__tests__/pathfinding/theta-star.test.ts",
+        "src/__tests__/pathfinding/astar.test.ts",
+        "src/__tests__/pathfinding/hpa-star.test.ts",
+        "src/__tests__/pathfinding/flow-field.test.ts",
       ],
-      fixDescription: 'Added consistent validation tests across all pathfinding algorithms including disconnected start/goal detection, invalid grid validation, and edge case handling.',
+      fixDescription:
+        "Added consistent validation tests across all pathfinding algorithms including disconnected start/goal detection, invalid grid validation, and edge case handling.",
       verificationTests: [
-        'should validate disconnected start and goal for all algorithms',
-        'should validate invalid grid configurations',
-        'should handle edge cases consistently',
-        'should provide comprehensive error messages',
+        "should validate disconnected start and goal for all algorithms",
+        "should validate invalid grid configurations",
+        "should handle edge cases consistently",
+        "should provide comprehensive error messages",
       ],
       testResults: {
         passed: 0,
@@ -67,9 +70,9 @@ describe('Comprehensive Pathfinding Validation', () => {
     });
   });
 
-  describe('Issue #7: Test Coverage Gaps', () => {
-    describe('Disconnected Start/Goal Validation', () => {
-      it('should detect disconnected start and goal in JPS', () => {
+  describe("Issue #7: Test Coverage Gaps", () => {
+    describe("Disconnected Start/Goal Validation", () => {
+      it("should detect disconnected start and goal in JPS", () => {
         const width = 10;
         const height = 10;
         const disconnectedGrid = createDisconnectedGrid(width, height);
@@ -79,10 +82,10 @@ describe('Comprehensive Pathfinding Validation', () => {
         const validation = jps.validateGrid(disconnectedGrid, width, height, start, goal);
 
         expect(validation.isValid).toBe(false);
-        expect(validation.errors).toContain('No path exists between start and goal');
+        expect(validation.errors).toContain("No path exists between start and goal");
       });
 
-      it('should detect disconnected start and goal in Theta*', () => {
+      it("should detect disconnected start and goal in Theta*", () => {
         const width = 10;
         const height = 10;
         const disconnectedGrid = createDisconnectedGrid(width, height);
@@ -92,10 +95,10 @@ describe('Comprehensive Pathfinding Validation', () => {
         const validation = thetaStar.validateGrid(disconnectedGrid, width, height, start, goal);
 
         expect(validation.isValid).toBe(false);
-        expect(validation.errors).toContain('No path exists between start and goal');
+        expect(validation.errors).toContain("No path exists between start and goal");
       });
 
-      it('should detect disconnected start and goal in HPA*', () => {
+      it("should detect disconnected start and goal in HPA*", () => {
         const width = 10;
         const height = 10;
         const disconnectedGrid = createDisconnectedGrid(width, height);
@@ -105,10 +108,10 @@ describe('Comprehensive Pathfinding Validation', () => {
         const validation = hpaStar.validateInput(disconnectedGrid, width, height, start, goal);
 
         expect(validation.isValid).toBe(false);
-        expect(validation.errors).toContain('No path exists between start and goal');
+        expect(validation.errors).toContain("No path exists between start and goal");
       });
 
-      it('should detect disconnected start and goal in A* (custom validation)', () => {
+      it("should detect disconnected start and goal in A* (custom validation)", () => {
         const width = 10;
         const height = 10;
         const disconnectedGrid = createDisconnectedGrid(width, height);
@@ -122,7 +125,7 @@ describe('Comprehensive Pathfinding Validation', () => {
         expect(result.path).toHaveLength(0);
       });
 
-      it('should detect disconnected start and goal in Flow Field', () => {
+      it("should detect disconnected start and goal in Flow Field", () => {
         const width = 10;
         const height = 10;
         const disconnectedGrid = createDisconnectedGrid(width, height);
@@ -149,13 +152,13 @@ describe('Comprehensive Pathfinding Validation', () => {
       });
     });
 
-    describe('Invalid Grid Configuration Validation', () => {
-      it('should validate grid dimensions for all algorithms', () => {
+    describe("Invalid Grid Configuration Validation", () => {
+      it("should validate grid dimensions for all algorithms", () => {
         const invalidGrids = [
-          { grid: [], width: 0, height: 0, description: 'empty grid' },
-          { grid: [0], width: 1, height: 0, description: 'zero height' },
-          { grid: [0], width: 0, height: 1, description: 'zero width' },
-          { grid: [0, 1], width: 1, height: 1, description: 'mismatched dimensions' },
+          { grid: [], width: 0, height: 0, description: "empty grid" },
+          { grid: [0], width: 1, height: 0, description: "zero height" },
+          { grid: [0], width: 0, height: 1, description: "zero width" },
+          { grid: [0, 1], width: 1, height: 1, description: "mismatched dimensions" },
         ];
 
         for (const { grid, width, height, description } of invalidGrids) {
@@ -179,16 +182,16 @@ describe('Comprehensive Pathfinding Validation', () => {
         }
       });
 
-      it('should validate start and goal positions for all algorithms', () => {
+      it("should validate start and goal positions for all algorithms", () => {
         const width = 10;
         const height = 10;
         const grid = createValidGrid(width, height);
-        
+
         const invalidPositions = [
-          { start: { x: -1, y: 0 }, goal: { x: 0, y: 0 }, description: 'negative start x' },
-          { start: { x: 0, y: -1 }, goal: { x: 0, y: 0 }, description: 'negative start y' },
-          { start: { x: 0, y: 0 }, goal: { x: 10, y: 0 }, description: 'goal x out of bounds' },
-          { start: { x: 0, y: 0 }, goal: { x: 0, y: 10 }, description: 'goal y out of bounds' },
+          { start: { x: -1, y: 0 }, goal: { x: 0, y: 0 }, description: "negative start x" },
+          { start: { x: 0, y: -1 }, goal: { x: 0, y: 0 }, description: "negative start y" },
+          { start: { x: 0, y: 0 }, goal: { x: 10, y: 0 }, description: "goal x out of bounds" },
+          { start: { x: 0, y: 0 }, goal: { x: 0, y: 10 }, description: "goal y out of bounds" },
         ];
 
         for (const { start, goal, description } of invalidPositions) {
@@ -210,8 +213,8 @@ describe('Comprehensive Pathfinding Validation', () => {
       });
     });
 
-    describe('Edge Case Handling', () => {
-      it('should handle same start and goal for all algorithms', () => {
+    describe("Edge Case Handling", () => {
+      it("should handle same start and goal for all algorithms", () => {
         const width = 10;
         const height = 10;
         const grid = createValidGrid(width, height);
@@ -236,7 +239,7 @@ describe('Comprehensive Pathfinding Validation', () => {
         expect(astarResult.path).toHaveLength(1);
       });
 
-      it('should handle single cell grids for all algorithms', () => {
+      it("should handle single cell grids for all algorithms", () => {
         const width = 1;
         const height = 1;
         const grid = [0]; // Walkable cell
@@ -260,11 +263,11 @@ describe('Comprehensive Pathfinding Validation', () => {
         expect(astarResult.success).toBe(true);
       });
 
-      it('should handle obstacles at start/goal for all algorithms', () => {
+      it("should handle obstacles at start/goal for all algorithms", () => {
         const width = 10;
         const height = 10;
         const grid = createValidGrid(width, height);
-        
+
         // Make start position blocked
         grid[0] = 1; // Obstacle at (0,0)
         const start = { x: 0, y: 0 };
@@ -273,22 +276,22 @@ describe('Comprehensive Pathfinding Validation', () => {
         // Test JPS
         const jpsValidation = jps.validateGrid(grid, width, height, start, goal);
         expect(jpsValidation.isValid).toBe(false);
-        expect(jpsValidation.errors).toContain('Start position is blocked');
+        expect(jpsValidation.errors).toContain("Start position is blocked");
 
         // Test Theta*
         const thetaValidation = thetaStar.validateGrid(grid, width, height, start, goal);
         expect(thetaValidation.isValid).toBe(false);
-        expect(thetaValidation.errors).toContain('Start position is blocked');
+        expect(thetaValidation.errors).toContain("Start position is blocked");
 
         // Test HPA*
         const hpaValidation = hpaStar.validateInput(grid, width, height, start, goal);
         expect(hpaValidation.isValid).toBe(false);
-        expect(hpaValidation.errors).toContain('Start position is blocked');
+        expect(hpaValidation.errors).toContain("Start position is blocked");
       });
     });
 
-    describe('Performance and Reliability', () => {
-      it('should validate large grids efficiently', async () => {
+    describe("Performance and Reliability", () => {
+      it("should validate large grids efficiently", async () => {
         const width = 100;
         const height = 100;
         const grid = createValidGrid(width, height);
@@ -296,7 +299,7 @@ describe('Comprehensive Pathfinding Validation', () => {
         const goal = { x: 99, y: 99 };
 
         beforeReport = await runBenchmark(
-          'pathfinding-validation-large-grid',
+          "pathfinding-validation-large-grid",
           () => {
             jps.validateGrid(grid, width, height, start, goal);
             thetaStar.validateGrid(grid, width, height, start, goal);
@@ -308,7 +311,7 @@ describe('Comprehensive Pathfinding Validation', () => {
         expect(beforeReport.statistics.median).toBeLessThan(50);
       });
 
-      it('should handle validation consistently across algorithms', async () => {
+      it("should handle validation consistently across algorithms", async () => {
         const width = 50;
         const height = 50;
         const grid = createValidGrid(width, height);
@@ -316,17 +319,15 @@ describe('Comprehensive Pathfinding Validation', () => {
         const goal = { x: 49, y: 49 };
 
         const algorithms = [
-          { name: 'JPS', validate: () => jps.validateGrid(grid, width, height, start, goal) },
-          { name: 'Theta*', validate: () => thetaStar.validateGrid(grid, width, height, start, goal) },
-          { name: 'HPA*', validate: () => hpaStar.validateInput(grid, width, height, start, goal) },
+          { name: "JPS", validate: () => jps.validateGrid(grid, width, height, start, goal) },
+          { name: "Theta*", validate: () => thetaStar.validateGrid(grid, width, height, start, goal) },
+          { name: "HPA*", validate: () => hpaStar.validateInput(grid, width, height, start, goal) },
         ];
 
         for (const algorithm of algorithms) {
-          const report = await runBenchmark(
-            `pathfinding-validation-${algorithm.name}`,
-            algorithm.validate,
-            { samples: 10 }
-          );
+          const report = await runBenchmark(`pathfinding-validation-${algorithm.name}`, algorithm.validate, {
+            samples: 10,
+          });
 
           expect(report.statistics.median).toBeLessThan(20);
           expect(report.assertions.stablePerformance).toBe(true);
@@ -334,8 +335,8 @@ describe('Comprehensive Pathfinding Validation', () => {
       });
     });
 
-    describe('Error Message Consistency', () => {
-      it('should provide consistent error messages across algorithms', () => {
+    describe("Error Message Consistency", () => {
+      it("should provide consistent error messages across algorithms", () => {
         const width = 10;
         const height = 10;
         const grid = createDisconnectedGrid(width, height);
@@ -347,9 +348,9 @@ describe('Comprehensive Pathfinding Validation', () => {
         const hpaValidation = hpaStar.validateInput(grid, width, height, start, goal);
 
         // All should have similar error messages
-        expect(jpsValidation.errors).toContain('No path exists between start and goal');
-        expect(thetaValidation.errors).toContain('No path exists between start and goal');
-        expect(hpaValidation.errors).toContain('No path exists between start and goal');
+        expect(jpsValidation.errors).toContain("No path exists between start and goal");
+        expect(thetaValidation.errors).toContain("No path exists between start and goal");
+        expect(hpaValidation.errors).toContain("No path exists between start and goal");
 
         // All should be invalid
         expect(jpsValidation.isValid).toBe(false);
@@ -357,7 +358,7 @@ describe('Comprehensive Pathfinding Validation', () => {
         expect(hpaValidation.isValid).toBe(false);
       });
 
-      it('should provide detailed error information', () => {
+      it("should provide detailed error information", () => {
         const width = 10;
         const height = 10;
         const grid = createValidGrid(width, height);
@@ -374,9 +375,9 @@ describe('Comprehensive Pathfinding Validation', () => {
         expect(hpaValidation.errors.length).toBeGreaterThan(0);
 
         // Error messages should be descriptive
-        expect(jpsValidation.errors[0]).toContain('Start position');
-        expect(thetaValidation.errors[0]).toContain('Start position');
-        expect(hpaValidation.errors[0]).toContain('Start position');
+        expect(jpsValidation.errors[0]).toContain("Start position");
+        expect(thetaValidation.errors[0]).toContain("Start position");
+        expect(hpaValidation.errors[0]).toContain("Start position");
       });
     });
   });
@@ -400,17 +401,29 @@ describe('Comprehensive Pathfinding Validation', () => {
   });
 
   // Helper functions
+  /**
+   *
+   * @param width
+   * @param height
+   * @example
+   */
   function createDisconnectedGrid(width: number, height: number): number[] {
     const grid = new Array(width * height).fill(0);
-    
+
     // Create a wall that completely separates start and goal
     for (let x = 0; x < width; x++) {
       grid[Math.floor(height / 2) * width + x] = 1; // Wall at middle row
     }
-    
+
     return grid;
   }
 
+  /**
+   *
+   * @param width
+   * @param height
+   * @example
+   */
   function createValidGrid(width: number, height: number): number[] {
     return new Array(width * height).fill(0); // All walkable
   }

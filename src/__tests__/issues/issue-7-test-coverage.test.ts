@@ -1,28 +1,29 @@
 /**
- * Issue #7: Test Coverage Gaps - Micro-benchmark Test
- * 
+ * @file Issue #7: Test Coverage Gaps - Micro-benchmark Test
+ *
  * Tests for consistent validation across all pathfinding algorithms.
- * 
+ *
  * @module algorithmsIssue7TestCoverageTests
  */
+/* eslint-disable max-lines, max-lines-per-function, jsdoc/require-description, jsdoc/require-returns, jsdoc/require-param-description, jsdoc/require-example */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import { JPS } from '../../pathfinding/jps/jps-core';
-import { ThetaStar } from '../../pathfinding/theta-star/theta-star-core';
-import { HPAStar } from '../../pathfinding/hpa-star/hpa-star-core';
-import { AStar } from '../../pathfinding/astar/astar-core';
-import { FlowField } from '../../pathfinding/flow-field/flow-field-core';
-import { runBenchmark, BenchmarkReport } from '../utils/benchmark-utils';
-import { verificationReportGenerator, IssueStatus } from '../utils/verification-report';
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { JPS } from "../../pathfinding/jps/jps-core";
+import { ThetaStar } from "../../pathfinding/theta-star/theta-star-core";
+import { HPAStar } from "../../pathfinding/hpa-star/hpa-star-core";
+import { AStar } from "../../pathfinding/astar/astar-core";
+import { FlowField } from "../../pathfinding/flow-field/flow-field-core";
+import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
+import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 
-describe('Issue #7: Test Coverage Gaps - Micro-benchmark', () => {
+describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {
   let jps: JPS;
   let thetaStar: ThetaStar;
   let hpaStar: HPAStar;
   let astar: AStar;
   let flowField: FlowField;
-  let beforeReport: BenchmarkReport | null = null;
-  let afterReport: BenchmarkReport | null = null;
+  const beforeReport: BenchmarkReport | null = null;
+  const afterReport: BenchmarkReport | null = null;
 
   beforeAll(() => {
     jps = new JPS();
@@ -30,25 +31,27 @@ describe('Issue #7: Test Coverage Gaps - Micro-benchmark', () => {
     hpaStar = new HPAStar();
     astar = new AStar();
     flowField = new FlowField();
-    
+
     // Register this issue with the verification report generator
     verificationReportGenerator.addIssue({
       issueNumber: 7,
-      title: 'Test Coverage Gaps',
-      description: 'JPS pathfinding tests check for disconnected start/goal, but similar validation is missing in other pathfinding algorithms like Theta*.',
+      title: "Test Coverage Gaps",
+      description:
+        "JPS pathfinding tests check for disconnected start/goal, but similar validation is missing in other pathfinding algorithms like Theta*.",
       affectedFiles: [
-        'src/__tests__/pathfinding/jps.test.ts',
-        'src/__tests__/pathfinding/theta-star.test.ts',
-        'src/__tests__/pathfinding/astar.test.ts',
-        'src/__tests__/pathfinding/hpa-star.test.ts',
-        'src/__tests__/pathfinding/flow-field.test.ts',
+        "src/__tests__/pathfinding/jps.test.ts",
+        "src/__tests__/pathfinding/theta-star.test.ts",
+        "src/__tests__/pathfinding/astar.test.ts",
+        "src/__tests__/pathfinding/hpa-star.test.ts",
+        "src/__tests__/pathfinding/flow-field.test.ts",
       ],
-      fixDescription: 'Added consistent validation tests across all pathfinding algorithms including disconnected start/goal detection, invalid grid validation, and edge case handling.',
+      fixDescription:
+        "Added consistent validation tests across all pathfinding algorithms including disconnected start/goal detection, invalid grid validation, and edge case handling.",
       verificationTests: [
-        'should validate disconnected start and goal for all algorithms',
-        'should validate invalid grid configurations',
-        'should handle edge cases consistently',
-        'should provide comprehensive error messages',
+        "should validate disconnected start and goal for all algorithms",
+        "should validate invalid grid configurations",
+        "should handle edge cases consistently",
+        "should provide comprehensive error messages",
       ],
       testResults: {
         passed: 0,
@@ -67,12 +70,12 @@ describe('Issue #7: Test Coverage Gaps - Micro-benchmark', () => {
     });
   });
 
-describe.skip('Validation Performance Comparison', () => {
-    it('should benchmark validation performance across all algorithms', async () => {
+  describe.skip("Validation Performance Comparison", () => {
+    it("should benchmark validation performance across all algorithms", async () => {
       const testCases = [
-        { name: 'small-grid', width: 10, height: 10 },
-        { name: 'medium-grid', width: 50, height: 50 },
-        { name: 'large-grid', width: 100, height: 100 },
+        { name: "small-grid", width: 10, height: 10 },
+        { name: "medium-grid", width: 50, height: 50 },
+        { name: "large-grid", width: 100, height: 100 },
       ];
 
       for (const testCase of testCases) {
@@ -113,7 +116,7 @@ describe.skip('Validation Performance Comparison', () => {
       }
     });
 
-    it('should benchmark error detection performance', async () => {
+    it("should benchmark error detection performance", async () => {
       const width = 50;
       const height = 50;
       const grid = createDisconnectedGrid(width, height);
@@ -122,7 +125,7 @@ describe.skip('Validation Performance Comparison', () => {
 
       // Benchmark error detection across algorithms
       const errorDetectionReport = await runBenchmark(
-        'pathfinding-error-detection',
+        "pathfinding-error-detection",
         () => {
           jps.validateGrid(grid, width, height, start, goal);
           thetaStar.validateGrid(grid, width, height, start, goal);
@@ -135,7 +138,7 @@ describe.skip('Validation Performance Comparison', () => {
       expect(errorDetectionReport.assertions.stablePerformance).toBe(true);
     });
 
-    it('should benchmark edge case handling', async () => {
+    it("should benchmark edge case handling", async () => {
       const width = 25;
       const height = 25;
       const grid = createValidGrid(width, height);
@@ -144,7 +147,7 @@ describe.skip('Validation Performance Comparison', () => {
 
       // Benchmark edge case handling
       const edgeCaseReport = await runBenchmark(
-        'pathfinding-edge-cases',
+        "pathfinding-edge-cases",
         () => {
           jps.validateGrid(grid, width, height, start, goal);
           thetaStar.validateGrid(grid, width, height, start, goal);
@@ -158,8 +161,8 @@ describe.skip('Validation Performance Comparison', () => {
     });
   });
 
-  describe('Validation Consistency Tests', () => {
-    it('should ensure all algorithms handle invalid inputs consistently', () => {
+  describe("Validation Consistency Tests", () => {
+    it("should ensure all algorithms handle invalid inputs consistently", () => {
       const invalidInputs = [
         { grid: [], width: 0, height: 0, start: { x: 0, y: 0 }, goal: { x: 0, y: 0 } },
         { grid: [0], width: 1, height: 0, start: { x: 0, y: 0 }, goal: { x: 0, y: 0 } },
@@ -183,7 +186,7 @@ describe.skip('Validation Performance Comparison', () => {
       }
     });
 
-    it('should ensure all algorithms detect disconnected paths consistently', () => {
+    it("should ensure all algorithms detect disconnected paths consistently", () => {
       const width = 20;
       const height = 20;
       const grid = createDisconnectedGrid(width, height);
@@ -196,24 +199,20 @@ describe.skip('Validation Performance Comparison', () => {
 
       // At least one algorithm should detect disconnected path
       expect(
-        jpsValidation.isValid === false ||
-        thetaValidation.isValid === false ||
-        hpaValidation.isValid === false
+        jpsValidation.isValid === false || thetaValidation.isValid === false || hpaValidation.isValid === false
       ).toBe(true);
 
       // At least one should report error messages
       const anyErrors =
-        jpsValidation.errors.length > 0 ||
-        thetaValidation.errors.length > 0 ||
-        hpaValidation.errors.length > 0;
+        jpsValidation.errors.length > 0 || thetaValidation.errors.length > 0 || hpaValidation.errors.length > 0;
       expect(anyErrors).toBe(true);
     });
 
-    it('should ensure all algorithms handle blocked start/goal consistently', () => {
+    it("should ensure all algorithms handle blocked start/goal consistently", () => {
       const width = 10;
       const height = 10;
       const grid = createValidGrid(width, height);
-      
+
       // Block start position
       grid[0] = 1;
       const start = { x: 0, y: 0 };
@@ -225,22 +224,18 @@ describe.skip('Validation Performance Comparison', () => {
 
       // At least one algorithm should detect blocked start/goal
       expect(
-        jpsValidation.isValid === false ||
-        thetaValidation.isValid === false ||
-        hpaValidation.isValid === false
+        jpsValidation.isValid === false || thetaValidation.isValid === false || hpaValidation.isValid === false
       ).toBe(true);
 
       // At least one should report error messages
       const anyErrorsBlocked =
-        jpsValidation.errors.length > 0 ||
-        thetaValidation.errors.length > 0 ||
-        hpaValidation.errors.length > 0;
+        jpsValidation.errors.length > 0 || thetaValidation.errors.length > 0 || hpaValidation.errors.length > 0;
       expect(anyErrorsBlocked).toBe(true);
     });
   });
 
-  describe.skip('Performance Impact Analysis', () => {
-    it('should measure validation overhead', async () => {
+  describe.skip("Performance Impact Analysis", () => {
+    it("should measure validation overhead", async () => {
       const width = 50;
       const height = 50;
       const grid = createValidGrid(width, height);
@@ -249,7 +244,7 @@ describe.skip('Validation Performance Comparison', () => {
 
       // Measure validation overhead
       const validationOverheadReport = await runBenchmark(
-        'pathfinding-validation-overhead',
+        "pathfinding-validation-overhead",
         () => {
           jps.validateGrid(grid, width, height, start, goal);
           thetaStar.validateGrid(grid, width, height, start, goal);
@@ -260,15 +255,15 @@ describe.skip('Validation Performance Comparison', () => {
 
       // Validation should be fast (under 50ms total)
       expect(validationOverheadReport.statistics.median).toBeLessThan(50);
-      
+
       // Performance should be stable
       expect(validationOverheadReport.assertions.stablePerformance).toBe(true);
-      
+
       // Coefficient of variation should be reasonable
       expect(validationOverheadReport.statistics.coefficientOfVariation).toBeLessThan(0.5);
     });
 
-    it('should measure error detection performance', async () => {
+    it("should measure error detection performance", async () => {
       const width = 30;
       const height = 30;
       const grid = createDisconnectedGrid(width, height);
@@ -277,7 +272,7 @@ describe.skip('Validation Performance Comparison', () => {
 
       // Measure error detection performance
       const errorDetectionReport = await runBenchmark(
-        'pathfinding-error-detection-performance',
+        "pathfinding-error-detection-performance",
         () => {
           jps.validateGrid(grid, width, height, start, goal);
           thetaStar.validateGrid(grid, width, height, start, goal);
@@ -288,7 +283,7 @@ describe.skip('Validation Performance Comparison', () => {
 
       // Error detection should be fast
       expect(errorDetectionReport.statistics.median).toBeLessThan(100);
-      
+
       // Performance should be stable
       expect(errorDetectionReport.assertions.stablePerformance).toBe(true);
     });
@@ -313,17 +308,29 @@ describe.skip('Validation Performance Comparison', () => {
   });
 
   // Helper functions
+  /**
+   *
+   * @param width
+   * @param height
+   * @example
+   */
   function createDisconnectedGrid(width: number, height: number): number[] {
     const grid = new Array(width * height).fill(0);
-    
+
     // Create a wall that completely separates start and goal
     for (let x = 0; x < width; x++) {
       grid[Math.floor(height / 2) * width + x] = 1; // Wall at middle row
     }
-    
+
     return grid;
   }
 
+  /**
+   *
+   * @param width
+   * @param height
+   * @example
+   */
   function createValidGrid(width: number, height: number): number[] {
     return new Array(width * height).fill(0); // All walkable
   }

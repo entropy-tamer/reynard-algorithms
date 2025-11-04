@@ -1,5 +1,8 @@
+/**
+ * @file Tests for LRUCache batch operations
+ */
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
-import { LRUCache } from "../../data-structures/lru-cache";
+import { LRUCache } from "../../../data-structures/basic/lru-cache";
 
 describe("LRUCache Batch Operations", () => {
   let cache: LRUCache<string, number>;

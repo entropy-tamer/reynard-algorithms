@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { SpatialHash } from "../../spatial-structures/spatial-hash/spatial-hash-core";
-import type { SpatialObject } from "../../spatial-structures/spatial-hash/spatial-hash-types";
-import type { SpatialObjectData } from "../../types/spatial-types";
+import { SpatialHash } from "../../data-structures/spatial/spatial-hash/spatial-hash-core";
+import type { SpatialObject } from "../../data-structures/spatial/spatial-hash/spatial-hash-types";
+import type { SpatialObjectData } from "../../core/types/spatial-types";
 
 describe("SpatialHash", () => {
   let spatialHash: SpatialHash;

@@ -19,6 +19,10 @@ export class AlgorithmSelectorCore {
   private spatialSelector: SpatialSelector;
   private unionFindSelector: UnionFindSelector;
 
+  /**
+   *
+   * @example
+   */
   constructor() {
     this.collisionSelector = new CollisionSelector();
     this.spatialSelector = new SpatialSelector();
@@ -27,6 +31,9 @@ export class AlgorithmSelectorCore {
 
   /**
    * Select optimal collision detection algorithm
+   * @param analysis
+   * @param t
+   * @example
    */
   selectOptimalCollisionAlgorithm(analysis: WorkloadAnalysis, t?: (key: string) => string): AlgorithmSelection {
     return this.collisionSelector.selectOptimalCollisionAlgorithm(analysis, t);
@@ -34,6 +41,9 @@ export class AlgorithmSelectorCore {
 
   /**
    * Select optimal spatial algorithm
+   * @param analysis
+   * @param t
+   * @example
    */
   selectOptimalSpatialAlgorithm(analysis: WorkloadAnalysis, t?: (key: string) => string): AlgorithmSelection {
     return this.spatialSelector.selectOptimalSpatialAlgorithm(analysis, t);
@@ -41,6 +51,8 @@ export class AlgorithmSelectorCore {
 
   /**
    * Select optimal Union-Find algorithm
+   * @param analysis
+   * @example
    */
   selectOptimalUnionFindAlgorithm(analysis: WorkloadAnalysis): AlgorithmSelection {
     return this.unionFindSelector.selectOptimalUnionFindAlgorithm(analysis);

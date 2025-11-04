@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { measureAsync } from "../../performance/benchmark";
+import { measureAsync } from "../../utils/performance/benchmark";
 import {
   mockPerformanceNow,
   setupPerformanceMock,
   teardownPerformanceMock,
   resetPerformanceMock,
-} from "../../performance/test-utils";
+} from "../../utils/performance/test-utils";
 
 beforeEach(() => {
   setupPerformanceMock();

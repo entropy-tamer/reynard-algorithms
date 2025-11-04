@@ -9,13 +9,13 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { detectCollisions, configureOptimization, cleanup } from "../optimized";
-import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../geometry/collision/aabb";
-import { MemoryPool } from "../optimization/core/enhanced-memory-pool";
-import { PerformanceTimer } from "../performance/timer";
-import { SpatialHash } from "../spatial-structures/spatial-hash/spatial-hash-core";
-import { UnionFind } from "../data-structures/union-find/union-find-core";
+import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../../algorithms/collision/aabb";
+import { MemoryPool } from "../optimization/core/memory-pool";
+import { PerformanceTimer } from "../utils/performance/timer";
+import { SpatialHash } from "../data-structures/spatial/spatial-hash/spatial-hash-core";
+import { UnionFind } from "../../data-structures/basic/union-find/union-find-core";
 import { AlgorithmSelector, type WorkloadCharacteristics } from "../optimization/core/algorithm-selector";
-import type { AABB, CollisionPair } from "../geometry/collision/aabb/aabb-types";
+import type { AABB, CollisionPair } from "../../algorithms/collision/aabb/aabb-types";
 
 // Deterministic RNG and test data generators
 /**

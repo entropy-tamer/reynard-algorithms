@@ -1,14 +1,16 @@
 /**
- * @vitest-environment happy-dom
+ * @file Extended tests for collision algorithms
  */
+/* eslint-disable max-lines-per-function */
+// @vitest-environment happy-dom
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import {
   executeSpatialCollisionDetection,
   executeOptimizedCollisionDetection,
 } from "../../../optimization/adapters/collision-algorithms";
-import { MemoryPool } from "../../../optimization/core/enhanced-memory-pool";
-import type { AABB } from "../../../geometry/collision/aabb/aabb-types";
+import { MemoryPool } from "../../../optimization/core/memory-pool";
+import type { AABB } from "../../../core/geometry/collision/aabb/aabb-types";
 
 describe("Collision Algorithms Extended Coverage", () => {
   let memoryPool: MemoryPool;

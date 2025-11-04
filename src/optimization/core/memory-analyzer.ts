@@ -14,6 +14,8 @@ import type { WorkloadCharacteristics, MemoryPressureAnalysis } from "./algorith
 export class MemoryAnalyzer {
   /**
    * Calculate memory pressure based on workload
+   * @param workload
+   * @example
    */
   calculateMemoryPressure(workload: WorkloadCharacteristics): MemoryPressureAnalysis {
     const { objectCount, memoryConstraints } = workload;

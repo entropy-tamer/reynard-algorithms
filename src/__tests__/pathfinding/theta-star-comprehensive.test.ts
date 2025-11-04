@@ -1,9 +1,9 @@
 /**
  * @file Comprehensive test suite for Theta* pathfinding algorithm.
- * 
+ *
  * This test suite provides extensive coverage for edge cases, performance scenarios,
  * and real-world usage patterns that were identified as gaps in the existing test suite.
- * 
+ *
  * Test Categories:
  * - Edge Cases & Boundary Conditions
  * - Performance Under Stress
@@ -16,9 +16,9 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { ThetaStar } from "../../pathfinding/theta-star/theta-star-core";
-import { LineOfSight } from "../../pathfinding/theta-star/line-of-sight";
-import type { Point, CellType, ThetaStarConfig, ThetaStarOptions } from "../../pathfinding/theta-star/theta-star-types";
+import { ThetaStar } from "../../algorithms/pathfinding/theta-star/theta-star-core";
+import { LineOfSight } from "../../algorithms/pathfinding/theta-star/line-of-sight";
+import type { Point, CellType, ThetaStarConfig, ThetaStarOptions } from "../../algorithms/pathfinding/theta-star/theta-star-types";
 
 describe("ThetaStar Comprehensive Test Suite", () => {
   let thetaStar: ThetaStar;
@@ -148,7 +148,7 @@ describe("ThetaStar Comprehensive Test Suite", () => {
       for (let i = 0; i < 100; i++) {
         const start: Point = { x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height) };
         const goal: Point = { x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height) };
-        
+
         const result = thetaStar.findPath(grid, width, height, start, goal);
         results.push(result);
       }
@@ -185,7 +185,8 @@ describe("ThetaStar Comprehensive Test Suite", () => {
       // Create a narrow passage
       for (let y = 0; y < 10; y++) {
         for (let x = 0; x < 10; x++) {
-          if (x !== 5) { // Leave column 5 as passage
+          if (x !== 5) {
+            // Leave column 5 as passage
             narrowGrid[y * 10 + x] = 1;
           }
         }
@@ -228,7 +229,7 @@ describe("ThetaStar Comprehensive Test Suite", () => {
 
       const result = thetaStar.findPath(simpleGrid, 5, 5, start, goal);
       expect(result.found).toBe(true);
-      
+
       // Path should be close to optimal (diagonal)
       const expectedMinLength = Math.sqrt(32); // Diagonal distance
       expect(result.cost).toBeCloseTo(expectedMinLength, 1);
@@ -243,7 +244,7 @@ describe("ThetaStar Comprehensive Test Suite", () => {
 
       const result = thetaStar.findPath(simpleGrid, 5, 5, start, goal);
       expect(result.found).toBe(true);
-      
+
       // With no diagonal movement, path should be longer
       expect(result.cost).toBeGreaterThanOrEqual(8); // Manhattan distance
     });
@@ -290,9 +291,9 @@ describe("ThetaStar Comprehensive Test Suite", () => {
       for (let i = 0; i < 1000; i++) {
         const start: Point = { x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height) };
         const goal: Point = { x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height) };
-        
+
         thetaStar.findPath(grid, width, height, start, goal);
-        
+
         if (i % 100 === 0) {
           thetaStar.clearCache();
         }
@@ -311,7 +312,7 @@ describe("ThetaStar Comprehensive Test Suite", () => {
         const testGrid = ThetaStarUtils.generateTestGrid(20, 20, 0.2, i);
         const start: Point = { x: 0, y: 0 };
         const goal: Point = { x: 19, y: 19 };
-        
+
         thetaStar.findPath(testGrid, 20, 20, start, goal);
       }
 
@@ -324,13 +325,13 @@ describe("ThetaStar Comprehensive Test Suite", () => {
   describe("Concurrent Operations", () => {
     it("should handle concurrent pathfinding calls", async () => {
       const promises = [];
-      
+
       for (let i = 0; i < 10; i++) {
-        const promise = new Promise((resolve) => {
+        const promise = new Promise(resolve => {
           setTimeout(() => {
             const start: Point = { x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height) };
             const goal: Point = { x: Math.floor(Math.random() * width), y: Math.floor(Math.random() * height) };
-            
+
             const result = thetaStar.findPath(grid, width, height, start, goal);
             resolve(result);
           }, Math.random() * 10);
@@ -350,7 +351,7 @@ describe("ThetaStar Comprehensive Test Suite", () => {
       const goal: Point = { x: 9, y: 9 };
 
       // Start pathfinding
-      const pathfindingPromise = new Promise((resolve) => {
+      const pathfindingPromise = new Promise(resolve => {
         setTimeout(() => {
           const result = thetaStar.findPath(grid, width, height, start, goal);
           resolve(result);
@@ -427,9 +428,9 @@ describe("ThetaStar Comprehensive Test Suite", () => {
         { allowDiagonal: false, diagonalOnlyWhenClear: false },
       ];
 
-      movementTypes.forEach((config) => {
+      movementTypes.forEach(config => {
         thetaStar.updateConfig(config);
-        
+
         const start: Point = { x: 0, y: 0 };
         const goal: Point = { x: 9, y: 9 };
 
@@ -445,7 +446,7 @@ describe("ThetaStar Comprehensive Test Suite", () => {
         { optimizePath: true, useEuclideanDistance: false },
       ];
 
-      options.forEach((option) => {
+      options.forEach(option => {
         const start: Point = { x: 0, y: 0 };
         const goal: Point = { x: 9, y: 9 };
 
@@ -457,13 +458,9 @@ describe("ThetaStar Comprehensive Test Suite", () => {
 
   describe("Line of Sight Integration", () => {
     it("should work with different line of sight algorithms", () => {
-      const algorithms = [
-        { useBresenham: true },
-        { useDDA: true },
-        { useRayCasting: true },
-      ];
+      const algorithms = [{ useBresenham: true }, { useDDA: true }, { useRayCasting: true }];
 
-      algorithms.forEach((algorithm) => {
+      algorithms.forEach(algorithm => {
         const start: Point = { x: 0, y: 0 };
         const goal: Point = { x: 9, y: 9 };
 
@@ -494,7 +491,7 @@ describe("ThetaStar Comprehensive Test Suite", () => {
       const goal: Point = { x: 9, y: 9 };
 
       const result = thetaStar.findPath(grid, width, height, start, goal);
-      
+
       expect(result.stats.nodesExplored).toBeGreaterThan(0);
       expect(result.stats.iterations).toBeGreaterThan(0);
       expect(result.stats.executionTime).toBeGreaterThan(0);
@@ -506,7 +503,7 @@ describe("ThetaStar Comprehensive Test Suite", () => {
       const goal: Point = { x: 9, y: 9 };
 
       const result = thetaStar.findPath(grid, width, height, start, goal);
-      
+
       expect(result.stats.cardinalMoves + result.stats.diagonalMoves).toBeGreaterThan(0);
     });
 
@@ -516,7 +513,7 @@ describe("ThetaStar Comprehensive Test Suite", () => {
 
       thetaStar.findPath(grid, width, height, start, goal);
       const statsBefore = thetaStar.getStats();
-      
+
       thetaStar.resetStats();
       const statsAfter = thetaStar.getStats();
 
@@ -529,14 +526,9 @@ describe("ThetaStar Comprehensive Test Suite", () => {
 
   describe("Configuration Validation", () => {
     it("should validate configuration parameters", () => {
-      const invalidConfigs = [
-        { maxIterations: -1 },
-        { maxIterations: 0 },
-        { tolerance: -0.1 },
-        { tolerance: NaN },
-      ];
+      const invalidConfigs = [{ maxIterations: -1 }, { maxIterations: 0 }, { tolerance: -0.1 }, { tolerance: NaN }];
 
-      invalidConfigs.forEach((config) => {
+      invalidConfigs.forEach(config => {
         expect(() => {
           thetaStar.updateConfig(config);
         }).not.toThrow();
@@ -550,7 +542,7 @@ describe("ThetaStar Comprehensive Test Suite", () => {
         { maxIterations: 1 },
       ];
 
-      extremeConfigs.forEach((config) => {
+      extremeConfigs.forEach(config => {
         expect(() => {
           thetaStar.updateConfig(config);
           const result = thetaStar.findPath(grid, width, height, { x: 0, y: 0 }, { x: 9, y: 9 });

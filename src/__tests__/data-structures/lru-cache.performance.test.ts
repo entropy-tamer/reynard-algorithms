@@ -1,5 +1,8 @@
+/**
+ * @file LRU Cache performance tests
+ */
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { LRUCache } from "../../data-structures/lru-cache";
+import { LRUCache } from "../../../data-structures/basic/lru-cache";
 
 describe("LRUCache Performance Benchmarks", () => {
   let cache: LRUCache<string, number>;

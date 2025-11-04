@@ -1,48 +1,52 @@
 /**
- * Basic Usage Examples for reynard-algorithms
+ * @file Basic Usage Examples for reynard-algorithms
  *
  * This file demonstrates practical usage of the algorithms package
  * with real-world scenarios and performance considerations.
  */
+/* eslint-disable max-lines */
 
 import {
   // Union-Find algorithms
   UnionFind,
-  UnionFindWithPathCompression,
 
   // Collision detection
   detectCollisions,
-  AABB,
-  createAABB,
+  type AABB,
 
   // Spatial hashing
   SpatialHash,
-  createSpatialHash,
 
   // Geometry operations
-  Point,
-  Circle,
-  Rectangle,
-  Polygon,
+  type Point,
+  type Circle,
+  type Rectangle,
+  PointOps,
 
   // Performance utilities
-  measurePerformance,
-  createBenchmark,
-
-  // PAW optimization
-  createOptimizedCollisionAdapter,
-  WorkloadAnalyzer,
+  PerformanceBenchmark,
 } from "../src/index.js";
+
+// PAW optimization (imported from optimization module)
+import { AlgorithmSelector } from "../src/optimization/index.js";
+import { WorkloadAnalyzer } from "../src/optimization/core/workload-analyzer.js";
 
 // ============================================================================
 // Example 1: Union-Find for Connected Components
 // ============================================================================
 
+/**
+ * Find connected components using Union-Find algorithm
+ *
+ * @example
+ * findConnectedComponents();
+ * // Output: Connected components with their member nodes
+ */
 export function findConnectedComponents() {
   console.log("🔗 Union-Find: Finding Connected Components");
 
   // Create a union-find structure for 10 nodes
-  const uf = new UnionFindWithPathCompression(10);
+  const uf = new UnionFind(10);
 
   // Connect some nodes
   uf.union(0, 1);
@@ -74,28 +78,33 @@ export function findConnectedComponents() {
 // Example 2: Collision Detection for Game Objects
 // ============================================================================
 
+/**
+ * Demonstrate collision detection for game objects using AABB
+ *
+ * @example
+ * gameCollisionDetection();
+ * // Output: Lists all detected collisions between game objects
+ */
 export function gameCollisionDetection() {
   console.log("💥 Collision Detection: Game Objects");
 
   // Create game objects with AABB bounds
-  const player = createAABB(10, 10, 20, 20); // x, y, width, height
-  const enemy1 = createAABB(15, 15, 10, 10);
-  const enemy2 = createAABB(50, 50, 15, 15);
-  const powerUp = createAABB(12, 12, 5, 5);
+  const player: AABB = { x: 10, y: 10, width: 20, height: 20 };
+  const enemy1: AABB = { x: 15, y: 15, width: 10, height: 10 };
+  const enemy2: AABB = { x: 50, y: 50, width: 15, height: 15 };
+  const powerUp: AABB = { x: 12, y: 12, width: 5, height: 5 };
 
-  const objects = [
-    { id: "player", bounds: player },
-    { id: "enemy1", bounds: enemy1 },
-    { id: "enemy2", bounds: enemy2 },
-    { id: "powerUp", bounds: powerUp },
-  ];
+  const aabbs = [player, enemy1, enemy2, powerUp];
 
   // Detect collisions
-  const collisions = detectCollisions(objects);
+  const collisions = detectCollisions(aabbs);
 
   console.log("Collisions detected:", collisions.length);
   collisions.forEach(collision => {
-    console.log(`${collision.a.id} collides with ${collision.b.id}`);
+    const aIndex = collision.a;
+    const bIndex = collision.b;
+    const names = ["player", "enemy1", "enemy2", "powerUp"];
+    console.log(`${names[aIndex]} collides with ${names[bIndex]}`);
   });
 
   // Output: player collides with enemy1, player collides with powerUp
@@ -105,11 +114,18 @@ export function gameCollisionDetection() {
 // Example 3: Spatial Hashing for Efficient Queries
 // ============================================================================
 
+/**
+ * Demonstrate spatial hashing for efficient spatial queries
+ *
+ * @example
+ * spatialHashingExample();
+ * // Output: Shows objects near a point and in a region
+ */
 export function spatialHashingExample() {
   console.log("🗺️ Spatial Hashing: Efficient Spatial Queries");
 
   // Create a spatial hash for a 1000x1000 world
-  const spatialHash = createSpatialHash(1000, 1000, 50); // cell size: 50
+  const spatialHash = new SpatialHash({ cellSize: 50 });
 
   // Add objects to the spatial hash
   const objects = [
@@ -120,82 +136,106 @@ export function spatialHashingExample() {
   ];
 
   objects.forEach(obj => {
-    spatialHash.insert(obj.id, obj.x, obj.y, obj.width, obj.height);
+    spatialHash.insert({
+      id: obj.id,
+      x: obj.x,
+      y: obj.y,
+      width: obj.width,
+      height: obj.height,
+      data: { id: obj.id, type: "spatial" as const },
+    });
   });
 
   // Query for objects near a point
-  const nearby = spatialHash.query(30, 30, 20, 20);
-  console.log("Objects near (30, 30):", nearby);
+  const nearby = spatialHash.queryRect(30, 30, 20, 20);
+  console.log("Objects near (30, 30):", nearby.map(obj => obj.id));
 
   // Query for objects in a region
-  const inRegion = spatialHash.query(0, 0, 100, 100);
-  console.log("Objects in region (0,0) to (100,100):", inRegion);
+  const inRegion = spatialHash.queryRect(0, 0, 100, 100);
+  console.log("Objects in region (0,0) to (100,100):", inRegion.map(obj => obj.id));
 }
 
 // ============================================================================
 // Example 4: Performance Benchmarking
 // ============================================================================
 
+/**
+ * Run performance benchmarks for collision detection with different dataset sizes
+ *
+ * @example
+ * await performanceBenchmarking();
+ * // Output: Performance metrics for small, medium, and large datasets
+ */
 export async function performanceBenchmarking() {
   console.log("⚡ Performance Benchmarking");
 
   // Benchmark collision detection with different dataset sizes
-  const benchmark = createBenchmark("Collision Detection Performance");
+  const benchmark = new PerformanceBenchmark();
 
   // Small dataset
-  const smallObjects = Array.from({ length: 50 }, (_, i) => ({
-    id: `obj${i}`,
-    bounds: createAABB(i * 10, i * 10, 5, 5),
+  const smallObjects: AABB[] = Array.from({ length: 50 }, (_, i) => ({
+    x: i * 10,
+    y: i * 10,
+    width: 5,
+    height: 5,
   }));
 
   // Medium dataset
-  const mediumObjects = Array.from({ length: 200 }, (_, i) => ({
-    id: `obj${i}`,
-    bounds: createAABB(i * 5, i * 5, 3, 3),
+  const mediumObjects: AABB[] = Array.from({ length: 200 }, (_, i) => ({
+    x: i * 5,
+    y: i * 5,
+    width: 3,
+    height: 3,
   }));
 
   // Large dataset
-  const largeObjects = Array.from({ length: 1000 }, (_, i) => ({
-    id: `obj${i}`,
-    bounds: createAABB(i * 2, i * 2, 2, 2),
+  const largeObjects: AABB[] = Array.from({ length: 1000 }, (_, i) => ({
+    x: i * 2,
+    y: i * 2,
+    width: 2,
+    height: 2,
   }));
 
   // Run benchmarks
-  await benchmark.measure("Small Dataset (50 objects)", () => {
+  const smallMetrics = await benchmark.run(() => {
     detectCollisions(smallObjects);
-  });
+  }, 10);
+  console.log("Small Dataset (50 objects):", smallMetrics);
 
-  await benchmark.measure("Medium Dataset (200 objects)", () => {
+  const mediumMetrics = await benchmark.run(() => {
     detectCollisions(mediumObjects);
-  });
+  }, 10);
+  console.log("Medium Dataset (200 objects):", mediumMetrics);
 
-  await benchmark.measure("Large Dataset (1000 objects)", () => {
+  const largeMetrics = await benchmark.run(() => {
     detectCollisions(largeObjects);
-  });
-
-  // Get results
-  const results = benchmark.getResults();
-  console.log("Benchmark Results:", results);
+  }, 10);
+  console.log("Large Dataset (1000 objects):", largeMetrics);
 }
 
 // ============================================================================
 // Example 5: PAW Optimization Framework
 // ============================================================================
 
+/**
+ * Demonstrate PAW (Performance-Aware Workload) optimization framework
+ *
+ * @example
+ * pawOptimizationExample();
+ * // Output: Shows algorithm recommendations for different workloads
+ */
 export function pawOptimizationExample() {
   console.log("🔧 PAW Optimization: Adaptive Algorithm Selection");
 
-  // Create an optimized collision adapter
-  const adapter = createOptimizedCollisionAdapter();
-
-  // Create a workload analyzer
+  // Create a workload analyzer and algorithm selector
   const analyzer = new WorkloadAnalyzer();
+  const selector = new AlgorithmSelector();
 
   // Simulate different workloads
   const workloads = [
-    { objectCount: 20, spatialDensity: 0.1, overlapRatio: 0.05 },
-    { objectCount: 200, spatialDensity: 0.5, overlapRatio: 0.1 },
-    { objectCount: 1000, spatialDensity: 1.0, overlapRatio: 0.2 },
+    { objectCount: 20, spatialDensity: 0.1, overlapRatio: 0.05, updateFrequency: 60, queryPattern: "random" as const },
+    { objectCount: 200, spatialDensity: 0.5, overlapRatio: 0.1, updateFrequency: 60, queryPattern: "random" as const },
+    { objectCount: 1000, spatialDensity: 1.0, overlapRatio: 0.2, updateFrequency: 60, queryPattern: "random" as const },
   ];
 
   workloads.forEach((workload, index) => {
@@ -206,7 +246,7 @@ export function pawOptimizationExample() {
     console.log("Analysis:", analysis);
 
     // Get algorithm recommendation
-    const recommendation = adapter.getAlgorithmRecommendation(analysis);
+    const recommendation = selector.selectCollisionAlgorithm(workload);
     console.log("Recommended algorithm:", recommendation.algorithm);
     console.log("Confidence:", recommendation.confidence);
     console.log("Expected performance:", recommendation.expectedPerformance);
@@ -217,33 +257,52 @@ export function pawOptimizationExample() {
 // Example 6: Geometry Operations
 // ============================================================================
 
+/**
+ * Demonstrate various geometry operations with shapes
+ *
+ * @example
+ * geometryOperationsExample();
+ * // Output: Tests point containment, distances, and intersections
+ */
 export function geometryOperationsExample() {
   console.log("📐 Geometry Operations");
 
-  // Create geometric shapes
-  const point = new Point(10, 20);
-  const circle = new Circle(15, 25, 5);
-  const rectangle = new Rectangle(5, 15, 20, 10);
-  const polygon = new Polygon([new Point(0, 0), new Point(10, 0), new Point(10, 10), new Point(0, 10)]);
+  // Create geometric shapes (using type interfaces)
+  const point: Point = { x: 10, y: 20 };
+  const circle: Circle = { center: { x: 15, y: 25 }, radius: 5 };
+  const rectangle: Rectangle = { x: 5, y: 15, width: 20, height: 10 };
+  // Use PointOps for distance calculations
+  const centerPoint: Point = circle.center;
+  const distance = PointOps.distance(point, centerPoint);
+  console.log("Distance from point to circle center:", distance);
 
-  // Test point-in-shape operations
-  console.log("Point in circle:", circle.containsPoint(point));
-  console.log("Point in rectangle:", rectangle.containsPoint(point));
-  console.log("Point in polygon:", polygon.containsPoint(point));
+  // Calculate distance to rectangle center
+  const rectCenter: Point = { x: rectangle.x + rectangle.width / 2, y: rectangle.y + rectangle.height / 2 };
+  const distanceToRect = PointOps.distance(point, rectCenter);
+  console.log("Distance from point to rectangle center:", distanceToRect);
 
-  // Calculate distances
-  console.log("Distance from point to circle center:", point.distanceTo(circle.center));
-  console.log("Distance from point to rectangle:", point.distanceToRectangle(rectangle));
+  // Basic point-in-rectangle check
+  const pointInRect =
+    point.x >= rectangle.x && point.x <= rectangle.x + rectangle.width && point.y >= rectangle.y && point.y <= rectangle.y + rectangle.height;
+  console.log("Point in rectangle:", pointInRect);
 
-  // Test intersections
-  console.log("Circle intersects rectangle:", circle.intersects(rectangle));
-  console.log("Rectangle intersects polygon:", rectangle.intersects(polygon));
+  // Distance from point to circle edge
+  const distanceToCircleEdge = Math.abs(distance - circle.radius);
+  console.log("Distance from point to circle edge:", distanceToCircleEdge);
 }
+
 
 // ============================================================================
 // Run All Examples
 // ============================================================================
 
+/**
+ * Run all example functions sequentially
+ *
+ * @example
+ * await runAllExamples();
+ * // Output: Executes all examples and logs results
+ */
 export async function runAllExamples() {
   console.log("🦊 Reynard Algorithms - Practical Examples\n");
 

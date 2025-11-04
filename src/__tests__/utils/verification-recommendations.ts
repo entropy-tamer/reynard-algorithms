@@ -1,7 +1,7 @@
 /**
  * @file Recommendation and next-step generators for verification reports
  */
-import { IssueStatus, type IssueVerification } from './verification-types';
+import { IssueStatus, type IssueVerification } from "./verification-types";
 
 /**
  * Generate actionable recommendations based on issues and their status/perf
@@ -23,16 +23,14 @@ export function generateRecommendations(issues: IssueVerification[]): string[] {
     recommendations.push(`${regressions.length} issues show performance regressions and should be optimized`);
   }
 
-  const lowCoverage = issues.filter(i =>
-    i.testResults.total > 0 && (i.testResults.passed / i.testResults.total) < 0.8
-  );
+  const lowCoverage = issues.filter(i => i.testResults.total > 0 && i.testResults.passed / i.testResults.total < 0.8);
 
   if (lowCoverage.length > 0) {
     recommendations.push(`${lowCoverage.length} issues have low test coverage and need additional tests`);
   }
 
   if (issues.length > 0 && issues.every(i => i.status === IssueStatus.VERIFIED)) {
-    recommendations.push('All issues have been successfully verified and are ready for production');
+    recommendations.push("All issues have been successfully verified and are ready for production");
   }
 
   return recommendations;
@@ -58,11 +56,9 @@ export function generateNextSteps(issues: IssueVerification[]): string[] {
     nextSteps.push(`Complete ${inProgressIssues.length} in-progress issues`);
   }
 
-  nextSteps.push('Run comprehensive integration tests');
-  nextSteps.push('Update documentation with changes');
-  nextSteps.push('Deploy to staging environment for validation');
+  nextSteps.push("Run comprehensive integration tests");
+  nextSteps.push("Update documentation with changes");
+  nextSteps.push("Deploy to staging environment for validation");
 
   return nextSteps;
 }
-
-

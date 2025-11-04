@@ -1,16 +1,10 @@
 /**
- * Global utility functions for immutable configuration management
- * 
- * @file
+ * @file Global utility functions for immutable configuration management
  */
 
-import { AlgorithmConfig, AlgorithmConfigManager } from './algorithm-config';
-import { ImmutableConfigManager } from './immutable-config';
-import type {
-  ImmutableConfigSnapshot,
-  OptimizedCollisionConfig,
-  ConfigChangeListener,
-} from './immutable-config-types';
+import { AlgorithmConfig, AlgorithmConfigManager } from "./algorithm-config";
+import { ImmutableConfigManager } from "./immutable-config";
+import type { ImmutableConfigSnapshot, OptimizedCollisionConfig, ConfigChangeListener } from "./immutable-config-types";
 
 /**
  * Global immutable configuration manager instance
@@ -19,7 +13,7 @@ let globalImmutableConfigManager: ImmutableConfigManager | null = null;
 
 /**
  * Get the global immutable configuration manager
- * 
+ *
  * @returns The global immutable configuration manager instance
  * @example
  * const manager = getImmutableConfigManager();
@@ -35,7 +29,7 @@ export function getImmutableConfigManager(): ImmutableConfigManager {
 
 /**
  * Initialize immutable configuration with custom path
- * 
+ *
  * @param configPath - Optional path to configuration file
  * @returns The initialized immutable configuration manager
  * @example
@@ -49,7 +43,7 @@ export function initializeImmutableConfig(configPath?: string): ImmutableConfigM
 
 /**
  * Get current immutable algorithm configuration
- * 
+ *
  * @returns The current immutable algorithm configuration
  * @example
  * const config = getImmutableAlgorithmConfig();
@@ -61,7 +55,7 @@ export function getImmutableAlgorithmConfig(): AlgorithmConfig {
 
 /**
  * Get current immutable optimization configuration
- * 
+ *
  * @returns The current immutable optimization configuration
  * @example
  * const config = getImmutableOptimizationConfig();
@@ -73,7 +67,7 @@ export function getImmutableOptimizationConfig(): OptimizedCollisionConfig {
 
 /**
  * Update configuration atomically
- * 
+ *
  * @param algorithmUpdates - Partial algorithm configuration updates
  * @param optimizationUpdates - Partial optimization configuration updates
  * @returns Promise resolving to the new configuration snapshot
@@ -92,7 +86,7 @@ export async function updateImmutableConfig(
 
 /**
  * Add configuration change listener
- * 
+ *
  * @param listener - Function to call when configuration changes
  * @example
  * addConfigChangeListener((event) => {
@@ -105,7 +99,7 @@ export function addConfigChangeListener(listener: ConfigChangeListener): void {
 
 /**
  * Remove configuration change listener
- * 
+ *
  * @param listener - Function to remove from change listeners
  * @example
  * const listener = (event) => console.log(event);
@@ -115,5 +109,6 @@ export function addConfigChangeListener(listener: ConfigChangeListener): void {
 export function removeConfigChangeListener(listener: ConfigChangeListener): void {
   getImmutableConfigManager().removeChangeListener(listener);
 }
+
 
 

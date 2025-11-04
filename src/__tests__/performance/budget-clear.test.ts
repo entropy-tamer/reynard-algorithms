@@ -1,5 +1,5 @@
 /**
- * Performance Budget Clear Tests
+ * @file Performance Budget Clear Tests
  *
  * Tests for clearing and removing performance budgets.
  *
@@ -7,8 +7,8 @@
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { PerformanceBudgetChecker } from "../../performance/budget";
-import { createTestBudget, createTestMetrics } from "../../performance/test-utils";
+import { PerformanceBudgetChecker } from "../../utils/performance/budget";
+import { createTestBudget, createTestMetrics } from "../../utils/performance/test-utils";
 
 describe("PerformanceBudgetChecker - Clear", () => {
   let checker: PerformanceBudgetChecker;

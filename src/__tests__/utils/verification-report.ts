@@ -8,19 +8,19 @@
  * @module algorithms/verificationReport
  */
 
-import type { BenchmarkReport } from './benchmark-utils';
+import type { BenchmarkReport } from "./benchmark-utils";
 import {
   IssueStatus,
   type IssueVerification,
   type TestCoverage,
   type PerformanceSummary,
   type VerificationReport,
-} from './verification-types';
-import { calculateSummary, calculateTestCoverage, calculatePerformanceSummary } from './verification-calculations';
-import { generateRecommendations, generateNextSteps } from './verification-recommendations';
-import { generateMarkdown } from './verification-markdown';
+} from "./verification-types";
+import { calculateSummary, calculateTestCoverage, calculatePerformanceSummary } from "./verification-calculations";
+import { generateRecommendations, generateNextSteps } from "./verification-recommendations";
+import { generateMarkdown } from "./verification-markdown";
 // Re-export IssueStatus so tests can import from this module directly
-export { IssueStatus } from './verification-types';
+export { IssueStatus } from "./verification-types";
 
 /**
  * Verification report generator
@@ -35,7 +35,7 @@ export class VerificationReportGenerator {
    * @example
    * generator.addIssue({ issueNumber: 1, title: 'Fix bug', description: '...', affectedFiles: [], fixDescription: '...', verificationTests: [], testResults: { passed: 0, failed: 0, skipped: 0, total: 0 }, performanceImpact: { before: null, after: null, improvement: 0, regression: false }, breakingChanges: [], notes: [] });
    */
-  public addIssue(issue: Omit<IssueVerification, 'status'>): void {
+  public addIssue(issue: Omit<IssueVerification, "status">): void {
     this.issues.push({
       ...issue,
       status: IssueStatus.PENDING,
@@ -65,7 +65,7 @@ export class VerificationReportGenerator {
    */
   public updateIssueVerification(
     issueNumber: number,
-    updates: Partial<Omit<IssueVerification, 'issueNumber' | 'status'>>
+    updates: Partial<Omit<IssueVerification, "issueNumber" | "status">>
   ): void {
     const issue = this.issues.find(i => i.issueNumber === issueNumber);
     if (issue) {
@@ -81,17 +81,12 @@ export class VerificationReportGenerator {
    * @example
    * generator.addPerformanceData(1, beforeReport, afterReport);
    */
-  public addPerformanceData(
-    issueNumber: number,
-    before: BenchmarkReport | null,
-    after: BenchmarkReport | null
-  ): void {
+  public addPerformanceData(issueNumber: number, before: BenchmarkReport | null, after: BenchmarkReport | null): void {
     const issue = this.issues.find(i => i.issueNumber === issueNumber);
     if (issue) {
-      const improvement = before && after
-        ? ((before.statistics.median - after.statistics.median) / before.statistics.median) * 100
-        : 0;
-      
+      const improvement =
+        before && after ? ((before.statistics.median - after.statistics.median) / before.statistics.median) * 100 : 0;
+
       issue.performanceImpact = {
         before,
         after,
@@ -120,8 +115,8 @@ export class VerificationReportGenerator {
     return {
       metadata: {
         timestamp: Date.now(),
-        version: '1.0.0',
-        generator: 'Algorithm Fixes Verification System',
+        version: "1.0.0",
+        generator: "Algorithm Fixes Verification System",
         executionTime,
       },
       summary,
@@ -170,14 +165,14 @@ export class VerificationReportGenerator {
    * generator.saveReport('reports/verification.json');
    */
   public saveReport(filePath: string): void {
-    const fs = require('fs');
-    const path = require('path');
-    
+    const fs = require("fs");
+    const path = require("path");
+
     const dir = path.dirname(filePath);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
     }
-    
+
     const report = this.generateReport();
     fs.writeFileSync(filePath, JSON.stringify(report, null, 2));
   }
@@ -198,5 +193,3 @@ export class VerificationReportGenerator {
  * Global verification report generator
  */
 export const verificationReportGenerator = new VerificationReportGenerator();
-
-

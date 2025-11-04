@@ -7,7 +7,7 @@
  * @module algorithms/utils/memoization
  */
 
-import { LRUCache } from "../data-structures/lru-cache";
+import { LRUCache } from "../data-structures/basic/lru-cache";
 
 /**
  * Configuration options for memoization
@@ -62,6 +62,7 @@ export interface MemoizationStats {
  * @param fn - Function to memoize
  * @param config - Memoization configuration
  * @returns Memoized function with performance tracking
+ * @example
  */
 export function memoize<T extends (...args: any[]) => any>(
   fn: T,
@@ -80,7 +81,7 @@ export function memoize<T extends (...args: any[]) => any>(
   const memoizedFn = ((...args: Parameters<T>): ReturnType<T> => {
     const startTime = performance.now();
     const key = finalConfig.keyGenerator(...args);
-    
+
     // Check cache first
     const cached = cache.get(key);
     if (cached) {
@@ -92,7 +93,7 @@ export function memoize<T extends (...args: any[]) => any>(
     // Execute function and cache result
     const result = fn(...args);
     const executionTime = performance.now() - startTime;
-    
+
     totalExecutionTime += executionTime;
     totalCalls++;
 
@@ -109,7 +110,7 @@ export function memoize<T extends (...args: any[]) => any>(
   }) as T & { stats: MemoizationStats; clear: () => void };
 
   // Add stats getter
-  Object.defineProperty(memoizedFn, 'stats', {
+  Object.defineProperty(memoizedFn, "stats", {
     get: (): MemoizationStats => {
       const cacheStats = cache.getStats();
       return {
@@ -126,7 +127,7 @@ export function memoize<T extends (...args: any[]) => any>(
   });
 
   // Add clear method
-  Object.defineProperty(memoizedFn, 'clear', {
+  Object.defineProperty(memoizedFn, "clear", {
     value: () => {
       cache.clear();
       totalExecutionTime = 0;
@@ -141,42 +142,48 @@ export function memoize<T extends (...args: any[]) => any>(
 /**
  * Specialized memoization for mathematical operations
  * Optimized for functions with numeric parameters and results
+ * @param fn
+ * @param config
+ * @example
  */
 export function memoizeMath<T extends (...args: number[]) => number>(
   fn: T,
-  config: Omit<MemoizationConfig, 'keyGenerator'> = {}
+  config: Omit<MemoizationConfig, "keyGenerator"> = {}
 ): T & { stats: MemoizationStats; clear: () => void } {
   return memoize(fn, {
     ...config,
-    keyGenerator: (...args: number[]) => args.map(n => n.toString()).join(','),
+    keyGenerator: (...args: number[]) => args.map(n => n.toString()).join(","),
   });
 }
 
 /**
  * Memoization for expensive geometric calculations
  * Uses specialized key generation for geometric data
+ * @param fn
+ * @param config
+ * @example
  */
 export function memoizeGeometry<T extends (...args: any[]) => any>(
   fn: T,
-  config: Omit<MemoizationConfig, 'keyGenerator'> = {}
+  config: Omit<MemoizationConfig, "keyGenerator"> = {}
 ): T & { stats: MemoizationStats; clear: () => void } {
   return memoize(fn, {
     ...config,
     keyGenerator: (...args: any[]) => {
-      return args.map(arg => {
-        if (Array.isArray(arg)) {
-          return `[${arg.map(n => typeof n === 'number' ? n.toFixed(6) : n).join(',')}]`;
-        }
-        if (typeof arg === 'number') {
-          return arg.toFixed(6);
-        }
-        if (typeof arg === 'object' && arg !== null) {
-          return JSON.stringify(arg, (key, value) => 
-            typeof value === 'number' ? Number(value.toFixed(6)) : value
-          );
-        }
-        return String(arg);
-      }).join('|');
+      return args
+        .map(arg => {
+          if (Array.isArray(arg)) {
+            return `[${arg.map(n => (typeof n === "number" ? n.toFixed(6) : n)).join(",")}]`;
+          }
+          if (typeof arg === "number") {
+            return arg.toFixed(6);
+          }
+          if (typeof arg === "object" && arg !== null) {
+            return JSON.stringify(arg, (key, value) => (typeof value === "number" ? Number(value.toFixed(6)) : value));
+          }
+          return String(arg);
+        })
+        .join("|");
     },
   });
 }
@@ -184,17 +191,17 @@ export function memoizeGeometry<T extends (...args: any[]) => any>(
 /**
  * Weak memoization using WeakMap for object-based caching
  * Useful when cache keys are objects that can be garbage collected
+ * @param fn
+ * @example
  */
-export function weakMemoize<T extends (...args: any[]) => any>(
-  fn: T
-): T & { clear: () => void } {
+export function weakMemoize<T extends (...args: any[]) => any>(fn: T): T & { clear: () => void } {
   const cache = new WeakMap<object, any>();
   const argCache = new WeakMap<object, any[]>();
 
   const memoizedFn = ((...args: Parameters<T>): ReturnType<T> => {
     // Use first object argument as cache key, or create synthetic key
     let cacheKey: object;
-    if (args.length > 0 && typeof args[0] === 'object' && args[0] !== null) {
+    if (args.length > 0 && typeof args[0] === "object" && args[0] !== null) {
       cacheKey = args[0];
     } else {
       // Create synthetic key for non-object arguments
@@ -212,7 +219,7 @@ export function weakMemoize<T extends (...args: any[]) => any>(
     return result;
   }) as T & { clear: () => void };
 
-  Object.defineProperty(memoizedFn, 'clear', {
+  Object.defineProperty(memoizedFn, "clear", {
     value: () => {
       // WeakMap doesn't have clear method, but we can create new instances
       // This is a limitation of WeakMap-based memoization
@@ -226,6 +233,9 @@ export function weakMemoize<T extends (...args: any[]) => any>(
 /**
  * Batch memoization for processing multiple inputs at once
  * More efficient than individual memoization for bulk operations
+ * @param fn
+ * @param config
+ * @example
  */
 export function batchMemoize<T, R>(
   fn: (inputs: T[]) => R[],
@@ -244,7 +254,7 @@ export function batchMemoize<T, R>(
   const memoizedFn = ((inputs: T[]): R[] => {
     const startTime = performance.now();
     const key = finalConfig.keyGenerator(inputs);
-    
+
     const cached = cache.get(key);
     if (cached) {
       return cached;
@@ -252,7 +262,7 @@ export function batchMemoize<T, R>(
 
     const result = fn(inputs);
     const executionTime = performance.now() - startTime;
-    
+
     totalExecutionTime += executionTime;
     totalCalls++;
 
@@ -260,7 +270,7 @@ export function batchMemoize<T, R>(
     return result;
   }) as (inputs: T[]) => R[] & { stats: MemoizationStats; clear: () => void };
 
-  Object.defineProperty(memoizedFn, 'stats', {
+  Object.defineProperty(memoizedFn, "stats", {
     get: (): MemoizationStats => {
       const cacheStats = cache.getStats();
       return {
@@ -276,7 +286,7 @@ export function batchMemoize<T, R>(
     enumerable: true,
   });
 
-  Object.defineProperty(memoizedFn, 'clear', {
+  Object.defineProperty(memoizedFn, "clear", {
     value: () => {
       cache.clear();
       totalExecutionTime = 0;
@@ -296,47 +306,47 @@ export const MathMemo = {
    * Memoized square function
    */
   square: memoizeMath((x: number) => x * x),
-  
+
   /**
    * Memoized power function
    */
   pow: memoizeMath((x: number, y: number) => Math.pow(x, y)),
-  
+
   /**
    * Memoized square root function
    */
   sqrt: memoizeMath((x: number) => Math.sqrt(x)),
-  
+
   /**
    * Memoized logarithm function
    */
   log: memoizeMath((x: number) => Math.log(x)),
-  
+
   /**
    * Memoized natural logarithm function
    */
   ln: memoizeMath((x: number) => Math.log(x)),
-  
+
   /**
    * Memoized exponential function
    */
   exp: memoizeMath((x: number) => Math.exp(x)),
-  
+
   /**
    * Memoized sine function
    */
   sin: memoizeMath((x: number) => Math.sin(x)),
-  
+
   /**
    * Memoized cosine function
    */
   cos: memoizeMath((x: number) => Math.cos(x)),
-  
+
   /**
    * Memoized tangent function
    */
   tan: memoizeMath((x: number) => Math.tan(x)),
-  
+
   /**
    * Memoized atan2 function
    */
@@ -351,58 +361,53 @@ export const MathMemo = {
    * Memoized add for numeric pairs
    */
   add: memoizeGeometry((x: number, y: number) => x + y),
-  
+
   /**
    * Memoized distance calculation
    */
-  distance: memoizeGeometry((x1: number, y1: number, x2: number, y2: number) => 
+  distance: memoizeGeometry((x1: number, y1: number, x2: number, y2: number) =>
     Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
   ),
-  
+
   /**
    * Memoized magnitude calculation for 2D vectors
    */
   magnitude2D: memoizeGeometry((x: number, y: number) => Math.sqrt(x * x + y * y)),
-  
+
   /**
    * Memoized magnitude calculation for 3D vectors
    */
-  magnitude3D: memoizeGeometry((x: number, y: number, z: number) => 
-    Math.sqrt(x * x + y * y + z * z)
-  ),
-  
+  magnitude3D: memoizeGeometry((x: number, y: number, z: number) => Math.sqrt(x * x + y * y + z * z)),
+
   /**
    * Memoized dot product for 2D vectors
    */
-  dot2D: memoizeGeometry((x1: number, y1: number, x2: number, y2: number) => 
-    x1 * x2 + y1 * y2
-  ),
-  
+  dot2D: memoizeGeometry((x1: number, y1: number, x2: number, y2: number) => x1 * x2 + y1 * y2),
+
   /**
    * Memoized dot product for 3D vectors
    */
-  dot3D: memoizeGeometry((x1: number, y1: number, z1: number, x2: number, y2: number, z2: number) => 
-    x1 * x2 + y1 * y2 + z1 * z2
+  dot3D: memoizeGeometry(
+    (x1: number, y1: number, z1: number, x2: number, y2: number, z2: number) => x1 * x2 + y1 * y2 + z1 * z2
   ),
-  
+
   /**
    * Memoized cross product for 3D vectors
    */
   cross3D: memoizeGeometry((x1: number, y1: number, z1: number, x2: number, y2: number, z2: number) => [
     y1 * z2 - z1 * y2,
     z1 * x2 - x1 * z2,
-    x1 * y2 - y1 * x2
+    x1 * y2 - y1 * x2,
   ]),
-  
-  
 };
 
 /**
  * Clear all predefined mathematical memoization caches
+ * @example
  */
 export function clearMathMemo(): void {
   Object.values(MathMemo).forEach(memoizedFn => {
-    if ('clear' in memoizedFn) {
+    if ("clear" in memoizedFn) {
       memoizedFn.clear();
     }
   });
@@ -410,15 +415,16 @@ export function clearMathMemo(): void {
 
 /**
  * Get statistics for all predefined mathematical memoization functions
+ * @example
  */
 export function getMathMemoStats(): Record<string, MemoizationStats> {
   const stats: Record<string, MemoizationStats> = {};
-  
+
   Object.entries(MathMemo).forEach(([name, memoizedFn]) => {
-    if ('stats' in memoizedFn) {
+    if ("stats" in memoizedFn) {
       stats[name] = memoizedFn.stats;
     }
   });
-  
+
   return stats;
 }

@@ -27,6 +27,9 @@ export class PerformanceTracker {
 
   /**
    * Record algorithm selection for learning
+   * @param selection
+   * @param _workload
+   * @example
    */
   recordSelection(selection: AlgorithmSelection, _workload: WorkloadCharacteristics): void {
     this.selectionStats.totalSelections++;
@@ -37,6 +40,8 @@ export class PerformanceTracker {
 
   /**
    * Update performance model with new results
+   * @param result
+   * @example
    */
   updatePerformanceModel(result: PerformanceRecord): void {
     this.performanceHistory.push(result);
@@ -52,6 +57,8 @@ export class PerformanceTracker {
 
   /**
    * Update selection statistics
+   * @param _result
+   * @example
    */
   private updateSelectionStats(_result: PerformanceRecord): void {
     // This would be implemented to track whether the selection was correct
@@ -60,6 +67,7 @@ export class PerformanceTracker {
 
   /**
    * Get selection statistics
+   * @example
    */
   getSelectionStats(): SelectionStats {
     return { ...this.selectionStats };
@@ -67,6 +75,7 @@ export class PerformanceTracker {
 
   /**
    * Get performance history
+   * @example
    */
   getPerformanceHistory(): PerformanceRecord[] {
     return [...this.performanceHistory];
@@ -74,6 +83,7 @@ export class PerformanceTracker {
 
   /**
    * Clear performance history
+   * @example
    */
   clearPerformanceHistory(): void {
     this.performanceHistory = [];

@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { KdTree } from "../../spatial-structures/kdtree/kdtree-core";
-import { KdTreeEventType } from "../../spatial-structures/kdtree/kdtree-types";
+import { KdTree } from "../../data-structures/spatial/kdtree/kdtree-core";
+import { KdTreeEventType } from "../../data-structures/spatial/kdtree/kdtree-types";
 
 describe("K-d Tree Data Structure", () => {
   let kdTree: KdTree;

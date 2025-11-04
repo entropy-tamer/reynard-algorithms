@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { Octree } from "../../spatial-structures/octree/octree-core";
-import { OctreeEventType } from "../../spatial-structures/octree/octree-types";
+import { Octree } from "../../data-structures/spatial/octree/octree-core";
+import { OctreeEventType } from "../../data-structures/spatial/octree/octree-types";
 
 describe("Octree Data Structure", () => {
   let octree: Octree;

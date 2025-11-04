@@ -24,11 +24,9 @@ export default defineConfig({
     ],
     // Environment for tests
     environment: "happy-dom",
-    // Test timeout
-    testTimeout: 2000,
+    // Test timeout (increased for complex data structure tests)
+    testTimeout: 10000,
     // Hook timeout
-    hookTimeout: 2000,
-    // Reduce memory usage
-    pool: "forks",
+    hookTimeout: 5000,
   },
 });

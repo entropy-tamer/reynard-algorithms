@@ -14,6 +14,9 @@ import type { WorkloadAnalysis, AlgorithmSelection } from "./algorithm-selector-
 export class SpatialSelector {
   /**
    * Select optimal spatial algorithm
+   * @param analysis
+   * @param t
+   * @example
    */
   selectOptimalSpatialAlgorithm(analysis: WorkloadAnalysis, t?: (key: string) => string): AlgorithmSelection {
     const { complexity } = analysis;
