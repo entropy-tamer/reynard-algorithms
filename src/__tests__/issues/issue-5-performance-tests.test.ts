@@ -381,6 +381,3 @@ describe("Issue #5: Performance Test Reliability", () => {
     return points;
   }
 });
-
-
-

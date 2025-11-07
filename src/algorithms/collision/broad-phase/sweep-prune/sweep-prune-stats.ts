@@ -47,9 +47,11 @@ export function updateStats(
 /**
  * Get performance metrics
  */
-export function getPerformanceMetrics(stats: SweepPruneStats, cache: Map<string, SweepPruneCacheEntry>): SweepPrunePerformanceMetrics {
-  const efficiencyRatio =
-    stats.totalAABBsProcessed > 0 ? stats.totalCollisionPairs / stats.totalAABBsProcessed : 0;
+export function getPerformanceMetrics(
+  stats: SweepPruneStats,
+  cache: Map<string, SweepPruneCacheEntry>
+): SweepPrunePerformanceMetrics {
+  const efficiencyRatio = stats.totalAABBsProcessed > 0 ? stats.totalCollisionPairs / stats.totalAABBsProcessed : 0;
 
   const performanceScore = Math.min(
     100,
@@ -87,15 +89,3 @@ export function resetStats(): SweepPruneStats {
     memoryUsage: 0,
   };
 }
-
-
-
-
-
-
-
-
-
-
-
-

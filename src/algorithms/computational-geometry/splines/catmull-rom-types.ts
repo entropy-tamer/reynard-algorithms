@@ -73,4 +73,3 @@ export interface CatmullRomEvaluation {
   /** Curvature at this point */
   curvature: number;
 }
-

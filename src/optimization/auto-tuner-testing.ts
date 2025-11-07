@@ -49,8 +49,7 @@ export async function testAlgorithmThresholds(
     if (testResults.length > 0) {
       const averageTime = testResults.reduce((sum, r) => sum + r.statistics.median, 0) / testResults.length;
       const standardDeviation = Math.sqrt(
-        testResults.reduce((sum, r) => sum + Math.pow(r.statistics.median - averageTime, 2), 0) /
-          testResults.length
+        testResults.reduce((sum, r) => sum + Math.pow(r.statistics.median - averageTime, 2), 0) / testResults.length
       );
       const totalIterations = testResults.reduce((sum, r) => sum + r.statistics.sampleCount, 0);
       const memoryUsage = testResults.reduce(
@@ -72,5 +71,3 @@ export async function testAlgorithmThresholds(
 
   return results;
 }
-
-

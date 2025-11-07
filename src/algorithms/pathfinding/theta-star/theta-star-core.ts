@@ -223,10 +223,10 @@ export class ThetaStar {
     options: Partial<GridValidationOptions> = {}
   ): GridValidationResult {
     const result = validateGrid(grid, width, height, options);
-    
+
     // If start/goal are provided, validate them
     const errors: string[] = [];
-    
+
     if (start !== undefined) {
       // Check if start is within bounds
       if (!isWithinBounds(start, width, height)) {
@@ -239,7 +239,7 @@ export class ThetaStar {
         }
       }
     }
-    
+
     if (goal !== undefined) {
       // Check if goal is within bounds
       if (!isWithinBounds(goal, width, height)) {
@@ -252,7 +252,7 @@ export class ThetaStar {
         }
       }
     }
-    
+
     if (errors.length > 0) {
       return {
         ...result,
@@ -260,7 +260,7 @@ export class ThetaStar {
         errors: [...result.errors, ...errors],
       };
     }
-    
+
     return result;
   }
 
@@ -290,7 +290,11 @@ export class ThetaStar {
    * @param options
    * @example
    */
-  compareResults(result1: ThetaStarResult, result2: ThetaStarResult, options: Partial<PathComparisonOptions> = {}): PathComparisonResult {
+  compareResults(
+    result1: ThetaStarResult,
+    result2: ThetaStarResult,
+    options: Partial<PathComparisonOptions> = {}
+  ): PathComparisonResult {
     return this.compare(result1.path, result2.path, options);
   }
 

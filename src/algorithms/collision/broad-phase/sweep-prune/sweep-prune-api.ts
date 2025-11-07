@@ -68,15 +68,3 @@ export function removeEventHandler(handler: SweepPruneEventHandler, api: SweepPr
     api.eventHandlers.splice(index, 1);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-

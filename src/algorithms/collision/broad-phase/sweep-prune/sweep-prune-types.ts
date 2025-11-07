@@ -9,12 +9,7 @@
  */
 
 // Re-export core types
-export type {
-  AABB,
-  Endpoint,
-  CollisionPair,
-  SweepPruneResult,
-} from "./sweep-prune-types-core";
+export type { AABB, Endpoint, CollisionPair, SweepPruneResult } from "./sweep-prune-types-core";
 
 // Re-export configuration types
 export type {
@@ -41,8 +36,4 @@ export type {
 export { SweepPruneEventType } from "./sweep-prune-types-config";
 
 // Re-export constants
-export {
-  DEFAULT_SWEEP_PRUNE_CONFIG,
-  DEFAULT_SWEEP_PRUNE_OPTIONS,
-  COMMON_AABBS,
-} from "./sweep-prune-constants";
+export { DEFAULT_SWEEP_PRUNE_CONFIG, DEFAULT_SWEEP_PRUNE_OPTIONS, COMMON_AABBS } from "./sweep-prune-constants";

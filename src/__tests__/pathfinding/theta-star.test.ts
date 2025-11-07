@@ -6,7 +6,12 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { ThetaStar } from "../../algorithms/pathfinding/theta-star/theta-star-core";
 import { ThetaStarUtils } from "../../algorithms/pathfinding/theta-star/theta-star-utils";
 import { LineOfSight } from "../../algorithms/pathfinding/theta-star/line-of-sight";
-import type { Point, CellType, Direction, MovementType } from "../../algorithms/pathfinding/theta-star/theta-star-types";
+import type {
+  Point,
+  CellType,
+  Direction,
+  MovementType,
+} from "../../algorithms/pathfinding/theta-star/theta-star-types";
 import {
   Direction as ThetaStarDirection,
   MovementType as ThetaStarMovementType,
@@ -185,7 +190,11 @@ describe("ThetaStar", () => {
       const validation = thetaStar.validateGrid(blockedGrid, width, height, start, goal);
 
       expect(validation.isValid).toBe(false);
-      expect(validation.errors.some(e => e.includes("Start point out of bounds or not walkable") || e.includes("Start point is not walkable"))).toBe(true);
+      expect(
+        validation.errors.some(
+          e => e.includes("Start point out of bounds or not walkable") || e.includes("Start point is not walkable")
+        )
+      ).toBe(true);
     });
 
     it("should detect non-walkable goal point", () => {
@@ -198,7 +207,11 @@ describe("ThetaStar", () => {
       const validation = thetaStar.validateGrid(blockedGrid, width, height, start, goal);
 
       expect(validation.isValid).toBe(false);
-      expect(validation.errors.some(e => e.includes("Goal point out of bounds or not walkable") || e.includes("Goal point is not walkable"))).toBe(true);
+      expect(
+        validation.errors.some(
+          e => e.includes("Goal point out of bounds or not walkable") || e.includes("Goal point is not walkable")
+        )
+      ).toBe(true);
     });
   });
 

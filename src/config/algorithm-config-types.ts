@@ -134,6 +134,3 @@ export interface AlgorithmConfig {
   /** Configuration version for migration */
   version: string;
 }
-
-
-

@@ -1,10 +1,10 @@
-# A* Pathfinding Algorithm
+# A\* Pathfinding Algorithm
 
 > Optimal informed search algorithm for finding shortest paths using heuristics
 
 ## Overview
 
-A* (pronounced "A-star") is one of the most widely used pathfinding algorithms in computer science, game development, robotics, and AI. It combines the best features of Dijkstra's algorithm (guaranteed optimality) with greedy best-first search (efficiency through heuristics) to find the shortest path between two points efficiently.
+A\* (pronounced "A-star") is one of the most widely used pathfinding algorithms in computer science, game development, robotics, and AI. It combines the best features of Dijkstra's algorithm (guaranteed optimality) with greedy best-first search (efficiency through heuristics) to find the shortest path between two points efficiently.
 
 **Key Advantages:**
 
@@ -50,7 +50,7 @@ Find: The shortest path $P = [s, v_1, v_2, ..., v_k, g]$ such that:
 
 ### Evaluation Function
 
-A* uses the evaluation function:
+A\* uses the evaluation function:
 
 $$f(n) = g(n) + h(n)$$
 
@@ -68,17 +68,17 @@ $$h(n) \leq h^*(n) \quad \forall n \in V$$
 
 Where $h^*(n)$ is the true minimum cost from $n$ to goal $g$.
 
-**Why Admissibility Matters**: Admissible heuristics guarantee A* finds optimal paths.
+**Why Admissibility Matters**: Admissible heuristics guarantee A\* finds optimal paths.
 
 ### Optimality Theorem
 
-**Theorem**: If heuristic $h$ is admissible, A* is guaranteed to find an optimal (shortest) path.
+**Theorem**: If heuristic $h$ is admissible, A\* is guaranteed to find an optimal (shortest) path.
 
 **Proof Sketch**:
 
-1. **Contradiction Assumption**: Suppose A* returns path $P_1$ but optimal path $P_2$ exists with lower cost $C(P_2) < C(P_1)$.
+1. **Contradiction Assumption**: Suppose A\* returns path $P_1$ but optimal path $P_2$ exists with lower cost $C(P_2) < C(P_1)$.
 
-2. **Goal Node Expansion**: Let $g'$ be the goal node when A* terminates with $P_1$.
+2. **Goal Node Expansion**: Let $g'$ be the goal node when A\* terminates with $P_1$.
 
 3. **Optimal Path Nodes**: Some node $n$ on $P_2$ must be in the open set when $g'$ is expanded.
 
@@ -86,15 +86,15 @@ Where $h^*(n)$ is the true minimum cost from $n$ to goal $g$.
    - $f(n) = g^*(n) + h(n)$ where $g^*(n)$ is optimal cost to $n$
    - Since $h$ is admissible: $f(n) \leq g^*(n) + h^*(n) = C(P_2)$
 
-5. **Contradiction**: Since $C(P_2) < C(P_1)$, we have $f(n) < f(g')$, meaning $n$ should have been expanded before $g'$. This contradicts A* expanding $g'$ first.
+5. **Contradiction**: Since $C(P_2) < C(P_1)$, we have $f(n) < f(g')$, meaning $n$ should have been expanded before $g'$. This contradicts A\* expanding $g'$ first.
 
-Therefore, A* must find the optimal path.
+Therefore, A\* must find the optimal path.
 
 ### Completeness Theorem
 
-**Theorem**: If a path exists, A* will find it (assuming finite graph and finite edge costs).
+**Theorem**: If a path exists, A\* will find it (assuming finite graph and finite edge costs).
 
-**Proof**: A* explores all reachable nodes systematically. If goal is reachable, it will eventually be added to the open set and expanded.
+**Proof**: A\* explores all reachable nodes systematically. If goal is reachable, it will eventually be added to the open set and expanded.
 
 ### Complexity Analysis
 
@@ -103,7 +103,6 @@ Therefore, A* must find the optimal path.
 - **Worst Case**: $O(b^d)$ where:
   - $b$ = branching factor (average neighbors per node)
   - $d$ = depth of optimal solution
-  
 - **Best Case**: $O(d)$ when heuristic perfectly guides search
 
 - **Average Case**: Depends on heuristic quality:
@@ -117,12 +116,12 @@ Therefore, A* must find the optimal path.
 
 #### Comparison with Other Algorithms
 
-| Algorithm | Optimal | Time Complexity | Space Complexity |
-|-----------|---------|----------------|------------------|
-| **Dijkstra** | Yes | $O(\|V\| + \|E\| \log \|V\|)$ | $O(\|V\|)$ |
-| **A*** | Yes | $O(b^d)$ (better with good $h$) | $O(\|V\|)$ |
-| **Greedy BFS** | No | $O(b^d)$ | $O(\|V\|)$ |
-| **BFS** | Yes (unweighted) | $O(\|V\| + \|E\|)$ | $O(\|V\|)$ |
+| Algorithm      | Optimal          | Time Complexity                 | Space Complexity |
+| -------------- | ---------------- | ------------------------------- | ---------------- |
+| **Dijkstra**   | Yes              | $O(\|V\| + \|E\| \log \|V\|)$   | $O(\|V\|)$       |
+| **A\***        | Yes              | $O(b^d)$ (better with good $h$) | $O(\|V\|)$       |
+| **Greedy BFS** | No               | $O(b^d)$                        | $O(\|V\|)$       |
+| **BFS**        | Yes (unweighted) | $O(\|V\| + \|E\|)$              | $O(\|V\|)$       |
 
 ### Common Heuristics
 
@@ -176,7 +175,7 @@ $$h(n) = \max(|n_x - g_x|, |n_y - g_y|) + (\sqrt{2} - 1) \cdot \min(|n_x - g_x|,
 
 ### High-Level Approach
 
-A* maintains two sets:
+A\* maintains two sets:
 
 1. **Open Set**: Nodes to be evaluated (priority queue by $f(n)$)
 2. **Closed Set**: Nodes already evaluated
@@ -206,49 +205,49 @@ A* maintains two sets:
 function A_STAR(start, goal, graph, heuristic):
     open_set = PriorityQueue()
     closed_set = Set()
-    
+
     g_score = Map()  // Actual cost from start
     f_score = Map()  // Estimated total cost
     parent = Map()   // Path reconstruction
-    
+
     g_score[start] = 0
     f_score[start] = heuristic(start, goal)
     open_set.add(start, f_score[start])
-    
+
     while not open_set.isEmpty():
         current = open_set.extractMin()
-        
+
         if current == goal:
             return RECONSTRUCT_PATH(parent, start, goal)
-        
+
         closed_set.add(current)
-        
+
         for each neighbor in graph.getNeighbors(current):
             if neighbor in closed_set:
                 continue
-            
+
             tentative_g = g_score[current] + graph.getCost(current, neighbor)
-            
+
             if neighbor not in g_score or tentative_g < g_score[neighbor]:
                 parent[neighbor] = current
                 g_score[neighbor] = tentative_g
                 f_score[neighbor] = tentative_g + heuristic(neighbor, goal)
-                
+
                 if neighbor not in open_set:
                     open_set.add(neighbor, f_score[neighbor])
                 else:
                     open_set.updatePriority(neighbor, f_score[neighbor])
-    
+
     return null  // No path found
 
 function RECONSTRUCT_PATH(parent, start, goal):
     path = [goal]
     current = goal
-    
+
     while current != start:
         current = parent[current]
         path.prepend(current)
-    
+
     return path
 ```
 
@@ -278,15 +277,15 @@ export class AStar {
     if (this.cache.has(cacheKey)) {
       return this.getCachedResult(cacheKey);
     }
-    
+
     // Perform A* search
     const result = this.performAStarSearch(start, goal, grid);
-    
+
     // Cache and return result
     if (result.success) {
       this.cacheResult(cacheKey, start, goal, result);
     }
-    
+
     return result;
   }
 }
@@ -329,36 +328,36 @@ Interactive visualization available in the [Algorithms Demo](/examples/algorithm
 
 ### Theoretical Complexity
 
-| Metric | Complexity | Notes |
-|--------|-----------|-------|
-| Time (worst) | $O(b^d)$ | $b$ = branching factor, $d$ = solution depth |
-| Time (with perfect $h$) | $O(d)$ | Optimal case with perfect heuristic |
-| Space | $O(\|V\|)$ | Stores all nodes in worst case |
-| Average nodes explored | $O(d \log d)$ | With good heuristic |
+| Metric                  | Complexity    | Notes                                        |
+| ----------------------- | ------------- | -------------------------------------------- |
+| Time (worst)            | $O(b^d)$      | $b$ = branching factor, $d$ = solution depth |
+| Time (with perfect $h$) | $O(d)$        | Optimal case with perfect heuristic          |
+| Space                   | $O(\|V\|)$    | Stores all nodes in worst case               |
+| Average nodes explored  | $O(d \log d)$ | With good heuristic                          |
 
 ### Empirical Benchmarks
 
 Performance on various grid sizes with Euclidean heuristic:
 
-| Grid Size | Nodes Explored | Execution Time | vs Dijkstra |
-|-----------|----------------|---------------|-------------|
-| 50×50 | 1,247 | 0.8 ms | 5.2× faster |
-| 100×100 | 4,892 | 3.2 ms | 8.7× faster |
-| 500×500 | 18,654 | 15 ms | 12.3× faster |
-| 1000×1000 | 52,341 | 42 ms | 18.5× faster |
+| Grid Size | Nodes Explored | Execution Time | vs Dijkstra  |
+| --------- | -------------- | -------------- | ------------ |
+| 50×50     | 1,247          | 0.8 ms         | 5.2× faster  |
+| 100×100   | 4,892          | 3.2 ms         | 8.7× faster  |
+| 500×500   | 18,654         | 15 ms          | 12.3× faster |
+| 1000×1000 | 52,341         | 42 ms          | 18.5× faster |
 
 **Heuristic Comparison** (500×500 grid):
 
-| Heuristic | Nodes Explored | Time | Accuracy |
-|-----------|----------------|------|----------|
-| Manhattan | 45,231 | 28 ms | Optimal (4-dir) |
-| Euclidean | 18,654 | 15 ms | Optimal |
-| Chebyshev | 22,891 | 18 ms | Optimal (8-dir, cost=1) |
-| Octile | 18,342 | 14 ms | Optimal (8-dir, cost=√2) |
+| Heuristic | Nodes Explored | Time  | Accuracy                 |
+| --------- | -------------- | ----- | ------------------------ |
+| Manhattan | 45,231         | 28 ms | Optimal (4-dir)          |
+| Euclidean | 18,654         | 15 ms | Optimal                  |
+| Chebyshev | 22,891         | 18 ms | Optimal (8-dir, cost=1)  |
+| Octile    | 18,342         | 14 ms | Optimal (8-dir, cost=√2) |
 
-### When to Use A*
+### When to Use A\*
 
-**Use A* when:**
+**Use A\* when:**
 
 - Need optimal path (shortest cost)
 - Graph has non-uniform edge costs
@@ -368,7 +367,7 @@ Performance on various grid sizes with Euclidean heuristic:
 
 **Use Dijkstra when:**
 
-- All edge costs are equal (A* = Dijkstra)
+- All edge costs are equal (A\* = Dijkstra)
 - Heuristic is unavailable
 - Need distances to all nodes (not just goal)
 
@@ -380,7 +379,7 @@ Performance on various grid sizes with Euclidean heuristic:
 
 ## PAW Framework Integration
 
-The PAW framework automatically selects A* when:
+The PAW framework automatically selects A\* when:
 
 - Grid size > 100 cells
 - Optimal path required
@@ -399,7 +398,7 @@ import { AStar } from "@entropy-tamer/reynard-algorithms";
 const astar = new AStar({
   allowDiagonal: true,
   diagonalCost: Math.sqrt(2),
-  enableCaching: true
+  enableCaching: true,
 });
 
 const start = { x: 0, y: 0 };
@@ -408,7 +407,7 @@ const goal = { x: 99, y: 99 };
 const grid = {
   width: 100,
   height: 100,
-  cells: generateWalkableGrid(100, 100)
+  cells: generateWalkableGrid(100, 100),
 };
 
 const result = astar.findPath(start, goal, grid);
@@ -432,7 +431,7 @@ const customHeuristic = (from: Point, to: Point): number => {
 };
 
 const astar = new AStar({
-  heuristic: customHeuristic
+  heuristic: customHeuristic,
 });
 ```
 
@@ -441,7 +440,7 @@ const astar = new AStar({
 ```typescript
 const astar = new AStar({
   enablePathSmoothing: true,
-  smoothingTolerance: 0.5
+  smoothingTolerance: 0.5,
 });
 ```
 
@@ -449,23 +448,23 @@ const astar = new AStar({
 
 ### Original Papers
 
-1. **Hart, P. E., Nilsson, N. J., & Raphael, B. (1968).** "A Formal Basis for the Heuristic Determination of Minimum Cost Paths." *IEEE Transactions on Systems Science and Cybernetics*, 4(2), 100-107.
+1. **Hart, P. E., Nilsson, N. J., & Raphael, B. (1968).** "A Formal Basis for the Heuristic Determination of Minimum Cost Paths." _IEEE Transactions on Systems Science and Cybernetics_, 4(2), 100-107.
 
-2. **Nilsson, N. J. (1971).** "Problem-Solving Methods in Artificial Intelligence." *McGraw-Hill*. Chapter 4.
+2. **Nilsson, N. J. (1971).** "Problem-Solving Methods in Artificial Intelligence." _McGraw-Hill_. Chapter 4.
 
 ### Related Algorithms
 
-- **Dijkstra's Algorithm** - Special case of A* with $h(n) = 0$
+- **Dijkstra's Algorithm** - Special case of A\* with $h(n) = 0$
 - **Greedy Best-First Search** - Uses only $h(n)$ (no optimality guarantee)
-- **Theta***- Any-angle variant of A*
-- **JPS (Jump Point Search)** - Optimized A* for uniform-cost grids
-- **HPA*** - Hierarchical extension for large maps
+- **Theta\***- Any-angle variant of A\*
+- **JPS (Jump Point Search)** - Optimized A\* for uniform-cost grids
+- **HPA\*** - Hierarchical extension for large maps
 
 ### Further Reading
 
 - "Artificial Intelligence: A Modern Approach" - Russell & Norvig (Chapter 3)
-- "A* Pathfinding for Beginners" - Game Development Tutorial
-- "Introduction to A*" - Red Blob Games
+- "A\* Pathfinding for Beginners" - Game Development Tutorial
+- "Introduction to A\*" - Red Blob Games
 
 ---
 

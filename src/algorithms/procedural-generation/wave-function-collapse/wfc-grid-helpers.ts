@@ -3,8 +3,18 @@
  * @description Grid conversion and constraint resolution utilities
  */
 
-import type { Tile, Constraint, Pattern, Cell, WaveFunctionCollapseAnalysisOptions } from "./wave-function-collapse-types";
-import { generateConstraintsFromPatterns, validateConstraints as validateConstraintsUtil, generateConstraintsFromSockets } from "./wfc-constraint";
+import type {
+  Tile,
+  Constraint,
+  Pattern,
+  Cell,
+  WaveFunctionCollapseAnalysisOptions,
+} from "./wave-function-collapse-types";
+import {
+  generateConstraintsFromPatterns,
+  validateConstraints as validateConstraintsUtil,
+  generateConstraintsFromSockets,
+} from "./wfc-constraint";
 
 export type GridGenerationOptions = {
   patterns2D?: Pattern[];
@@ -19,7 +29,11 @@ export type GridGenerationOptions = {
  * @param options Generation options
  * @returns Resolved constraints
  */
-export function resolveConstraints(tiles: Tile[], constraints: Constraint[], options: GridGenerationOptions): Constraint[] {
+export function resolveConstraints(
+  tiles: Tile[],
+  constraints: Constraint[],
+  options: GridGenerationOptions
+): Constraint[] {
   if (constraints && constraints.length > 0) {
     return constraints;
   }
@@ -65,4 +79,3 @@ export function convertGrid2DToResult(grid: Cell[][][], width: number, height: n
   }
   return resultGrid;
 }
-

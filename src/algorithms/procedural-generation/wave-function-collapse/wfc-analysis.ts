@@ -7,10 +7,7 @@
  * @module algorithms/geometry/algorithms/wave-function-collapse
  */
 
-import type {
-  WaveFunctionCollapseAnalysis,
-  WaveFunctionCollapseAnalysisOptions,
-} from "./wave-function-collapse-types";
+import type { WaveFunctionCollapseAnalysis, WaveFunctionCollapseAnalysisOptions } from "./wave-function-collapse-types";
 import { calculateEntropyFromCounts } from "./wfc-entropy";
 import { extractPatternString } from "./wfc-pattern-extraction";
 
@@ -105,9 +102,7 @@ export function analyzeResult(
     totalTiles,
     uniqueTiles: uniqueTiles.length,
     tileCounts,
-    tilePercentages: Object.fromEntries(
-      Object.entries(tileCounts).map(([tile, count]) => [tile, count / totalTiles])
-    ),
+    tilePercentages: Object.fromEntries(Object.entries(tileCounts).map(([tile, count]) => [tile, count / totalTiles])),
   };
 
   analysis.uniqueTiles = uniqueTiles;
@@ -122,15 +117,3 @@ export function analyzeResult(
 
   return analysis;
 }
-
-
-
-
-
-
-
-
-
-
-
-

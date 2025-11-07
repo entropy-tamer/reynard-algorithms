@@ -94,13 +94,7 @@ function extractPatternAt2D(inputData: string[][], x: number, y: number, pattern
  * @param patternSize Size of pattern
  * @returns Extracted pattern
  */
-function extractPatternAt3D(
-  inputData: string[][][],
-  x: number,
-  y: number,
-  z: number,
-  patternSize: number
-): Pattern {
+function extractPatternAt3D(inputData: string[][][], x: number, y: number, z: number, patternSize: number): Pattern {
   const data: string[][][] = [];
 
   for (let dz = 0; dz < patternSize; dz++) {
@@ -147,15 +141,3 @@ export function extractPatternString(grid: any[][][], x: number, y: number, z: n
 
   return parts.join(",");
 }
-
-
-
-
-
-
-
-
-
-
-
-

@@ -74,7 +74,7 @@ export type {
 // ============================================================================
 export { PointOps } from "./core/geometry/point";
 export { VectorOps } from "./core/geometry/vector";
-// Note: LineOps, RectangleOps, CircleOps, PolygonOps, TransformOps 
+// Note: LineOps, RectangleOps, CircleOps, PolygonOps, TransformOps
 // are exported from their respective modules in geometry/shapes
 // These will be added when the shape algorithm files are properly organized
 
@@ -155,9 +155,7 @@ export type {
 // ============================================================================
 // Spatial Hash
 export { SpatialHash } from "./data-structures/spatial/spatial-hash/spatial-hash-core";
-export type {
-  QueryResult,
-} from "./data-structures/spatial/spatial-hash/spatial-hash-types";
+export type { QueryResult } from "./data-structures/spatial/spatial-hash/spatial-hash-types";
 // Note: SpatialHashConfig, SpatialHashStats, SpatialObject are exported from core/types to avoid duplicates
 
 // K-d Tree
@@ -586,7 +584,11 @@ export type {
 // Algorithms - Collision Detection
 // ============================================================================
 // AABB collision detection
-export type { AABB as AABBCollision, CollisionPair, CollisionResult } from "./algorithms/collision/narrow-phase/aabb/aabb-types";
+export type {
+  AABB as AABBCollision,
+  CollisionPair,
+  CollisionResult,
+} from "./algorithms/collision/narrow-phase/aabb/aabb-types";
 export {
   checkCollision,
   batchCollisionDetection,

@@ -12,7 +12,12 @@ import type {
 import { createInitialGrid } from "./wfc-backtrack";
 import { analyzeResult } from "./wfc-observation";
 import { runGenerationLoop } from "./wfc-generation-loop";
-import { resolveConstraints, validateConstraints, convertGrid2DToResult, type GridGenerationOptions } from "./wfc-grid-helpers";
+import {
+  resolveConstraints,
+  validateConstraints,
+  convertGrid2DToResult,
+  type GridGenerationOptions,
+} from "./wfc-grid-helpers";
 
 export type InternalGridResult = {
   grid: string[][];
@@ -70,7 +75,12 @@ export function generateGrid2D(
   const activeConstraints = resolveConstraints(tiles, constraints, options);
   validateConstraints(activeConstraints, tiles);
 
-  const grid = createInitialGrid(width, height, depth, tiles.map(t => t.id));
+  const grid = createInitialGrid(
+    width,
+    height,
+    depth,
+    tiles.map(t => t.id)
+  );
   const result = runGenerationLoop(grid, activeConstraints, width, height, depth, maxIterations, random);
 
   return {
@@ -113,7 +123,12 @@ export function generateGrid3D(
   }
   validateConstraints(activeConstraints, tiles);
 
-  const grid = createInitialGrid(width, height, depth, tiles.map(t => t.id));
+  const grid = createInitialGrid(
+    width,
+    height,
+    depth,
+    tiles.map(t => t.id)
+  );
   const result = runGenerationLoop(grid, activeConstraints, width, height, depth, maxIterations, random);
 
   const resultGrid = convertGrid2DToResult(grid, width, height);

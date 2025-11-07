@@ -69,12 +69,20 @@ function extractConstraintsFromPattern(pattern: Pattern): Constraint[] {
         const currentTile = is2D ? (data as string[][])[y][x] : (data as string[][][])[z][y][x];
         const directions = is2D ? dirs2D : dirs3D;
         for (const direction of directions) {
-          const neighborPos = is2D ? getNeighborPosition2D({ x, y }, direction as Direction2D) : getNeighborPosition3D({ x, y, z }, direction as Direction3D);
-          const isValid = is2D ? isValidPosition2D(neighborPos as Position2D, width, height) : isValidPosition3D(neighborPos as Position3D, width, height, depth);
+          const neighborPos = is2D
+            ? getNeighborPosition2D({ x, y }, direction as Direction2D)
+            : getNeighborPosition3D({ x, y, z }, direction as Direction3D);
+          const isValid = is2D
+            ? isValidPosition2D(neighborPos as Position2D, width, height)
+            : isValidPosition3D(neighborPos as Position3D, width, height, depth);
           if (isValid) {
             const n = neighborPos as Position2D & Position3D;
             const neighborTile = is2D ? (data as string[][])[n.y][n.x] : (data as string[][][])[n.z][n.y][n.x];
-            constraints.push({ tile1: currentTile, tile2: neighborTile, direction: direction as Direction2D | Direction3D });
+            constraints.push({
+              tile1: currentTile,
+              tile2: neighborTile,
+              direction: direction as Direction2D | Direction3D,
+            });
           }
         }
       }
@@ -192,26 +200,37 @@ export function validateConstraints(constraints: Constraint[], tiles: Tile[]): b
 export function generateConstraintsFromSockets(tiles: Tile[]): Constraint[] {
   const constraints: Constraint[] = [];
   const dirs2D: Array<[keyof NonNullable<Tile["sockets2D"]>, keyof NonNullable<Tile["sockets2D"]>, Direction2D]> = [
-    ["east", "west", "east"], ["west", "east", "west"], ["north", "south", "north"], ["south", "north", "south"],
+    ["east", "west", "east"],
+    ["west", "east", "west"],
+    ["north", "south", "north"],
+    ["south", "north", "south"],
   ];
   const faces3D: Array<[keyof NonNullable<Tile["sockets3D"]>, keyof NonNullable<Tile["sockets3D"]>, Direction3D]> = [
-    ["px", "nx", "east"], ["nx", "px", "west"], ["py", "ny", "up"], ["ny", "py", "down"], ["pz", "nz", "south"], ["nz", "pz", "north"],
+    ["px", "nx", "east"],
+    ["nx", "px", "west"],
+    ["py", "ny", "up"],
+    ["ny", "py", "down"],
+    ["pz", "nz", "south"],
+    ["nz", "pz", "north"],
   ];
 
   for (const t of tiles) {
     if (t.sockets2D) {
       for (const [socketA, socketB, dir] of dirs2D) {
         const sa = t.sockets2D[socketA];
-        if (sa) for (const u of tiles) if (u.sockets2D?.[socketB] === sa) constraints.push({ tile1: t.id, tile2: u.id, direction: dir });
+        if (sa)
+          for (const u of tiles)
+            if (u.sockets2D?.[socketB] === sa) constraints.push({ tile1: t.id, tile2: u.id, direction: dir });
       }
     }
     if (t.sockets3D) {
       for (const [faceA, faceB, dir] of faces3D) {
         const sa = t.sockets3D[faceA];
-        if (sa) for (const u of tiles) {
-          const sb = u.sockets3D?.[faceB];
-          if (sb && socketsAreCompatible(sa, sb, dir)) constraints.push({ tile1: t.id, tile2: u.id, direction: dir });
-        }
+        if (sa)
+          for (const u of tiles) {
+            const sb = u.sockets3D?.[faceB];
+            if (sb && socketsAreCompatible(sa, sb, dir)) constraints.push({ tile1: t.id, tile2: u.id, direction: dir });
+          }
       }
     }
   }
@@ -260,7 +279,11 @@ export function filterConstraintsByTile(constraints: Constraint[], tileId: strin
  * @example
  * const matching = getConstraintsForTileAndDirection(constraints, 'tile-1', 'east');
  */
-export function getConstraintsForTileAndDirection(constraints: Constraint[], tileId: string, direction: string): Constraint[] {
+export function getConstraintsForTileAndDirection(
+  constraints: Constraint[],
+  tileId: string,
+  direction: string
+): Constraint[] {
   return constraints.filter(c => c.tile1 === tileId && c.direction === direction);
 }
 
@@ -290,6 +313,11 @@ export function getAllowedTilesForDirection(constraints: Constraint[], tileId: s
  * @example
  * const compatible = areTilesCompatible(constraints, 'tile-1', 'tile-2', 'east');
  */
-export function areTilesCompatible(constraints: Constraint[], tile1: string, tile2: string, direction: string): boolean {
+export function areTilesCompatible(
+  constraints: Constraint[],
+  tile1: string,
+  tile2: string,
+  direction: string
+): boolean {
   return constraints.some(c => c.tile1 === tile1 && c.tile2 === tile2 && c.direction === direction);
 }

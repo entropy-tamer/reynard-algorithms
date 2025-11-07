@@ -62,17 +62,17 @@ let requireInitPromise: Promise<void> | null = null;
 function initRequire(): Promise<void> {
   if (nodeRequire) return Promise.resolve();
   if (requireInitPromise) return requireInitPromise;
-  
+
   requireInitPromise = (async () => {
     // Early return for browser environments
     if (!isNodeEnvironment()) return;
-    
+
     // Check for browser-specific globals that indicate we're not in Node.js
     if (typeof window !== "undefined" || typeof navigator !== "undefined") {
       // In browser environment, Node.js modules are not available
       return;
     }
-    
+
     try {
       if (typeof import.meta !== "undefined" && import.meta.url) {
         // In ES modules (Node.js), use createRequire
@@ -86,7 +86,7 @@ function initRequire(): Promise<void> {
           // Fall through to CommonJS require fallback
         }
       }
-      
+
       // Fallback to global require in CommonJS or if module import failed
       if (typeof require !== "undefined") {
         nodeRequire = require;
@@ -96,7 +96,7 @@ function initRequire(): Promise<void> {
       // nodeRequire will remain null, and getFs/getPath/getOs will return null
     }
   })();
-  
+
   return requireInitPromise;
 }
 
@@ -112,7 +112,7 @@ export function getFs(): FSLike | null {
   // Early return for browser environments
   if (!isNodeEnvironment()) return null;
   if (typeof window !== "undefined") return null; // Browser environment
-  
+
   // If not initialized, try to use global require synchronously (CommonJS)
   if (!nodeRequire) {
     if (typeof require !== "undefined") {
@@ -133,7 +133,7 @@ export function getFs(): FSLike | null {
       return null;
     }
   }
-  
+
   try {
     const fs = nodeRequire("fs");
     return fs as FSLike;
@@ -154,7 +154,7 @@ export function getPath(): PathLike | null {
   // Early return for browser environments
   if (!isNodeEnvironment()) return null;
   if (typeof window !== "undefined") return null; // Browser environment
-  
+
   // If not initialized, try to use global require synchronously (CommonJS)
   if (!nodeRequire) {
     if (typeof require !== "undefined") {
@@ -175,7 +175,7 @@ export function getPath(): PathLike | null {
       return null;
     }
   }
-  
+
   try {
     const path = nodeRequire("path");
     return path as PathLike;
@@ -196,7 +196,7 @@ export function getOs(): OSLike | null {
   // Early return for browser environments
   if (!isNodeEnvironment()) return null;
   if (typeof window !== "undefined") return null; // Browser environment
-  
+
   // If not initialized, try to use global require synchronously (CommonJS)
   if (!nodeRequire) {
     if (typeof require !== "undefined") {
@@ -217,7 +217,7 @@ export function getOs(): OSLike | null {
       return null;
     }
   }
-  
+
   try {
     const os = nodeRequire("node:os");
     return os as unknown as OSLike;

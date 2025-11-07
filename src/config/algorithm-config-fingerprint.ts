@@ -68,6 +68,3 @@ export function generateMachineFingerprint(): MachineFingerprint {
 
   return fingerprint;
 }
-
-
-

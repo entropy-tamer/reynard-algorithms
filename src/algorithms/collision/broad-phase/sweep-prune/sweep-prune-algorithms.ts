@@ -66,10 +66,7 @@ export function performSweepPrune(aabbs: AABB[], context: SweepPruneContext): Sw
 /**
  * Perform sweep and prune on a single axis
  */
-export function performSingleAxisSweepPrune(
-  aabbs: AABB[],
-  context: SweepPruneContext
-): SweepPruneResult {
+export function performSingleAxisSweepPrune(aabbs: AABB[], context: SweepPruneContext): SweepPruneResult {
   const collisionPairs: CollisionPair[] = [];
   let endpointsProcessed = 0;
   let axisSweeps = 0;
@@ -112,10 +109,7 @@ export function performSingleAxisSweepPrune(
 /**
  * Perform sweep and prune on multiple axes simultaneously
  */
-export function performMultiAxisSweepPrune(
-  aabbs: AABB[],
-  context: SweepPruneContext
-): SweepPruneResult {
+export function performMultiAxisSweepPrune(aabbs: AABB[], context: SweepPruneContext): SweepPruneResult {
   const axisResults: AxisSweepResult[] = [];
   let totalEndpointsProcessed = 0;
   let totalAxisSweeps = 0;
@@ -135,9 +129,7 @@ export function performMultiAxisSweepPrune(
   }
 
   // Find intersection of collision pairs from all axes
-  const combinedPairs = intersectCollisionPairs(
-    axisResults.map(r => sweepAxis(aabbs, r.axis, context).collisionPairs)
-  );
+  const combinedPairs = intersectCollisionPairs(axisResults.map(r => sweepAxis(aabbs, r.axis, context).collisionPairs));
 
   const activeCollisions = combinedPairs.filter(pair => pair.active).length;
 
@@ -154,10 +146,7 @@ export function performMultiAxisSweepPrune(
 /**
  * Perform sweep and prune with spatial partitioning
  */
-export function performSpatialPartitionedSweepPrune(
-  aabbs: AABB[],
-  context: SweepPruneContext
-): SweepPruneResult {
+export function performSpatialPartitionedSweepPrune(aabbs: AABB[], context: SweepPruneContext): SweepPruneResult {
   // Partition AABBs into spatial cells
   const cells = partitionAABBs(aabbs, context.config);
   const allCollisionPairs: CollisionPair[] = [];
@@ -204,10 +193,7 @@ function sweepAxis(
     const minValue = axis === 0 ? aabb.minX : aabb.minY;
     const maxValue = axis === 0 ? aabb.maxX : aabb.maxY;
 
-    endpoints.push(
-      { aabb, isStart: true, value: minValue, axis },
-      { aabb, isStart: false, value: maxValue, axis }
-    );
+    endpoints.push({ aabb, isStart: true, value: minValue, axis }, { aabb, isStart: false, value: maxValue, axis });
   }
 
   // Sort endpoints
@@ -240,4 +226,3 @@ function sweepAxis(
     endpointsProcessed: endpoints.length,
   };
 }
-

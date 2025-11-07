@@ -176,7 +176,7 @@ export function adaptiveMemo<TArgs extends any[], TResult>(
   if (policy?.name && typeof window === "undefined") {
     // Use dynamic import for ES module compatibility (fire-and-forget)
     import("../memo-registry")
-      .then((memoModule) => {
+      .then(memoModule => {
         if (memoModule.memoRegistry) {
           memoModule.memoRegistry.register(policy.name!, ctl);
         }

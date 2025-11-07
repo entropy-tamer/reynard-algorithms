@@ -51,6 +51,3 @@ export class DDALine {
 }
 
 export const DDA = { draw: DDALine.draw };
-
-
-

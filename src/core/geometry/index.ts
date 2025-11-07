@@ -14,5 +14,5 @@
  * @module algorithms/geometry/transformations
  */
 
-// Export transformation algorithms  
+// Export transformation algorithms
 export * from "./transforms";

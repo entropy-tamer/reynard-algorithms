@@ -221,7 +221,7 @@ export class JPS {
           if (!validDirections.includes(jumpPoint.direction!)) {
             continue;
           }
-          
+
           // Calculate tentative g-cost
           const tentativeG = current.g + JPSUtils.getMovementCost(jumpPoint.direction!, this.config.allowDiagonal);
 

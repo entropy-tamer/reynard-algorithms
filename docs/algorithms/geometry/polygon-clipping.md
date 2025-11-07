@@ -61,7 +61,7 @@ Compute the result polygon(s) $P_r$ representing:
 **Edge Classification**: For edge $e$ relative to clipping plane:
 
 - **Inside**: Edge entirely inside clipping region
-- **Outside**: Edge entirely outside clipping region  
+- **Outside**: Edge entirely outside clipping region
 - **Intersecting**: Edge crosses clipping boundary
 
 **Intersection Point**: Point where edge crosses clipping plane boundary.
@@ -189,41 +189,41 @@ $$v_{intersect} = v_1 + t(v_2 - v_1)$$
 ```pseudocode
 function SUTHERLAND_HODGMAN(subject, clipping):
     output = subject
-    
+
     for each edge in clipping:
         input = output
         output = []
-        
+
         for i = 0 to length(input) - 1:
             current = input[i]
             next = input[(i + 1) mod length(input)]
-            
+
             if INSIDE(current, edge):
                 output.append(current)
-            
+
             if EDGE_CROSSES(current, next, edge):
                 intersection = COMPUTE_INTERSECTION(current, next, edge)
                 output.append(intersection)
-    
+
     return output
 
 function WEILER_ATHERTON(subject, clipping, operation):
     // Build edge lists
     subject_edges = BUILD_EDGE_LIST(subject)
     clipping_edges = BUILD_EDGE_LIST(clipping)
-    
+
     // Find intersections
     intersections = FIND_INTERSECTIONS(subject_edges, clipping_edges)
-    
+
     // Build intersection graph
     graph = BUILD_GRAPH(subject_edges, clipping_edges, intersections)
-    
+
     // Traverse based on operation
     result_polygons = []
     for each unvisited_component in graph:
         polygon = TRAVERSE(graph, unvisited_component, operation)
         result_polygons.append(polygon)
-    
+
     return result_polygons
 ```
 
@@ -251,7 +251,7 @@ export class PolygonClipping {
   clip(subject: Polygon, clipping: Polygon, operation: ClipOperation): ClipResult {
     // Auto-select algorithm
     const useWeilerAtherton = this.needsWeilerAtherton(subject, clipping, operation);
-    
+
     if (useWeilerAtherton) {
       return this.weilerAtherton.clip(subject, clipping, operation);
     } else {
@@ -298,34 +298,34 @@ Interactive visualization available in the [Algorithms Demo](/examples/algorithm
 
 ### Theoretical Complexity
 
-| Algorithm | Time Complexity | Space Complexity | Use Case |
-|-----------|----------------|------------------|----------|
-| Sutherland-Hodgman | $O(m \times n)$ | $O(n)$ | Convex clipping |
-| Weiler-Atherton | $O(n \times m + k)$ | $O(n + m + k)$ | General case |
+| Algorithm          | Time Complexity     | Space Complexity | Use Case        |
+| ------------------ | ------------------- | ---------------- | --------------- |
+| Sutherland-Hodgman | $O(m \times n)$     | $O(n)$           | Convex clipping |
+| Weiler-Atherton    | $O(n \times m + k)$ | $O(n + m + k)$   | General case    |
 
 Where:
 
 - $n$ = subject polygon vertices
-- $m$ = clipping polygon vertices  
+- $m$ = clipping polygon vertices
 - $k$ = number of edge intersections
 
 ### Empirical Benchmarks
 
 Performance on various polygon sizes:
 
-| Subject | Clipping | Operation | Algorithm | Time |
-|---------|----------|-----------|------------|------|
-| 100 | 100 | Intersection | Sutherland-Hodgman | 0.15 ms |
-| 1000 | 1000 | Intersection | Sutherland-Hodgman | 1.2 ms |
-| 100 | 100 (concave) | Union | Weiler-Atherton | 0.45 ms |
-| 1000 | 1000 (concave) | Union | Weiler-Atherton | 8.3 ms |
+| Subject | Clipping       | Operation    | Algorithm          | Time    |
+| ------- | -------------- | ------------ | ------------------ | ------- |
+| 100     | 100            | Intersection | Sutherland-Hodgman | 0.15 ms |
+| 1000    | 1000           | Intersection | Sutherland-Hodgman | 1.2 ms  |
+| 100     | 100 (concave)  | Union        | Weiler-Atherton    | 0.45 ms |
+| 1000    | 1000 (concave) | Union        | Weiler-Atherton    | 8.3 ms  |
 
 **Algorithm Selection Impact:**
 
-| Case | Auto-Selected | Time | vs Other |
-|------|---------------|------|----------|
-| Convex-Convex | Sutherland-Hodgman | 0.15 ms | 3× faster |
-| Concave-Any | Weiler-Atherton | 0.45 ms | Correct result |
+| Case          | Auto-Selected      | Time    | vs Other       |
+| ------------- | ------------------ | ------- | -------------- |
+| Convex-Convex | Sutherland-Hodgman | 0.15 ms | 3× faster      |
+| Concave-Any   | Weiler-Atherton    | 0.45 ms | Correct result |
 
 ### When to Use Each Algorithm
 
@@ -367,8 +367,8 @@ const subject = {
     { x: 0, y: 0 },
     { x: 4, y: 0 },
     { x: 4, y: 4 },
-    { x: 0, y: 4 }
-  ]
+    { x: 0, y: 4 },
+  ],
 };
 
 const clipping = {
@@ -376,8 +376,8 @@ const clipping = {
     { x: 2, y: 2 },
     { x: 6, y: 2 },
     { x: 6, y: 6 },
-    { x: 2, y: 6 }
-  ]
+    { x: 2, y: 6 },
+  ],
 };
 
 const result = clipper.intersection(subject, clipping);
@@ -407,9 +407,9 @@ const result = clipper.xor(subject, clipping);
 
 ### Original Papers
 
-1. **Sutherland, I. E., & Hodgman, G. W. (1974).** "Reentrant Polygon Clipping." *Communications of the ACM*, 17(1), 32-42.
+1. **Sutherland, I. E., & Hodgman, G. W. (1974).** "Reentrant Polygon Clipping." _Communications of the ACM_, 17(1), 32-42.
 
-2. **Weiler, K., & Atherton, P. (1977).** "Hidden Surface Removal Using Polygon Area Sorting." *ACM SIGGRAPH*, 214-222.
+2. **Weiler, K., & Atherton, P. (1977).** "Hidden Surface Removal Using Polygon Area Sorting." _ACM SIGGRAPH_, 214-222.
 
 ### Related Algorithms
 

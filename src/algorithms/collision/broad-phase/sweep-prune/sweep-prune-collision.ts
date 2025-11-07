@@ -39,11 +39,7 @@ export function getPairId(aabb1: AABB, aabb2: AABB): string {
 /**
  * Create a collision pair from two AABBs
  */
-export function createCollisionPair(
-  aabb1: AABB,
-  aabb2: AABB,
-  activePairs: Map<string, CollisionPair>
-): CollisionPair {
+export function createCollisionPair(aabb1: AABB, aabb2: AABB, activePairs: Map<string, CollisionPair>): CollisionPair {
   const pairId = getPairId(aabb1, aabb2);
   const existingPair = activePairs.get(pairId);
 
@@ -107,4 +103,3 @@ export function intersectCollisionPairs(axisPairArrays: CollisionPair[][]): Coll
 
   return result;
 }
-

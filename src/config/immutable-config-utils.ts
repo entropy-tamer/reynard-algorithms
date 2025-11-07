@@ -109,6 +109,3 @@ export function addConfigChangeListener(listener: ConfigChangeListener): void {
 export function removeConfigChangeListener(listener: ConfigChangeListener): void {
   getImmutableConfigManager().removeChangeListener(listener);
 }
-
-
-

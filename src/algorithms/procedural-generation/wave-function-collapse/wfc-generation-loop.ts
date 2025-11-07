@@ -98,7 +98,9 @@ export function runGenerationLoop(
     }
 
     backtrackManager.saveState(grid, [...collapsedPositions], iterations);
-    if (!collapseAndPropagate(grid, minEntropyPos, activeConstraints, width, height, depth, collapsedPositions, random)) {
+    if (
+      !collapseAndPropagate(grid, minEntropyPos, activeConstraints, width, height, depth, collapsedPositions, random)
+    ) {
       continue;
     }
 
@@ -107,15 +109,3 @@ export function runGenerationLoop(
 
   return { iterations, success };
 }
-
-
-
-
-
-
-
-
-
-
-
-

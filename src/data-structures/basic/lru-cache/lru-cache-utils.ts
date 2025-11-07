@@ -100,9 +100,7 @@ export function performBatchSet<K, V>(
  * @param cache - Map of cache entries
  * @returns Estimated memory usage in bytes
  */
-export function calculateMemoryUsage<K, V>(
-  cache: Map<K, LRUCacheNode<K, V>>
-): number {
+export function calculateMemoryUsage<K, V>(cache: Map<K, LRUCacheNode<K, V>>): number {
   let estimatedSize = 0;
   for (const [key, node] of cache) {
     estimatedSize += JSON.stringify(key).length * 2; // UTF-16
@@ -160,14 +158,8 @@ export function performTTLCleanup<K, V>(
 ): void {
   const startTime = performance.now();
 
-  const expiredCount = ttlManager.cleanup(
-    cache,
-    deleteFunction,
-    expireCallback
-  );
+  const expiredCount = ttlManager.cleanup(cache, deleteFunction, expireCallback);
 
   recordCleanup(performance.now() - startTime);
   emitCleanupEvent(expiredCount);
 }
-
-

@@ -39,11 +39,7 @@ import {
   createCacheIterator,
   performTTLCleanup,
 } from "./lru-cache-utils";
-import {
-  getValue,
-  setValue,
-  deleteValue,
-} from "./lru-cache-operations";
+import { getValue, setValue, deleteValue } from "./lru-cache-operations";
 import { LRUCacheNodePool } from "./lru-cache-pooling";
 
 /**
@@ -89,8 +85,18 @@ export class LRUCache<K, V> {
     };
     this.linkedList = new LRUCacheLinkedList<K, V>();
     this.statsManager = new LRUCacheStatsManager<K>(this.config.maxSize);
-    this.ttlManager = new LRUCacheTTLManager<K, V>(this.config.ttl, this.config.enableCleanup, this.config.cleanupInterval);
-    this.eventManager = new LRUCacheEventManager<K, V>(options.onEvent, options.onEvict, options.onAccess, options.onSet, options.onDelete);
+    this.ttlManager = new LRUCacheTTLManager<K, V>(
+      this.config.ttl,
+      this.config.enableCleanup,
+      this.config.cleanupInterval
+    );
+    this.eventManager = new LRUCacheEventManager<K, V>(
+      options.onEvent,
+      options.onEvict,
+      options.onAccess,
+      options.onSet,
+      options.onDelete
+    );
     this.nodePool = new LRUCacheNodePool<K, V>(this.config.enableOptimizations, this.config.maxPoolSize);
     if (this.config.enableCleanup && this.config.ttl > 0) {
       this.ttlManager.startCleanupTimer(() => this.performCleanup());
@@ -98,15 +104,43 @@ export class LRUCache<K, V> {
   }
 
   get(key: K): V | undefined {
-    return getValue(key, this.cache, this.linkedList, this.statsManager, this.ttlManager, this.eventManager, this.config.enableStats, (k) => this.delete(k));
+    return getValue(
+      key,
+      this.cache,
+      this.linkedList,
+      this.statsManager,
+      this.ttlManager,
+      this.eventManager,
+      this.config.enableStats,
+      k => this.delete(k)
+    );
   }
 
   set(key: K, value: V): boolean {
-    return setValue(key, value, this.cache, this.linkedList, this.statsManager, this.eventManager, this.config.maxSize, () => this.evict(), () => this.updateMemoryUsage(), (k, v) => this.nodePool.createNode(k, v));
+    return setValue(
+      key,
+      value,
+      this.cache,
+      this.linkedList,
+      this.statsManager,
+      this.eventManager,
+      this.config.maxSize,
+      () => this.evict(),
+      () => this.updateMemoryUsage(),
+      (k, v) => this.nodePool.createNode(k, v)
+    );
   }
 
   delete(key: K): boolean {
-    return deleteValue(key, this.cache, this.linkedList, this.statsManager, this.eventManager, () => this.updateMemoryUsage(), (node) => this.nodePool.returnNodeToPool(node));
+    return deleteValue(
+      key,
+      this.cache,
+      this.linkedList,
+      this.statsManager,
+      this.eventManager,
+      () => this.updateMemoryUsage(),
+      node => this.nodePool.returnNodeToPool(node)
+    );
   }
 
   has(key: K): boolean {
@@ -129,13 +163,27 @@ export class LRUCache<K, V> {
     this.eventManager.emitEvent("clear");
   }
 
-  size(): number { return this.statsManager.getSize(); }
-  maxSize(): number { return this.config.maxSize; }
-  getStats() { return this.statsManager.getStats(); }
-  getPerformanceMetrics() { return this.statsManager.getPerformanceMetrics(); }
-  snapshot(): LRUCacheSnapshot<K, V> { return createCacheSnapshot(this.linkedList, this.ttlManager, this.config, () => this.getStats()); }
-  batchSet(entries: Array<{ key: K; value: V }>): LRUCacheBatchResult<K, V> { return performBatchSet(entries, (key, value) => this.set(key, value)); }
-  [Symbol.iterator](): Iterator<{ key: K; value: V }> { return createCacheIterator(this.linkedList, this.ttlManager); }
+  size(): number {
+    return this.statsManager.getSize();
+  }
+  maxSize(): number {
+    return this.config.maxSize;
+  }
+  getStats() {
+    return this.statsManager.getStats();
+  }
+  getPerformanceMetrics() {
+    return this.statsManager.getPerformanceMetrics();
+  }
+  snapshot(): LRUCacheSnapshot<K, V> {
+    return createCacheSnapshot(this.linkedList, this.ttlManager, this.config, () => this.getStats());
+  }
+  batchSet(entries: Array<{ key: K; value: V }>): LRUCacheBatchResult<K, V> {
+    return performBatchSet(entries, (key, value) => this.set(key, value));
+  }
+  [Symbol.iterator](): Iterator<{ key: K; value: V }> {
+    return createCacheIterator(this.linkedList, this.ttlManager);
+  }
 
   private evict(): void {
     const evictedNode = this.linkedList.evictTail();
@@ -147,9 +195,18 @@ export class LRUCache<K, V> {
   }
 
   private performCleanup(): void {
-    performTTLCleanup(this.ttlManager, this.cache, (key) => this.delete(key), (key) => this.eventManager.emitEvent("expire", key), (time) => this.statsManager.recordCleanup(time), (expiredCount) => this.eventManager.emitEvent("cleanup", undefined, undefined, { expiredCount }));
+    performTTLCleanup(
+      this.ttlManager,
+      this.cache,
+      key => this.delete(key),
+      key => this.eventManager.emitEvent("expire", key),
+      time => this.statsManager.recordCleanup(time),
+      expiredCount => this.eventManager.emitEvent("cleanup", undefined, undefined, { expiredCount })
+    );
   }
-  private updateMemoryUsage(): void { this.statsManager.updateMemoryUsage(() => calculateMemoryUsage(this.cache)); }
+  private updateMemoryUsage(): void {
+    this.statsManager.updateMemoryUsage(() => calculateMemoryUsage(this.cache));
+  }
 
   destroy(): void {
     this.ttlManager.stopCleanupTimer();

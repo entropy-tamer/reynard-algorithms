@@ -136,4 +136,3 @@ export interface SweepPrunePerformanceMetrics {
   /** Efficiency ratio (collisions found per AABB processed) */
   efficiencyRatio: number;
 }
-

@@ -59,6 +59,7 @@ $$Vor(S) = \{V(s_1), V(s_2), ..., V(s_n)\}$$
 **Voronoi Vertex**: Point where three or more Voronoi cells meet. A vertex is equidistant from three or more sites and is the circumcenter of the triangle formed by those sites.
 
 **Dual Relationship**: The Voronoi diagram is the dual graph of the Delaunay triangulation:
+
 - Each Voronoi cell corresponds to a Delaunay vertex (site)
 - Each Voronoi edge corresponds to a Delaunay edge
 - Each Voronoi vertex corresponds to a Delaunay triangle (its circumcenter)
@@ -68,11 +69,13 @@ $$Vor(S) = \{V(s_1), V(s_2), ..., V(s_n)\}$$
 #### Time Complexity
 
 **Fortune's Algorithm** (Sweep Line):
+
 - Best case: $O(n \log n)$
 - Average case: $O(n \log n)$
 - Worst case: $O(n \log n)$
 
 **Delaunay Dual Method** (used in this implementation):
+
 - Delaunay triangulation: $O(n \log n)$
 - Voronoi construction from dual: $O(n)$
 - **Total: $O(n \log n)$**
@@ -126,13 +129,13 @@ function VORONOI_DIAGRAM(sites):
     delaunay = DELAUNAY_TRIANGULATION(sites)
     triangles = delaunay.triangles
     edges = delaunay.edges
-    
+
     // Step 2: Compute Voronoi vertices (circumcenters)
     voronoi_vertices = []
     for each triangle in triangles:
         circumcenter = CIRCUMCENTER(triangle)
         voronoi_vertices.append(circumcenter)
-    
+
     // Step 3: Build Voronoi edges (connect circumcenters of adjacent triangles)
     voronoi_edges = []
     for each edge in edges:
@@ -144,7 +147,7 @@ function VORONOI_DIAGRAM(sites):
         else:
             // Boundary edge - create infinite edge
             voronoi_edges.append(INFINITE_EDGE(...))
-    
+
     // Step 4: Construct Voronoi cells
     voronoi_cells = []
     for each site in sites:
@@ -152,7 +155,7 @@ function VORONOI_DIAGRAM(sites):
         vertices = ORDER_VERTICES(cell_edges)
         cell = CREATE_CELL(site, vertices, cell_edges)
         voronoi_cells.append(cell)
-    
+
     return VoronoiResult(cells, edges, vertices)
 ```
 
@@ -179,21 +182,21 @@ export class VoronoiDiagram {
   generate(sites: Point[]): VoronoiResult {
     // 1. Compute Delaunay triangulation
     const delaunayResult = this.delaunay.triangulate(sites);
-    
+
     // 2. Extract Voronoi vertices (circumcenters)
     const vertices = this.extractVertices(delaunayResult.triangles);
-    
+
     // 3. Build Voronoi edges
     const edges = this.buildEdges(delaunayResult, vertices);
-    
+
     // 4. Construct Voronoi cells
     const cells = this.buildCells(sites, edges, vertices);
-    
+
     return {
       cells,
       edges,
       vertices,
-      stats: this.computeStats()
+      stats: this.computeStats(),
     };
   }
 }
@@ -236,35 +239,36 @@ Interactive visualization available in the [Algorithms Demo](/examples/algorithm
 
 ### Theoretical Complexity
 
-| Operation | Time Complexity | Space Complexity |
-|-----------|----------------|------------------|
-| Diagram Construction | $O(n \log n)$ | $O(n)$ |
-| Nearest Neighbor Query | $O(\log n)$ | $O(1)$ |
-| Lloyd Relaxation (k iterations) | $O(k \times n \log n)$ | $O(n)$ |
-| Cell Area Calculation | $O(n)$ | $O(1)$ |
+| Operation                       | Time Complexity        | Space Complexity |
+| ------------------------------- | ---------------------- | ---------------- |
+| Diagram Construction            | $O(n \log n)$          | $O(n)$           |
+| Nearest Neighbor Query          | $O(\log n)$            | $O(1)$           |
+| Lloyd Relaxation (k iterations) | $O(k \times n \log n)$ | $O(n)$           |
+| Cell Area Calculation           | $O(n)$                 | $O(1)$           |
 
 ### Empirical Benchmarks
 
 Performance on various site counts:
 
-| Sites | Construction Time | Memory Usage |
-|-------|------------------|--------------|
-| 100 | 2.3 ms | 45 KB |
-| 1,000 | 18 ms | 380 KB |
-| 10,000 | 210 ms | 3.2 MB |
-| 100,000 | 2.8 s | 28 MB |
+| Sites   | Construction Time | Memory Usage |
+| ------- | ----------------- | ------------ |
+| 100     | 2.3 ms            | 45 KB        |
+| 1,000   | 18 ms             | 380 KB       |
+| 10,000  | 210 ms            | 3.2 MB       |
+| 100,000 | 2.8 s             | 28 MB        |
 
 **Nearest Neighbor Query Performance:**
 
-| Sites | Query Time | vs Naive |
-|-------|------------|----------|
-| 1,000 | 0.012 ms | 100× faster |
-| 10,000 | 0.018 ms | 550× faster |
-| 100,000 | 0.025 ms | 4,000× faster |
+| Sites   | Query Time | vs Naive      |
+| ------- | ---------- | ------------- |
+| 1,000   | 0.012 ms   | 100× faster   |
+| 10,000  | 0.018 ms   | 550× faster   |
+| 100,000 | 0.025 ms   | 4,000× faster |
 
 ### When to Use Voronoi Diagrams
 
 **Use Voronoi diagrams when:**
+
 - Multiple nearest neighbor queries needed
 - Coverage analysis required
 - Spatial partitioning needed for algorithms
@@ -272,6 +276,7 @@ Performance on various site counts:
 - Visual effects or procedural generation
 
 **Use simpler methods when:**
+
 - Single one-time nearest neighbor query
 - Very few sites (< 10)
 - Memory is extremely constrained
@@ -300,7 +305,7 @@ const sites = [
   { x: 0, y: 0 },
   { x: 100, y: 0 },
   { x: 50, y: 86.6 },
-  { x: 25, y: 43.3 }
+  { x: 25, y: 43.3 },
 ];
 
 // Generate diagram
@@ -324,7 +329,7 @@ const queryPoint = { x: 30, y: 40 };
 
 const queryResult = voronoi.query(queryPoint, {
   returnCell: true,
-  returnDistance: true
+  returnDistance: true,
 });
 
 console.log(`Nearest site: (${queryResult.site.x}, ${queryResult.site.y})`);
@@ -337,7 +342,7 @@ console.log(`Distance: ${queryResult.distance}`);
 // Refine sites for uniform cell sizes
 const relaxed = voronoi.performLloydRelaxation(sites, {
   iterations: 10,
-  tolerance: 1e-6
+  tolerance: 1e-6,
 });
 
 console.log(`Relaxed sites:`, relaxed.sites);
@@ -348,9 +353,9 @@ console.log(`Iterations: ${relaxed.iterations}`);
 
 ### Original Papers
 
-1. **Voronoi, G. (1908).** "Nouvelles applications des paramètres continus à la théorie des formes quadratiques." *Journal für die reine und angewandte Mathematik*, 133, 97-178.
+1. **Voronoi, G. (1908).** "Nouvelles applications des paramètres continus à la théorie des formes quadratiques." _Journal für die reine und angewandte Mathematik_, 133, 97-178.
 
-2. **Fortune, S. (1987).** "A Sweep-line Algorithm for Voronoi Diagrams." *Algorithmica*, 2(1), 153-174.
+2. **Fortune, S. (1987).** "A Sweep-line Algorithm for Voronoi Diagrams." _Algorithmica_, 2(1), 153-174.
 
 ### Related Algorithms
 

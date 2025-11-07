@@ -18,7 +18,12 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { ThetaStar } from "../../algorithms/pathfinding/theta-star/theta-star-core";
 import { LineOfSight } from "../../algorithms/pathfinding/theta-star/line-of-sight";
-import type { Point, CellType, ThetaStarConfig, ThetaStarOptions } from "../../algorithms/pathfinding/theta-star/theta-star-types";
+import type {
+  Point,
+  CellType,
+  ThetaStarConfig,
+  ThetaStarOptions,
+} from "../../algorithms/pathfinding/theta-star/theta-star-types";
 
 describe("ThetaStar Comprehensive Test Suite", () => {
   let thetaStar: ThetaStar;

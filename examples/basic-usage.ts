@@ -148,11 +148,17 @@ export function spatialHashingExample() {
 
   // Query for objects near a point
   const nearby = spatialHash.queryRect(30, 30, 20, 20);
-  console.log("Objects near (30, 30):", nearby.map(obj => obj.id));
+  console.log(
+    "Objects near (30, 30):",
+    nearby.map(obj => obj.id)
+  );
 
   // Query for objects in a region
   const inRegion = spatialHash.queryRect(0, 0, 100, 100);
-  console.log("Objects in region (0,0) to (100,100):", inRegion.map(obj => obj.id));
+  console.log(
+    "Objects in region (0,0) to (100,100):",
+    inRegion.map(obj => obj.id)
+  );
 }
 
 // ============================================================================
@@ -283,14 +289,16 @@ export function geometryOperationsExample() {
 
   // Basic point-in-rectangle check
   const pointInRect =
-    point.x >= rectangle.x && point.x <= rectangle.x + rectangle.width && point.y >= rectangle.y && point.y <= rectangle.y + rectangle.height;
+    point.x >= rectangle.x &&
+    point.x <= rectangle.x + rectangle.width &&
+    point.y >= rectangle.y &&
+    point.y <= rectangle.y + rectangle.height;
   console.log("Point in rectangle:", pointInRect);
 
   // Distance from point to circle edge
   const distanceToCircleEdge = Math.abs(distance - circle.radius);
   console.log("Distance from point to circle edge:", distanceToCircleEdge);
 }
-
 
 // ============================================================================
 // Run All Examples

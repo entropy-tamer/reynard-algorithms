@@ -39,7 +39,12 @@ import { performSingleAxisSweepPrune } from "./sweep-prune-algorithms";
 import { emitEvent } from "./sweep-prune-events";
 import { resetStats } from "./sweep-prune-stats";
 import { detectCollisions as detectCollisionsUtil, type DetectionManager } from "./sweep-prune-detection";
-import { addAABB as addAABBUtil, removeAABB as removeAABBUtil, updateAABB as updateAABBUtil, type AABBManager } from "./sweep-prune-aabb";
+import {
+  addAABB as addAABBUtil,
+  removeAABB as removeAABBUtil,
+  updateAABB as updateAABBUtil,
+  type AABBManager,
+} from "./sweep-prune-aabb";
 import {
   getStats as getStatsAPI,
   getPerformanceMetricsFromAPI,

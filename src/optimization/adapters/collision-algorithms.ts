@@ -11,7 +11,10 @@ import type { AABB, CollisionPair, CollisionResult } from "../../algorithms/coll
 import type { CollisionObjectData } from "../../core/types/spatial-types";
 // import { SpatialHash } from "../../data-structures/spatial/spatial-hash/spatial-structures/spatial-hash-core";
 import { MemoryPool } from "../core/memory-pool";
-import { validateAABBsForCollision, assertValidAABB } from "../../algorithms/collision/narrow-phase/aabb/aabb-validation";
+import {
+  validateAABBsForCollision,
+  assertValidAABB,
+} from "../../algorithms/collision/narrow-phase/aabb/aabb-validation";
 import { getAlgorithmConfig } from "../../config/algorithm-config";
 
 /**

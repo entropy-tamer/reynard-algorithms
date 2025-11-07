@@ -99,10 +99,7 @@ export async function runNaiveCollisionTest(_dataset: TestDataset, _threshold: n
  * @returns Benchmark report
  * @example
  */
-export async function runSpatialCollisionTest(
-  _dataset: TestDataset,
-  _threshold: number
-): Promise<BenchmarkReport> {
+export async function runSpatialCollisionTest(_dataset: TestDataset, _threshold: number): Promise<BenchmarkReport> {
   // Mock implementation - would use actual spatial collision detection
   return benchmarkUtils.createReport("spatial-test", [
     {
@@ -121,10 +118,7 @@ export async function runSpatialCollisionTest(
  * @returns Benchmark report
  * @example
  */
-export async function runOptimizedCollisionTest(
-  _dataset: TestDataset,
-  _threshold: number
-): Promise<BenchmarkReport> {
+export async function runOptimizedCollisionTest(_dataset: TestDataset, _threshold: number): Promise<BenchmarkReport> {
   // Mock implementation - would use actual optimized collision detection
   return benchmarkUtils.createReport("optimized-test", [
     {
@@ -134,5 +128,3 @@ export async function runOptimizedCollisionTest(
     },
   ]);
 }
-
-

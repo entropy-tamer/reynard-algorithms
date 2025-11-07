@@ -6,12 +6,7 @@
  */
 /* eslint-disable max-lines */
 
-import {
-  detectCollisions,
-  SpatialHash,
-  PointOps,
-  checkCollision,
-} from "../src/index.js";
+import { detectCollisions, SpatialHash, PointOps, checkCollision } from "../src/index.js";
 import type { Point, MutablePoint } from "../src/index.js";
 import { OptimizedCollisionAdapter } from "../src/optimization/adapters/optimized-collision-adapter.js";
 import { WorkloadAnalyzer } from "../src/optimization/core/workload-analyzer.js";

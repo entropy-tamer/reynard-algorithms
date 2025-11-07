@@ -58,7 +58,7 @@ describe("PriorityQueue", () => {
       for (let i = 0; i < heap.length; i++) {
         const parent = heap[i];
         if (!parent) continue;
-        
+
         const leftChildIndex = 2 * i + 1;
         const rightChildIndex = 2 * i + 2;
 

@@ -109,4 +109,3 @@ function handleDetectionError(startTime: number, manager: DetectionManager): Swe
   manager.emitEvent(SweepPruneEventType.COLLISION_DETECTION_COMPLETED, result);
   return result;
 }
-

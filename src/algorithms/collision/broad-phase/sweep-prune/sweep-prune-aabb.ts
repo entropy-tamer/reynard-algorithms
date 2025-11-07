@@ -54,4 +54,3 @@ export function updateAABB(aabb: AABB, manager: AABBManager): void {
     }
   }
 }
-

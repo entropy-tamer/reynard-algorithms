@@ -140,33 +140,33 @@ Therefore, the algorithm is correct and optimal.
 function MINIMUM_BOUNDING_BOX(points):
     // Step 1: Compute convex hull
     hull = CONVEX_HULL(points)
-    
+
     if length(hull) < 3:
         return AXIS_ALIGNED_BBOX(points)
-    
+
     min_area = INFINITY
     min_rectangle = null
-    
+
     // Step 2: Rotating calipers
     for i = 0 to length(hull) - 1:
         edge = hull[i] to hull[(i+1) mod length(hull)]
-        
+
         // Align rectangle with edge
         direction = NORMALIZE(edge)
         perpendicular = PERPENDICULAR(direction)
-        
+
         // Project hull onto rectangle axes
         projections_x = PROJECT(hull, direction)
         projections_y = PROJECT(hull, perpendicular)
-        
+
         width = MAX(projections_x) - MIN(projections_x)
         height = MAX(projections_y) - MIN(projections_y)
         area = width * height
-        
+
         if area < min_area:
             min_area = area
             min_rectangle = BUILD_RECTANGLE(edge, width, height)
-    
+
     return min_rectangle
 ```
 
@@ -191,21 +191,21 @@ export class MinimumBoundingBox {
   compute(points: Point[], options: Partial<MinimumBoundingBoxOptions> = {}): MinimumBoundingBoxResult {
     // 1. Validate and deduplicate points
     const uniquePoints = this.removeDuplicates(points);
-    
+
     // 2. Compute convex hull
     if (options.useConvexHull !== false) {
       points = this.computeConvexHull(uniquePoints);
     }
-    
+
     // 3. Apply rotating calipers
     const rectangle = this.computeRotatingCalipers(points, options);
-    
+
     // 4. Normalize and return
     return {
       rectangle,
       area: rectangle.width * rectangle.height,
       perimeter: 2 * (rectangle.width + rectangle.height),
-      quality: this.computeQuality(rectangle, points)
+      quality: this.computeQuality(rectangle, points),
     };
   }
 }
@@ -248,11 +248,11 @@ Interactive visualization available in the [Algorithms Demo](/examples/algorithm
 
 ### Theoretical Complexity
 
-| Operation | Time Complexity | Space Complexity |
-|-----------|----------------|------------------|
-| Convex Hull | $O(n \log n)$ | $O(n)$ |
-| Rotating Calipers | $O(h)$ | $O(1)$ |
-| **Total** | **$O(n \log n)$** | **$O(n)$** |
+| Operation         | Time Complexity   | Space Complexity |
+| ----------------- | ----------------- | ---------------- |
+| Convex Hull       | $O(n \log n)$     | $O(n)$           |
+| Rotating Calipers | $O(h)$            | $O(1)$           |
+| **Total**         | **$O(n \log n)$** | **$O(n)$**       |
 
 Where $h$ = number of hull vertices ($h \leq n$).
 
@@ -260,20 +260,20 @@ Where $h$ = number of hull vertices ($h \leq n$).
 
 Performance on various point set sizes:
 
-| Points | Convex Hull Time | MBB Time | Total Time |
-|--------|------------------|----------|------------|
-| 100 | 0.08 ms | 0.02 ms | 0.10 ms |
-| 1,000 | 0.65 ms | 0.15 ms | 0.80 ms |
-| 10,000 | 7.2 ms | 1.1 ms | 8.3 ms |
-| 100,000 | 85 ms | 12 ms | 97 ms |
+| Points  | Convex Hull Time | MBB Time | Total Time |
+| ------- | ---------------- | -------- | ---------- |
+| 100     | 0.08 ms          | 0.02 ms  | 0.10 ms    |
+| 1,000   | 0.65 ms          | 0.15 ms  | 0.80 ms    |
+| 10,000  | 7.2 ms           | 1.1 ms   | 8.3 ms     |
+| 100,000 | 85 ms            | 12 ms    | 97 ms      |
 
 **Hull Reduction Impact:**
 
-| Points | Hull Vertices | Reduction | Speedup |
-|--------|---------------|-----------|---------|
-| 1,000 | 127 | 87.3% | 7.9× |
-| 10,000 | 1,423 | 85.8% | 7.0× |
-| 100,000 | 14,892 | 85.1% | 6.7× |
+| Points  | Hull Vertices | Reduction | Speedup |
+| ------- | ------------- | --------- | ------- |
+| 1,000   | 127           | 87.3%     | 7.9×    |
+| 10,000  | 1,423         | 85.8%     | 7.0×    |
+| 100,000 | 14,892        | 85.1%     | 6.7×    |
 
 ### When to Use Minimum Bounding Box
 
@@ -313,7 +313,7 @@ const points = [
   { x: 10, y: 5 },
   { x: 5, y: 10 },
   { x: -2, y: 8 },
-  { x: 8, y: -3 }
+  { x: 8, y: -3 },
 ];
 
 const result = mbb.compute(points);
@@ -331,7 +331,7 @@ console.log(`  Perimeter: ${result.perimeter}`);
 ```typescript
 const result = mbb.compute(points, {
   optimizeForArea: false,
-  optimizeForPerimeter: true
+  optimizeForPerimeter: true,
 });
 ```
 
@@ -339,7 +339,7 @@ const result = mbb.compute(points, {
 
 ```typescript
 const result = mbb.compute(points, {
-  useConvexHull: false  // Use all points directly
+  useConvexHull: false, // Use all points directly
 });
 ```
 
@@ -347,9 +347,9 @@ const result = mbb.compute(points, {
 
 ### Original Papers
 
-1. **Shamos, M. I. (1978).** "Computational Geometry." *PhD Thesis, Yale University*. Introduced rotating calipers concept.
+1. **Shamos, M. I. (1978).** "Computational Geometry." _PhD Thesis, Yale University_. Introduced rotating calipers concept.
 
-2. **Toussaint, G. T. (1983).** "Solving Geometric Problems with the Rotating Calipers." *Proceedings of IEEE MELECON*.
+2. **Toussaint, G. T. (1983).** "Solving Geometric Problems with the Rotating Calipers." _Proceedings of IEEE MELECON_.
 
 ### Related Algorithms
 

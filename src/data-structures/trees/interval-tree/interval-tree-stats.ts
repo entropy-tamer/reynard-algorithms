@@ -143,6 +143,3 @@ function collectIntervals(node: IntervalTreeNode | null, intervals: Interval[]):
   collectIntervals(node.left, intervals);
   collectIntervals(node.right, intervals);
 }
-
-
-

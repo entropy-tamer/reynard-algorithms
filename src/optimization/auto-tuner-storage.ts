@@ -76,16 +76,3 @@ export function saveCalibrationResult(result: CalibrationResult, verbose: boolea
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,10 +1,10 @@
 import { LRUCache } from "./src/data-structures/basic/lru-cache";
 
 // Quick test to verify pooling doesn't hang
-const cache = new LRUCache<string, number>({ 
+const cache = new LRUCache<string, number>({
   maxSize: 10,
   enableOptimizations: true,
-  maxPoolSize: 100
+  maxPoolSize: 100,
 });
 
 console.log("Testing basic operations...");
@@ -26,14 +26,3 @@ cache.destroy();
 console.log("✓ Destroy operation works");
 
 console.log("\n✅ All operations completed successfully - no hanging!");
-
-
-
-
-
-
-
-
-
-
-

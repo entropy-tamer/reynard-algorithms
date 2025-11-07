@@ -27,7 +27,7 @@ function run() {
     }
   }
   const t1 = performance.now();
-   
+
   console.log(`[memo-geometry] totalMs=${(t1 - t0).toFixed(3)}`);
 }
 

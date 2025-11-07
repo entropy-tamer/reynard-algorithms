@@ -71,6 +71,3 @@ function deserializeNode(data: any): IntervalTreeNode | null {
     size: data.size || 1,
   };
 }
-
-
-

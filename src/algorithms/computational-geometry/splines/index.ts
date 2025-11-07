@@ -11,4 +11,3 @@ export * from "./bezier-types.js";
 // Catmull-Rom splines
 export * from "./catmull-rom-core.js";
 export * from "./catmull-rom-types.js";
-

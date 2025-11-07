@@ -70,11 +70,7 @@ function calculateCatmullRomControlPoints(
  * Evaluate a Catmull-Rom segment at parameter t (0 to 1)
  * Uses the standard Catmull-Rom formula
  */
-export function evaluateCatmullRomSegment(
-  segment: CatmullRomSegment,
-  t: number,
-  tension: number = 0.5
-): Point {
+export function evaluateCatmullRomSegment(segment: CatmullRomSegment, t: number, tension: number = 0.5): Point {
   const { p0, p1, p2, p3 } = segment;
   const { c1, c2 } = calculateCatmullRomControlPoints(p0, p1, p2, p3, tension);
 
@@ -94,11 +90,7 @@ export function evaluateCatmullRomSegment(
 /**
  * Calculate the derivative (tangent) of a Catmull-Rom segment at parameter t
  */
-export function derivativeCatmullRomSegment(
-  segment: CatmullRomSegment,
-  t: number,
-  tension: number = 0.5
-): Point {
+export function derivativeCatmullRomSegment(segment: CatmullRomSegment, t: number, tension: number = 0.5): Point {
   const { p0, p1, p2, p3 } = segment;
   const { c1, c2 } = calculateCatmullRomControlPoints(p0, p1, p2, p3, tension);
 
@@ -151,10 +143,7 @@ export function evaluateCatmullRomSegmentFull(
 /**
  * Generate a Catmull-Rom spline from a series of control points
  */
-export function generateCatmullRomSpline(
-  points: Point[],
-  options: CatmullRomOptions = {}
-): CatmullRomResult {
+export function generateCatmullRomSpline(points: Point[], options: CatmullRomOptions = {}): CatmullRomResult {
   if (points.length < 2) {
     return {
       points: [...points],
@@ -181,7 +170,10 @@ export function generateCatmullRomSpline(
         { x: 2 * points[0].x - points[1].x, y: 2 * points[0].y - points[1].y },
         ...points,
         // Add virtual end point
-        { x: 2 * points[points.length - 1].x - points[points.length - 2].x, y: 2 * points[points.length - 1].y - points[points.length - 2].y },
+        {
+          x: 2 * points[points.length - 1].x - points[points.length - 2].x,
+          y: 2 * points[points.length - 1].y - points[points.length - 2].y,
+        },
       ];
 
   // Generate segments
@@ -247,11 +239,7 @@ export function generateCatmullRomSpline(
 /**
  * Generate a Catmull-Rom spline path string for SVG
  */
-export function generateCatmullRomSVGPath(
-  points: Point[],
-  tension: number = 0.5,
-  closed: boolean = false
-): string {
+export function generateCatmullRomSVGPath(points: Point[], tension: number = 0.5, closed: boolean = false): string {
   if (points.length < 2) return "";
 
   const result = generateCatmullRomSpline(points, {
@@ -263,4 +251,3 @@ export function generateCatmullRomSVGPath(
 
   return result.svgPath;
 }
-

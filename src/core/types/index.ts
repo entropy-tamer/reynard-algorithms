@@ -1,6 +1,6 @@
 /**
  * @file Canonical Type Definitions
- * 
+ *
  * Single source of truth for core geometric and spatial types used throughout
  * the algorithms package. All modules should import from here to avoid type aliasing.
  */
@@ -215,4 +215,3 @@ export type {
   SpatialHashConfig,
   SpatialHashStats,
 } from "./performance-types";
-

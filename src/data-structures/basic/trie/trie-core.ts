@@ -747,11 +747,11 @@ export class Trie {
     if (result.deleted && result.shouldCleanup) {
       node.children.delete(char);
       this.emitEvent(TrieEventType.NODE_DELETED, { node: child, char });
-      
+
       // If current node is not end of word and has no children, it can also be deleted
-      return { 
-        deleted: true, 
-        shouldCleanup: !node.isEndOfWord && node.children.size === 0 && node !== this.root 
+      return {
+        deleted: true,
+        shouldCleanup: !node.isEndOfWord && node.children.size === 0 && node !== this.root,
       };
     }
 

@@ -6,11 +6,7 @@
  * @module algorithms/dataStructures/lruCacheEvents
  */
 
-import {
-  LRUCacheEvent,
-  LRUCacheEventType,
-  LRUCacheEventHandler,
-} from "./lru-cache-types";
+import { LRUCacheEvent, LRUCacheEventType, LRUCacheEventHandler } from "./lru-cache-types";
 
 /**
  * Event manager for LRU cache
@@ -44,12 +40,7 @@ export class LRUCacheEventManager<K, V> {
    * @param value - Event value
    * @param metadata - Additional metadata
    */
-  emitEvent(
-    type: LRUCacheEventType,
-    key?: K,
-    value?: V,
-    metadata?: Record<string, any>
-  ): void {
+  emitEvent(type: LRUCacheEventType, key?: K, value?: V, metadata?: Record<string, any>): void {
     const event: LRUCacheEvent<K, V> = {
       type,
       timestamp: Date.now(),
@@ -90,15 +81,3 @@ export class LRUCacheEventManager<K, V> {
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-

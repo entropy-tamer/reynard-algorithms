@@ -5,10 +5,7 @@
  */
 
 import type { AlgorithmConfig } from "../config/algorithm-config";
-import type {
-  CalibrationTestResult,
-  AlgorithmCalibrationResult,
-} from "./auto-tuner-types";
+import type { CalibrationTestResult, AlgorithmCalibrationResult } from "./auto-tuner-types";
 
 /**
  * Analyze algorithm test results to find optimal thresholds
@@ -136,16 +133,3 @@ export function generateRecommendedConfig(
 
   return config;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

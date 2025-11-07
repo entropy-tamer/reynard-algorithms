@@ -428,6 +428,3 @@ describe("Comprehensive Pathfinding Validation", () => {
     return new Array(width * height).fill(0); // All walkable
   }
 });
-
-
-

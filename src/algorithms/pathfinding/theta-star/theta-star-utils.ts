@@ -731,7 +731,7 @@ export class ThetaStarUtils {
           result += "?";
           continue;
         }
-        
+
         const point = { x, y };
 
         if (start && this.pointsEqual(point, start, 1e-10)) {

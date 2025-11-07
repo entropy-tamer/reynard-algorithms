@@ -79,4 +79,3 @@ export interface BezierEvaluation {
   /** Curvature at this point */
   curvature: number;
 }
-

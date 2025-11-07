@@ -114,11 +114,7 @@ export class LRUCacheStatsManager<K> {
    * @param accessCount - The access count for the key
    * @param getNodeAccessCount - Function to get access count for comparison
    */
-  updateMostAccessedKey(
-    key: K,
-    accessCount: number,
-    getNodeAccessCount: (key: K) => number | undefined
-  ): void {
+  updateMostAccessedKey(key: K, accessCount: number, getNodeAccessCount: (key: K) => number | undefined): void {
     if (!this.stats.mostAccessedKey) {
       this.stats.mostAccessedKey = key;
       return;
@@ -187,15 +183,3 @@ export class LRUCacheStatsManager<K> {
     return this.stats.size;
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-

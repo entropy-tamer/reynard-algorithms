@@ -19,6 +19,3 @@ export function emitEvent(eventHandlers: IntervalTreeEventHandler[], type: Inter
 }
 
 export { IntervalTreeEventType };
-
-
-

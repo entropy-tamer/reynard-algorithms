@@ -55,9 +55,7 @@ export function getValue<K, V>(
   eventManager.emitEvent("get", key, node.value, { hit: true });
 
   if (enableStats) {
-    statsManager.updateMostAccessedKey(key, node.accessCount, (k) =>
-      cache.get(k)?.accessCount
-    );
+    statsManager.updateMostAccessedKey(key, node.accessCount, k => cache.get(k)?.accessCount);
   }
 
   return node.value;
@@ -132,6 +130,3 @@ export function deleteValue<K, V>(
   eventManager.emitEvent("delete", key, node.value);
   return true;
 }
-
-
-

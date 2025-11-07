@@ -88,7 +88,9 @@ export class HPAStar {
       throw new Error(`Invalid cluster size: ${this.config.clusterSize}`);
     }
     if (this.config.cardinalCost <= 0 || this.config.diagonalCost <= 0) {
-      throw new Error(`Invalid movement costs: cardinal=${this.config.cardinalCost}, diagonal=${this.config.diagonalCost}`);
+      throw new Error(
+        `Invalid movement costs: cardinal=${this.config.cardinalCost}, diagonal=${this.config.diagonalCost}`
+      );
     }
 
     this.stats = {
@@ -639,7 +641,7 @@ export class HPAStar {
    */
   updateConfig(newConfig: Partial<HPAConfig>): void {
     const updatedConfig = { ...this.config, ...newConfig };
-    
+
     // Validate configuration
     if (updatedConfig.width <= 0 || updatedConfig.height <= 0) {
       throw new Error(`Invalid grid dimensions: width=${updatedConfig.width}, height=${updatedConfig.height}`);
@@ -648,9 +650,11 @@ export class HPAStar {
       throw new Error(`Invalid cluster size: ${updatedConfig.clusterSize}`);
     }
     if (updatedConfig.cardinalCost <= 0 || updatedConfig.diagonalCost <= 0) {
-      throw new Error(`Invalid movement costs: cardinal=${updatedConfig.cardinalCost}, diagonal=${updatedConfig.diagonalCost}`);
+      throw new Error(
+        `Invalid movement costs: cardinal=${updatedConfig.cardinalCost}, diagonal=${updatedConfig.diagonalCost}`
+      );
     }
-    
+
     this.config = updatedConfig;
     // Clear cache when configuration changes
     this.clearCache();

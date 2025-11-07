@@ -299,7 +299,7 @@ describe("JPS", () => {
 
     it("should handle different movement types", () => {
       const start: Point = { x: 0, y: 0 };
-      
+
       // Test cardinal movement - use goal reachable with cardinal-only
       const cardinalGoal: Point = { x: 9, y: 0 };
       jps.updateConfig({ movementType: MovementType.CARDINAL, allowDiagonal: false });
@@ -356,9 +356,9 @@ describe("JPS", () => {
 
       const result1 = jps.findPath(grid, width, height, start, goal);
       expect(result1.found).toBe(true);
-      
+
       jps.clearCache();
-      
+
       // Run the same path again - should recalculate (not use cache)
       const result2 = jps.findPath(grid, width, height, start, goal);
       expect(result2.found).toBe(true);

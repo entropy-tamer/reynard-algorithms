@@ -15,7 +15,7 @@ function run() {
   const t0 = performance.now();
   for (let r = 0; r < 50; r++) for (const [a, b] of pairs) euclideanDistance(pts[a], pts[b]);
   const t1 = performance.now();
-   
+
   console.log(`[memo-heuristics] totalMs=${(t1 - t0).toFixed(3)}`);
 }
 

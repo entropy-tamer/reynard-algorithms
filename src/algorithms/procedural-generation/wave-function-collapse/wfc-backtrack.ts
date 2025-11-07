@@ -195,7 +195,13 @@ export function resetCell(cell: Cell, initialTiles: string[]): void {
  * @param depth Grid depth
  * @example resetGrid(grid, ['tile1'], 10, 10, 1)
  */
-export function resetGrid(grid: Cell[][][], initialTiles: string[], width: number, height: number, depth: number): void {
+export function resetGrid(
+  grid: Cell[][][],
+  initialTiles: string[],
+  width: number,
+  height: number,
+  depth: number
+): void {
   for (let z = 0; z < depth; z++) {
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
@@ -254,7 +260,11 @@ export function getBacktrackStats(backtrackManager: BacktrackManager): {
   canBacktrack: boolean;
   maxSteps: number;
 } {
-  return { stateCount: backtrackManager.getStateCount(), canBacktrack: backtrackManager.canBacktrack(), maxSteps: 1000 };
+  return {
+    stateCount: backtrackManager.getStateCount(),
+    canBacktrack: backtrackManager.canBacktrack(),
+    maxSteps: 1000,
+  };
 }
 /**
  * Create initial grid state

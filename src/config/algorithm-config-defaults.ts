@@ -60,6 +60,3 @@ export const DEFAULT_CONFIG: AlgorithmConfig = {
   },
   version: "1.0.0",
 };
-
-
-
