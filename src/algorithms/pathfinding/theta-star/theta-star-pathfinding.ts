@@ -16,6 +16,7 @@ import type {
   ThetaStarOptions,
 } from "./theta-star-types";
 import { CellType, Direction, MovementType } from "./theta-star-types";
+import { calculateHeuristic } from "./theta-star-heuristic";
 
 /**
  * Find path using Theta* algorithm
@@ -46,6 +47,22 @@ export function findThetaStarPath(
   const startTime = performance.now();
 
   try {
+    // Check if start and goal are the same
+    if (pointsEqual(start, goal, config.tolerance)) {
+      const executionTime = performance.now() - startTime;
+      stats.executionTime = executionTime;
+      return {
+        found: true,
+        path: [start],
+        cost: 0,
+        length: 1,
+        explored: [],
+        stats,
+        executionTime,
+        metadata: { iterations: 0, lineOfSightChecks: 0 },
+      };
+    }
+
     // Initialize open and closed sets
     const openSet: ThetaStarNode[] = [];
     const openSetMap = new Map<string, ThetaStarNode>();
@@ -80,7 +97,7 @@ export function findThetaStarPath(
 
       // Check if we reached the goal
       const currentNodePoint = { x: currentNode.x, y: currentNode.y };
-      if (pointsEqual(currentNodePoint, goal)) {
+      if (pointsEqual(currentNodePoint, goal, config.tolerance)) {
         const path = reconstructPath(currentNode);
         const executionTime = performance.now() - startTime;
         stats.executionTime = executionTime;

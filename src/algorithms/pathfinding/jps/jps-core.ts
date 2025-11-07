@@ -216,6 +216,12 @@ export class JPS {
             continue;
           }
 
+          // Check if movement type allows this direction
+          const validDirections = JPSUtils.getValidDirections(this.config.movementType, this.config.allowDiagonal);
+          if (!validDirections.includes(jumpPoint.direction!)) {
+            continue;
+          }
+          
           // Calculate tentative g-cost
           const tentativeG = current.g + JPSUtils.getMovementCost(jumpPoint.direction!, this.config.allowDiagonal);
 

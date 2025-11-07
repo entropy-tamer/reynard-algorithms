@@ -393,6 +393,43 @@ export type {
   StatusNode,
 } from "./algorithms/computational-geometry/line-intersection/line-intersection-types";
 
+// Bezier Curves
+export {
+  evaluateQuadraticBezier,
+  evaluateCubicBezier,
+  derivativeQuadraticBezier,
+  derivativeCubicBezier,
+  evaluateQuadraticBezierFull,
+  evaluateCubicBezierFull,
+  generateQuadraticBezierPoints,
+  generateCubicBezierPoints,
+  quadraticToCubic,
+} from "./algorithms/computational-geometry/splines/bezier-core";
+export type {
+  BezierConfig,
+  BezierResult,
+  QuadraticBezier,
+  CubicBezier,
+  BezierOptions,
+  BezierEvaluation,
+} from "./algorithms/computational-geometry/splines/bezier-types";
+
+// Catmull-Rom Splines
+export {
+  evaluateCatmullRomSegment,
+  derivativeCatmullRomSegment,
+  evaluateCatmullRomSegmentFull,
+  generateCatmullRomSpline,
+  generateCatmullRomSVGPath,
+} from "./algorithms/computational-geometry/splines/catmull-rom-core";
+export type {
+  CatmullRomConfig,
+  CatmullRomResult,
+  CatmullRomSegment,
+  CatmullRomOptions,
+  CatmullRomEvaluation,
+} from "./algorithms/computational-geometry/splines/catmull-rom-types";
+
 // Oriented Bounding Box (OBB)
 export { OBB } from "./algorithms/collision/narrow-phase/obb/obb-core";
 export { OBBUtils } from "./algorithms/collision/narrow-phase/obb/obb-utils";

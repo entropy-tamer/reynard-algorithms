@@ -131,10 +131,8 @@ export function validatePathfindingParams(
     errors.push(`Invalid goal point: (${goal.x}, ${goal.y})`);
   }
 
-  // Check if start and goal are the same
-  if (pointsEqual(start, goal)) {
-    errors.push("Start and goal points are the same");
-  }
+  // Check if start and goal are the same (this is allowed, just a warning)
+  // Don't add as error since findPath handles this case
 
   return {
     isValid: errors.length === 0,

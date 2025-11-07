@@ -61,6 +61,7 @@ export function generateIntegrationField(
       queue.push({ point: goal, cost: 0 });
       visited.add(pointToKey(goal));
       stats.goalCells++;
+      stats.cellsProcessed++; // Count goal cells as processed
     }
   }
 
@@ -69,11 +70,13 @@ export function generateIntegrationField(
     queue.sort((a, b) => a.cost - b.cost);
     const current = queue.shift()!;
     const currentIndex = current.point.y * width + current.point.x;
+    const currentKey = pointToKey(current.point);
 
-    if (integrationField[currentIndex].processed) {
+    if (visited.has(currentKey) && integrationField[currentIndex].processed) {
       continue;
     }
 
+    visited.add(currentKey);
     integrationField[currentIndex].processed = true;
     stats.cellsProcessed++;
 

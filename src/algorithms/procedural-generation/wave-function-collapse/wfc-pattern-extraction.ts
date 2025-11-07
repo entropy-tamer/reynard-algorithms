@@ -150,3 +150,12 @@ export function extractPatternString(grid: any[][][], x: number, y: number, z: n
 
 
 
+
+
+
+
+
+
+
+
+

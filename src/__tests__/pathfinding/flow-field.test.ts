@@ -3,7 +3,9 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { FlowField, FlowFieldUtils, FlowFieldGenerator } from "../../algorithms/pathfinding/flow-field/flow-field-core";
+import { FlowField } from "../../algorithms/pathfinding/flow-field/flow-field-core";
+import { FlowFieldUtils } from "../../algorithms/pathfinding/flow-field/flow-field-utils";
+import { FlowFieldGenerator } from "../../algorithms/pathfinding/flow-field/flow-field-generator";
 import type { Point, CellType } from "../../algorithms/pathfinding/flow-field/flow-field-types";
 import { CellType as FlowFieldCellType } from "../../algorithms/pathfinding/flow-field/flow-field-types";
 
@@ -521,7 +523,7 @@ describe("FlowFieldUtils", () => {
         FlowFieldCellType.OBSTACLE,
       ];
       const goals: Point[] = [{ x: 0, y: 0 }];
-      const agents: Point[] = [{ x: 2, y: 0 }];
+      const agents: Point[] = [{ x: 1, y: 0 }]; // Fix: x=1 (not 2) since width is 2
 
       const str = FlowFieldUtils.gridToString(grid, 2, 2, goals, agents);
 
@@ -554,7 +556,7 @@ describe("FlowFieldGenerator", () => {
     it("should generate integration field", () => {
       const grid = FlowFieldUtils.generateTestGrid(10, 10, 0.2, 42);
       const goals: Point[] = [{ x: 9, y: 9 }];
-      const config = FlowFieldUtils.createDefaultConfig();
+      const config = { ...FlowFieldUtils.createDefaultConfig(), width: 10, height: 10 };
 
       const integrationField = FlowFieldGenerator.generateIntegrationField(grid, goals, config);
 
@@ -568,7 +570,7 @@ describe("FlowFieldGenerator", () => {
         { x: 0, y: 0 },
         { x: 9, y: 9 },
       ];
-      const config = FlowFieldUtils.createDefaultConfig();
+      const config = { ...FlowFieldUtils.createDefaultConfig(), width: 10, height: 10 };
 
       const integrationField = FlowFieldGenerator.generateIntegrationField(grid, goals, config);
 
@@ -581,10 +583,10 @@ describe("FlowFieldGenerator", () => {
     it("should generate flow field from integration field", () => {
       const grid = FlowFieldUtils.generateTestGrid(10, 10, 0.2, 42);
       const goals: Point[] = [{ x: 9, y: 9 }];
-      const config = FlowFieldUtils.createDefaultConfig();
+      const config = { ...FlowFieldUtils.createDefaultConfig(), width: 10, height: 10 };
 
       const integrationField = FlowFieldGenerator.generateIntegrationField(grid, goals, config);
-      const flowField = FlowFieldGenerator.generateFlowField(integrationField, grid, config);
+      const flowField = FlowFieldGenerator.generateFlowFieldFromIntegration(integrationField, grid, config);
 
       expect(flowField.length).toBe(100);
       expect(flowField.some(cell => cell.valid)).toBe(true);
@@ -593,7 +595,7 @@ describe("FlowFieldGenerator", () => {
     it("should generate complete flow field", () => {
       const grid = FlowFieldUtils.generateTestGrid(10, 10, 0.2, 42);
       const goals: Point[] = [{ x: 9, y: 9 }];
-      const config = FlowFieldUtils.createDefaultConfig();
+      const config = { ...FlowFieldUtils.createDefaultConfig(), width: 10, height: 10 };
 
       const result = FlowFieldGenerator.generateFlowField(grid, goals, config);
 
@@ -606,7 +608,7 @@ describe("FlowFieldGenerator", () => {
     it("should generate multi-goal flow field", () => {
       const grid = FlowFieldUtils.generateTestGrid(10, 10, 0.2, 42);
       const goalGroups: Point[][] = [[{ x: 0, y: 0 }], [{ x: 9, y: 9 }]];
-      const config = FlowFieldUtils.createDefaultConfig();
+      const config = { ...FlowFieldUtils.createDefaultConfig(), width: 10, height: 10 };
 
       const result = FlowFieldGenerator.generateMultiGoalFlowField(grid, goalGroups, config);
 

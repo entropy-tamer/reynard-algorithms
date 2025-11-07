@@ -3,7 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { ThetaStar, ThetaStarUtils } from "../../algorithms/pathfinding/theta-star/theta-star-core";
+import { ThetaStar } from "../../algorithms/pathfinding/theta-star/theta-star-core";
+import { ThetaStarUtils } from "../../algorithms/pathfinding/theta-star/theta-star-utils";
 import { LineOfSight } from "../../algorithms/pathfinding/theta-star/line-of-sight";
 import type { Point, CellType, Direction, MovementType } from "../../algorithms/pathfinding/theta-star/theta-star-types";
 import {
@@ -184,7 +185,7 @@ describe("ThetaStar", () => {
       const validation = thetaStar.validateGrid(blockedGrid, width, height, start, goal);
 
       expect(validation.isValid).toBe(false);
-      expect(validation.errors.some(e => e.includes("Start point is not walkable"))).toBe(true);
+      expect(validation.errors.some(e => e.includes("Start point out of bounds or not walkable") || e.includes("Start point is not walkable"))).toBe(true);
     });
 
     it("should detect non-walkable goal point", () => {
@@ -197,7 +198,7 @@ describe("ThetaStar", () => {
       const validation = thetaStar.validateGrid(blockedGrid, width, height, start, goal);
 
       expect(validation.isValid).toBe(false);
-      expect(validation.errors.some(e => e.includes("Goal point is not walkable"))).toBe(true);
+      expect(validation.errors.some(e => e.includes("Goal point out of bounds or not walkable") || e.includes("Goal point is not walkable"))).toBe(true);
     });
   });
 
@@ -242,7 +243,7 @@ describe("ThetaStar", () => {
       const result1 = thetaStar.findPath(grid, width, height, start, goal);
       const result2 = thetaStar.findPath(grid, width, height, start, goal);
 
-      const comparison = thetaStar.compare(result1, result2);
+      const comparison = thetaStar.compareResults(result1, result2);
 
       expect(comparison.areEquivalent).toBe(true);
       expect(comparison.similarity).toBeGreaterThan(0);
@@ -567,9 +568,18 @@ describe("ThetaStarUtils", () => {
 
       const sorted = ThetaStarUtils.sortPointsByDistance(target, points);
 
+      // {x: 5, y: 6} is closest (distance 1)
       expect(sorted[0]).toEqual({ x: 5, y: 6 });
-      expect(sorted[1]).toEqual({ x: 0, y: 0 });
-      expect(sorted[2]).toEqual({ x: 10, y: 10 });
+      // {x: 0, y: 0} and {x: 10, y: 10} are both distance ~7.07, so order may vary
+      // Just verify distances are sorted correctly
+      const dist1 = ThetaStarUtils.distance(target, sorted[0]);
+      const dist2 = ThetaStarUtils.distance(target, sorted[1]);
+      const dist3 = ThetaStarUtils.distance(target, sorted[2]);
+      expect(dist1).toBeLessThanOrEqual(dist2);
+      expect(dist2).toBeLessThanOrEqual(dist3);
+      // Verify all points are present
+      expect(sorted).toContainEqual({ x: 0, y: 0 });
+      expect(sorted).toContainEqual({ x: 10, y: 10 });
     });
   });
 
@@ -595,7 +605,7 @@ describe("ThetaStarUtils", () => {
     it("should convert grid to string", () => {
       const grid: CellType[] = [0, 1, 0, 1, 0, 1, 0, 1, 0, 1];
       const start: Point = { x: 0, y: 0 };
-      const goal: Point = { x: 2, y: 2 };
+      const goal: Point = { x: 2, y: 1 }; // Fix: goal.y = 1 (not 2) since height is 2
 
       const str = ThetaStarUtils.gridToString(grid, 5, 2, start, goal);
 

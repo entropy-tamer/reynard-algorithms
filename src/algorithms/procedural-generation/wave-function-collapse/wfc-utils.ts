@@ -46,3 +46,12 @@ export function getEmptyAnalysis(): WaveFunctionCollapseAnalysis {
 
 
 
+
+
+
+
+
+
+
+
+

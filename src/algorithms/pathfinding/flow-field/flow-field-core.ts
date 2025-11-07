@@ -236,11 +236,29 @@ export class FlowField {
    */
   validateFlowField(
     flowField: FlowCell[],
-    width: number,
-    height: number,
-    options: Partial<FlowFieldValidationOptions> = {}
+    integrationFieldOrWidth?: IntegrationCell[] | number,
+    optionsOrHeight?: Partial<FlowFieldValidationOptions> | number,
+    options?: Partial<FlowFieldValidationOptions>
   ): FlowFieldValidationResult {
-    return validateFlowField(flowField, width, height, options);
+    // Handle both signatures: (flowField, integrationField, options) and (flowField, width, height, options)
+    let width: number;
+    let height: number;
+    let validationOptions: Partial<FlowFieldValidationOptions> = {};
+    
+    if (typeof integrationFieldOrWidth === 'number') {
+      // Old signature: (flowField, width, height, options)
+      width = integrationFieldOrWidth;
+      height = optionsOrHeight as number;
+      validationOptions = (options || {}) as Partial<FlowFieldValidationOptions>;
+    } else {
+      // New signature: (flowField, integrationField, options)
+      const integrationField = integrationFieldOrWidth;
+      width = this.config.width || (integrationField && integrationField.length > 0 ? Math.sqrt(integrationField.length) : 0);
+      height = this.config.height || (integrationField && integrationField.length > 0 ? Math.sqrt(integrationField.length) : 0);
+      validationOptions = (optionsOrHeight || {}) as Partial<FlowFieldValidationOptions>;
+    }
+    
+    return validateFlowField(flowField, width, height, validationOptions);
   }
 
   /**
@@ -253,13 +271,26 @@ export class FlowField {
    * @example
    */
   compareFlowFields(
-    flowField1: FlowCell[],
-    flowField2: FlowCell[],
-    width: number,
-    height: number,
-    options: Partial<FlowFieldComparisonOptions> = {}
+    flowField1OrResult1: FlowCell[] | FlowFieldResult,
+    flowField2OrResult2?: FlowCell[] | FlowFieldResult,
+    widthOrOptions?: number | Partial<FlowFieldComparisonOptions>,
+    heightOrUndefined?: number,
+    options?: Partial<FlowFieldComparisonOptions>
   ): FlowFieldComparisonResult {
-    return compareFlowFields(flowField1, flowField2, width, height, options);
+    // Handle both signatures: (result1, result2) and (flowField1, flowField2, width, height, options)
+    if ('flowField' in flowField1OrResult1 && flowField2OrResult2 && 'flowField' in flowField2OrResult2) {
+      // New signature: (result1, result2)
+      return compareFlowFieldResults(flowField1OrResult1 as FlowFieldResult, flowField2OrResult2 as FlowFieldResult, widthOrOptions as Partial<FlowFieldComparisonOptions> || {});
+    } else {
+      // Old signature: (flowField1, flowField2, width, height, options)
+      return compareFlowFields(
+        flowField1OrResult1 as FlowCell[],
+        flowField2OrResult2 as FlowCell[],
+        widthOrOptions as number,
+        heightOrUndefined as number,
+        options || {}
+      );
+    }
   }
 
   /**

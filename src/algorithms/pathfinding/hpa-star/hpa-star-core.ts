@@ -80,6 +80,17 @@ export class HPAStar {
       ...config,
     };
 
+    // Validate configuration
+    if (this.config.width <= 0 || this.config.height <= 0) {
+      throw new Error(`Invalid grid dimensions: width=${this.config.width}, height=${this.config.height}`);
+    }
+    if (this.config.clusterSize <= 0) {
+      throw new Error(`Invalid cluster size: ${this.config.clusterSize}`);
+    }
+    if (this.config.cardinalCost <= 0 || this.config.diagonalCost <= 0) {
+      throw new Error(`Invalid movement costs: cardinal=${this.config.cardinalCost}, diagonal=${this.config.diagonalCost}`);
+    }
+
     this.stats = {
       clustersCreated: 0,
       entrancesFound: 0,
@@ -153,6 +164,23 @@ export class HPAStar {
         this.generateClusters(grid);
       }
 
+      // Check if start and goal are the same
+      const dx = Math.abs(start.x - goal.x);
+      const dy = Math.abs(start.y - goal.y);
+      if (dx < this.config.tolerance && dy < this.config.tolerance) {
+        const executionTime = performance.now() - startTime;
+        this.resetStats();
+        return {
+          path: [start],
+          found: true,
+          cost: 0,
+          length: 1,
+          abstractPath: [],
+          refinedPath: [start],
+          stats: this.getStats(),
+        };
+      }
+
       // Find abstract path
       const abstractPath = this.findAbstractPath(start, goal, hpaOptions);
 
@@ -167,17 +195,33 @@ export class HPAStar {
         return this.createFailureResult(startTime, "Path refinement failed");
       }
 
+      // Ensure path starts at start and ends at goal
+      const finalPath: Point[] = [];
+      if (refinedPath.length > 0) {
+        // Add start if not already at the beginning
+        if (refinedPath[0].x !== start.x || refinedPath[0].y !== start.y) {
+          finalPath.push(start);
+        }
+        // Add refined path
+        finalPath.push(...refinedPath);
+        // Ensure goal is at the end
+        const lastPoint = finalPath[finalPath.length - 1];
+        if (lastPoint.x !== goal.x || lastPoint.y !== goal.y) {
+          finalPath.push(goal);
+        }
+      }
+
       const executionTime = performance.now() - startTime;
       this.stats.executionTime = executionTime;
       this.stats.success = true;
 
       const result: HPAResult = {
-        path: refinedPath,
+        path: finalPath.length > 0 ? finalPath : refinedPath,
         found: true,
-        cost: this.calculatePathCost(refinedPath),
-        length: refinedPath.length,
+        cost: this.calculatePathCost(finalPath.length > 0 ? finalPath : refinedPath),
+        length: finalPath.length > 0 ? finalPath.length : refinedPath.length,
         abstractPath,
-        refinedPath,
+        refinedPath: finalPath.length > 0 ? finalPath : refinedPath,
         stats: this.getStats(),
       };
 
@@ -594,7 +638,20 @@ export class HPAStar {
    * @example
    */
   updateConfig(newConfig: Partial<HPAConfig>): void {
-    this.config = { ...this.config, ...newConfig };
+    const updatedConfig = { ...this.config, ...newConfig };
+    
+    // Validate configuration
+    if (updatedConfig.width <= 0 || updatedConfig.height <= 0) {
+      throw new Error(`Invalid grid dimensions: width=${updatedConfig.width}, height=${updatedConfig.height}`);
+    }
+    if (updatedConfig.clusterSize <= 0) {
+      throw new Error(`Invalid cluster size: ${updatedConfig.clusterSize}`);
+    }
+    if (updatedConfig.cardinalCost <= 0 || updatedConfig.diagonalCost <= 0) {
+      throw new Error(`Invalid movement costs: cardinal=${updatedConfig.cardinalCost}, diagonal=${updatedConfig.diagonalCost}`);
+    }
+    
+    this.config = updatedConfig;
     // Clear cache when configuration changes
     this.clearCache();
   }

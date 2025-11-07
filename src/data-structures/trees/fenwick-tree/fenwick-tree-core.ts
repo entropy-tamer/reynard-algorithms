@@ -350,14 +350,14 @@ export class FenwickTree {
         };
       }
 
-      // Range update using the range update technique
-      this.add(start, value, nodesUpdatedRef);
-      if (end + 1 < this.array.length) {
-        this.add(end + 1, -value, nodesUpdatedRef);
-      }
-
-      // Update the array
+      // Range update: update each element in the range
+      // For Fenwick Tree, we can either:
+      // 1. Use range update technique (requires modified queries)
+      // 2. Update each element individually (simpler, still O(log n) per element)
+      // This implementation uses approach 2 for simplicity
       for (let i = start; i <= end; i++) {
+        const difference = value; // We're adding value to each element
+        this.add(i, difference, nodesUpdatedRef);
         this.array[i] += value;
       }
 

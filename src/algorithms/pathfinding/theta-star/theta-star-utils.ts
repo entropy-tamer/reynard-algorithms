@@ -727,11 +727,16 @@ export class ThetaStarUtils {
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const index = y * width + x;
+        if (index >= grid.length) {
+          result += "?";
+          continue;
+        }
+        
         const point = { x, y };
 
-        if (start && this.pointsEqual(point, start)) {
+        if (start && this.pointsEqual(point, start, 1e-10)) {
           result += "S";
-        } else if (goal && this.pointsEqual(point, goal)) {
+        } else if (goal && this.pointsEqual(point, goal, 1e-10)) {
           result += "G";
         } else {
           switch (grid[index]) {

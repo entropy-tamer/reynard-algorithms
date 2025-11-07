@@ -77,9 +77,8 @@ export class PriorityQueue<T> {
       averageExtractTime: 0,
     };
 
-    // Initialize heap with initial capacity
-    this.heap = new Array(this.config.initialCapacity);
-    this.heap.length = 0; // Set actual length to 0
+    // Initialize heap with empty array
+    this.heap = [];
   }
 
   /**
@@ -153,12 +152,23 @@ export class PriorityQueue<T> {
 
     // Get root element (highest priority)
     const root = this.heap[0];
+    if (!root) {
+      return undefined;
+    }
+
+    const rootData = root.data;
+    const rootPriority = root.priority;
 
     // Move last element to root
-    const lastElement = this.heap.pop()!;
+    const lastElement = this.heap.pop();
+    if (!lastElement) {
+      // This shouldn't happen if isEmpty() worked correctly, but guard against it
+      return undefined;
+    }
     this.stats.size--;
 
-    if (!this.isEmpty()) {
+    // If heap still has elements after popping, move last element to root and bubble down
+    if (this.heap.length > 0) {
       this.heap[0] = lastElement;
       // Bubble down to maintain heap property
       this.bubbleDown(0);
@@ -167,8 +177,8 @@ export class PriorityQueue<T> {
     this.stats.extractCount++;
     this.updateAverageExtractTime(performance.now() - startTime);
 
-    this.emitEvent("extract", root.data, root.priority);
-    return root.data;
+    this.emitEvent("extract", rootData, rootPriority);
+    return rootData;
   }
 
   /**
@@ -203,7 +213,7 @@ export class PriorityQueue<T> {
    * @example
    */
   size(): number {
-    return this.stats.size;
+    return this.heap.length;
   }
 
   /**
@@ -213,7 +223,7 @@ export class PriorityQueue<T> {
    * @example
    */
   isEmpty(): boolean {
-    return this.stats.size === 0;
+    return this.heap.length === 0;
   }
 
   /**
@@ -221,7 +231,7 @@ export class PriorityQueue<T> {
    * @example
    */
   clear(): void {
-    this.heap.length = 0;
+    this.heap = [];
     this.stats.size = 0;
     this.emitEvent("clear");
   }

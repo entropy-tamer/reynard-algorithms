@@ -33,6 +33,11 @@ import { ThetaStarCache, generatePathCacheKey } from "./theta-star-cache";
 import { validateGrid, validatePathfindingParams, validatePath } from "./theta-star-validation";
 import { LineOfSight } from "./line-of-sight";
 
+// Helper function to check if point is within bounds
+function isWithinBounds(point: Point, width: number, height: number): boolean {
+  return point.x >= 0 && point.x < width && point.y >= 0 && point.y < height;
+}
+
 /**
  * The ThetaStar class provides functionality for pathfinding using the Theta* algorithm.
  * Theta* is an any-angle pathfinding algorithm that produces smoother, more natural paths
@@ -108,6 +113,40 @@ export class ThetaStar {
     };
 
     try {
+      // Skip if grid is empty (check before start==goal check)
+      if (grid.length === 0 || width === 0 || height === 0) {
+        const executionTime = performance.now() - startTime;
+        this.resetStats();
+        return {
+          found: false,
+          path: [],
+          cost: 0,
+          length: 0,
+          explored: [],
+          stats: this.stats,
+          executionTime,
+          metadata: { error: "Empty grid", iterations: 0, lineOfSightChecks: 0 },
+        };
+      }
+
+      // Check if start and goal are the same (early return before validation)
+      const dx = Math.abs(start.x - goal.x);
+      const dy = Math.abs(start.y - goal.y);
+      if (dx < this.config.tolerance && dy < this.config.tolerance) {
+        const executionTime = performance.now() - startTime;
+        this.resetStats();
+        return {
+          found: true,
+          path: [start],
+          cost: 0,
+          length: 1,
+          explored: [],
+          stats: this.stats,
+          executionTime,
+          metadata: { iterations: 0, lineOfSightChecks: 0 },
+        };
+      }
+
       // Validate input
       if (this.config.validateInput) {
         const gridValidation = validateGrid(grid, width, height);
@@ -179,9 +218,50 @@ export class ThetaStar {
     grid: CellType[],
     width: number,
     height: number,
+    start?: Point,
+    goal?: Point,
     options: Partial<GridValidationOptions> = {}
   ): GridValidationResult {
-    return validateGrid(grid, width, height, options);
+    const result = validateGrid(grid, width, height, options);
+    
+    // If start/goal are provided, validate them
+    const errors: string[] = [];
+    
+    if (start !== undefined) {
+      // Check if start is within bounds
+      if (!isWithinBounds(start, width, height)) {
+        errors.push(`Start point out of bounds: (${start.x}, ${start.y})`);
+      } else {
+        // Check if start is walkable
+        const index = start.y * width + start.x;
+        if (grid[index] === CellType.OBSTACLE) {
+          errors.push("Start point is not walkable");
+        }
+      }
+    }
+    
+    if (goal !== undefined) {
+      // Check if goal is within bounds
+      if (!isWithinBounds(goal, width, height)) {
+        errors.push(`Goal point out of bounds: (${goal.x}, ${goal.y})`);
+      } else {
+        // Check if goal is walkable
+        const index = goal.y * width + goal.x;
+        if (grid[index] === CellType.OBSTACLE) {
+          errors.push("Goal point is not walkable");
+        }
+      }
+    }
+    
+    if (errors.length > 0) {
+      return {
+        ...result,
+        isValid: false,
+        errors: [...result.errors, ...errors],
+      };
+    }
+    
+    return result;
   }
 
   /**
@@ -210,6 +290,10 @@ export class ThetaStar {
    * @param options
    * @example
    */
+  compareResults(result1: ThetaStarResult, result2: ThetaStarResult, options: Partial<PathComparisonOptions> = {}): PathComparisonResult {
+    return this.compare(result1.path, result2.path, options);
+  }
+
   compare(path1: Point[], path2: Point[], options: Partial<PathComparisonOptions> = {}): PathComparisonResult {
     const comparisonOptions: PathComparisonOptions = {
       tolerance: 1e-10,
