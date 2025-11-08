@@ -62,7 +62,7 @@
     "happy-dom": "20.0.8",
     "@entropy-tamer/reynard-testing": "workspace:*",
     "typescript": "5.9.3",
-    "vite": "7.1.11",
+    "vite": "7.2.2",
     "vite-plugin-solid": "2.11.10",
     "vitest": "4.0.5"
   },

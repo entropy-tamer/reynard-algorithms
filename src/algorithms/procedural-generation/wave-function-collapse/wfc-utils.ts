@@ -43,3 +43,9 @@ export function getEmptyAnalysis(): WaveFunctionCollapseAnalysis {
     executionTime: 0,
   };
 }
+
+
+
+
+
+

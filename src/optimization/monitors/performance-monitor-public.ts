@@ -103,3 +103,9 @@ export class PerformanceMonitor {
     this.adapter.resetStatistics();
   }
 }
+
+
+
+
+
+

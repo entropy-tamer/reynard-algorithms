@@ -94,3 +94,9 @@ export interface MultiAxisSweepResult {
   /** Most efficient axis */
   mostEfficientAxis: number;
 }
+
+
+
+
+
+
