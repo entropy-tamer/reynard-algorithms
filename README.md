@@ -60,6 +60,12 @@ A comprehensive collection of reusable algorithmic building blocks with automati
 - **🌊 Flow Field** - Potential field pathfinding for crowd simulation
 - **🏗️ HPA\*** - Hierarchical Pathfinding for large-scale pathfinding
 
+### Machine Learning - Dimensionality Reduction
+
+- **🗺️ Isomap** - Non-linear dimensionality reduction preserving geodesic distances
+- **📊 PCA** - Principal Component Analysis for linear dimensionality reduction
+- **📉 MDS** - Multidimensional Scaling for distance-preserving embeddings
+
 ## Installation
 
 ```bash

@@ -83,6 +83,19 @@ export class AlgorithmSelector {
   }
 
   /**
+   * Select optimal procedural generation algorithm
+   * @param workload
+   * @example
+   */
+  selectProceduralAlgorithm(workload: WorkloadCharacteristics): AlgorithmSelection {
+    const analysis = this.workloadAnalyzer.analyzeWorkload(workload);
+    const selection = this.algorithmSelectorCore.selectOptimalProceduralAlgorithm(analysis);
+
+    this.performanceTracker.recordSelection(selection, workload);
+    return selection;
+  }
+
+  /**
    * Update performance model with new results
    * @param result
    * @example

@@ -358,10 +358,35 @@ export type {
   WAPolygon,
   PolygonValidationOptions,
   PolygonValidationResult,
-  PolygonSimplificationOptions,
+  PolygonSimplificationOptions as PolygonClippingSimplificationOptions,
   PolygonSerializationOptions,
   PolygonSerialization,
 } from "./algorithms/computational-geometry/polygon-clipping/polygon-clipping-types";
+
+// Polygon Simplification
+export {
+  PolygonSimplifier,
+  simplifyPolygon,
+} from "./algorithms/computational-geometry/polygon/polygon-simplification-core";
+export type {
+  PolygonSimplificationConfig,
+  PolygonSimplificationResult,
+  PolygonSimplificationOptions,
+  SimplificationAlgorithm,
+} from "./algorithms/computational-geometry/polygon/polygon-simplification-types";
+
+// Polygon Boolean Operations
+export {
+  PolygonBooleanOps,
+  performPolygonBoolean,
+  BooleanOperation,
+} from "./algorithms/computational-geometry/polygon/polygon-boolean-core";
+export type {
+  Polygon as PolygonBooleanPolygon,
+  PolygonBooleanConfig,
+  PolygonBooleanResult,
+  PolygonBooleanOptions,
+} from "./algorithms/computational-geometry/polygon/polygon-boolean-types";
 
 // Line Segment Intersection
 export { LineIntersection } from "./algorithms/computational-geometry/line-intersection/line-intersection-core";
@@ -427,6 +452,57 @@ export type {
   CatmullRomOptions,
   CatmullRomEvaluation,
 } from "./algorithms/computational-geometry/splines/catmull-rom-types";
+
+// B-Splines
+export {
+  BSplineCurve,
+  evaluateBSpline,
+  evaluateBSplineFull,
+  generateBSplinePoints,
+  generateUniformKnotVector,
+  generateNonUniformKnotVector,
+  basisFunction,
+} from "./algorithms/computational-geometry/splines/b-spline-core";
+export type {
+  BSpline,
+  BSplineConfig,
+  BSplineResult,
+  BSplineOptions,
+  BSplineEvaluation,
+  KnotVectorOptions,
+} from "./algorithms/computational-geometry/splines/b-spline-types";
+
+// NURBS
+export {
+  NURBSCurve,
+  evaluateNURBS,
+  evaluateNURBSFull,
+  generateNURBSPoints,
+} from "./algorithms/computational-geometry/splines/nurbs-core";
+export type {
+  NURBS,
+  NURBSConfig,
+  NURBSResult,
+  NURBSOptions,
+  NURBSEvaluation,
+} from "./algorithms/computational-geometry/splines/nurbs-types";
+
+// Hermite Splines
+export {
+  HermiteSpline,
+  evaluateHermiteSegment,
+  evaluateHermiteSegmentFull,
+  derivativeHermiteSegment,
+  generateHermiteSpline,
+  createHermiteSegments,
+} from "./algorithms/computational-geometry/splines/hermite-core";
+export type {
+  HermiteConfig,
+  HermiteResult,
+  HermiteSegment,
+  HermiteOptions,
+  HermiteEvaluation,
+} from "./algorithms/computational-geometry/splines/hermite-types";
 
 // Oriented Bounding Box (OBB)
 export { OBB } from "./algorithms/collision/narrow-phase/obb/obb-core";
@@ -495,11 +571,30 @@ export type {
   HullSimplificationResult,
 } from "./algorithms/computational-geometry/convex-hull/convex-hull-types";
 
+// Circular Positioning
+export {
+  calculateCircularPosition,
+  calculateCircularPositionFull,
+  calculateRadialPositions,
+  degreesToRadians,
+  radiansToDegrees,
+  normalizeAngle,
+  calculateArcLength,
+  calculateSectorArea,
+} from "./algorithms/computational-geometry/circular";
+export type {
+  CircularPositionOptions,
+  RadialDistributionOptions,
+  CircularPositionResult,
+} from "./algorithms/computational-geometry/circular";
+
 // ============================================================================
 // Algorithms - Procedural Generation
 // ============================================================================
-// Marching Squares Algorithm
+// Marching Squares Algorithm (Refined LUT - Default)
 export { MarchingSquares } from "./algorithms/procedural-generation/marching-squares/marching-squares-core";
+// Marching Squares Algorithm (Legacy - Preserved for backward compatibility)
+export { MarchingSquaresLegacy } from "./algorithms/procedural-generation/marching-squares/marching-squares-legacy";
 export type {
   Point as MarchingSquaresPoint,
   Vector as MarchingSquaresVector,
@@ -518,6 +613,11 @@ export type {
 
 // Simplex Noise Algorithm
 export { SimplexNoise } from "./algorithms/procedural-generation/simplex-noise/simplex-noise-core";
+export {
+  generateMultiscaleNoise2D as generateMultiscaleSimplexNoise2D,
+  generateMultiscaleNoise3D as generateMultiscaleSimplexNoise3D,
+  generateMultiscaleNoise4D as generateMultiscaleSimplexNoise4D,
+} from "./algorithms/procedural-generation/simplex-noise/simplex-noise-multiscale";
 export type {
   Point2D,
   Point3D as SimplexPoint3D,
@@ -533,7 +633,36 @@ export type {
   NoiseAnalysis,
   NoiseFilterOptions,
   NoiseFilterResult,
+  MultiscaleSimplexNoiseOptions,
+  MultiscaleSimplexNoiseResult,
+  ScaleDefinition as SimplexScaleDefinition,
+  MultiscaleCombinationMode as SimplexMultiscaleCombinationMode,
+  ScaleStats as SimplexScaleStats,
 } from "./algorithms/procedural-generation/simplex-noise/simplex-noise-types";
+
+// Perlin Noise Algorithm
+export {
+  PerlinNoise,
+  perlinNoise2D,
+  perlinNoise3D,
+  fractalPerlinNoise2D,
+} from "./algorithms/procedural-generation/perlin-noise/perlin-noise-core";
+export {
+  generateMultiscaleNoise2D,
+  generateMultiscaleNoise3D,
+} from "./algorithms/procedural-generation/perlin-noise/perlin-noise-multiscale";
+export type {
+  PerlinNoiseConfig,
+  PerlinNoiseResult,
+  PerlinNoiseOptions,
+  FractalPerlinNoiseOptions,
+  PerlinNoiseStats,
+  MultiscalePerlinNoiseOptions,
+  MultiscalePerlinNoiseResult,
+  ScaleDefinition as PerlinScaleDefinition,
+  MultiscaleCombinationMode as PerlinMultiscaleCombinationMode,
+  ScaleStats as PerlinScaleStats,
+} from "./algorithms/procedural-generation/perlin-noise/perlin-noise-types";
 
 // Poisson Disk Sampling Algorithm
 export { PoissonDisk } from "./algorithms/procedural-generation/poisson-disk/poisson-disk-core";
@@ -751,6 +880,54 @@ export type {
 } from "./algorithms/pathfinding/hpa-star/hpa-star-types";
 
 // ============================================================================
+// Algorithms - Graph Layout
+// ============================================================================
+// Force-Directed Graph Layout
+export {
+  ForceDirectedLayout,
+  performForceDirectedLayout,
+  ForceDirectedAlgorithm,
+} from "./algorithms/graph/force-directed-core";
+export type {
+  Graph,
+  GraphNode,
+  GraphEdge,
+  ForceDirectedConfig,
+  ForceDirectedResult,
+  ForceDirectedOptions,
+} from "./algorithms/graph/force-directed-types";
+
+// ============================================================================
+// Algorithms - Machine Learning - Dimensionality Reduction
+// ============================================================================
+// Isomap
+export { Isomap } from "./algorithms/machine-learning/dimensionality-reduction/isomap";
+export type {
+  IsomapConfig,
+  IsomapResult,
+  IsomapOptions,
+} from "./algorithms/machine-learning/dimensionality-reduction/isomap/isomap-types";
+export { DEFAULT_ISOMAP_CONFIG } from "./algorithms/machine-learning/dimensionality-reduction/isomap/isomap-types";
+
+// PCA
+export { PCA } from "./algorithms/machine-learning/dimensionality-reduction/pca";
+export type {
+  PCAConfig,
+  PCAResult,
+  PCAOptions,
+} from "./algorithms/machine-learning/dimensionality-reduction/pca/pca-types";
+export { DEFAULT_PCA_CONFIG } from "./algorithms/machine-learning/dimensionality-reduction/pca/pca-types";
+
+// MDS
+export { MDS } from "./algorithms/machine-learning/dimensionality-reduction/mds";
+export type {
+  MDSConfig,
+  MDSResult,
+  MDSOptions,
+} from "./algorithms/machine-learning/dimensionality-reduction/mds/mds-types";
+export { DEFAULT_MDS_CONFIG } from "./algorithms/machine-learning/dimensionality-reduction/mds/mds-types";
+
+// ============================================================================
 // Utils - Performance
 // ============================================================================
 export { PerformanceTimer } from "./utils/performance/timer";
@@ -797,3 +974,10 @@ export {
   configureOptimization,
   cleanup,
 } from "./optimized";
+
+// PAW Optimization Adapters
+export { OptimizedMarchingSquaresAdapter } from "./optimization/adapters/optimized-marching-squares-adapter";
+export type {
+  OptimizedMarchingSquaresConfig,
+  MarchingSquaresPerformanceStats,
+} from "./optimization/adapters/optimized-marching-squares-adapter";

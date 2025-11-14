@@ -10,6 +10,7 @@ import type { WorkloadAnalysis, AlgorithmSelection } from "./algorithm-selector-
 import { CollisionSelector } from "./collision-selector";
 import { SpatialSelector } from "./spatial-selector";
 import { UnionFindSelector } from "./union-find-selector";
+import { ProceduralSelector } from "./procedural-selector";
 
 /**
  * Core algorithm selection logic
@@ -18,6 +19,7 @@ export class AlgorithmSelectorCore {
   private collisionSelector: CollisionSelector;
   private spatialSelector: SpatialSelector;
   private unionFindSelector: UnionFindSelector;
+  private proceduralSelector: ProceduralSelector;
 
   /**
    *
@@ -27,6 +29,7 @@ export class AlgorithmSelectorCore {
     this.collisionSelector = new CollisionSelector();
     this.spatialSelector = new SpatialSelector();
     this.unionFindSelector = new UnionFindSelector();
+    this.proceduralSelector = new ProceduralSelector();
   }
 
   /**
@@ -56,5 +59,15 @@ export class AlgorithmSelectorCore {
    */
   selectOptimalUnionFindAlgorithm(analysis: WorkloadAnalysis): AlgorithmSelection {
     return this.unionFindSelector.selectOptimalUnionFindAlgorithm(analysis);
+  }
+
+  /**
+   * Select optimal procedural generation algorithm
+   * @param analysis
+   * @param t
+   * @example
+   */
+  selectOptimalProceduralAlgorithm(analysis: WorkloadAnalysis, t?: (key: string) => string): AlgorithmSelection {
+    return this.proceduralSelector.selectOptimalProceduralAlgorithm(analysis, t);
   }
 }

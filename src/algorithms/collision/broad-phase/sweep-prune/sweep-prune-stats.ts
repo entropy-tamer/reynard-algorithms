@@ -89,9 +89,3 @@ export function resetStats(): SweepPruneStats {
     memoryUsage: 0,
   };
 }
-
-
-
-
-
-

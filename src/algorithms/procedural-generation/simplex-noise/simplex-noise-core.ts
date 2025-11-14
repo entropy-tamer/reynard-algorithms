@@ -14,7 +14,14 @@ import {
   NoiseAnalysis,
   NoiseFilterOptions,
   NoiseFilterResult,
+  MultiscaleSimplexNoiseOptions,
+  MultiscaleSimplexNoiseResult,
 } from "./simplex-noise-types";
+import {
+  generateMultiscaleNoise2D,
+  generateMultiscaleNoise3D,
+  generateMultiscaleNoise4D,
+} from "./simplex-noise-multiscale";
 
 import { initializeGradients, initializePermutation } from "./simplex-noise-init";
 import {
@@ -322,5 +329,66 @@ export class SimplexNoise {
     this.p = p;
     this.perm = perm;
     this.permMod12 = permMod12;
+  }
+
+  /**
+   * Generates 2D multiscale noise.
+   * @param x - X coordinate.
+   * @param y - Y coordinate.
+   * @param options - Multiscale noise options.
+   * @returns Multiscale noise result with individual scales and combined value.
+   * @example
+   * ```typescript
+   * const result = simplexNoise.multiscaleNoise2D(10, 20, {
+   *   scales: [
+   *     { frequency: 0.01, amplitude: 1.0, name: "terrain" },
+   *     { frequency: 0.05, amplitude: 0.5, name: "features" }
+   *   ],
+   *   combinationMode: "additive"
+   * });
+   * console.log(result.combined); // Combined value
+   * console.log(result.scales.get("terrain")); // Individual scale value
+   * ```
+   */
+  multiscaleNoise2D(x: number, y: number, options: MultiscaleSimplexNoiseOptions): MultiscaleSimplexNoiseResult {
+    return generateMultiscaleNoise2D(x, y, options, this.config, this.grad3, this.perm, this.permMod12);
+  }
+
+  /**
+   * Generates 3D multiscale noise.
+   * @param x - X coordinate.
+   * @param y - Y coordinate.
+   * @param z - Z coordinate.
+   * @param options - Multiscale noise options.
+   * @returns Multiscale noise result with individual scales and combined value.
+   * @example
+   */
+  multiscaleNoise3D(
+    x: number,
+    y: number,
+    z: number,
+    options: MultiscaleSimplexNoiseOptions
+  ): MultiscaleSimplexNoiseResult {
+    return generateMultiscaleNoise3D(x, y, z, options, this.config, this.grad3, this.perm, this.permMod12);
+  }
+
+  /**
+   * Generates 4D multiscale noise.
+   * @param x - X coordinate.
+   * @param y - Y coordinate.
+   * @param z - Z coordinate.
+   * @param w - W coordinate.
+   * @param options - Multiscale noise options.
+   * @returns Multiscale noise result with individual scales and combined value.
+   * @example
+   */
+  multiscaleNoise4D(
+    x: number,
+    y: number,
+    z: number,
+    w: number,
+    options: MultiscaleSimplexNoiseOptions
+  ): MultiscaleSimplexNoiseResult {
+    return generateMultiscaleNoise4D(x, y, z, w, options, this.config, this.grad4, this.perm, this.permMod12);
   }
 }

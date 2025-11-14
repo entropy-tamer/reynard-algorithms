@@ -24,6 +24,15 @@ export {
   type OptimizedCollisionConfig,
 } from "./adapters/optimized-collision-adapter";
 
+export {
+  OptimizedMarchingSquaresAdapter,
+  type MarchingSquaresPerformanceStats,
+  type OptimizedMarchingSquaresConfig,
+} from "./adapters/optimized-marching-squares-adapter";
+
+// Procedural generation selector
+export { ProceduralSelector } from "./core/procedural-selector";
+
 // Legacy optimizations removed - use OptimizedCollisionAdapter instead
 
 // Re-export types for convenience

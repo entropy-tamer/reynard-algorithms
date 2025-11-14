@@ -84,9 +84,3 @@ export function getTilePositions(grid: any[][][], tileId: string): Position3D[] 
 
   return positions;
 }
-
-
-
-
-
-

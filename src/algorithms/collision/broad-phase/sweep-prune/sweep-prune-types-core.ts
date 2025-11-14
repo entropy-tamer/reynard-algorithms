@@ -69,9 +69,3 @@ export interface SweepPruneResult {
   /** Number of axis sweeps performed */
   axisSweeps: number;
 }
-
-
-
-
-
-

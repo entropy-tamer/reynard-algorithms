@@ -16,7 +16,6 @@ import type {
   ThetaStarOptions,
 } from "./theta-star-types";
 import { CellType, Direction, MovementType } from "./theta-star-types";
-import { calculateHeuristic } from "./theta-star-heuristic";
 
 /**
  * Find path using Theta* algorithm

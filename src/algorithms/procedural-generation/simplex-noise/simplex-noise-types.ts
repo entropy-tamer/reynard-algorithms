@@ -25,3 +25,12 @@ export type { NoiseAnalysisOptions, NoiseAnalysis } from "./types/analysis";
 
 // Filter types
 export type { NoiseFilterOptions, NoiseFilterResult } from "./types/filter";
+
+// Multiscale types
+export type {
+  ScaleDefinition,
+  MultiscaleCombinationMode,
+  ScaleStats,
+  MultiscaleSimplexNoiseOptions,
+  MultiscaleSimplexNoiseResult,
+} from "./types/multiscale";

@@ -7,6 +7,7 @@
  */
 
 import { vi } from "vitest";
+import type { MockedFunction } from "vitest";
 import type { PerformanceBudget, PerformanceMetrics } from "./types";
 
 // ============================================================================
@@ -80,7 +81,7 @@ export function createAtLimitMetrics(): PerformanceMetrics {
 // ============================================================================
 
 // Mock performance.now for consistent testing
-export const mockPerformanceNow = vi.fn();
+export const mockPerformanceNow: MockedFunction<() => number> = vi.fn();
 export const originalPerformance = global.performance;
 
 export const setupPerformanceMock = () => {

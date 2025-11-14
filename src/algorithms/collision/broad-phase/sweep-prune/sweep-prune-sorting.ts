@@ -90,9 +90,3 @@ export function compareEndpoints(a: Endpoint, b: Endpoint, config: SweepPruneCon
   // Tertiary sort by AABB ID for stability
   return String(a.aabb.id).localeCompare(String(b.aabb.id));
 }
-
-
-
-
-
-

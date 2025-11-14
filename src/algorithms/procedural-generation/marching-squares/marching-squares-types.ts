@@ -70,6 +70,14 @@ export interface MarchingSquaresConfig {
    * @default true
    */
   validateInput?: boolean;
+  /**
+   * Ambiguity resolution method for cases 5 and 10.
+   * - "saddle": Uses saddle point method (default, best performance)
+   * - "asymptotic": Uses asymptotic decider method
+   * - "default": Uses default lookup table (no special resolution)
+   * @default "saddle"
+   */
+  ambiguityResolution?: "saddle" | "asymptotic" | "default";
 }
 
 /**

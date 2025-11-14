@@ -90,9 +90,3 @@ export function checkInterCellCollisions(
 
   return interCellPairs;
 }
-
-
-
-
-
-

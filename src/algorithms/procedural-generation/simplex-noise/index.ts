@@ -4,6 +4,7 @@
  */
 
 export { SimplexNoise } from "./simplex-noise-core";
+export * from "./simplex-noise-multiscale";
 export type {
   Point2D,
   Point3D,
@@ -19,4 +20,9 @@ export type {
   NoiseAnalysis,
   NoiseFilterOptions,
   NoiseFilterResult,
+  MultiscaleSimplexNoiseOptions,
+  MultiscaleSimplexNoiseResult,
+  ScaleDefinition,
+  MultiscaleCombinationMode,
+  ScaleStats,
 } from "./simplex-noise-types";
