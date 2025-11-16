@@ -109,8 +109,3 @@ export function calculateSectorArea(radius: number, angle: number, unit: "degree
   const angleRad = unit === "degrees" ? degreesToRadians(angle) : angle;
   return (radius * radius * angleRad) / 2;
 }
-
-
-
-
-

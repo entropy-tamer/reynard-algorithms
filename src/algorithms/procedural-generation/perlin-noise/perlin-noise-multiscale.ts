@@ -150,8 +150,3 @@ export function generateMultiscaleNoise3D(
     combined,
   };
 }
-
-
-
-
-

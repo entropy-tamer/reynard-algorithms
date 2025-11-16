@@ -179,3 +179,4 @@ pnpm tsx src/__bench__/marching-squares-benchmark.ts
 - [Marching Squares Algorithm](./marching-squares.md) - Main algorithm documentation
 - [PAW Optimization](./optimization/marching-squares-optimization.md) - Optimization framework
 
+

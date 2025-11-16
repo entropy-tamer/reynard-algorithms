@@ -75,28 +75,24 @@ describe("Marching Squares PAW Integration", () => {
       expect(stats.averageExecutionTime).toBeGreaterThan(0);
     });
 
-    it(
-      "should provide optimization recommendations",
-      { timeout: 30000 },
-      () => {
-        const grid = Array(50)
-          .fill(null)
-          .map(() =>
-            Array(50)
-              .fill(0)
-              .map(() => Math.random())
-          );
+    it("should provide optimization recommendations", { timeout: 30000 }, () => {
+      const grid = Array(50)
+        .fill(null)
+        .map(() =>
+          Array(50)
+            .fill(0)
+            .map(() => Math.random())
+        );
 
-        // Run multiple times to build up statistics
-        for (let i = 0; i < 10; i++) {
-          adapter.compute(grid, 0.5);
-        }
-
-        const recommendations = adapter.getOptimizationRecommendations();
-
-        expect(Array.isArray(recommendations)).toBe(true);
+      // Run multiple times to build up statistics
+      for (let i = 0; i < 10; i++) {
+        adapter.compute(grid, 0.5);
       }
-    );
+
+      const recommendations = adapter.getOptimizationRecommendations();
+
+      expect(Array.isArray(recommendations)).toBe(true);
+    });
   });
 
   describe("Performance Improvements", () => {
@@ -159,40 +155,36 @@ describe("Marching Squares PAW Integration", () => {
   });
 
   describe("Performance Monitoring Integration", () => {
-    it(
-      "should detect performance degradation",
-      { timeout: 30000 },
-      () => {
-        const smallGrid = Array(20)
-          .fill(null)
-          .map(() =>
-            Array(20)
-              .fill(0)
-              .map(() => Math.random())
-          );
+    it("should detect performance degradation", { timeout: 30000 }, () => {
+      const smallGrid = Array(20)
+        .fill(null)
+        .map(() =>
+          Array(20)
+            .fill(0)
+            .map(() => Math.random())
+        );
 
-        const largeGrid = Array(100)
-          .fill(null)
-          .map(() =>
-            Array(100)
-              .fill(0)
-              .map(() => Math.random())
-          );
+      const largeGrid = Array(100)
+        .fill(null)
+        .map(() =>
+          Array(100)
+            .fill(0)
+            .map(() => Math.random())
+        );
 
-        // Run with small grid
-        for (let i = 0; i < 5; i++) {
-          adapter.compute(smallGrid, 0.5);
-        }
-
-        // Run with large grid (should trigger performance monitoring)
-        for (let i = 0; i < 3; i++) {
-          adapter.compute(largeGrid, 0.5);
-        }
-
-        const isDegraded = adapter.isPerformanceDegraded();
-        expect(typeof isDegraded).toBe("boolean");
+      // Run with small grid
+      for (let i = 0; i < 5; i++) {
+        adapter.compute(smallGrid, 0.5);
       }
-    );
+
+      // Run with large grid (should trigger performance monitoring)
+      for (let i = 0; i < 3; i++) {
+        adapter.compute(largeGrid, 0.5);
+      }
+
+      const isDegraded = adapter.isPerformanceDegraded();
+      expect(typeof isDegraded).toBe("boolean");
+    });
 
     it("should generate performance report", () => {
       const grid = Array(50)
@@ -238,4 +230,3 @@ describe("Marching Squares PAW Integration", () => {
     });
   });
 });
-

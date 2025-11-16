@@ -64,23 +64,19 @@ describe("OptimizedMarchingSquaresAdapter", () => {
       expect(result.stats.success).toBe(true);
     });
 
-    it(
-      "should use adaptive algorithm selection for large grids",
-      { timeout: 30000 },
-      () => {
-        const grid = Array(100)
-          .fill(null)
-          .map(() =>
-            Array(100)
-              .fill(0)
-              .map(() => Math.random())
-          );
+    it("should use adaptive algorithm selection for large grids", { timeout: 30000 }, () => {
+      const grid = Array(100)
+        .fill(null)
+        .map(() =>
+          Array(100)
+            .fill(0)
+            .map(() => Math.random())
+        );
 
-        const result = adapter.compute(grid, 0.5);
+      const result = adapter.compute(grid, 0.5);
 
-        expect(result.stats.success).toBe(true);
-      }
-    );
+      expect(result.stats.success).toBe(true);
+    });
 
     it("should use refined-lut strategy when specified", () => {
       const refinedAdapter = new OptimizedMarchingSquaresAdapter({
@@ -288,4 +284,3 @@ describe("OptimizedMarchingSquaresAdapter", () => {
     });
   });
 });
-

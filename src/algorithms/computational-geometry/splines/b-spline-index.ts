@@ -6,8 +6,3 @@
 
 export * from "./b-spline-core.js";
 export * from "./b-spline-types.js";
-
-
-
-
-

@@ -58,4 +58,3 @@ export const DEFAULT_PCA_CONFIG: PCAConfig = {
   center: true,
   scale: false,
 };
-

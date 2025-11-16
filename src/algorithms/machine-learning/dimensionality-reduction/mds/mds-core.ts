@@ -18,10 +18,7 @@
 
 import type { MDSConfig, MDSResult, MDSOptions } from "./mds-types";
 import { DEFAULT_MDS_CONFIG } from "./mds-types";
-import {
-  doubleCenterSquaredDistanceMatrix,
-  eigenvalueDecomposition,
-} from "../shared/matrix-ops";
+import { doubleCenterSquaredDistanceMatrix, eigenvalueDecomposition } from "../shared/matrix-ops";
 
 /**
  * Multidimensional Scaling Algorithm
@@ -72,10 +69,7 @@ export class MDS {
    * @param startTime Start time for performance measurement
    * @returns MDS result
    */
-  private classicalMDS(
-    distanceMatrix: number[][],
-    startTime: number
-  ): MDSResult {
+  private classicalMDS(distanceMatrix: number[][], startTime: number): MDSResult {
     const n = distanceMatrix.length;
 
     // Square the distance matrix
@@ -93,10 +87,7 @@ export class MDS {
     const gramMatrix = doubleCenterSquaredDistanceMatrix(squaredDistances);
 
     // Eigenvalue decomposition
-    const { eigenvalues, eigenvectors } = eigenvalueDecomposition(
-      gramMatrix,
-      this.config.dimensions
-    );
+    const { eigenvalues, eigenvectors } = eigenvalueDecomposition(gramMatrix, this.config.dimensions);
 
     // Sort by eigenvalue magnitude (descending)
     const indices = Array(eigenvalues.length)
@@ -142,10 +133,7 @@ export class MDS {
    * @param startTime Start time for performance measurement
    * @returns MDS result
    */
-  private metricMDS(
-    distanceMatrix: number[][],
-    startTime: number
-  ): MDSResult {
+  private metricMDS(distanceMatrix: number[][], startTime: number): MDSResult {
     const n = distanceMatrix.length;
 
     // Initialize embedding randomly
@@ -239,4 +227,3 @@ export class MDS {
     return { ...this.config };
   }
 }
-

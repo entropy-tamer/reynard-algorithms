@@ -213,8 +213,3 @@ export function generateMultiscaleNoise4D(
     combined,
   };
 }
-
-
-
-
-

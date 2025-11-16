@@ -62,4 +62,3 @@ export const DEFAULT_ISOMAP_CONFIG: IsomapConfig = {
   distanceMetric: undefined as any, // Will be set to euclideanDistance in constructor
   checkConnectivity: true,
 };
-

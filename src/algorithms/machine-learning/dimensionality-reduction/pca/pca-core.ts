@@ -61,7 +61,7 @@ export class PCA {
     }
 
     const m = data[0].length;
-    let processedData = data.map((row) => [...row]);
+    let processedData = data.map(row => [...row]);
 
     // Center the data
     if (this.config.center) {
@@ -94,10 +94,7 @@ export class PCA {
 
     // Eigenvalue decomposition
     const numComponents = Math.min(this.config.components, m, n - 1);
-    const { eigenvalues, eigenvectors } = eigenvalueDecomposition(
-      covariance,
-      numComponents
-    );
+    const { eigenvalues, eigenvectors } = eigenvalueDecomposition(covariance, numComponents);
 
     // Sort by eigenvalue magnitude (descending)
     const indices = Array(eigenvalues.length)
@@ -139,9 +136,7 @@ export class PCA {
 
     // Compute explained variance ratio
     const totalVariance = topEigenvalues.reduce((sum, v) => sum + v, 0);
-    const explainedVarianceRatio = topEigenvalues.map(
-      (v) => (totalVariance > 0 ? v / totalVariance : 0)
-    );
+    const explainedVarianceRatio = topEigenvalues.map(v => (totalVariance > 0 ? v / totalVariance : 0));
 
     return {
       transformed,
@@ -167,7 +162,7 @@ export class PCA {
 
     const n = data.length;
     const m = data[0].length;
-    let processedData = data.map((row) => [...row]);
+    let processedData = data.map(row => [...row]);
 
     // Apply same preprocessing as fit
     if (this.mean) {
@@ -241,4 +236,3 @@ export class PCA {
     return this.explainedVariance;
   }
 }
-

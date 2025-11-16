@@ -7,7 +7,10 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { MarchingSquares } from "../../algorithms/procedural-generation/marching-squares/marching-squares-core";
 import { MarchingSquaresLegacy } from "../../algorithms/procedural-generation/marching-squares/marching-squares-legacy";
-import type { Contour, MarchingSquaresResult } from "../../algorithms/procedural-generation/marching-squares/marching-squares-types";
+import type {
+  Contour,
+  MarchingSquaresResult,
+} from "../../algorithms/procedural-generation/marching-squares/marching-squares-types";
 
 describe("MarchingSquares (Refined LUT)", () => {
   describe("Basic Functionality", () => {
@@ -423,4 +426,3 @@ describe("MarchingSquares (Refined LUT)", () => {
     });
   });
 });
-

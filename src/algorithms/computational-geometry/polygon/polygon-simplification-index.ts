@@ -6,8 +6,3 @@
 
 export * from "./polygon-simplification-core.js";
 export * from "./polygon-simplification-types.js";
-
-
-
-
-

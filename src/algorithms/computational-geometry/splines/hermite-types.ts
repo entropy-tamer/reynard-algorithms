@@ -71,8 +71,3 @@ export interface HermiteEvaluation {
   /** Curvature at this point */
   curvature: number;
 }
-
-
-
-
-

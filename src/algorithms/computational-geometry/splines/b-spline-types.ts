@@ -93,8 +93,3 @@ export interface KnotVectorOptions {
   /** Whether the curve is closed (periodic) */
   closed?: boolean;
 }
-
-
-
-
-

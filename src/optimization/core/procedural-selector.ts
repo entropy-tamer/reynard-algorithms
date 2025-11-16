@@ -120,7 +120,10 @@ export class ProceduralSelector {
    * @param t
    * @example
    */
-  private selectRefinedLUTWithOptimization(analysis: WorkloadAnalysis, t?: (key: string) => string): AlgorithmSelection {
+  private selectRefinedLUTWithOptimization(
+    analysis: WorkloadAnalysis,
+    t?: (key: string) => string
+  ): AlgorithmSelection {
     const { complexity } = analysis;
     const { objectCount } = analysis.workload;
 
@@ -135,18 +138,13 @@ export class ProceduralSelector {
         memoryUsage: ProceduralSelector.memoizedMultiply(objectCount, 48), // More segments for large grids
       },
       reasoning: [
-        t
-          ? t("algorithms.algorithmSelection.largeGrid.requiresOptimization")
-          : "Large grid size requires optimization",
+        t ? t("algorithms.algorithmSelection.largeGrid.requiresOptimization") : "Large grid size requires optimization",
         t
           ? t("algorithms.algorithmSelection.largeGrid.refinedLUTWithMerging")
           : "Refined LUT with optimized merging (10-17% improvement)",
-        t
-          ? t("algorithms.algorithmSelection.largeGrid.scalableForLargeGrids")
-          : "Scalable for >100x100 grids",
+        t ? t("algorithms.algorithmSelection.largeGrid.scalableForLargeGrids") : "Scalable for >100x100 grids",
         "Memory pooling recommended for very large grids",
       ],
     };
   }
 }
-

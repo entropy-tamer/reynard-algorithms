@@ -928,6 +928,53 @@ export type {
 export { DEFAULT_MDS_CONFIG } from "./algorithms/machine-learning/dimensionality-reduction/mds/mds-types";
 
 // ============================================================================
+// Algorithms - Signal Processing
+// ============================================================================
+// Fast Fourier Transform (FFT)
+export { Radix2FFT } from "./algorithms/signal-processing/fft/radix2-fft";
+export { Radix4FFT } from "./algorithms/signal-processing/fft/radix4-fft";
+export { MixedRadixFFT } from "./algorithms/signal-processing/fft/mixed-radix-fft";
+export { RealFFT } from "./algorithms/signal-processing/fft/real-fft";
+export { FFTFactory } from "./algorithms/signal-processing/fft/fft-factory";
+export { FFTBase } from "./algorithms/signal-processing/fft/fft-base";
+export { BitReversal } from "./algorithms/signal-processing/fft/core/bit-reversal";
+export { TwiddleFactors, OptimizedTwiddleFactors } from "./algorithms/signal-processing/fft/core/twiddle-factors";
+export { ComplexNumber, ComplexArrayOps } from "./algorithms/signal-processing/fft/core/complex-number";
+export { FFTAlgorithm } from "./algorithms/signal-processing/fft/fft-types";
+export type {
+  FFTConfig,
+  FFTResult,
+  FFTPerformanceMetrics,
+  DSPStats,
+  FrequencyBin,
+  ComplexArray,
+} from "./algorithms/signal-processing/fft/fft-types";
+
+// Discrete Cosine Transform (DCT)
+export {
+  DCTTypeI,
+  DCTTypeII,
+  DCTTypeIII,
+  DCTTypeIV,
+  DCTFactory,
+  DCTBase,
+} from "./algorithms/signal-processing/fft/dct";
+export type { DCTConfig, DCTResult } from "./algorithms/signal-processing/fft/dct";
+export { DCTType } from "./algorithms/signal-processing/fft/dct";
+
+// Discrete Sine Transform (DST)
+export {
+  DSTTypeI,
+  DSTTypeII,
+  DSTTypeIII,
+  DSTTypeIV,
+  DSTFactory,
+  DSTBase,
+} from "./algorithms/signal-processing/fft/dst";
+export type { DSTConfig, DSTResult } from "./algorithms/signal-processing/fft/dst";
+export { DSTType } from "./algorithms/signal-processing/fft/dst";
+
+// ============================================================================
 // Utils - Performance
 // ============================================================================
 export { PerformanceTimer } from "./utils/performance/timer";

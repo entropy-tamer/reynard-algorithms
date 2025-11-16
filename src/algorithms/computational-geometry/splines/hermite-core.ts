@@ -259,8 +259,3 @@ export class HermiteSpline {
     return [...this.segments];
   }
 }
-
-
-
-
-

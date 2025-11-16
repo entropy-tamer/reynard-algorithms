@@ -5,10 +5,5 @@
  */
 
 export { Isomap } from "./isomap-core";
-export type {
-  IsomapConfig,
-  IsomapResult,
-  IsomapOptions,
-} from "./isomap-types";
+export type { IsomapConfig, IsomapResult, IsomapOptions } from "./isomap-types";
 export { DEFAULT_ISOMAP_CONFIG } from "./isomap-types";
-

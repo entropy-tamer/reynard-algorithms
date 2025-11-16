@@ -15,11 +15,7 @@
  * @module algorithms/machine-learning/dimensionality-reduction/isomap
  */
 
-import type {
-  IsomapConfig,
-  IsomapResult,
-  IsomapOptions,
-} from "./isomap-types";
+import type { IsomapConfig, IsomapResult, IsomapOptions } from "./isomap-types";
 import { DEFAULT_ISOMAP_CONFIG } from "./isomap-types";
 import { computeGeodesicDistances } from "./isomap-utils";
 import { MDS } from "../mds";
@@ -91,7 +87,7 @@ export class Isomap {
       this.graph = {
         nodes: graph.nodes,
         edges: graph.edges.flatMap((edges, from) =>
-          edges.map((edge) => ({
+          edges.map(edge => ({
             from,
             to: edge.to,
             weight: edge.weight,
@@ -192,4 +188,3 @@ export class Isomap {
     return this.graph;
   }
 }
-

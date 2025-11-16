@@ -6,8 +6,3 @@
 
 export * from "./force-directed-core.js";
 export * from "./force-directed-types.js";
-
-
-
-
-

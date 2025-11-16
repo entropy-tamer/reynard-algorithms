@@ -144,16 +144,16 @@ The refined LUT implementation has been benchmarked against the legacy implement
 
 Based on empirical benchmarks:
 
-- **Small grids (10×10 - 25×25)**: 
+- **Small grids (10×10 - 25×25)**:
   - Refined LUT shows significant improvements (up to 29% faster for 25×25)
   - Best choice for interactive applications and real-time visualization
-  
-- **Medium grids (50×50 - 75×75)**: 
+
+- **Medium grids (50×50 - 75×75)**:
   - Performance is comparable to legacy
   - Refined LUT provides better contour detection (more accurate feature extraction)
   - Recommended when accuracy is more important than raw speed
-  
-- **Large grids (100×100+)**: 
+
+- **Large grids (100×100+)**:
   - Slight performance improvement (2-3% faster)
   - Better scalability for very large datasets
   - Memory usage is comparable to legacy implementation

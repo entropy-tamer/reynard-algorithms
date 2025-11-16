@@ -81,10 +81,7 @@ export function buildKNearestNeighborGraph(
  * @param source Source node index
  * @returns Array of shortest distances from source to all nodes
  */
-export function dijkstraShortestPaths(
-  graph: Graph,
-  source: number
-): number[] {
+export function dijkstraShortestPaths(graph: Graph, source: number): number[] {
   const n = graph.nodes;
   const distances: number[] = Array(n).fill(Number.POSITIVE_INFINITY);
   const visited: boolean[] = Array(n).fill(false);
@@ -170,6 +167,5 @@ export function isGraphConnected(graph: Graph): boolean {
   }
 
   // Check if all nodes were visited
-  return visited.every((v) => v);
+  return visited.every(v => v);
 }
-

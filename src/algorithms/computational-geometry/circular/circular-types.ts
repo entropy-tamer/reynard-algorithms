@@ -43,8 +43,3 @@ export interface CircularPositionResult extends Point {
   /** The radius used */
   radius: number;
 }
-
-
-
-
-

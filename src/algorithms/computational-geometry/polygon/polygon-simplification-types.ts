@@ -63,8 +63,3 @@ export interface PolygonSimplificationOptions {
   /** Whether to remove collinear points */
   removeCollinear?: boolean;
 }
-
-
-
-
-

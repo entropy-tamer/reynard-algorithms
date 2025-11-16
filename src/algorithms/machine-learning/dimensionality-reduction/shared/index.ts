@@ -7,4 +7,3 @@
 export * from "./distance-metrics";
 export * from "./matrix-ops";
 export * from "./graph-utils";
-

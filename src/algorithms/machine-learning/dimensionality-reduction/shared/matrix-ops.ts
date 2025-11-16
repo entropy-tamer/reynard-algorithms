@@ -82,9 +82,7 @@ export function computeCovarianceMatrix(matrix: number[][]): number[][] {
  * @param distanceMatrixSquared Squared distance matrix (n x n)
  * @returns Gram matrix (n x n)
  */
-export function doubleCenterSquaredDistanceMatrix(
-  distanceMatrixSquared: number[][]
-): number[][] {
+export function doubleCenterSquaredDistanceMatrix(distanceMatrixSquared: number[][]): number[][] {
   const n = distanceMatrixSquared.length;
 
   // Compute row and column means
@@ -153,7 +151,7 @@ export function eigenvalueDecomposition(
       .fill(0)
       .map(() => Math.random() - 0.5);
     let norm = Math.sqrt(v.reduce((sum, x) => sum + x * x, 0));
-    v = v.map((x) => x / norm);
+    v = v.map(x => x / norm);
 
     // Deflate previous eigenvectors if any
     for (let prev = 0; prev < comp; prev++) {
@@ -162,7 +160,7 @@ export function eigenvalueDecomposition(
       v = v.map((x, i) => x - dot * prevVec[i]);
       norm = Math.sqrt(v.reduce((sum, x) => sum + x * x, 0));
       if (norm > 1e-10) {
-        v = v.map((x) => x / norm);
+        v = v.map(x => x / norm);
       }
     }
 
@@ -178,14 +176,12 @@ export function eigenvalueDecomposition(
       }
 
       // Compute eigenvalue (Rayleigh quotient)
-      const eigenvalue = Math.sqrt(
-        newV.reduce((sum, x) => sum + x * x, 0)
-      );
+      const eigenvalue = Math.sqrt(newV.reduce((sum, x) => sum + x * x, 0));
 
       // Normalize
       norm = eigenvalue;
       if (norm > 1e-10) {
-        v = newV.map((x) => x / norm);
+        v = newV.map(x => x / norm);
       } else {
         break;
       }
@@ -258,4 +254,3 @@ export function transpose(matrix: number[][]): number[][] {
 
   return result;
 }
-

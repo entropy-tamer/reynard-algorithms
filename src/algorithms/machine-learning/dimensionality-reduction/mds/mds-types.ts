@@ -57,4 +57,3 @@ export const DEFAULT_MDS_CONFIG: MDSConfig = {
   maxIterations: 1000,
   tolerance: 1e-6,
 };
-

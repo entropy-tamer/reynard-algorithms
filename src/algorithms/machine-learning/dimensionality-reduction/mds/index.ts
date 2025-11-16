@@ -5,10 +5,5 @@
  */
 
 export { MDS } from "./mds-core";
-export type {
-  MDSConfig,
-  MDSResult,
-  MDSOptions,
-} from "./mds-types";
+export type { MDSConfig, MDSResult, MDSOptions } from "./mds-types";
 export { DEFAULT_MDS_CONFIG } from "./mds-types";
-

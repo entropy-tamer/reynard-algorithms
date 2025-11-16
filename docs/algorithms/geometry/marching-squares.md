@@ -88,7 +88,7 @@ Each cell in the grid is a square with four corner values:
 Cell at position (x, y):
     g[y][x]     g[y][x+1]
     (top-left)  (top-right)
-    
+
     g[y+1][x]   g[y+1][x+1]
     (bottom-left) (bottom-right)
 ```
@@ -104,7 +104,7 @@ $$caseIndex = \sum_{i=0}^{3} b_i \cdot 2^i$$
 Where $b_i = 1$ if corner $i$ is above threshold, else $0$. Corner indices:
 
 - $i=0$: top-left
-- $i=1$: top-right  
+- $i=1$: top-right
 - $i=2$: bottom-right
 - $i=3$: bottom-left
 
@@ -252,7 +252,7 @@ After generating segments for each cell, the algorithm merges connected segments
 ```pseudocode
 function MARCHING_SQUARES(grid, threshold):
     contours = []
-    
+
     for y = 0 to height - 2:
         for x = 0 to width - 2:
             // Get corner values
@@ -262,34 +262,34 @@ function MARCHING_SQUARES(grid, threshold):
                 grid[y+1][x+1],  // bottom-right
                 grid[y+1][x]     // bottom-left
             ]
-            
+
             // Calculate case index
             caseIndex = 0
             for i = 0 to 3:
                 if corners[i] >= threshold:
                     caseIndex |= (1 << i)
-            
+
             // Handle ambiguous cases
             if caseIndex == 5 or caseIndex == 10:
                 edges = RESOLVE_AMBIGUITY(caseIndex, grid, x, y, threshold)
             else:
                 edges = LUT[caseIndex]
-            
+
             // Generate segments
             for each edge in edges:
                 startPoint = INTERPOLATE_EDGE(edge[0], x, y, grid, threshold)
                 endPoint = INTERPOLATE_EDGE(edge[1], x, y, grid, threshold)
                 segments.append(LineSegment(startPoint, endPoint))
-    
+
     // Merge connected segments
     mergedContours = MERGE_CONTOURS(segments)
-    
+
     return mergedContours
 
 function RESOLVE_AMBIGUITY(caseIndex, grid, x, y, threshold):
-    centerValue = (grid[y][x] + grid[y][x+1] + 
+    centerValue = (grid[y][x] + grid[y][x+1] +
                    grid[y+1][x] + grid[y+1][x+1]) / 4
-    
+
     if caseIndex == 5:
         if centerValue > threshold:
             return [[0,1], [2,3]]  // Connect top-left to bottom-right
@@ -641,7 +641,7 @@ if (result.stats.success) {
   console.log(`Generated ${result.stats.contourCount} contours`);
   console.log(`Total segments: ${result.stats.segmentCount}`);
   console.log(`Execution time: ${result.stats.executionTime}ms`);
-  
+
   // Process each contour
   for (const contour of result.contours) {
     console.log(`Contour: ${contour.segments.length} segments, closed: ${contour.isClosed}`);
@@ -677,7 +677,7 @@ for (const contour of result.contours) {
     computeCentroids: true,
     computeBoundingBoxes: true
   });
-  
+
   console.log(`Length: ${analysis.length}`);
   if (contour.isClosed) {
     console.log(`Area: ${analysis.area}`);
@@ -696,7 +696,7 @@ for (const contour of result.contours) {
     maxDistance: 0.1,
     preserveEndpoints: true
   });
-  
+
   console.log(`Simplified from ${contour.segments.length} to ${simplified.simplifiedContour.segments.length} segments`);
   console.log(`Compression ratio: ${simplified.compressionRatio.toFixed(2)}x`);
 }
@@ -712,12 +712,12 @@ function generateTerrainContours(heightMap: number[][], seaLevel: number) {
     interpolate: true,
     ambiguityResolution: "saddle"
   });
-  
+
   const result = marchingSquares.compute(heightMap, seaLevel);
-  
+
   // Filter for closed contours (islands)
   const islands = result.contours.filter(c => c.isClosed);
-  
+
   // Analyze each island
   return islands.map(island => {
     const analysis = marchingSquares.analyzeContour(island);
@@ -737,12 +737,12 @@ function generateTerrainContours(heightMap: number[][], seaLevel: number) {
 // Visualize temperature distribution
 function visualizeTemperature(temperatureGrid: number[][]) {
   const marchingSquares = new MarchingSquares();
-  
+
   // Generate isotherms at 10-degree intervals
   const isotherms = marchingSquares.computeMultiLevel(temperatureGrid, {
     thresholds: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
   });
-  
+
   // Render each isotherm with different color based on temperature
   for (const [temperature, contours] of isotherms.contoursByLevel) {
     const color = getTemperatureColor(temperature);

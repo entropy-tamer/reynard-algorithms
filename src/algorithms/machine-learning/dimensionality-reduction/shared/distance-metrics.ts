@@ -118,4 +118,3 @@ export function computeDistanceMatrix(
  * Distance metric function type
  */
 export type DistanceMetric = (a: number[], b: number[]) => number;
-

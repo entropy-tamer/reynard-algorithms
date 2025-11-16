@@ -16,8 +16,3 @@ export {
   calculateArcLength,
   calculateSectorArea,
 } from "./circular-core.js";
-
-
-
-
-

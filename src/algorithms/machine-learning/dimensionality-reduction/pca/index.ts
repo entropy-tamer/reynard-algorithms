@@ -5,10 +5,5 @@
  */
 
 export { PCA } from "./pca-core";
-export type {
-  PCAConfig,
-  PCAResult,
-  PCAOptions,
-} from "./pca-types";
+export type { PCAConfig, PCAResult, PCAOptions } from "./pca-types";
 export { DEFAULT_PCA_CONFIG } from "./pca-types";
-

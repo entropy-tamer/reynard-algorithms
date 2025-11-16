@@ -87,8 +87,3 @@ export interface MultiscaleSimplexNoiseResult {
    */
   stats?: Map<string | number, ScaleStats>;
 }
-
-
-
-
-

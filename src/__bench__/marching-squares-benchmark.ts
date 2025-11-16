@@ -143,8 +143,7 @@ function runBenchmark(
   pattern: "random" | "circle" | "gradient" | "noise",
   iterations: number = 10
 ): BenchmarkResult {
-  const grid =
-    pattern === "random" ? generateRandomGrid(gridSize) : generatePatternGrid(gridSize, pattern);
+  const grid = pattern === "random" ? generateRandomGrid(gridSize) : generatePatternGrid(gridSize, pattern);
 
   const refinedResult = benchmarkImplementation(grid, 0.5, "refined", iterations);
   const legacyResult = benchmarkImplementation(grid, 0.5, "legacy", iterations);
@@ -234,4 +233,3 @@ console.log("\n" + formatResults(results));
 const jsonResults = JSON.stringify(results, null, 2);
 console.log("\n## JSON Results\n");
 console.log(jsonResults);
-

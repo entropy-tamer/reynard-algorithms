@@ -40,7 +40,10 @@ export interface OptimizedMarchingSquaresConfig {
 }
 
 // Re-export types from performance monitor
-export type { CollisionPerformanceStats as MarchingSquaresPerformanceStats, PerformanceReport } from "./performance-monitor";
+export type {
+  CollisionPerformanceStats as MarchingSquaresPerformanceStats,
+  PerformanceReport,
+} from "./performance-monitor";
 
 /**
  * Optimized marching squares adapter with automatic algorithm selection
@@ -259,4 +262,3 @@ export class OptimizedMarchingSquaresAdapter {
     this.memoryPool.destroy();
   }
 }
-
