@@ -48,8 +48,8 @@ describe("A* Pathfinding Algorithm", () => {
 
     // Add obstacles to complex grid
     for (let i = 2; i < 8; i++) {
-      complexGrid.cells[4][i] = false; // Horizontal wall
-      complexGrid.cells[i][4] = false; // Vertical wall
+      complexGrid.cells[4]![i] = false; // Horizontal wall
+      complexGrid.cells[i]![4] = false; // Vertical wall
     }
   });
 
@@ -497,9 +497,9 @@ describe("A* Pathfinding Algorithm", () => {
 
       // All results should be identical
       for (let i = 1; i < results.length; i++) {
-        expect(results[i].success).toBe(results[0].success);
-        expect(results[i].path.length).toBe(results[0].path.length);
-        expect(results[i].totalCost).toBe(results[0].totalCost);
+        expect(results[i]!.success).toBe(results[0]!.success);
+        expect(results[i]!.path.length).toBe(results[0]!.path.length);
+        expect(results[i]!.totalCost).toBe(results[0]!.totalCost);
       }
     });
   });

@@ -6,16 +6,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { ThetaStar } from "../../algorithms/pathfinding/theta-star/theta-star-core";
 import { ThetaStarUtils } from "../../algorithms/pathfinding/theta-star/theta-star-utils";
 import { LineOfSight } from "../../algorithms/pathfinding/theta-star/line-of-sight";
-import type {
-  Point,
-  CellType,
-  Direction,
-  MovementType,
-} from "../../algorithms/pathfinding/theta-star/theta-star-types";
-import {
-  Direction as ThetaStarDirection,
-  MovementType as ThetaStarMovementType,
-} from "../../algorithms/pathfinding/theta-star/theta-star-types";
+import type { Point, CellType } from "../../algorithms/pathfinding/theta-star/theta-star-types";
 
 describe("ThetaStar", () => {
   let thetaStar: ThetaStar;
@@ -138,7 +129,7 @@ describe("ThetaStar", () => {
       const goal: Point = { x: 9, y: 9 };
 
       thetaStar.findPath(grid, width, height, start, goal);
-      const stats1 = thetaStar.getStats();
+      thetaStar.getStats(); // baseline before reset
 
       thetaStar.resetStats();
       const stats2 = thetaStar.getStats();
@@ -227,9 +218,6 @@ describe("ThetaStar", () => {
     });
 
     it("should handle path optimization options", () => {
-      const start: Point = { x: 0, y: 0 };
-      const goal: Point = { x: 9, y: 9 };
-
       const optimization = thetaStar.optimizePath(
         [
           { x: 0, y: 0 },
@@ -585,9 +573,9 @@ describe("ThetaStarUtils", () => {
       expect(sorted[0]).toEqual({ x: 5, y: 6 });
       // {x: 0, y: 0} and {x: 10, y: 10} are both distance ~7.07, so order may vary
       // Just verify distances are sorted correctly
-      const dist1 = ThetaStarUtils.distance(target, sorted[0]);
-      const dist2 = ThetaStarUtils.distance(target, sorted[1]);
-      const dist3 = ThetaStarUtils.distance(target, sorted[2]);
+      const dist1 = ThetaStarUtils.distance(target, sorted[0]!);
+      const dist2 = ThetaStarUtils.distance(target, sorted[1]!);
+      const dist3 = ThetaStarUtils.distance(target, sorted[2]!);
       expect(dist1).toBeLessThanOrEqual(dist2);
       expect(dist2).toBeLessThanOrEqual(dist3);
       // Verify all points are present
@@ -751,7 +739,7 @@ describe("LineOfSight", () => {
       const from: Point = { x: 0, y: 0 };
       const to: Point = { x: 5, y: 5 };
 
-      const result = LineOfSight.check(grid, from, to, width, height, { useDDA: true });
+      const result = LineOfSight.check(grid, from, to, width, height, { useDDA: true } as any);
 
       expect(result.hasLineOfSight).toBe(true);
       expect(result.success).toBe(true);
@@ -761,7 +749,7 @@ describe("LineOfSight", () => {
       const from: Point = { x: 0, y: 0 };
       const to: Point = { x: 5, y: 5 };
 
-      const result = LineOfSight.check(grid, from, to, width, height, { useRayCasting: true });
+      const result = LineOfSight.check(grid, from, to, width, height, { useRayCasting: true } as any);
 
       expect(result.hasLineOfSight).toBe(true);
       expect(result.success).toBe(true);
@@ -776,7 +764,7 @@ describe("LineOfSight", () => {
       const from: Point = { x: 0, y: 0 };
       const to: Point = { x: 5, y: 5 };
 
-      const result = LineOfSight.check(blockedGrid, from, to, width, height, { checkEndpoints: true });
+      const result = LineOfSight.check(blockedGrid, from, to, width, height, { checkEndpoints: true } as any);
 
       expect(result.hasLineOfSight).toBe(false);
     });
@@ -785,7 +773,7 @@ describe("LineOfSight", () => {
       const from: Point = { x: 0, y: 0 };
       const to: Point = { x: 5, y: 5 };
 
-      const result = LineOfSight.check(grid, from, to, width, height, { maxDistance: 1 });
+      const result = LineOfSight.check(grid, from, to, width, height, { maxDistance: 1 } as any);
 
       expect(result.hasLineOfSight).toBe(false);
     });

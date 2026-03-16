@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { ThetaStar, ThetaStarUtils } from "../../algorithms/pathfinding/theta-star/theta-star-core";
-import type { Point, CellType } from "../../algorithms/pathfinding/theta-star/theta-star-types";
+import { ThetaStar, ThetaStarUtils } from "../../algorithms/pathfinding/theta-star";
+import type { Point } from "../../algorithms/pathfinding/theta-star/theta-star-types";
 
 describe("ThetaStar Performance", () => {
   let thetaStar: ThetaStar;
@@ -76,8 +76,8 @@ describe("ThetaStar Performance", () => {
       }
 
       // Times should generally increase with grid size
-      expect(times[1]).toBeGreaterThan(times[0]);
-      expect(times[2]).toBeGreaterThan(times[1]);
+      expect(times[1]!).toBeGreaterThan(times[0]!);
+      expect(times[2]!).toBeGreaterThan(times[1]!);
     });
 
     it("should handle very large grids", () => {
@@ -127,7 +127,7 @@ describe("ThetaStar Performance", () => {
       const goal: Point = { x: 99, y: 99 };
 
       const startTime = performance.now();
-      const result = thetaStar.findPath(grid, 100, 100, start, goal);
+      thetaStar.findPath(grid, 100, 100, start, goal);
       const endTime = performance.now();
 
       // May not find a path, but should complete quickly
@@ -368,7 +368,7 @@ describe("ThetaStar Performance", () => {
       let totalChecks = 0;
 
       for (let i = 0; i < points.length - 1; i++) {
-        const result = thetaStar.findPath(grid, 50, 50, points[i], points[i + 1]);
+        const result = thetaStar.findPath(grid, 50, 50, points[i]!, points[i + 1]!);
         totalChecks += result.stats.lineOfSightChecks;
       }
 

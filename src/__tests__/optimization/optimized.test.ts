@@ -67,9 +67,9 @@ describe("Optimized Algorithms API", () => {
       const collisions = detectCollisions(aabbs);
 
       expect(collisions).toHaveLength(1);
-      expect(collisions[0].a).toBe(0);
-      expect(collisions[0].b).toBe(1);
-      expect(collisions[0].result.colliding).toBe(true);
+      expect(collisions[0]!.a).toBe(0);
+      expect(collisions[0]!.b).toBe(1);
+      expect(collisions[0]!.result.colliding).toBe(true);
     });
 
     it("should return empty array for non-overlapping AABBs", () => {

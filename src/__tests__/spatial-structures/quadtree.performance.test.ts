@@ -96,9 +96,9 @@ describe("Quadtree Performance Tests", () => {
       const numberQuery = numberQuadtree.queryPoint({ point: { x: 100, y: 100 } });
       const objectQuery = objectQuadtree.queryPoint({ point: { x: 200, y: 200 } });
 
-      expect(numberQuery.objects[0].data).toBe(42);
-      expect(objectQuery.objects[0].data.id).toBe(1);
-      expect(objectQuery.objects[0].data.name).toBe("test");
+      expect(numberQuery.objects[0]!.data).toBe(42);
+      expect(objectQuery.objects[0]!.data.id).toBe(1);
+      expect(objectQuery.objects[0]!.data.name).toBe("test");
     });
 
     it("should maintain consistency across complex operations", () => {

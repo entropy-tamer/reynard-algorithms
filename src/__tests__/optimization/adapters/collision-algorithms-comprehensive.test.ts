@@ -117,7 +117,7 @@ describe("Collision Algorithms Comprehensive Coverage", () => {
 
       // Verify collision structure
       if (collisions.length > 0) {
-        const collision = collisions[0];
+        const collision = collisions[0]!;
         expect(collision).toHaveProperty("a");
         expect(collision).toHaveProperty("b");
         expect(collision).toHaveProperty("result");
@@ -228,8 +228,8 @@ describe("Collision Algorithms Comprehensive Coverage", () => {
       ];
       const collisions = executeSpatialCollisionDetection(aabbs, memoryPool);
       expect(collisions.length).toBe(1);
-      expect(collisions[0].a).toBe(0);
-      expect(collisions[0].b).toBe(1);
+      expect(collisions[0]!.a).toBe(0);
+      expect(collisions[0]!.b).toBe(1);
     });
 
     it("should handle AABBs with zero dimensions", () => {
@@ -246,8 +246,7 @@ describe("Collision Algorithms Comprehensive Coverage", () => {
         { x: 0, y: 0, width: -5, height: -5 },
         { x: 0, y: 0, width: -5, height: -5 },
       ];
-      const collisions = executeSpatialCollisionDetection(aabbs, memoryPool);
-      expect(collisions).toEqual([]);
+      expect(() => executeSpatialCollisionDetection(aabbs, memoryPool)).toThrow();
     });
 
     it("should handle AABBs with very large coordinates", () => {

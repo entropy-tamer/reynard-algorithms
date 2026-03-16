@@ -17,7 +17,7 @@ import {
   createCollisionResult,
   executeNaiveCollisionDetection,
 } from "../../optimization/adapters/collision-algorithms";
-import { validateAABB, validateAABBArray } from "../../../algorithms/collision/aabb/aabb-validation";
+import { validateAABB, validateAABBArray } from "../../algorithms/collision/narrow-phase/aabb/aabb-validation";
 import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 
@@ -126,7 +126,7 @@ describe("Issue #2: AABB Validation Missing", () => {
       const invalidValidation = validateAABB(invalidAABB);
       expect(invalidValidation.isValid).toBe(false);
       expect(invalidValidation.errors).toHaveLength(1);
-      expect(invalidValidation.errors[0].field).toBe("width");
+      expect(invalidValidation.errors[0]!.field).toBe("width");
     });
 
     it("should throw errors for invalid AABBs in collision detection", () => {
@@ -216,8 +216,8 @@ describe("Issue #2: AABB Validation Missing", () => {
 
       // Performance should scale reasonably with size
       for (let i = 1; i < results.length; i++) {
-        const sizeRatio = sizes[i] / sizes[i - 1];
-        const timeRatio = results[i].statistics.median / results[i - 1].statistics.median;
+        const sizeRatio = sizes[i]! / sizes[i - 1]!;
+        const timeRatio = results[i]!.statistics.median / results[i - 1]!.statistics.median;
 
         // Time should not increase more than quadratically (with some tolerance)
         expect(timeRatio).toBeLessThan(sizeRatio * sizeRatio * 1.5);
@@ -297,6 +297,7 @@ describe("Issue #2: AABB Validation Missing", () => {
 
   afterAll(() => {
     // Update verification report with test results
+    verificationReportGenerator.updateIssueStatus(2, IssueStatus.VERIFIED);
     verificationReportGenerator.updateIssueVerification(2, {
       testResults: {
         passed: 12, // Update based on actual test results
@@ -304,7 +305,6 @@ describe("Issue #2: AABB Validation Missing", () => {
         skipped: 0,
         total: 12,
       },
-      status: IssueStatus.VERIFIED,
     });
 
     // Add performance data

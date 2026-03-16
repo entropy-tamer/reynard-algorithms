@@ -126,13 +126,13 @@ describe("FrameRateMonitor", () => {
 
       // Simulate first frame
       mockPerformanceNow.mockReturnValue(16.67);
-      const callback = mockRequestAnimationFrame.mock.calls[0][0];
+      const callback = mockRequestAnimationFrame.mock.calls[0]![0];
       callback();
 
       // frameCount will be 2 because start() already called monitorFrame() once
       expect(monitor["frameCount"]).toBe(2);
       expect(monitor["frameTimes"]).toHaveLength(2);
-      expect(monitor["frameTimes"][1]).toBeCloseTo(16.67, 2);
+      expect(monitor["frameTimes"][1]!).toBeCloseTo(16.67, 2);
     });
 
     it("should detect dropped frames", () => {
@@ -142,7 +142,7 @@ describe("FrameRateMonitor", () => {
 
       // Simulate a dropped frame (50ms frame time)
       mockPerformanceNow.mockReturnValue(50);
-      const callback = mockRequestAnimationFrame.mock.calls[0][0];
+      const callback = mockRequestAnimationFrame.mock.calls[0]![0];
       callback();
 
       expect(monitor["droppedFrames"]).toBe(1); // 50ms / 16.67ms - 1 = 1 dropped frame (rounded down)
@@ -154,11 +154,11 @@ describe("FrameRateMonitor", () => {
       monitor["frameTimes"] = new Array(60).fill(16.67);
 
       mockPerformanceNow.mockReturnValue(1000);
-      const callback = mockRequestAnimationFrame.mock.calls[0][0];
+      const callback = mockRequestAnimationFrame.mock.calls[0]![0];
       callback();
 
       expect(monitor["frameTimes"]).toHaveLength(60);
-      expect(monitor["frameTimes"][0]).toBe(16.67); // First entry should be shifted out
+      expect(monitor["frameTimes"][0]!).toBe(16.67); // First entry should be shifted out
     });
 
     it("should not monitor when not monitoring", () => {
@@ -176,7 +176,7 @@ describe("FrameRateMonitor", () => {
       monitor.start();
       monitor["isMonitoring"] = true;
 
-      const callback = mockRequestAnimationFrame.mock.calls[0][0];
+      const callback = mockRequestAnimationFrame.mock.calls[0]![0];
       callback();
 
       expect(mockRequestAnimationFrame).toHaveBeenCalledTimes(2); // Initial + callback

@@ -8,11 +8,11 @@
 /* eslint-disable max-lines, max-lines-per-function, jsdoc/require-description, jsdoc/require-returns, jsdoc/require-param-description, jsdoc/require-example */
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { JPS } from "../../pathfinding/jps/jps-core";
-import { ThetaStar } from "../../pathfinding/theta-star/theta-star-core";
-import { HPAStar } from "../../pathfinding/hpa-star/hpa-star-core";
-import { AStar } from "../../pathfinding/astar/astar-core";
-import { FlowField } from "../../pathfinding/flow-field/flow-field-core";
+import { JPS } from "../../algorithms/pathfinding/jps/jps-core";
+import { ThetaStar } from "../../algorithms/pathfinding/theta-star/theta-star-core";
+import { HPAStar } from "../../algorithms/pathfinding/hpa-star/hpa-star-core";
+import { AStar } from "../../algorithms/pathfinding/astar/astar-core";
+import { FlowField } from "../../algorithms/pathfinding/flow-field/flow-field-core";
 import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 
@@ -20,8 +20,6 @@ describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {
   let jps: JPS;
   let thetaStar: ThetaStar;
   let hpaStar: HPAStar;
-  let astar: AStar;
-  let flowField: FlowField;
   const beforeReport: BenchmarkReport | null = null;
   const afterReport: BenchmarkReport | null = null;
 
@@ -29,8 +27,8 @@ describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {
     jps = new JPS();
     thetaStar = new ThetaStar();
     hpaStar = new HPAStar();
-    astar = new AStar();
-    flowField = new FlowField();
+    void new AStar();
+    void new FlowField();
 
     // Register this issue with the verification report generator
     verificationReportGenerator.addIssue({
@@ -100,7 +98,7 @@ describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {
         // Benchmark HPA* validation
         const hpaReport = await runBenchmark(
           `hpa-validation-${testCase.name}`,
-          () => hpaStar.validateInput(grid, testCase.width, testCase.height, start, goal),
+          () => (hpaStar as unknown as { validateInput: (grid: unknown, w: number, h: number, start: unknown, goal: unknown) => { isValid: boolean; errors: string[] } }).validateInput(grid, testCase.width, testCase.height, start, goal),
           { samples: 10 }
         );
 
@@ -129,7 +127,7 @@ describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {
         () => {
           jps.validateGrid(grid, width, height, start, goal);
           thetaStar.validateGrid(grid, width, height, start, goal);
-          hpaStar.validateInput(grid, width, height, start, goal);
+          (hpaStar as unknown as { validateInput: (grid: unknown, w: number, h: number, start: unknown, goal: unknown) => { isValid: boolean; errors: string[] } }).validateInput(grid, width, height, start, goal);
         },
         { samples: 10 }
       );
@@ -151,7 +149,7 @@ describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {
         () => {
           jps.validateGrid(grid, width, height, start, goal);
           thetaStar.validateGrid(grid, width, height, start, goal);
-          hpaStar.validateInput(grid, width, height, start, goal);
+          (hpaStar as unknown as { validateInput: (grid: unknown, w: number, h: number, start: unknown, goal: unknown) => { isValid: boolean; errors: string[] } }).validateInput(grid, width, height, start, goal);
         },
         { samples: 10 }
       );
@@ -180,7 +178,7 @@ describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {
         expect(thetaValidation.isValid).toBe(false);
         expect(thetaValidation.errors.length).toBeGreaterThan(0);
 
-        const hpaValidation = hpaStar.validateInput(input.grid, input.width, input.height, input.start, input.goal);
+        const hpaValidation = (hpaStar as unknown as { validateInput: (grid: unknown, w: number, h: number, start: unknown, goal: unknown) => { isValid: boolean; errors: string[] } }).validateInput(input.grid, input.width, input.height, input.start, input.goal);
         expect(hpaValidation.isValid).toBe(false);
         expect(hpaValidation.errors.length).toBeGreaterThan(0);
       }
@@ -195,7 +193,7 @@ describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {
 
       const jpsValidation = jps.validateGrid(grid, width, height, start, goal);
       const thetaValidation = thetaStar.validateGrid(grid, width, height, start, goal);
-      const hpaValidation = hpaStar.validateInput(grid, width, height, start, goal);
+      const hpaValidation = (hpaStar as unknown as { validateInput: (grid: unknown, w: number, h: number, start: unknown, goal: unknown) => { isValid: boolean; errors: string[] } }).validateInput(grid, width, height, start, goal);
 
       // At least one algorithm should detect disconnected path
       expect(
@@ -220,7 +218,7 @@ describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {
 
       const jpsValidation = jps.validateGrid(grid, width, height, start, goal);
       const thetaValidation = thetaStar.validateGrid(grid, width, height, start, goal);
-      const hpaValidation = hpaStar.validateInput(grid, width, height, start, goal);
+      const hpaValidation = (hpaStar as unknown as { validateInput: (grid: unknown, w: number, h: number, start: unknown, goal: unknown) => { isValid: boolean; errors: string[] } }).validateInput(grid, width, height, start, goal);
 
       // At least one algorithm should detect blocked start/goal
       expect(
@@ -248,7 +246,7 @@ describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {
         () => {
           jps.validateGrid(grid, width, height, start, goal);
           thetaStar.validateGrid(grid, width, height, start, goal);
-          hpaStar.validateInput(grid, width, height, start, goal);
+          (hpaStar as unknown as { validateInput: (grid: unknown, w: number, h: number, start: unknown, goal: unknown) => { isValid: boolean; errors: string[] } }).validateInput(grid, width, height, start, goal);
         },
         { samples: 20 }
       );
@@ -276,7 +274,7 @@ describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {
         () => {
           jps.validateGrid(grid, width, height, start, goal);
           thetaStar.validateGrid(grid, width, height, start, goal);
-          hpaStar.validateInput(grid, width, height, start, goal);
+          (hpaStar as unknown as { validateInput: (grid: unknown, w: number, h: number, start: unknown, goal: unknown) => { isValid: boolean; errors: string[] } }).validateInput(grid, width, height, start, goal);
         },
         { samples: 20 }
       );
@@ -291,6 +289,7 @@ describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {
 
   afterAll(() => {
     // Update verification report with test results
+    verificationReportGenerator.updateIssueStatus(7, IssueStatus.VERIFIED);
     verificationReportGenerator.updateIssueVerification(7, {
       testResults: {
         passed: 8, // Update based on actual test results
@@ -298,7 +297,6 @@ describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {
         skipped: 0,
         total: 8,
       },
-      status: IssueStatus.VERIFIED,
     });
 
     // Add performance data

@@ -12,8 +12,8 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { FlowField } from "../../pathfinding/flow-field/flow-field-core";
-import { FlowCell, IntegrationCell } from "../../pathfinding/flow-field/flow-field-types";
+import { FlowField } from "../../algorithms/pathfinding/flow-field/flow-field-core";
+import { FlowCell, IntegrationCell } from "../../algorithms/pathfinding/flow-field/flow-field-types";
 import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 
@@ -80,11 +80,6 @@ describe("Issue #1: Flow Field Validation Logic Error", () => {
         },
       ];
 
-      const integrationField: IntegrationCell[] = [
-        { x: 0, y: 0, cost: 0, processed: true },
-        { x: 1, y: 0, cost: 1, processed: true },
-      ];
-
       // The original buggy logic would incorrectly flag the first cell
       // because it was valid AND had magnitude > 0
       const hasOriginalBug = flowFieldCells.some(cell => cell.valid && cell.magnitude > 0);
@@ -95,7 +90,7 @@ describe("Issue #1: Flow Field Validation Logic Error", () => {
 
     it("should benchmark performance before fix", async () => {
       const flowFieldCells = generateTestFlowField(1000);
-      const integrationField = generateTestIntegrationField(1000);
+      void generateTestIntegrationField(1000);
 
       beforeReport = await runBenchmark(
         "flow-field-validation-before-fix",
@@ -150,7 +145,7 @@ describe("Issue #1: Flow Field Validation Logic Error", () => {
         },
       ];
 
-      const integrationField: IntegrationField[] = [
+      const integrationField: IntegrationCell[] = [
         { x: 0, y: 0, cost: 0, processed: true },
         { x: 1, y: 0, cost: 1, processed: true },
         { x: 2, y: 0, cost: 2, processed: true },
@@ -215,20 +210,17 @@ describe("Issue #1: Flow Field Validation Logic Error", () => {
 
   describe("Regression Testing", () => {
     it("should not break existing valid flow fields", () => {
-      // Test with a properly constructed flow field
-      const flowFieldCells: FlowCell[] = [
+      // Test with a properly constructed flow field (arrays kept for future use)
+      const _flowFieldCells: FlowCell[] = [
         { x: 0, y: 0, vector: { x: 1, y: 0 }, magnitude: 1, valid: true },
         { x: 1, y: 0, vector: { x: 0, y: 0 }, magnitude: 0, valid: false },
-        { x: 0, y: 1, vector: { x: 0, y: 1 }, magnitude: 1, valid: true },
-        { x: 1, y: 1, vector: { x: 0, y: 0 }, magnitude: 0, valid: false },
       ];
-
-      const integrationField: IntegrationCell[] = [
+      const _integrationField: IntegrationCell[] = [
         { x: 0, y: 0, cost: 0, processed: true },
         { x: 1, y: 0, cost: 1, processed: true },
-        { x: 0, y: 1, cost: 1, processed: true },
-        { x: 1, y: 1, cost: 2, processed: true },
       ];
+      void _flowFieldCells;
+      void _integrationField;
 
       // Skip this test for now due to configuration issues
       // TODO: Fix FlowField configuration for proper testing
@@ -257,6 +249,7 @@ describe("Issue #1: Flow Field Validation Logic Error", () => {
 
   afterAll(() => {
     // Update verification report with test results
+    verificationReportGenerator.updateIssueStatus(1, IssueStatus.VERIFIED);
     verificationReportGenerator.updateIssueVerification(1, {
       testResults: {
         passed: 8, // Update based on actual test results
@@ -264,7 +257,6 @@ describe("Issue #1: Flow Field Validation Logic Error", () => {
         skipped: 0,
         total: 8,
       },
-      status: IssueStatus.VERIFIED,
     });
 
     // Add performance data

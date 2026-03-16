@@ -24,7 +24,7 @@ describe("Spatial Types", () => {
 
       expect(spatialData.id).toBe("test-1");
       expect(spatialData.type).toBe("basic");
-      expect(spatialData.metadata?.priority).toBe(1);
+      expect(spatialData.metadata?.["priority"]).toBe(1);
     });
 
     it("should allow numeric IDs", () => {
@@ -57,7 +57,7 @@ describe("Spatial Types", () => {
       };
 
       expect(objectData.category).toBe("entity");
-      expect(objectData.properties?.health).toBe(100);
+      expect(objectData.properties?.["health"]).toBe(100);
     });
 
     it("should support all category types", () => {
@@ -361,8 +361,8 @@ describe("Spatial Types", () => {
         totalObjects: 1,
       };
 
-      expect(queryResult.objects[0].data.collisionType).toBe("solid");
-      expect(queryResult.objects[0].data.material).toBe("stone");
+      expect(queryResult.objects[0]!.data.collisionType).toBe("solid");
+      expect(queryResult.objects[0]!.data.material).toBe("stone");
     });
 
     it("should handle empty results", () => {

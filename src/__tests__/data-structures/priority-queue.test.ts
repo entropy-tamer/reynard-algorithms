@@ -379,9 +379,9 @@ describe("PriorityQueue", () => {
       eventPQ.clear();
 
       expect(events).toHaveLength(3);
-      expect(events[0].type).toBe("insert");
-      expect(events[1].type).toBe("extract");
-      expect(events[2].type).toBe("clear");
+      expect(events[0]!.type).toBe("insert");
+      expect(events[1]!.type).toBe("extract");
+      expect(events[2]!.type).toBe("clear");
     });
 
     it("should include event metadata", () => {
@@ -394,9 +394,9 @@ describe("PriorityQueue", () => {
 
       eventPQ.insert(42, 10);
 
-      expect(events[0].data).toBe(42);
-      expect(events[0].priority).toBe(10);
-      expect(events[0].timestamp).toBeGreaterThan(0);
+      expect(events[0]!.data).toBe(42);
+      expect(events[0]!.priority).toBe(10);
+      expect(events[0]!.timestamp).toBeGreaterThan(0);
     });
   });
 

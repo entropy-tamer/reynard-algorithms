@@ -712,7 +712,7 @@ export {
 export type {
   StructureType,
   MaterialType,
-  CellType,
+  CellType as StructureForgeCellType,
   StructureCell,
   LayerPattern,
   PatternConstraint,

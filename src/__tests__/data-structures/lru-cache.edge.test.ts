@@ -2,7 +2,7 @@
  * @file Tests for LRUCache edge cases
  */
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { LRUCache } from "../../../data-structures/basic/lru-cache";
+import { LRUCache } from "../../data-structures/basic/lru-cache";
 
 describe("LRUCache Edge Cases", () => {
   let cache: LRUCache<string, number>;

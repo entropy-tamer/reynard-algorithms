@@ -8,7 +8,8 @@
  */
 /* eslint-disable max-lines, max-lines-per-function, jsdoc/require-description, jsdoc/require-returns, jsdoc/require-param-description, jsdoc/require-example */
 
-import { MinimumBoundingBox } from "../../core/geometry/algorithms/minimum-bounding-box/minimum-bounding-box-core";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { MinimumBoundingBox } from "../../algorithms/computational-geometry/minimum-bounding-box/minimum-bounding-box-core";
 import { runBenchmark, assertPerformance, BenchmarkReport } from "../utils/benchmark-utils";
 import { getAlgorithmConfig } from "../../config/algorithm-config";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
@@ -232,7 +233,7 @@ describe("Issue #5: Performance Test Reliability", () => {
     });
 
     it("should support dynamic calibration for performance tests", async () => {
-      const config = getAlgorithmConfig();
+      getAlgorithmConfig(); // ensure config is loaded
       const points = generateRandomPoints(500);
 
       // Test with different statistical parameters
@@ -346,6 +347,7 @@ describe("Issue #5: Performance Test Reliability", () => {
 
   afterAll(() => {
     // Update verification report with test results
+    verificationReportGenerator.updateIssueStatus(5, IssueStatus.VERIFIED);
     verificationReportGenerator.updateIssueVerification(5, {
       testResults: {
         passed: 10, // Update based on actual test results
@@ -353,7 +355,6 @@ describe("Issue #5: Performance Test Reliability", () => {
         skipped: 0,
         total: 10,
       },
-      status: IssueStatus.VERIFIED,
     });
 
     // Add performance data

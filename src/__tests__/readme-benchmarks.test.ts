@@ -9,13 +9,13 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { detectCollisions, configureOptimization, cleanup } from "../optimized";
-import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../../algorithms/collision/aabb";
+import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../algorithms/collision/narrow-phase/aabb";
 import { MemoryPool } from "../optimization/core/memory-pool";
 import { PerformanceTimer } from "../utils/performance/timer";
 import { SpatialHash } from "../data-structures/spatial/spatial-hash/spatial-hash-core";
-import { UnionFind } from "../../data-structures/basic/union-find/union-find-core";
+import { UnionFind } from "../data-structures/basic/union-find/union-find-core";
 import { AlgorithmSelector, type WorkloadCharacteristics } from "../optimization/core/algorithm-selector";
-import type { AABB, CollisionPair } from "../../algorithms/collision/aabb/aabb-types";
+import type { AABB, CollisionPair } from "../algorithms/collision/narrow-phase/aabb/aabb-types";
 
 // Deterministic RNG and test data generators
 /**
@@ -178,9 +178,9 @@ function collectSamples(
 
   values.sort((a, b) => a - b);
   const idx = (q: number) => Math.floor(q * (values.length - 1));
-  const median = values[idx(0.5)];
-  const p10 = values[idx(0.1)];
-  const p90 = values[idx(0.9)];
+  const median = values[idx(0.5)]!;
+  const p10 = values[idx(0.1)]!;
+  const p90 = values[idx(0.9)]!;
   return { median, p10, p90, lastCount };
 }
 
@@ -439,11 +439,13 @@ describe("README Performance Validation Benchmarks", () => {
 
       const spatialResult = benchmarkAlgorithm(
         (aabbs: AABB[]) =>
-          batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }).map(({ index1, index2, result }) => ({
-            a: index1,
-            b: index2,
-            result,
-          })),
+          batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }).map(
+            ({ index1, index2, result }: { index1: number; index2: number; result: { colliding: boolean } }) => ({
+              a: index1,
+              b: index2,
+              result,
+            })
+          ) as CollisionPair[],
         degenerateAABBs,
         "spatial-structures/spatial-hash",
         "degenerate-spatial",
@@ -482,11 +484,13 @@ describe("README Performance Validation Benchmarks", () => {
 
       const spatialResult = benchmarkAlgorithm(
         (aabbs: AABB[]) =>
-          batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }).map(({ index1, index2, result }) => ({
-            a: index1,
-            b: index2,
-            result,
-          })),
+          batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }).map(
+            ({ index1, index2, result }: { index1: number; index2: number; result: { colliding: boolean } }) => ({
+              a: index1,
+              b: index2,
+              result,
+            })
+          ) as CollisionPair[],
         denseAABBs,
         "spatial-structures/spatial-hash",
         "dense-overlap",
@@ -536,11 +540,13 @@ describe("README Performance Validation Benchmarks", () => {
 
       const uniformSpatial = benchmarkAlgorithm(
         (aabbs: AABB[]) =>
-          batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }).map(({ index1, index2, result }) => ({
-            a: index1,
-            b: index2,
-            result,
-          })),
+          batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }).map(
+            ({ index1, index2, result }: { index1: number; index2: number; result: { colliding: boolean } }) => ({
+              a: index1,
+              b: index2,
+              result,
+            })
+          ) as CollisionPair[],
         uniformAABBs,
         "spatial-structures/spatial-hash",
         "uniform",
@@ -550,11 +556,13 @@ describe("README Performance Validation Benchmarks", () => {
 
       const clusteredSpatial = benchmarkAlgorithm(
         (aabbs: AABB[]) =>
-          batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }).map(({ index1, index2, result }) => ({
-            a: index1,
-            b: index2,
-            result,
-          })),
+          batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity }).map(
+            ({ index1, index2, result }: { index1: number; index2: number; result: { colliding: boolean } }) => ({
+              a: index1,
+              b: index2,
+              result,
+            })
+          ) as CollisionPair[],
         clusteredAABBs,
         "spatial-structures/spatial-hash",
         "clustered",

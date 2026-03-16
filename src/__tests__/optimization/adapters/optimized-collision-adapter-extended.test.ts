@@ -363,8 +363,8 @@ describe("Optimized Collision Adapter Extended Coverage", () => {
       ];
       const collisions = adapter.detectCollisions(aabbs);
       expect(collisions.length).toBe(1);
-      expect(collisions[0].a).toBe(0);
-      expect(collisions[0].b).toBe(1);
+      expect(collisions[0]!.a).toBe(0);
+      expect(collisions[0]!.b).toBe(1);
     });
 
     it("should handle AABBs with zero dimensions", () => {

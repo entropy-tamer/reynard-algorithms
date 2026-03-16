@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { memoize, memoizeMath, memoizeGeometry, MathMemo, clearMathMemo, getMathMemoStats } from "../memoization";
+import { memoizeMath, memoizeGeometry, MathMemo, clearMathMemo, getMathMemoStats } from "../memoization";
 
 // Performance measurement utilities
 /**
@@ -132,8 +132,8 @@ describe("Memoization Performance Benchmarks", () => {
 
       // Assert cache effectiveness rather than wall-clock speed
       const trigStats = getMathMemoStats();
-      expect(trigStats.sin.hitRate).toBeGreaterThan(0.5);
-      expect(trigStats.cos.hitRate).toBeGreaterThan(0.5);
+      expect(trigStats["sin"]!.hitRate).toBeGreaterThan(0.5);
+      expect(trigStats["cos"]!.hitRate).toBeGreaterThan(0.5);
     });
 
     it("should demonstrate performance improvement for complex mathematical operations", { timeout: 4000 }, () => {
@@ -147,7 +147,7 @@ describe("Memoization Performance Benchmarks", () => {
 
       // Non-memoized
       const nonMemoizedTime = measureExecutionTime(() => {
-        return testData.map((x, i) => complexCalc(x, testData[(i + 1) % testData.length]));
+        return testData.map((x, i) => complexCalc(x, testData[(i + 1) % testData.length]!));
       }, iterations);
 
       // Memoized
@@ -156,12 +156,12 @@ describe("Memoization Performance Benchmarks", () => {
       );
 
       const memoizedTime = measureExecutionTime(() => {
-        return testData.map((x, i) => memoizedComplexCalc(x, testData[(i + 1) % testData.length]));
+        return testData.map((x, i) => memoizedComplexCalc(x, testData[(i + 1) % testData.length]!));
       }, iterations);
 
       // Second run
       const memoizedTime2 = measureExecutionTime(() => {
-        return testData.map((x, i) => memoizedComplexCalc(x, testData[(i + 1) % testData.length]));
+        return testData.map((x, i) => memoizedComplexCalc(x, testData[(i + 1) % testData.length]!));
       }, iterations);
 
       console.log("Complex Mathematical Operations:");
@@ -187,7 +187,7 @@ describe("Memoization Performance Benchmarks", () => {
       const iterations = 1;
       const pairIndices: Array<[number, number]> = Array.from({ length: 20 }, (_, i) => [
         i,
-        (i + 1) % testPoints.length,
+        (i + 1) % testPoints.length as number,
       ]);
       const repeats = 50;
 
@@ -198,8 +198,8 @@ describe("Memoization Performance Benchmarks", () => {
         const distances: number[] = [];
         for (let r = 0; r < repeats; r++) {
           for (const [i, j] of pairIndices) {
-            const p1 = testPoints[i];
-            const p2 = testPoints[j];
+            const p1 = testPoints[i]!;
+            const p2 = testPoints[j]!;
             distances.push(distance(p1.x, p1.y, p2.x, p2.y));
           }
         }
@@ -211,8 +211,8 @@ describe("Memoization Performance Benchmarks", () => {
         const distances: number[] = [];
         for (let r = 0; r < repeats; r++) {
           for (const [i, j] of pairIndices) {
-            const p1 = testPoints[i];
-            const p2 = testPoints[j];
+            const p1 = testPoints[i]!;
+            const p2 = testPoints[j]!;
             distances.push(MathMemo.distance(p1.x, p1.y, p2.x, p2.y));
           }
         }
@@ -224,8 +224,8 @@ describe("Memoization Performance Benchmarks", () => {
         const distances: number[] = [];
         for (let r = 0; r < repeats; r++) {
           for (const [i, j] of pairIndices) {
-            const p1 = testPoints[i];
-            const p2 = testPoints[j];
+            const p1 = testPoints[i]!;
+            const p2 = testPoints[j]!;
             distances.push(MathMemo.distance(p1.x, p1.y, p2.x, p2.y));
           }
         }
@@ -238,7 +238,7 @@ describe("Memoization Performance Benchmarks", () => {
       console.log(`  Memoized (cached): ${memoizedTime2.avgTime.toFixed(4)}ms avg`);
       // Assert cache is utilized
       const dStats = getMathMemoStats();
-      expect(dStats.distance.hitRate).toBeGreaterThan(0.9);
+      expect(dStats["distance"]!.hitRate).toBeGreaterThan(0.9);
     });
 
     it("should demonstrate performance improvement for vector operations", { timeout: 3000 }, () => {
@@ -291,7 +291,7 @@ describe("Memoization Performance Benchmarks", () => {
       console.log(`  Performance improvement: ${(nonMemoizedTime.avgTime / memoizedTime2.avgTime).toFixed(2)}x`);
 
       const vStats = getMathMemoStats();
-      expect(vStats.magnitude2D.hitRate).toBeGreaterThan(0.5);
+      expect(vStats["magnitude2D"]!.hitRate).toBeGreaterThan(0.5);
     });
   });
 
@@ -311,8 +311,8 @@ describe("Memoization Performance Benchmarks", () => {
 
         for (let i = 0; i < objects.length; i++) {
           for (let j = i + 1; j < objects.length; j++) {
-            const obj1 = objects[i];
-            const obj2 = objects[j];
+            const obj1 = objects[i]!;
+            const obj2 = objects[j]!;
             const distance = Math.sqrt((obj2.x - obj1.x) ** 2 + (obj2.y - obj1.y) ** 2);
             const minDistance = obj1.radius + obj2.radius;
 
@@ -335,8 +335,8 @@ describe("Memoization Performance Benchmarks", () => {
 
         for (let i = 0; i < objects.length; i++) {
           for (let j = i + 1; j < objects.length; j++) {
-            const obj1 = objects[i];
-            const obj2 = objects[j];
+            const obj1 = objects[i]!;
+            const obj2 = objects[j]!;
             const distance = MathMemo.distance(obj1.x, obj1.y, obj2.x, obj2.y);
             const minDistance = obj1.radius + obj2.radius;
 
@@ -366,7 +366,7 @@ describe("Memoization Performance Benchmarks", () => {
 
       // Collision workload varies; assert memoized path completes and cache is used
       const cStats = getMathMemoStats();
-      expect(cStats.distance.hitRate).toBeGreaterThan(0.2);
+      expect(cStats["distance"]!.hitRate).toBeGreaterThan(0.2);
     });
   });
 
@@ -442,9 +442,6 @@ describe("Memoization Performance Benchmarks", () => {
       const gridSize = 30;
       const iterations = 2;
 
-      // Generate a grid with random obstacles
-      const grid = Array.from({ length: gridSize }, () => Array.from({ length: gridSize }, () => Math.random() > 0.3));
-
       // A* pathfinding with heuristic calculation
       const calculateHeuristic = (x1: number, y1: number, x2: number, y2: number) => {
         return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
@@ -467,8 +464,7 @@ describe("Memoization Performance Benchmarks", () => {
         }));
 
         for (let i = 0; i < startPoints.length; i++) {
-          const start = startPoints[i];
-          const end = endPoints[i];
+          const end = endPoints[i]!;
 
           // Simulate heuristic calculations (simplified A*)
           for (let x = 0; x < gridSize; x += 10) {
@@ -508,7 +504,7 @@ describe("Memoization Performance Benchmarks", () => {
 
       // Pathfinding sim is illustrative only; assert cache usage
       const pStats = getMathMemoStats();
-      expect(pStats.distance.hitRate).toBeGreaterThan(0.2);
+      expect(pStats["distance"]!.hitRate).toBeGreaterThan(0.2);
     });
   });
 });

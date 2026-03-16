@@ -77,7 +77,7 @@ describe("Quadtree", () => {
 
         const query = quadtree.queryPoint({ point: { x: 100, y: 200 } });
         expect(query.objects).toHaveLength(1);
-        expect(query.objects[0].data).toBe("test");
+        expect(query.objects[0]!.data).toBe("test");
       });
 
       it("should handle objects with bounding boxes", () => {
@@ -86,7 +86,7 @@ describe("Quadtree", () => {
 
         const query = quadtree.queryRect({ bounds: { x: 75, y: 75, width: 50, height: 50 } });
         expect(query.objects).toHaveLength(1);
-        expect(query.objects[0].data).toBe("box");
+        expect(query.objects[0]!.data).toBe("box");
       });
 
       it("should return false for objects outside bounds", () => {
@@ -153,7 +153,7 @@ describe("Quadtree", () => {
         });
 
         expect(query.objects).toHaveLength(1);
-        expect(query.objects[0].data).toBe("obj1");
+        expect(query.objects[0]!.data).toBe("obj1");
       });
 
       it("should return empty result for empty query area", () => {
@@ -189,7 +189,7 @@ describe("Quadtree", () => {
         });
 
         expect(query.objects).toHaveLength(1);
-        expect(query.objects[0].data).toBe("obj1");
+        expect(query.objects[0]!.data).toBe("obj1");
       });
 
       it("should handle large radius queries", () => {
@@ -212,7 +212,7 @@ describe("Quadtree", () => {
 
         const query = quadtree.queryPoint({ point: { x: 100, y: 200 } });
         expect(query.objects).toHaveLength(1);
-        expect(query.objects[0].data).toBe("obj1");
+        expect(query.objects[0]!.data).toBe("obj1");
       });
 
       it("should handle tolerance in point queries", () => {
@@ -224,7 +224,7 @@ describe("Quadtree", () => {
         });
 
         expect(query.objects).toHaveLength(1);
-        expect(query.objects[0].data).toBe("obj1");
+        expect(query.objects[0]!.data).toBe("obj1");
       });
     });
 
@@ -267,9 +267,9 @@ describe("Quadtree", () => {
         const result = quadtree.detectCollisions(20);
 
         expect(result.collisions).toHaveLength(1);
-        expect(result.collisions[0].object1.data).toBe("obj1");
-        expect(result.collisions[0].object2.data).toBe("obj2");
-        expect(result.collisions[0].distance).toBeCloseTo(7.07, 1);
+        expect(result.collisions[0]!.object1.data).toBe("obj1");
+        expect(result.collisions[0]!.object2.data).toBe("obj2");
+        expect(result.collisions[0]!.distance).toBeCloseTo(7.07, 1);
       });
 
       it("should return empty result when no collisions exist", () => {
@@ -384,9 +384,9 @@ describe("Quadtree", () => {
 
       eventQuadtree.insert("obj1", { x: 100, y: 100 });
 
-      expect(events[0].type).toBe("insert");
-      expect(events[0].data?.data).toBe("obj1");
-      expect(events[0].timestamp).toBeGreaterThan(0);
+      expect(events[0]!.type).toBe("insert");
+      expect(events[0]!.data?.data).toBe("obj1");
+      expect(events[0]!.timestamp).toBeGreaterThan(0);
     });
   });
 

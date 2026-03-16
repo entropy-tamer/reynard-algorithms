@@ -19,7 +19,7 @@ describe("FFTFactory", () => {
       expect(fft.getSize()).toBe(1024);
       // Check if getAlgorithmName exists (Radix2FFT implements it)
       if ("getAlgorithmName" in fft && typeof fft.getAlgorithmName === "function") {
-        expect(fft.getAlgorithmName()).toBe("Radix-2 Cooley-Tukey");
+        expect((fft as unknown as { getAlgorithmName(): string }).getAlgorithmName()).toBe("Radix-2 Cooley-Tukey");
       }
     });
 
@@ -45,7 +45,7 @@ describe("FFTFactory", () => {
       expect(fft).toBeDefined();
       expect(fft.getSize()).toBe(256);
       if ("getAlgorithmName" in fft && typeof fft.getAlgorithmName === "function") {
-        expect(fft.getAlgorithmName()).toBe("Radix-4 Cooley-Tukey");
+        expect((fft as unknown as { getAlgorithmName(): string }).getAlgorithmName()).toBe("Radix-4 Cooley-Tukey");
       }
     });
   });
@@ -56,7 +56,7 @@ describe("FFTFactory", () => {
 
       expect(fft).toBeDefined();
       expect(fft.getSize()).toBe(256);
-      expect(fft.getAlgorithmName()).toBe("Radix-4 Cooley-Tukey");
+      expect((fft as unknown as { getAlgorithmName(): string }).getAlgorithmName()).toBe("Radix-4 Cooley-Tukey");
     });
 
     it("should create Radix-2 FFT for power-of-2 but not power-of-4 size", () => {
@@ -64,7 +64,7 @@ describe("FFTFactory", () => {
 
       expect(fft).toBeDefined();
       expect(fft.getSize()).toBe(512);
-      expect(fft.getAlgorithmName()).toBe("Radix-2 Cooley-Tukey");
+      expect((fft as unknown as { getAlgorithmName(): string }).getAlgorithmName()).toBe("Radix-2 Cooley-Tukey");
     });
 
     it("should create Mixed-Radix FFT for non-power-of-2 size", () => {
@@ -72,7 +72,7 @@ describe("FFTFactory", () => {
 
       expect(fft).toBeDefined();
       expect(fft.getSize()).toBe(1000);
-      expect(fft.getAlgorithmName()).toBe("Mixed-Radix (Bluestein)");
+      expect((fft as unknown as { getAlgorithmName(): string }).getAlgorithmName()).toBe("Mixed-Radix (Bluestein)");
     });
 
     it("should accept partial config", () => {
@@ -89,14 +89,14 @@ describe("FFTFactory", () => {
 
       expect(fft).toBeDefined();
       expect(fft.getSize()).toBe(1024);
-      expect(fft.getAlgorithmName()).toBe("Radix-2 Cooley-Tukey");
+      expect((fft as unknown as { getAlgorithmName(): string }).getAlgorithmName()).toBe("Radix-2 Cooley-Tukey");
     });
 
     it("should create Radix-4 FFT with explicit algorithm", () => {
       const fft = FFTFactory.createWithAlgorithm(FFTAlgorithm.RADIX_4, 256); // 256 is power of 4
       expect(fft).toBeDefined();
       expect(fft.getSize()).toBe(256);
-      expect(fft.getAlgorithmName()).toBe("Radix-4 Cooley-Tukey");
+      expect((fft as unknown as { getAlgorithmName(): string }).getAlgorithmName()).toBe("Radix-4 Cooley-Tukey");
     });
   });
 
@@ -189,8 +189,8 @@ describe("FFTFactory", () => {
 
       expect(recommendations).toHaveProperty("power-of-2");
       expect(recommendations).toHaveProperty("auto-select");
-      expect(recommendations["power-of-2"].algorithm).toBe(FFTAlgorithm.RADIX_2);
-      expect(recommendations["auto-select"].algorithm).toBe(FFTAlgorithm.AUTO);
+      expect(recommendations["power-of-2"]!.algorithm).toBe(FFTAlgorithm.RADIX_2);
+      expect(recommendations["auto-select"]!.algorithm).toBe(FFTAlgorithm.AUTO);
     });
   });
 

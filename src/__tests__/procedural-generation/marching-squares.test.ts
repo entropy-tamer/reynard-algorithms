@@ -4,13 +4,9 @@
  * Comprehensive test suite for the refined LUT marching squares implementation.
  */
 
-import { beforeEach, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { MarchingSquares } from "../../algorithms/procedural-generation/marching-squares/marching-squares-core";
 import { MarchingSquaresLegacy } from "../../algorithms/procedural-generation/marching-squares/marching-squares-legacy";
-import type {
-  Contour,
-  MarchingSquaresResult,
-} from "../../algorithms/procedural-generation/marching-squares/marching-squares-types";
 
 describe("MarchingSquares (Refined LUT)", () => {
   describe("Basic Functionality", () => {
@@ -202,7 +198,7 @@ describe("MarchingSquares (Refined LUT)", () => {
       const result = ms.compute(grid, 0.5);
 
       if (result.contours.length > 0) {
-        const analysis = ms.analyzeContour(result.contours[0]);
+        const analysis = ms.analyzeContour(result.contours[0]!);
 
         expect(analysis.length).toBeGreaterThan(0);
         expect(analysis.centroid).toBeDefined();
@@ -223,7 +219,7 @@ describe("MarchingSquares (Refined LUT)", () => {
 
       const closedContours = result.contours.filter(c => c.isClosed);
       if (closedContours.length > 0) {
-        const analysis = ms.analyzeContour(closedContours[0], {
+        const analysis = ms.analyzeContour(closedContours[0]!, {
           computeAreas: true,
         });
 
@@ -250,7 +246,7 @@ describe("MarchingSquares (Refined LUT)", () => {
       const result = ms.compute(grid, 0.5);
 
       if (result.contours.length > 0) {
-        const simplification = ms.simplifyContour(result.contours[0], {
+        const simplification = ms.simplifyContour(result.contours[0]!, {
           maxDistance: 0.1,
         });
 
@@ -272,15 +268,15 @@ describe("MarchingSquares (Refined LUT)", () => {
       const result = ms.compute(grid, 0.5);
 
       if (result.contours.length > 0) {
-        const original = result.contours[0];
+        const original = result.contours[0]!;
         const simplification = ms.simplifyContour(original, {
           maxDistance: 0.5,
           preserveEndpoints: true,
         });
 
         if (original.segments.length > 0 && simplification.simplifiedContour.segments.length > 0) {
-          const originalStart = original.segments[0].start;
-          const simplifiedStart = simplification.simplifiedContour.segments[0].start;
+          const originalStart = original.segments[0]!.start;
+          const simplifiedStart = simplification.simplifiedContour.segments[0]!.start;
           expect(Math.abs(originalStart.x - simplifiedStart.x)).toBeLessThan(0.1);
           expect(Math.abs(originalStart.y - simplifiedStart.y)).toBeLessThan(0.1);
         }

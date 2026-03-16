@@ -51,7 +51,7 @@ describe("FFT Validation", () => {
 
       const reconstructed = new Float32Array(1024);
       for (let i = 0; i < 1024; i++) {
-        reconstructed[i] = inverseResult.real[i];
+        reconstructed[i] = inverseResult.real[i] ?? 0;
       }
 
       // Use very lenient tolerance for round-trip due to Float32Array precision
@@ -70,8 +70,8 @@ describe("FFT Validation", () => {
       const reconstructedReal = new Float32Array(1024);
       const reconstructedImag = new Float32Array(1024);
       for (let i = 0; i < 1024; i++) {
-        reconstructedReal[i] = inverseResult.real[i];
-        reconstructedImag[i] = inverseResult.imag[i];
+        reconstructedReal[i] = inverseResult.real[i] ?? 0;
+        reconstructedImag[i] = inverseResult.imag[i] ?? 0;
       }
 
       // Use even more lenient tolerance for complex signals due to accumulated errors
@@ -159,10 +159,10 @@ describe("FFT Validation", () => {
 
       // Check that it's a local maximum (with some tolerance for numerical issues)
       if (expectedBin > 0) {
-        expect(result.magnitude[expectedBin]).toBeGreaterThan(result.magnitude[expectedBin - 1] * 0.9);
+        expect(result.magnitude[expectedBin]).toBeGreaterThan((result.magnitude[expectedBin - 1] ?? 0) * 0.9);
       }
       if (expectedBin < 1023) {
-        expect(result.magnitude[expectedBin]).toBeGreaterThan(result.magnitude[expectedBin + 1] * 0.9);
+        expect(result.magnitude[expectedBin]).toBeGreaterThan((result.magnitude[expectedBin + 1] ?? 0) * 0.9);
       }
     });
   });

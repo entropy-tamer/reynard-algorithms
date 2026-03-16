@@ -19,8 +19,44 @@ import {
 } from "../../optimization/adapters/collision-algorithms";
 import { MemoryPool } from "../../optimization/core/memory-pool";
 import { getAlgorithmConfig, updateAlgorithmConfig } from "../../config/algorithm-config";
+import type { WorkloadAnalysis } from "../../optimization/core/algorithm-selector-types";
 import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
+
+function createMinimalWorkloadAnalysis(objectCount: number): WorkloadAnalysis {
+  return {
+    workload: {
+      objectCount,
+      spatialDensity: 0.5,
+      overlapRatio: 0,
+      updateFrequency: 0,
+      queryPattern: "random",
+    },
+    complexity: {
+      naive: objectCount * objectCount,
+      spatial: objectCount,
+      optimized: Math.log(objectCount + 1),
+      crossoverPoint: 100,
+      recommendation: "naive",
+    },
+    memoryPressure: {
+      estimatedUsage: { naive: 0, spatial: 0, optimized: 0 },
+      pressure: 0,
+      recommendation: "",
+    },
+    performanceProfile: {
+      confidence: 0.9,
+      expectedPerformance: {
+        executionTime: 0,
+        memoryUsage: 0,
+        allocationCount: 0,
+        cacheHitRate: 0,
+      },
+      historicalData: [],
+    },
+    recommendations: [],
+  };
+}
 
 describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
   let collisionSelector: CollisionSelector;
@@ -148,6 +184,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
         thresholds: {
           naiveToSpatial: 200,
           spatialToOptimized: 800,
+          pathfindingThreshold: 1000,
+          spatialHashThreshold: 400,
         },
       });
 
@@ -160,6 +198,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
         thresholds: {
           naiveToSpatial: originalNaiveToSpatial,
           spatialToOptimized: originalConfig.thresholds.spatialToOptimized,
+          pathfindingThreshold: originalConfig.thresholds.pathfindingThreshold,
+          spatialHashThreshold: originalConfig.thresholds.spatialHashThreshold,
         },
       });
     });
@@ -178,12 +218,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
       ];
 
       for (const testCase of testCases) {
-        const workload = {
-          workload: { objectCount: testCase.count },
-          characteristics: { density: 0.5, distribution: "uniform" },
-        };
-
-        const selection = collisionSelector.selectOptimalCollisionAlgorithm(workload);
+        const analysis = createMinimalWorkloadAnalysis(testCase.count);
+        const selection = collisionSelector.selectOptimalCollisionAlgorithm(analysis);
         expect(selection.algorithm).toBe(testCase.expectedAlgorithm);
       }
     });
@@ -225,6 +261,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
           thresholds: {
             naiveToSpatial: threshold,
             spatialToOptimized: threshold * 2,
+            pathfindingThreshold: 1000,
+            spatialHashThreshold: 400,
           },
         });
 
@@ -247,6 +285,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
         thresholds: {
           naiveToSpatial: config.thresholds.naiveToSpatial,
           spatialToOptimized: config.thresholds.spatialToOptimized,
+          pathfindingThreshold: config.thresholds.pathfindingThreshold,
+          spatialHashThreshold: config.thresholds.spatialHashThreshold,
         },
       });
     });
@@ -259,6 +299,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
         thresholds: {
           naiveToSpatial: 1,
           spatialToOptimized: 2,
+          pathfindingThreshold: 1000,
+          spatialHashThreshold: 400,
         },
       });
 
@@ -271,6 +313,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
         thresholds: {
           naiveToSpatial: 1000,
           spatialToOptimized: 2000,
+          pathfindingThreshold: 1000,
+          spatialHashThreshold: 400,
         },
       });
 
@@ -283,6 +327,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
         thresholds: {
           naiveToSpatial: config.thresholds.naiveToSpatial,
           spatialToOptimized: config.thresholds.spatialToOptimized,
+          pathfindingThreshold: config.thresholds.pathfindingThreshold,
+          spatialHashThreshold: config.thresholds.spatialHashThreshold,
         },
       });
     });
@@ -298,6 +344,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
           thresholds: {
             naiveToSpatial: threshold,
             spatialToOptimized: threshold * 2,
+            pathfindingThreshold: 1000,
+            spatialHashThreshold: 400,
           },
         });
 
@@ -326,6 +374,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
         thresholds: {
           naiveToSpatial: config.thresholds.naiveToSpatial,
           spatialToOptimized: config.thresholds.spatialToOptimized,
+          pathfindingThreshold: config.thresholds.pathfindingThreshold,
+          spatialHashThreshold: config.thresholds.spatialHashThreshold,
         },
       });
     });
@@ -346,8 +396,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
 
       // Performance should scale reasonably
       for (let i = 1; i < results.length; i++) {
-        const sizeRatio = workloadSizes[i] / workloadSizes[i - 1];
-        const timeRatio = results[i].statistics.median / results[i - 1].statistics.median;
+        const sizeRatio = workloadSizes[i]! / workloadSizes[i - 1]!;
+        const timeRatio = results[i]!.statistics.median / results[i - 1]!.statistics.median;
 
         // Time should not increase more than quadratically (with tolerance)
         expect(timeRatio).toBeLessThan(sizeRatio * sizeRatio * 1.2);
@@ -369,12 +419,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
       ];
 
       for (const test of testWorkloads) {
-        const workload = {
-          workload: { objectCount: test.count },
-          characteristics: { density: 0.5, distribution: "uniform" },
-        };
-
-        const selection = collisionSelector.selectOptimalCollisionAlgorithm(workload);
+        const analysis = createMinimalWorkloadAnalysis(test.count);
+        const selection = collisionSelector.selectOptimalCollisionAlgorithm(analysis);
         expect(selection.algorithm).toBe(test.expected);
       }
     });
@@ -388,6 +434,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
           thresholds: {
             naiveToSpatial: -1, // Invalid
             spatialToOptimized: 100,
+            pathfindingThreshold: 1000,
+            spatialHashThreshold: 400,
           },
         });
       }).not.toThrow();
@@ -401,6 +449,8 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
         thresholds: {
           naiveToSpatial: originalConfig.thresholds.naiveToSpatial,
           spatialToOptimized: originalConfig.thresholds.spatialToOptimized,
+          pathfindingThreshold: originalConfig.thresholds.pathfindingThreshold,
+          spatialHashThreshold: originalConfig.thresholds.spatialHashThreshold,
         },
       });
     });
@@ -408,6 +458,7 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
 
   afterAll(() => {
     // Update verification report with test results
+    verificationReportGenerator.updateIssueStatus(3, IssueStatus.VERIFIED);
     verificationReportGenerator.updateIssueVerification(3, {
       testResults: {
         passed: 10, // Update based on actual test results
@@ -415,7 +466,6 @@ describe("Issue #3: Hardcoded Algorithm Selection Thresholds", () => {
         skipped: 0,
         total: 10,
       },
-      status: IssueStatus.VERIFIED,
     });
 
     // Add performance data

@@ -280,7 +280,7 @@ describe("Interval Tree Data Structure", () => {
     });
 
     it("should update configuration", () => {
-      intervalTree.updateConfig({ allowDuplicates: false });
+      (intervalTree as unknown as { updateConfig: (c: { allowDuplicates: boolean }) => void }).updateConfig({ allowDuplicates: false });
 
       intervalTree.insert({ start: 1, end: 5 });
       const result = intervalTree.insert({ start: 1, end: 5 });
@@ -385,7 +385,7 @@ describe("Interval Tree Data Structure", () => {
 
       const searchResult = newTree.searchOverlapping({ start: 2, end: 4 });
       expect(searchResult.count).toBe(1);
-      expect(searchResult.intervals[0].data).toEqual({ id: 1 });
+      expect(searchResult.intervals[0]!.data).toEqual({ id: 1 });
     });
   });
 

@@ -45,10 +45,12 @@ function calculateWCSSManual(data: Point[], labels: number[], centroids: Point[]
   let wcss = 0;
   for (let i = 0; i < data.length; i++) {
     const clusterIdx = labels[i];
+    if (clusterIdx === undefined) continue;
     const centroid = centroids[clusterIdx];
-    if (centroid) {
-      const dx = data[i].x - centroid.x;
-      const dy = data[i].y - centroid.y;
+    const pt = data[i];
+    if (centroid && pt) {
+      const dx = pt.x - centroid.x;
+      const dy = pt.y - centroid.y;
       wcss += dx * dx + dy * dy;
     }
   }
@@ -98,6 +100,7 @@ function verifyNearestCentroidAssignment(data: Point[], labels: number[], centro
   for (let i = 0; i < data.length; i++) {
     const point = data[i];
     const assignedCluster = labels[i];
+    if (point === undefined || assignedCluster === undefined) return false;
     const assignedCentroid = centroids[assignedCluster];
     if (!assignedCentroid) return false;
 
@@ -112,8 +115,8 @@ function verifyNearestCentroidAssignment(data: Point[], labels: number[], centro
       const otherCentroid = centroids[j];
       if (!otherCentroid) continue;
 
-      const dxOther = point.x - otherCentroid.x;
-      const dyOther = point.y - otherCentroid.y;
+      const dxOther = point!.x - otherCentroid.x;
+      const dyOther = point!.y - otherCentroid.y;
       const distOther = dxOther * dxOther + dyOther * dyOther;
 
       if (distOther < distAssigned - 1e-10) {
@@ -178,8 +181,8 @@ describe("K-Means Algorithm Validation", () => {
 
       // Points should be clustered as [0,1] and [10,11]
       // Verify by checking distances
-      const cluster0 = result.clusters[0];
-      const cluster1 = result.clusters[1];
+      const cluster0 = result.clusters[0]!;
+      const cluster1 = result.clusters[1]!;
 
       // One cluster should have points near 0, other near 10
       const hasNearZero = cluster0.some((p) => Math.abs(p.x) < 2) || cluster1.some((p) => Math.abs(p.x) < 2);

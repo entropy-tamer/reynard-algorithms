@@ -117,8 +117,8 @@ describe("JPS", () => {
       // Path should only use cardinal directions
       if (result.path.length > 1) {
         for (let i = 1; i < result.path.length; i++) {
-          const prev = result.path[i - 1];
-          const curr = result.path[i];
+          const prev = result.path[i - 1]!;
+          const curr = result.path[i]!;
           const dx = Math.abs(curr.x - prev.x);
           const dy = Math.abs(curr.y - prev.y);
           // Should be cardinal movement (one axis movement only)

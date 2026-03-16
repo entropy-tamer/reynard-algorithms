@@ -223,17 +223,17 @@ describe("Circular Positioning Algorithms", () => {
       expect(positions.length).toBe(4);
 
       // Check that positions are at 0°, 90°, 180°, 270°
-      expect(positions[0].x).toBeCloseTo(10, 10);
-      expect(positions[0].y).toBeCloseTo(0, 10);
+      expect(positions[0]!.x).toBeCloseTo(10, 10);
+      expect(positions[0]!.y).toBeCloseTo(0, 10);
 
-      expect(positions[1].x).toBeCloseTo(0, 10);
-      expect(positions[1].y).toBeCloseTo(10, 10);
+      expect(positions[1]!.x).toBeCloseTo(0, 10);
+      expect(positions[1]!.y).toBeCloseTo(10, 10);
 
-      expect(positions[2].x).toBeCloseTo(-10, 10);
-      expect(positions[2].y).toBeCloseTo(0, 10);
+      expect(positions[2]!.x).toBeCloseTo(-10, 10);
+      expect(positions[2]!.y).toBeCloseTo(0, 10);
 
-      expect(positions[3].x).toBeCloseTo(0, 10);
-      expect(positions[3].y).toBeCloseTo(-10, 10);
+      expect(positions[3]!.x).toBeCloseTo(0, 10);
+      expect(positions[3]!.y).toBeCloseTo(-10, 10);
     });
 
     it("should use custom start angle", () => {
@@ -244,8 +244,8 @@ describe("Circular Positioning Algorithms", () => {
       });
 
       // First position should be at 90 degrees (up)
-      expect(positions[0].x).toBeCloseTo(0, 10);
-      expect(positions[0].y).toBeCloseTo(10, 10);
+      expect(positions[0]!.x).toBeCloseTo(0, 10);
+      expect(positions[0]!.y).toBeCloseTo(10, 10);
     });
 
     it("should use custom angle step", () => {
@@ -258,8 +258,8 @@ describe("Circular Positioning Algorithms", () => {
 
       expect(positions.length).toBe(3);
       // First at 0°, second at 60°, third at 120°
-      expect(positions[0].x).toBeCloseTo(10, 10);
-      expect(positions[0].y).toBeCloseTo(0, 10);
+      expect(positions[0]!.x).toBeCloseTo(10, 10);
+      expect(positions[0]!.y).toBeCloseTo(0, 10);
     });
 
     it("should use custom center", () => {
@@ -270,8 +270,8 @@ describe("Circular Positioning Algorithms", () => {
       });
 
       // First position should be offset by center
-      expect(positions[0].x).toBeCloseTo(15, 10);
-      expect(positions[0].y).toBeCloseTo(5, 10);
+      expect(positions[0]!.x).toBeCloseTo(15, 10);
+      expect(positions[0]!.y).toBeCloseTo(5, 10);
     });
 
     it("should generate positions for clock face (12 hours)", () => {
@@ -283,15 +283,15 @@ describe("Circular Positioning Algorithms", () => {
 
       expect(positions.length).toBe(12);
       // First position should be at top (12 o'clock) - positive y in standard coordinates
-      expect(positions[0].x).toBeCloseTo(0, 10);
-      expect(positions[0].y).toBeCloseTo(100, 10);
+      expect(positions[0]!.x).toBeCloseTo(0, 10);
+      expect(positions[0]!.y).toBeCloseTo(100, 10);
     });
 
     it("should handle single position", () => {
       const positions = calculateRadialPositions({ count: 1, radius: 10 });
       expect(positions.length).toBe(1);
-      expect(positions[0].x).toBeCloseTo(10, 10);
-      expect(positions[0].y).toBeCloseTo(0, 10);
+      expect(positions[0]!.x).toBeCloseTo(10, 10);
+      expect(positions[0]!.y).toBeCloseTo(0, 10);
     });
   });
 
@@ -402,7 +402,7 @@ describe("Circular Positioning Algorithms", () => {
       expect(positions.length).toBe(12);
 
       // Verify first position is at top (positive y in standard coordinates)
-      const firstPos = positions[0];
+      const firstPos = positions[0]!;
       expect(firstPos.x).toBeCloseTo(0, 10);
       expect(firstPos.y).toBeCloseTo(radius, 10);
 
@@ -439,8 +439,8 @@ describe("Circular Positioning Algorithms", () => {
       ];
 
       positions.forEach((pos, i) => {
-        expect(pos.x).toBeCloseTo(expected[i].x, 10);
-        expect(pos.y).toBeCloseTo(expected[i].y, 10);
+        expect(pos.x).toBeCloseTo(expected[i]!.x, 10);
+        expect(pos.y).toBeCloseTo(expected[i]!.y, 10);
       });
     });
   });

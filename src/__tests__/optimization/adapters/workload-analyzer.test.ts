@@ -11,7 +11,7 @@ import {
   calculateSpatialDensity,
   analyzeQueryPattern,
 } from "../../../optimization/adapters/workload-analyzer";
-import type { AABB } from "../../../core/geometry/collision/aabb/aabb-types";
+import type { AABB } from "../../../algorithms/collision/narrow-phase/aabb/aabb-types";
 
 describe("WorkloadAnalyzer", () => {
   describe("calculateSpatialDensity", () => {

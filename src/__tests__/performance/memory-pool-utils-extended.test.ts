@@ -294,8 +294,8 @@ describe("Memory Pool Utils Extended Coverage", () => {
       const stats = manager.getAllStats();
       expect(stats).toHaveProperty("pool1");
       expect(stats).toHaveProperty("pool2");
-      expect(stats.pool1).toBeDefined();
-      expect(stats.pool2).toBeDefined();
+      expect(stats["pool1"]).toBeDefined();
+      expect(stats["pool2"]).toBeDefined();
     });
 
     it("should clear all pools", () => {

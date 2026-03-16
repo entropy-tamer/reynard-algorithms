@@ -34,6 +34,7 @@ export class SpatialHash<T extends SpatialDataType = SpatialDataType> {
     removeCount: 0,
   };
   private lastCleanup = Date.now();
+  private _isResizing = false;
 
   /**
    * Create a SpatialHash instance.
@@ -63,8 +64,10 @@ export class SpatialHash<T extends SpatialDataType = SpatialDataType> {
       { cells: this.cells, objectToCells: this.objectToCells, config: this.config, stats: this.stats },
       object
     );
-    this.checkAutoResize();
-    this.checkCleanup();
+    if (!this._isResizing) {
+      this.checkAutoResize();
+      this.checkCleanup();
+    }
   }
 
   /**
@@ -202,12 +205,17 @@ export class SpatialHash<T extends SpatialDataType = SpatialDataType> {
    */
   resize(newCellSize: number): void {
     if (newCellSize === this.config.cellSize) return;
-    const oldCells = this.cells;
-    const oldObjectToCells = this.objectToCells;
-    this.config.cellSize = newCellSize;
-    this.cells = new Map();
-    this.objectToCells = new Map();
-    resizeReindexImpl<T>(oldCells, oldObjectToCells, o => this.insert(o));
+    this._isResizing = true;
+    try {
+      const oldCells = this.cells;
+      const oldObjectToCells = this.objectToCells;
+      this.config.cellSize = newCellSize;
+      this.cells = new Map();
+      this.objectToCells = new Map();
+      resizeReindexImpl<T>(oldCells, oldObjectToCells, o => this.insert(o));
+    } finally {
+      this._isResizing = false;
+    }
   }
 
   /**

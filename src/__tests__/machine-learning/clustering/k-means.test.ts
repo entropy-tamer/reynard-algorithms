@@ -43,7 +43,7 @@ describe("KMeans", () => {
     });
 
     it("should use k-means++ initialization by default", () => {
-      const data: Point[] = Array.from({ length: 20 }, (_, i) => ({
+      const data: Point[] = Array.from({ length: 20 }, () => ({
         x: Math.random() * 100,
         y: Math.random() * 100,
       }));

@@ -400,7 +400,13 @@ export class StructureForge {
       for (let y = 0; y < this.config.height; y++) {
         for (let x = 0; x < centerX; x++) {
           const mirrorX = this.config.width - 1 - x;
-          layers[z]![y]![mirrorX] = { ...layers[z]![y]![x] };
+          const src = layers[z]![y]![x]!;
+          layers[z]![y]![mirrorX] = {
+            type: src.type,
+            material: src.material,
+            ...(src.height !== undefined && { height: src.height }),
+            ...(src.metadata !== undefined && { metadata: src.metadata }),
+          };
         }
       }
     }
@@ -481,7 +487,7 @@ export class StructureForge {
   /**
    * Calculate bounding box of the generated structure
    */
-  private calculateBounds(layers: StructureCell[][][]) {
+  private calculateBounds(_layers: StructureCell[][][]) {
     return {
       minX: 0,
       maxX: this.config.width - 1,

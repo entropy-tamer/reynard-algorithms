@@ -190,7 +190,7 @@ describe("FlowField", () => {
       const goals: Point[] = [{ x: 9, y: 9 }];
 
       flowField.generateFlowField(grid, width, height, goals);
-      const stats1 = flowField.getStats();
+      flowField.getStats(); // baseline before reset
 
       flowField.resetStats();
       const stats2 = flowField.getStats();

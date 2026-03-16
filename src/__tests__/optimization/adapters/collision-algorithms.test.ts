@@ -11,7 +11,7 @@ import {
   executeOptimizedCollisionDetection,
 } from "../../../optimization/adapters/collision-algorithms";
 import { MemoryPool } from "../../../optimization/core/memory-pool";
-import type { AABB } from "../../../core/geometry/collision/aabb/aabb-types";
+import type { AABB } from "../../../algorithms/collision/narrow-phase/aabb/aabb-types";
 
 describe("Collision Algorithms", () => {
   let memoryPool: MemoryPool;
@@ -137,9 +137,9 @@ describe("Collision Algorithms", () => {
       const result = executeNaiveCollisionDetection(aabbs);
 
       expect(result).toHaveLength(1);
-      expect(result[0].a).toBe(0);
-      expect(result[0].b).toBe(1);
-      expect(result[0].result.colliding).toBe(true);
+      expect(result[0]!.a).toBe(0);
+      expect(result[0]!.b).toBe(1);
+      expect(result[0]!.result.colliding).toBe(true);
     });
 
     it("should handle empty array", () => {
@@ -192,8 +192,8 @@ describe("Collision Algorithms", () => {
       const result = executeSpatialCollisionDetection(aabbs, mockMemoryPool as any);
 
       expect(result).toHaveLength(1);
-      expect(result[0].a).toBe(0);
-      expect(result[0].b).toBe(1);
+      expect(result[0]!.a).toBe(0);
+      expect(result[0]!.b).toBe(1);
     });
 
     it("should handle empty array", () => {
@@ -240,8 +240,8 @@ describe("Collision Algorithms", () => {
       const result = executeOptimizedCollisionDetection(aabbs, memoryPool);
 
       expect(result).toHaveLength(1);
-      expect(result[0].a).toBe(0);
-      expect(result[0].b).toBe(1);
+      expect(result[0]!.a).toBe(0);
+      expect(result[0]!.b).toBe(1);
     });
 
     it("should handle empty array", () => {
@@ -311,9 +311,7 @@ describe("Collision Algorithms", () => {
       const a: AABB = { x: 0, y: 0, width: -10, height: -10 };
       const b: AABB = { x: 0, y: 0, width: 10, height: 10 };
 
-      const result = checkCollision(a, b);
-
-      expect(typeof result).toBe("boolean");
+      expect(() => checkCollision(a, b)).toThrow();
     });
 
     it("should handle very large coordinate values", () => {

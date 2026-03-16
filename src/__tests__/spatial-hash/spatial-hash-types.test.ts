@@ -186,7 +186,7 @@ describe("Spatial Hash Types", () => {
       expect(obj.y).toBe(200);
       expect(obj.width).toBe(50);
       expect(obj.height).toBe(75);
-      expect(obj.data).toBe("test-data");
+      expect(obj.data).toEqual(createTestSpatialData("object-1"));
     });
 
     it("should create a spatial object with number id", () => {
@@ -200,7 +200,7 @@ describe("Spatial Hash Types", () => {
       expect(obj.id).toBe(123);
       expect(obj.x).toBe(0);
       expect(obj.y).toBe(0);
-      expect(obj.data).toEqual({ type: "player", health: 100 });
+      expect(obj.data).toEqual(createTestGameEntityData("player-123", "player"));
     });
 
     it("should handle objects without dimensions", () => {
@@ -216,7 +216,7 @@ describe("Spatial Hash Types", () => {
       expect(obj.y).toBe(75);
       expect(obj.width).toBeUndefined();
       expect(obj.height).toBeUndefined();
-      expect(obj.data).toBe("point-data");
+      expect(obj.data).toEqual(createTestSpatialData("point-data"));
     });
 
     it("should handle negative coordinates", () => {

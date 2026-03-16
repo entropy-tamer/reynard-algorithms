@@ -9,9 +9,9 @@
 
 import { describe, it, expect, beforeEach } from "vitest";
 import { detectCollisions, PerformanceMonitor, configureOptimization, cleanup } from "../optimized";
-import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../../algorithms/collision/aabb";
+import { batchCollisionDetection, batchCollisionWithSpatialHash } from "../algorithms/collision/narrow-phase/aabb";
 import { PerformanceTimer } from "../utils/performance/timer";
-import type { AABB, CollisionPair } from "../../algorithms/collision/aabb/aabb-types";
+import type { AABB, CollisionPair } from "../algorithms/collision/narrow-phase/aabb/aabb-types";
 
 // Wrapper function to convert batchCollisionDetection return type to CollisionPair[]
 /**
@@ -21,11 +21,11 @@ import type { AABB, CollisionPair } from "../../algorithms/collision/aabb/aabb-t
  */
 function batchCollisionDetectionWrapper(aabbs: AABB[]): CollisionPair[] {
   const results = batchCollisionDetection(aabbs);
-  return results.map(result => ({
+  return results.map((result: { index1: number; index2: number; result: { colliding: boolean } }) => ({
     a: result.index1,
     b: result.index2,
     result: result.result,
-  }));
+  })) as CollisionPair[];
 }
 
 // Wrapper function to convert batchCollisionWithSpatialHash return type to CollisionPair[]
@@ -36,11 +36,11 @@ function batchCollisionDetectionWrapper(aabbs: AABB[]): CollisionPair[] {
  */
 function batchCollisionWithSpatialHashWrapper(aabbs: AABB[]): CollisionPair[] {
   const results = batchCollisionWithSpatialHash(aabbs, { maxDistance: Infinity });
-  return results.map(result => ({
+  return results.map((result: { index1: number; index2: number; result: { colliding: boolean } }) => ({
     a: result.index1,
     b: result.index2,
     result: result.result,
-  }));
+  })) as CollisionPair[];
 }
 
 // Test data generators

@@ -6,7 +6,6 @@
 
 import { beforeEach, describe, expect, it } from "vitest";
 import { OptimizedMarchingSquaresAdapter } from "../../optimization/adapters/optimized-marching-squares-adapter";
-import { MarchingSquares } from "../../algorithms/procedural-generation/marching-squares/marching-squares-core";
 
 describe("OptimizedMarchingSquaresAdapter", () => {
   let adapter: OptimizedMarchingSquaresAdapter;

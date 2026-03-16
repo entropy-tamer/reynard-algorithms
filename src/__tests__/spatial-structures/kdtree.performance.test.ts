@@ -7,7 +7,7 @@ describe("K-d Tree Performance Tests", () => {
 
   beforeEach(() => {
     kdTree = new KdTree({
-      config: { enableStats: true },
+      config: { dimensions: 2, enablePerformanceMonitoring: true } as any,
     });
   });
 
@@ -53,7 +53,7 @@ describe("K-d Tree Performance Tests", () => {
       const times: number[] = [];
 
       for (const size of sizes) {
-        const tree = new KdTree({ config: { enableStats: true } });
+        const tree = new KdTree({ config: { dimensions: 2, enablePerformanceMonitoring: true } as any });
         const points = generateRandomPoints(size, 2);
 
         const startTime = performance.now();
@@ -64,8 +64,8 @@ describe("K-d Tree Performance Tests", () => {
       }
 
       // Check that time doesn't grow quadratically
-      const ratio1 = times[1] / times[0];
-      const ratio2 = times[2] / times[1];
+      const ratio1 = times[1]! / times[0]!;
+      const ratio2 = times[2]! / times[1]!;
 
       // Should be roughly logarithmic growth
       expect(ratio2).toBeLessThan(ratio1 * 2);
@@ -99,7 +99,7 @@ describe("K-d Tree Performance Tests", () => {
       const avgTimes: number[] = [];
 
       for (const size of sizes) {
-        const tree = new KdTree({ config: { enableStats: true } });
+        const tree = new KdTree({ config: { dimensions: 2, enablePerformanceMonitoring: true } as any });
         const points = generateRandomPoints(size, 2);
         tree.insertBatch(points);
 
@@ -114,8 +114,8 @@ describe("K-d Tree Performance Tests", () => {
       }
 
       // Check logarithmic growth
-      const ratio1 = avgTimes[1] / avgTimes[0];
-      const ratio2 = avgTimes[2] / avgTimes[1];
+      const ratio1 = avgTimes[1]! / avgTimes[0]!;
+      const ratio2 = avgTimes[2]! / avgTimes[1]!;
 
       expect(ratio2).toBeLessThan(ratio1 * 1.5); // Should be roughly logarithmic
     });
@@ -158,7 +158,7 @@ describe("K-d Tree Performance Tests", () => {
     });
 
     it("should maintain good performance with different k values", () => {
-      const queryPoint = { coordinates: [0.5, 0.5] };
+      const queryPoint = coordsToPoint([0.5, 0.5]);
       const kValues = [1, 5, 10, 50, 100];
 
       for (const k of kValues) {
@@ -168,7 +168,7 @@ describe("K-d Tree Performance Tests", () => {
 
         const executionTime = endTime - startTime;
         expect(result.success).toBe(true);
-        expect(result.points.length).toBeLessThanOrEqual(k);
+        expect(result.points!.length).toBeLessThanOrEqual(k);
         expect(executionTime).toBeLessThan(20); // Should be reasonable for any k
       }
     });
@@ -234,7 +234,7 @@ describe("K-d Tree Performance Tests", () => {
       const metrics = kdTree.getPerformanceMetrics();
 
       // Memory usage should be reasonable (rough estimate: ~1KB per 100 points)
-      expect(metrics.memoryUsage).toBeLessThan(200000); // 200KB for 10k points
+      expect((metrics.memoryUsage ?? 0) as number).toBeLessThan(200000); // 200KB for 10k points
       expect(metrics.memoryUsage).toBeGreaterThan(0);
     });
 
@@ -243,17 +243,17 @@ describe("K-d Tree Performance Tests", () => {
       const memoryUsages: number[] = [];
 
       for (const size of sizes) {
-        const tree = new KdTree({ config: { enableStats: true } });
+        const tree = new KdTree({ config: { dimensions: 2, enablePerformanceMonitoring: true } as any });
         const points = generateRandomPoints(size, 2);
         tree.insertBatch(points);
 
         const metrics = tree.getPerformanceMetrics();
-        memoryUsages.push(metrics.memoryUsage);
+        memoryUsages.push(metrics.memoryUsage ?? 0);
       }
 
       // Memory should scale roughly linearly
-      const ratio1 = memoryUsages[1] / memoryUsages[0];
-      const ratio2 = memoryUsages[2] / memoryUsages[1];
+      const ratio1 = memoryUsages[1]! / memoryUsages[0]!;
+      const ratio2 = memoryUsages[2]! / memoryUsages[1]!;
 
       expect(ratio1).toBeCloseTo(5, 1); // 5x points should use ~5x memory
       expect(ratio2).toBeCloseTo(2, 0.5); // 2x points should use ~2x memory
@@ -277,7 +277,7 @@ describe("K-d Tree Performance Tests", () => {
       // Insert points in sorted order (worst case for naive insertion)
       const points: Point[] = [];
       for (let i = 0; i < 1000; i++) {
-        points.push({ coordinates: [i, i] });
+        points.push(coordsToPoint([i, i]));
       }
 
       kdTree.insertBatch(points);
@@ -293,15 +293,15 @@ describe("K-d Tree Performance Tests", () => {
       // Create unbalanced tree
       const points: Point[] = [];
       for (let i = 0; i < 1000; i++) {
-        points.push({ coordinates: [i, 0] }); // All on x-axis
+        points.push(coordsToPoint([i, 0])); // All on x-axis
       }
       kdTree.insertBatch(points);
 
-      const balanceBefore = kdTree.getPerformanceMetrics().balanceRatio;
+      const balanceBefore = kdTree.getPerformanceMetrics().balanceRatio ?? 0;
 
       kdTree.rebuild();
 
-      const balanceAfter = kdTree.getPerformanceMetrics().balanceRatio;
+      const balanceAfter = kdTree.getPerformanceMetrics().balanceRatio ?? 0;
 
       expect(balanceAfter).toBeGreaterThanOrEqual(balanceBefore);
     });
@@ -310,7 +310,7 @@ describe("K-d Tree Performance Tests", () => {
   describe("3D Performance", () => {
     it("should handle 3D points efficiently", () => {
       const tree3D = new KdTree({
-        config: { dimensions: 3, enableStats: true },
+        config: { dimensions: 3, enablePerformanceMonitoring: true } as any,
       });
 
       const points = generateRandomPoints(10000, 3);
@@ -321,12 +321,12 @@ describe("K-d Tree Performance Tests", () => {
 
       const executionTime = endTime - startTime;
       expect(executionTime).toBeLessThan(1000); // Should be reasonable for 3D
-      expect(tree3D.size()).toBe(10000);
+      expect((tree3D.size() ?? 0) as number).toBe(10000);
     });
 
     it("should perform 3D nearest neighbor searches efficiently", () => {
       const tree3D = new KdTree({
-        config: { dimensions: 3, enableStats: true },
+        config: { dimensions: 3, enablePerformanceMonitoring: true } as any,
       });
 
       const points = generateRandomPoints(10000, 3);
@@ -350,7 +350,7 @@ describe("K-d Tree Performance Tests", () => {
   describe("High-Dimensional Performance", () => {
     it("should handle high-dimensional points", () => {
       const tree5D = new KdTree({
-        config: { dimensions: 5, enableStats: true },
+        config: { dimensions: 5, enablePerformanceMonitoring: true } as any,
       });
 
       const points = generateRandomPoints(1000, 5);
@@ -361,18 +361,18 @@ describe("K-d Tree Performance Tests", () => {
 
       const executionTime = endTime - startTime;
       expect(executionTime).toBeLessThan(500); // Should be reasonable for 5D
-      expect(tree5D.size()).toBe(1000);
+      expect((tree5D.size() ?? 0) as number).toBe(1000);
     });
 
     it("should perform high-dimensional searches", () => {
       const tree5D = new KdTree({
-        config: { dimensions: 5, enableStats: true },
+        config: { dimensions: 5, enablePerformanceMonitoring: true } as any,
       });
 
       const points = generateRandomPoints(1000, 5);
       tree5D.insertBatch(points);
 
-      const queryPoint = { coordinates: [0.5, 0.5, 0.5, 0.5, 0.5] };
+      const queryPoint = coordsToPoint([0.5, 0.5, 0.5, 0.5, 0.5]);
 
       const startTime = performance.now();
       const result = tree5D.nearestNeighbor(queryPoint);
@@ -385,21 +385,24 @@ describe("K-d Tree Performance Tests", () => {
   });
 });
 
-// Helper function to generate random points
-/**
- *
- * @param count
- * @param dimensions
- * @example
- */
+/** Build a Point from coordinate array (index-based: 0, 1, 2, ...). */
+function coordsToPoint(coords: number[]): Point {
+  const p: Point = {} as Point;
+  for (let d = 0; d < coords.length; d++) {
+    p[d] = coords[d]!;
+  }
+  return p;
+}
+
+/** Generate random points with index-based coordinates. */
 function generateRandomPoints(count: number, dimensions: number): Point[] {
   const points: Point[] = [];
   for (let i = 0; i < count; i++) {
-    const coordinates: number[] = [];
+    const coords: number[] = [];
     for (let d = 0; d < dimensions; d++) {
-      coordinates.push(Math.random());
+      coords.push(Math.random());
     }
-    points.push({ coordinates });
+    points.push(coordsToPoint(coords));
   }
   return points;
 }

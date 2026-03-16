@@ -2,7 +2,7 @@
  * @file Tests for LRUCache batch operations
  */
 import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
-import { LRUCache } from "../../../data-structures/basic/lru-cache";
+import { LRUCache } from "../../data-structures/basic/lru-cache";
 
 describe("LRUCache Batch Operations", () => {
   let cache: LRUCache<string, number>;
@@ -50,7 +50,7 @@ describe("LRUCache Batch Operations", () => {
 
       expect(result.processed).toHaveLength(1);
       expect(result.failed).toHaveLength(1);
-      expect(result.failed[0].error).toBe("Test error");
+      expect(result.failed[0]!.error).toBe("Test error");
 
       cache.set = originalSet;
     });

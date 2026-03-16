@@ -3,7 +3,7 @@
  */
 /* eslint-disable max-lines, max-lines-per-function */
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { LRUCache, LRUCacheEvent } from "../../../data-structures/basic/lru-cache";
+import { LRUCache, LRUCacheEvent } from "../../data-structures/basic/lru-cache";
 
 describe("LRUCache", () => {
   let cache: LRUCache<string, number>;
@@ -28,8 +28,8 @@ describe("LRUCache", () => {
 
       // "a" should now be most recent (head)
       const snapshot = cache.snapshot();
-      expect(snapshot.entries[0].key).toBe("a");
-      expect(snapshot.entries[0].value).toBe(1);
+      expect(snapshot.entries[0]!.key).toBe("a");
+      expect(snapshot.entries[0]!.value).toBe(1);
     });
 
     it("should evict least recently used item", () => {
@@ -378,9 +378,9 @@ describe("LRUCache", () => {
 
       eventCache.set("key1", 42);
 
-      expect(events[0].key).toBe("key1");
-      expect(events[0].value).toBe(42);
-      expect(events[0].timestamp).toBeGreaterThan(0);
+      expect(events[0]!.key).toBe("key1");
+      expect(events[0]!.value).toBe(42);
+      expect(events[0]!.timestamp).toBeGreaterThan(0);
 
       eventCache.destroy();
     });
@@ -395,8 +395,8 @@ describe("LRUCache", () => {
       const snapshot = cache.snapshot();
 
       expect(snapshot.entries).toHaveLength(2);
-      expect(snapshot.entries[0].key).toBe("a"); // Most recent
-      expect(snapshot.entries[1].key).toBe("b");
+      expect(snapshot.entries[0]!.key).toBe("a"); // Most recent
+      expect(snapshot.entries[1]!.key).toBe("b");
       expect(snapshot.stats.size).toBe(2);
       expect(snapshot.timestamp).toBeGreaterThan(0);
     });
@@ -406,7 +406,7 @@ describe("LRUCache", () => {
       cache.get("key1");
 
       const snapshot = cache.snapshot();
-      const entry = snapshot.entries[0];
+      const entry = snapshot.entries[0]!;
 
       expect(entry.key).toBe("key1");
       expect(entry.value).toBe(42);

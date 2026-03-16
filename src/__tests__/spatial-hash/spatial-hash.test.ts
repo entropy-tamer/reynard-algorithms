@@ -49,7 +49,7 @@ describe("SpatialHash", () => {
       spatialHash.insert(obj);
       const results = spatialHash.queryRect(0, 0, 100, 100);
       expect(results).toHaveLength(1);
-      expect(results[0].id).toBe("1");
+      expect(results[0]!.id).toBe("1");
     });
 
     it("should handle multiple objects in same cell", () => {
@@ -110,7 +110,7 @@ describe("SpatialHash", () => {
 
       const results = spatialHash.queryRect(100, 100, 100, 100);
       expect(results).toHaveLength(1);
-      expect(results[0].x).toBe(150);
+      expect(results[0]!.x).toBe(150);
     });
 
     it("should return false when updating non-existent object", () => {
@@ -145,7 +145,7 @@ describe("SpatialHash", () => {
 
       const results = spatialHash.queryRect(0, 0, 100, 100);
       expect(results).toHaveLength(1);
-      expect(results[0].id).toBe("1");
+      expect(results[0]!.id).toBe("1");
     });
 
     it("should return empty array for empty query area", () => {
@@ -174,7 +174,7 @@ describe("SpatialHash", () => {
 
       const results = spatialHash.queryRadius(0, 0, 100);
       expect(results).toHaveLength(1);
-      expect(results[0].object.id).toBe("1");
+      expect(results[0]!.object.id).toBe("1");
     });
   });
 
@@ -256,7 +256,7 @@ describe("SpatialHash", () => {
       spatialHash.insert(obj);
       const allObjects = spatialHash.getAllObjects();
       expect(allObjects).toHaveLength(1);
-      expect(allObjects[0].id).toBe("1");
+      expect(allObjects[0]!.id).toBe("1");
     });
   });
 });

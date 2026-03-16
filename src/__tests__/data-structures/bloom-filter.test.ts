@@ -227,10 +227,10 @@ describe("Bloom Filter Data Structure", () => {
       const results = bloomFilter.testBatch(elements);
 
       expect(results.length).toBe(3);
-      expect(results[0].possiblyPresent).toBe(true);
-      expect(results[1].possiblyPresent).toBe(true);
+      expect(results[0]!.possiblyPresent).toBe(true);
+      expect(results[1]!.possiblyPresent).toBe(true);
       // Third element might be true due to false positives
-      expect(results[2].possiblyPresent).toBeDefined();
+      expect(results[2]!.possiblyPresent).toBeDefined();
     });
   });
 

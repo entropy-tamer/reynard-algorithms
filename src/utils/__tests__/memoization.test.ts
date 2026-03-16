@@ -163,9 +163,9 @@ describe("Memoization Utilities", () => {
       expect(stats).toHaveProperty("square");
       expect(stats).toHaveProperty("sqrt");
       expect(stats).toHaveProperty("distance");
-      expect(stats.square.cacheSize).toBe(1);
-      expect(stats.sqrt.cacheSize).toBe(1);
-      expect(stats.distance.cacheSize).toBe(1);
+      expect(stats["square"]!.cacheSize).toBe(1);
+      expect(stats["sqrt"]!.cacheSize).toBe(1);
+      expect(stats["distance"]!.cacheSize).toBe(1);
     });
   });
 

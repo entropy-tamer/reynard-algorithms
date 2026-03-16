@@ -62,9 +62,9 @@ describe("BatchUnionFind", () => {
 
     const results = uf.batchOperations(operations);
 
-    expect(results[0].result).toBe(true);
-    expect(typeof results[1].result).toBe("number");
-    expect(results[2].result).toBe(true);
+    expect(results[0]!.result).toBe(true);
+    expect(typeof results[1]!.result).toBe("number");
+    expect(results[2]!.result).toBe(true);
   });
 
   it("should track batch statistics", () => {

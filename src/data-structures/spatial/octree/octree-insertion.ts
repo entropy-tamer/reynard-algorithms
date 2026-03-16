@@ -177,6 +177,13 @@ function insertRecursive(node: OctreeNode, point: Point3D, depth: number, config
  * @example
  */
 function isValidPoint(point: Point3D): boolean {
+  if (point == null || typeof point !== "object") {
+    return false;
+  }
+  const keys = Object.keys(point);
+  if (keys.length !== 3) {
+    return false;
+  }
   return (
     typeof point.x === "number" &&
     typeof point.y === "number" &&

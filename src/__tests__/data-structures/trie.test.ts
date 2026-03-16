@@ -232,10 +232,10 @@ describe("Trie (Prefix Tree) Data Structure", () => {
       const matches = trie.findFuzzyMatches("helo", 1);
 
       expect(matches.length).toBeGreaterThan(0);
-      expect(matches[0]).toHaveProperty("word");
-      expect(matches[0]).toHaveProperty("editDistance");
-      expect(matches[0]).toHaveProperty("similarity");
-      expect(matches[0].editDistance).toBeLessThanOrEqual(1);
+      expect(matches[0]!).toHaveProperty("word");
+      expect(matches[0]!).toHaveProperty("editDistance");
+      expect(matches[0]!).toHaveProperty("similarity");
+      expect(matches[0]!.editDistance).toBeLessThanOrEqual(1);
     });
 
     it("should respect max distance parameter", () => {
@@ -248,7 +248,7 @@ describe("Trie (Prefix Tree) Data Structure", () => {
       const matches = trie.findFuzzyMatches("helo", 2);
 
       if (matches.length > 1) {
-        expect(matches[0].similarity).toBeGreaterThanOrEqual(matches[1].similarity);
+        expect(matches[0]!.similarity).toBeGreaterThanOrEqual(matches[1]!.similarity);
       }
     });
   });
@@ -270,9 +270,9 @@ describe("Trie (Prefix Tree) Data Structure", () => {
       const matches = trie.findWildcardMatches("hel*");
 
       expect(matches.length).toBeGreaterThan(0);
-      expect(matches[0]).toHaveProperty("word");
-      expect(matches[0]).toHaveProperty("pattern");
-      expect(matches[0].pattern).toBe("hel*");
+      expect(matches[0]!).toHaveProperty("word");
+      expect(matches[0]!).toHaveProperty("pattern");
+      expect(matches[0]!.pattern).toBe("hel*");
     });
 
     it("should handle multiple wildcards", () => {

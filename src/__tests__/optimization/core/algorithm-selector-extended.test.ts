@@ -525,7 +525,7 @@ describe("Algorithm Selector Extended Coverage", () => {
       expect(history.length).toBe(1000);
 
       // Should have cleaned up old records
-      expect(history[0].timestamp).toBeGreaterThan(0);
+      expect(history[0]!.timestamp).toBeGreaterThan(0);
     });
   });
 });

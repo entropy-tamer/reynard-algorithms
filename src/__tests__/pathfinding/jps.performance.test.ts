@@ -141,8 +141,8 @@ describe("JPS Performance", () => {
       }
 
       // Times should scale roughly with grid size
-      const ratio1 = times[1] / times[0];
-      const ratio2 = times[2] / times[0];
+      const ratio1 = times[1]! / times[0]!;
+      const ratio2 = times[2]! / times[0]!;
 
       expect(ratio1).toBeLessThan(5); // 2x size should take less than 5x time
       expect(ratio2).toBeLessThan(20); // 4x size should take less than 20x time
@@ -205,8 +205,8 @@ describe("JPS Performance", () => {
       }
 
       // Higher density should generally take longer
-      expect(times[1]).toBeGreaterThan(times[0] * 0.5); // 0.3 density should be slower than 0.1
-      expect(times[2]).toBeGreaterThan(times[0] * 0.5); // 0.5 density should be slower than 0.1
+      expect(times[1]!).toBeGreaterThan(times[0]! * 0.5); // 0.3 density should be slower than 0.1
+      expect(times[2]!).toBeGreaterThan(times[0]! * 0.5); // 0.5 density should be slower than 0.1
     });
   });
 

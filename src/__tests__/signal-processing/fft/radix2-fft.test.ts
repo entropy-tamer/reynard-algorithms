@@ -192,7 +192,7 @@ describe("Radix2FFT", () => {
       // Note: inverse FFT result needs to be scaled by N when normalization is disabled
       const reconstructed = new Float32Array(1024);
       for (let i = 0; i < 1024; i++) {
-        reconstructed[i] = inverseResult.real[i];
+        reconstructed[i] = inverseResult.real[i] ?? 0;
       }
 
       // Use very lenient tolerance for round-trip due to Float32Array precision
@@ -211,8 +211,8 @@ describe("Radix2FFT", () => {
       const reconstructedReal = new Float32Array(1024);
       const reconstructedImag = new Float32Array(1024);
       for (let i = 0; i < 1024; i++) {
-        reconstructedReal[i] = inverseResult.real[i];
-        reconstructedImag[i] = inverseResult.imag[i];
+        reconstructedReal[i] = inverseResult.real[i] ?? 0;
+        reconstructedImag[i] = inverseResult.imag[i] ?? 0;
       }
 
       // Use very lenient tolerance for round-trip due to Float32Array precision
@@ -225,7 +225,7 @@ describe("Radix2FFT", () => {
       const fft = new Radix2FFT(config);
       const originalSignal = TestSignalGenerator.whiteNoise(1024, 0.5);
       const fftResult = fft.forward(originalSignal);
-      const inverseResult = fft.inverse(fftResult.real, fftResult.imag);
+      void fft.inverse(fftResult.real, fftResult.imag);
 
       expect(FFTValidator.checkParsevalsTheorem(originalSignal, fftResult)).toBe(true);
     });
