@@ -296,8 +296,8 @@ describe("Issue #6: Missing Input Validation", () => {
         const endTime = performance.now();
         const duration = endTime - startTime;
 
-        // Should fail quickly (within 1ms)
-        expect(duration).toBeLessThan(1);
+        // Should fail fast (validation only, no heavy work); 10ms allows timer granularity and VM variance
+        expect(duration).toBeLessThan(10);
       }
     });
   });
