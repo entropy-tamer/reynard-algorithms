@@ -1,0 +1,222 @@
+{
+  "timestamp": "2026-04-05T11:56:34.236Z",
+  "systemInfo": {
+    "nodeVersion": "v25.2.1",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "results": [
+    {
+      "config": {
+        "name": "Micro Grid - Rapid Fire",
+        "gridSize": 10,
+        "threshold": 0.4,
+        "iterations": 200,
+        "description": "Very small grid with many iterations"
+      },
+      "standardTime": 19.87856899999315,
+      "optimizedTime": 10.534536000006483,
+      "speedup": 1.8869904664031634,
+      "memoryUsage": {
+        "standard": -38412296,
+        "optimized": 21328784
+      },
+      "algorithmSelection": {
+        "selected": "refined-lut",
+        "confidence": 0.95,
+        "alternatives": []
+      },
+      "recommendations": [
+        "Low pool hit rate detected. Consider increasing pool sizes.",
+        "Allocation reduction below optimal. Check object lifecycle management."
+      ]
+    },
+    {
+      "config": {
+        "name": "Small Grid - High Complexity",
+        "gridSize": 25,
+        "threshold": 0.7,
+        "iterations": 50,
+        "description": "Small grid with complex threshold"
+      },
+      "standardTime": 105.85016100000001,
+      "optimizedTime": 74.13137399999994,
+      "speedup": 1.4278726440440737,
+      "memoryUsage": {
+        "standard": -1502808,
+        "optimized": 1896136
+      },
+      "algorithmSelection": {
+        "selected": "refined-lut",
+        "confidence": 0.95,
+        "alternatives": []
+      },
+      "recommendations": [
+        "Low pool hit rate detected. Consider increasing pool sizes.",
+        "Allocation reduction below optimal. Check object lifecycle management."
+      ]
+    },
+    {
+      "config": {
+        "name": "Small Grid - Low Complexity",
+        "gridSize": 25,
+        "threshold": 0.3,
+        "iterations": 50,
+        "description": "Small grid with simple threshold"
+      },
+      "standardTime": 104.81331799999998,
+      "optimizedTime": 86.67503800000003,
+      "speedup": 1.209267632510296,
+      "memoryUsage": {
+        "standard": 4364064,
+        "optimized": -1596200
+      },
+      "algorithmSelection": {
+        "selected": "refined-lut",
+        "confidence": 0.95,
+        "alternatives": []
+      },
+      "recommendations": [
+        "Low pool hit rate detected. Consider increasing pool sizes.",
+        "Allocation reduction below optimal. Check object lifecycle management."
+      ]
+    },
+    {
+      "config": {
+        "name": "Very Large Grid - Stress Test",
+        "gridSize": 200,
+        "threshold": 0.6,
+        "iterations": 2,
+        "description": "Very large grid stress test"
+      },
+      "standardTime": 35452.420115,
+      "optimizedTime": 35497.02194,
+      "speedup": 0.9987435051572667,
+      "memoryUsage": {
+        "standard": 7015528,
+        "optimized": 13356832
+      },
+      "algorithmSelection": {
+        "selected": "refined-lut-optimized",
+        "confidence": 0.85,
+        "alternatives": []
+      },
+      "recommendations": [
+        "Low pool hit rate detected. Consider increasing pool sizes.",
+        "Allocation reduction below optimal. Check object lifecycle management."
+      ]
+    },
+    {
+      "config": {
+        "name": "Large Grid - Standard",
+        "gridSize": 100,
+        "threshold": 0.5,
+        "iterations": 5,
+        "description": "Large grid with standard threshold"
+      },
+      "standardTime": 3088.219449,
+      "optimizedTime": 3166.142908,
+      "speedup": 0.9753885212183229,
+      "memoryUsage": {
+        "standard": 19150840,
+        "optimized": 5295024
+      },
+      "algorithmSelection": {
+        "selected": "refined-lut-optimized",
+        "confidence": 0.85,
+        "alternatives": []
+      },
+      "recommendations": [
+        "Low pool hit rate detected. Consider increasing pool sizes.",
+        "Allocation reduction below optimal. Check object lifecycle management."
+      ]
+    },
+    {
+      "config": {
+        "name": "Medium Grid - High Complexity",
+        "gridSize": 50,
+        "threshold": 0.8,
+        "iterations": 15,
+        "description": "Medium grid with high complexity"
+      },
+      "standardTime": 195.27342500000032,
+      "optimizedTime": 202.02666500000032,
+      "speedup": 0.9665725314032185,
+      "memoryUsage": {
+        "standard": -5819800,
+        "optimized": 10982960
+      },
+      "algorithmSelection": {
+        "selected": "refined-lut-interpolated",
+        "confidence": 0.9,
+        "alternatives": []
+      },
+      "recommendations": [
+        "Low pool hit rate detected. Consider increasing pool sizes.",
+        "Allocation reduction below optimal. Check object lifecycle management."
+      ]
+    },
+    {
+      "config": {
+        "name": "Large Grid - High Complexity",
+        "gridSize": 100,
+        "threshold": 0.9,
+        "iterations": 3,
+        "description": "Large grid with maximum complexity"
+      },
+      "standardTime": 263.17544499999894,
+      "optimizedTime": 279.0923870000006,
+      "speedup": 0.9429689137310592,
+      "memoryUsage": {
+        "standard": 14463712,
+        "optimized": 14418488
+      },
+      "algorithmSelection": {
+        "selected": "refined-lut-optimized",
+        "confidence": 0.85,
+        "alternatives": []
+      },
+      "recommendations": [
+        "Low pool hit rate detected. Consider increasing pool sizes.",
+        "Allocation reduction below optimal. Check object lifecycle management."
+      ]
+    },
+    {
+      "config": {
+        "name": "Medium Grid - Standard",
+        "gridSize": 50,
+        "threshold": 0.5,
+        "iterations": 20,
+        "description": "Medium grid with standard threshold"
+      },
+      "standardTime": 671.5207660000001,
+      "optimizedTime": 822.8940360000001,
+      "speedup": 0.8160476763985199,
+      "memoryUsage": {
+        "standard": 13135704,
+        "optimized": -7037144
+      },
+      "algorithmSelection": {
+        "selected": "refined-lut-interpolated",
+        "confidence": 0.9,
+        "alternatives": []
+      },
+      "recommendations": [
+        "Low pool hit rate detected. Consider increasing pool sizes.",
+        "Allocation reduction below optimal. Check object lifecycle management."
+      ]
+    }
+  ],
+  "summary": {
+    "totalTests": 8,
+    "averageSpeedup": 1.1529814863582402,
+    "bestSpeedup": 1.8869904664031634,
+    "worstSpeedup": 0.8160476763985199,
+    "optimizationOpportunities": [
+      "Consider improving algorithm selection logic - many tests show minimal speedup",
+      "Memory pooling may be inefficient for certain workloads",
+      "Large grid performance could be improved with better clustering",
+      "High complexity workloads need specialized algorithms"
+    ]
+  }
+}

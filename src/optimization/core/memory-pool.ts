@@ -61,7 +61,7 @@ export class MemoryPool {
   private processedSetPool: PooledObject[] = [];
   private config: MemoryPoolConfig;
   private stats: MemoryPoolStats;
-  private cleanupInterval: number | undefined;
+  private cleanupInterval: ReturnType<typeof setInterval> | undefined;
   private performanceHistory: Array<{
     timestamp: number;
     poolUsage: number;
@@ -567,7 +567,19 @@ export class MemoryPool {
    * @example
    */
   private startCleanup(): void {
-    this.cleanupInterval = window.setInterval(() => {
+    // Use Node.js timers or fallback to browser timers
+    const setInterval = typeof globalThis !== 'undefined' && globalThis.setInterval 
+      ? globalThis.setInterval 
+      : typeof window !== 'undefined' && window.setInterval 
+        ? window.setInterval 
+        : null;
+    
+    if (!setInterval) {
+      console.warn('No timer implementation available - cleanup disabled');
+      return;
+    }
+    
+    this.cleanupInterval = setInterval(() => {
       this.cleanupUnusedPools();
     }, this.config.cleanupInterval);
   }
