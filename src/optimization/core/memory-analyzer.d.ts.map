@@ -1,0 +1,1 @@
+{"version":3,"file":"memory-analyzer.d.ts","sourceRoot":"","sources":["memory-analyzer.ts"],"names":[],"mappings":"AAAA;;;;;;GAMG;AAEH,OAAO,KAAK,EAAE,uBAAuB,EAAE,sBAAsB,EAAE,MAAM,4BAA4B,CAAC;AAElG;;GAEG;AACH,qBAAa,cAAc;IACzB;;;;OAIG;IACH,uBAAuB,CAAC,QAAQ,EAAE,uBAAuB,GAAG,sBAAsB;CAiBnF"}

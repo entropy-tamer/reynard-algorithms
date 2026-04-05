@@ -2,8 +2,78 @@
   "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src"
+    "rootDir": "./src",
+    "ignoreDeprecations": "6.0",
+    "baseUrl": "../../../",
+    "paths": {
+      "@entropy-tamer/reynard-i18n": [
+        "packages/core/i18n/src"
+      ],
+      "@entropy-tamer/reynard-themes": [
+        "packages/ui/themes/src"
+      ],
+      "@entropy-tamer/reynard-core": [
+        "packages/core/core/src"
+      ],
+      "@entropy-tamer/reynard-ui": [
+        "packages/ui/ui/src"
+      ],
+      "@entropy-tamer/reynard-primitives": [
+        "packages/ui/primitives/src"
+      ],
+      "@entropy-tamer/reynard-components-core": [
+        "packages/ui/components-core/src"
+      ]
+    },
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts",
+    "**/*.test.tsx"
+  ],
+  "references": [
+    {
+      "path": "../../../packages/core/i18n"
+    },
+    {
+      "path": "../../../packages/ui/themes"
+    },
+    {
+      "path": "../../../packages/core/core"
+    },
+    {
+      "path": "../../../packages/ui/ui"
+    },
+    {
+      "path": "../../../packages/ui/primitives"
+    },
+    {
+      "path": "../../../packages/ui/components-core"
+    },
+    {
+      "path": "../../../packages/core/i18n"
+    },
+    {
+      "path": "../../../packages/ui/themes"
+    },
+    {
+      "path": "../../../packages/core/core"
+    },
+    {
+      "path": "../../../packages/ui/ui"
+    },
+    {
+      "path": "../../../packages/ui/primitives"
+    },
+    {
+      "path": "../../../packages/ui/components-core"
+    }
+  ]
 }

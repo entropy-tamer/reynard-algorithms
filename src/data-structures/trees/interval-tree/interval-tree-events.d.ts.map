@@ -1,0 +1,1 @@
+{"version":3,"file":"interval-tree-events.d.ts","sourceRoot":"","sources":["interval-tree-events.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,wBAAwB,EAAE,MAAM,uBAAuB,CAAC;AACtE,OAAO,EAAE,qBAAqB,EAAE,MAAM,uBAAuB,CAAC;AAE9D;;;;;;GAMG;AACH,wBAAgB,SAAS,CAAC,aAAa,EAAE,wBAAwB,EAAE,EAAE,IAAI,EAAE,qBAAqB,EAAE,IAAI,EAAE,GAAG,GAAG,IAAI,CAQjH;AAED,OAAO,EAAE,qBAAqB,EAAE,CAAC"}
