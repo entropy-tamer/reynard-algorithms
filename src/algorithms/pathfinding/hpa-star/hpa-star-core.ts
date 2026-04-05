@@ -161,15 +161,17 @@ export class HPAStar {
       if (dx < this.config.tolerance && dy < this.config.tolerance) {
         const executionTime = performance.now() - startTime;
         this.stats.executionTime = executionTime;
-        this.stats.success = true;
         return {
-          path: [start],
+          path: [start], // Return the start point as the path
           found: true,
           cost: 0,
           length: 1,
-          abstractPath: [start],
+          abstractPath: [],
           refinedPath: [start],
-          stats: this.getStats(),
+          stats: {
+            ...this.stats,
+            executionTime,
+          },
         };
       }
 

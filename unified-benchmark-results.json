@@ -1,0 +1,287 @@
+{
+  "timestamp": "2026-04-05T16:32:03.007Z",
+  "environment": {
+    "nodeVersion": "v25.2.1",
+    "platform": "linux",
+    "arch": "x64",
+    "memory": {
+      "rss": 90370048,
+      "heapTotal": 19935232,
+      "heapUsed": 13301472,
+      "external": 8411798,
+      "arrayBuffers": 10519
+    }
+  },
+  "summary": {
+    "totalBenchmarks": 11,
+    "suites": 4,
+    "fastest": "Fixed Clustering - Medium Grid",
+    "slowest": "Adaptive Clustering - Large Grid",
+    "average": 0.46073967818181777,
+    "improvements": [
+      30.66966333110092,
+      -640.820252421395,
+      -1598.9649183352344,
+      -2004.7243309137286,
+      71.87204598949518
+    ]
+  },
+  "results": [
+    {
+      "name": "Memory Pool Performance",
+      "description": "Comparison of standard vs optimized memory allocation",
+      "benchmarks": [
+        {
+          "name": "Standard Array Allocation",
+          "category": "memory-pool",
+          "iterations": 10,
+          "totalTime": 7.5902169999999956,
+          "averageTime": 0.7590216999999996,
+          "memoryBefore": 8515488,
+          "memoryAfter": 10007376,
+          "memoryDelta": 1491888
+        },
+        {
+          "name": "Optimized Memory Pool",
+          "category": "memory-pool",
+          "iterations": 10,
+          "totalTime": 5.262323000000009,
+          "averageTime": 0.5262323000000009,
+          "memoryBefore": 10013272,
+          "memoryAfter": 10917624,
+          "memoryDelta": 904352,
+          "improvement": 30.66966333110092
+        }
+      ]
+    },
+    {
+      "name": "Clustering Performance",
+      "description": "Comparison of fixed vs adaptive clustering algorithms",
+      "benchmarks": [
+        {
+          "name": "Fixed Clustering - Small Grid",
+          "category": "clustering",
+          "iterations": 50,
+          "totalTime": 1.2808739999999972,
+          "averageTime": 0.025617479999999943,
+          "memoryBefore": 11464472,
+          "memoryAfter": 11125952,
+          "memoryDelta": -338520
+        },
+        {
+          "name": "Adaptive Clustering - Small Grid",
+          "category": "clustering",
+          "iterations": 50,
+          "totalTime": 9.488973999999999,
+          "averageTime": 0.18977947999999997,
+          "memoryBefore": 11127232,
+          "memoryAfter": 12779000,
+          "memoryDelta": 1651768,
+          "improvement": -640.820252421395
+        },
+        {
+          "name": "Fixed Clustering - Medium Grid",
+          "category": "clustering",
+          "iterations": 50,
+          "totalTime": 1.2401919999999933,
+          "averageTime": 0.024803839999999865,
+          "memoryBefore": 13020832,
+          "memoryAfter": 9260600,
+          "memoryDelta": -3760232
+        },
+        {
+          "name": "Adaptive Clustering - Medium Grid",
+          "category": "clustering",
+          "iterations": 50,
+          "totalTime": 21.070426999999995,
+          "averageTime": 0.4214085399999999,
+          "memoryBefore": 9261584,
+          "memoryAfter": 9613040,
+          "memoryDelta": 351456,
+          "improvement": -1598.9649183352344
+        },
+        {
+          "name": "Fixed Clustering - Large Grid",
+          "category": "clustering",
+          "iterations": 50,
+          "totalTime": 3.6093999999999937,
+          "averageTime": 0.07218799999999988,
+          "memoryBefore": 10574456,
+          "memoryAfter": 11809320,
+          "memoryDelta": 1234864
+        },
+        {
+          "name": "Adaptive Clustering - Large Grid",
+          "category": "clustering",
+          "iterations": 50,
+          "totalTime": 75.96791999999999,
+          "averageTime": 1.5193583999999998,
+          "memoryBefore": 11810400,
+          "memoryAfter": 12412352,
+          "memoryDelta": 601952,
+          "improvement": -2004.7243309137286
+        }
+      ]
+    },
+    {
+      "name": "Caching Performance",
+      "description": "Impact of caching on grid classification performance",
+      "benchmarks": [
+        {
+          "name": "Grid Classification - No Cache",
+          "category": "caching",
+          "iterations": 5,
+          "totalTime": 3.870796999999982,
+          "averageTime": 0.7741593999999964,
+          "memoryBefore": 12418328,
+          "memoryAfter": 12428768,
+          "memoryDelta": 10440
+        },
+        {
+          "name": "Grid Classification - With Cache",
+          "category": "caching",
+          "iterations": 5,
+          "totalTime": 1.0887759999999957,
+          "averageTime": 0.21775519999999915,
+          "memoryBefore": 12430016,
+          "memoryAfter": 13295968,
+          "memoryDelta": 865952,
+          "improvement": 71.87204598949518
+        }
+      ]
+    },
+    {
+      "name": "Integration Performance",
+      "description": "End-to-end PAW workflow with all optimizations",
+      "benchmarks": [
+        {
+          "name": "Optimized PAW Workflow",
+          "category": "integration",
+          "iterations": 25,
+          "totalTime": 13.445302999999996,
+          "averageTime": 0.5378121199999998,
+          "memoryBefore": 13301192,
+          "memoryAfter": 12915176,
+          "memoryDelta": -386016
+        }
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "name": "Standard Array Allocation",
+      "category": "memory-pool",
+      "iterations": 10,
+      "totalTime": 7.5902169999999956,
+      "averageTime": 0.7590216999999996,
+      "memoryBefore": 8515488,
+      "memoryAfter": 10007376,
+      "memoryDelta": 1491888
+    },
+    {
+      "name": "Optimized Memory Pool",
+      "category": "memory-pool",
+      "iterations": 10,
+      "totalTime": 5.262323000000009,
+      "averageTime": 0.5262323000000009,
+      "memoryBefore": 10013272,
+      "memoryAfter": 10917624,
+      "memoryDelta": 904352,
+      "improvement": 30.66966333110092
+    },
+    {
+      "name": "Fixed Clustering - Small Grid",
+      "category": "clustering",
+      "iterations": 50,
+      "totalTime": 1.2808739999999972,
+      "averageTime": 0.025617479999999943,
+      "memoryBefore": 11464472,
+      "memoryAfter": 11125952,
+      "memoryDelta": -338520
+    },
+    {
+      "name": "Adaptive Clustering - Small Grid",
+      "category": "clustering",
+      "iterations": 50,
+      "totalTime": 9.488973999999999,
+      "averageTime": 0.18977947999999997,
+      "memoryBefore": 11127232,
+      "memoryAfter": 12779000,
+      "memoryDelta": 1651768,
+      "improvement": -640.820252421395
+    },
+    {
+      "name": "Fixed Clustering - Medium Grid",
+      "category": "clustering",
+      "iterations": 50,
+      "totalTime": 1.2401919999999933,
+      "averageTime": 0.024803839999999865,
+      "memoryBefore": 13020832,
+      "memoryAfter": 9260600,
+      "memoryDelta": -3760232
+    },
+    {
+      "name": "Adaptive Clustering - Medium Grid",
+      "category": "clustering",
+      "iterations": 50,
+      "totalTime": 21.070426999999995,
+      "averageTime": 0.4214085399999999,
+      "memoryBefore": 9261584,
+      "memoryAfter": 9613040,
+      "memoryDelta": 351456,
+      "improvement": -1598.9649183352344
+    },
+    {
+      "name": "Fixed Clustering - Large Grid",
+      "category": "clustering",
+      "iterations": 50,
+      "totalTime": 3.6093999999999937,
+      "averageTime": 0.07218799999999988,
+      "memoryBefore": 10574456,
+      "memoryAfter": 11809320,
+      "memoryDelta": 1234864
+    },
+    {
+      "name": "Adaptive Clustering - Large Grid",
+      "category": "clustering",
+      "iterations": 50,
+      "totalTime": 75.96791999999999,
+      "averageTime": 1.5193583999999998,
+      "memoryBefore": 11810400,
+      "memoryAfter": 12412352,
+      "memoryDelta": 601952,
+      "improvement": -2004.7243309137286
+    },
+    {
+      "name": "Grid Classification - No Cache",
+      "category": "caching",
+      "iterations": 5,
+      "totalTime": 3.870796999999982,
+      "averageTime": 0.7741593999999964,
+      "memoryBefore": 12418328,
+      "memoryAfter": 12428768,
+      "memoryDelta": 10440
+    },
+    {
+      "name": "Grid Classification - With Cache",
+      "category": "caching",
+      "iterations": 5,
+      "totalTime": 1.0887759999999957,
+      "averageTime": 0.21775519999999915,
+      "memoryBefore": 12430016,
+      "memoryAfter": 13295968,
+      "memoryDelta": 865952,
+      "improvement": 71.87204598949518
+    },
+    {
+      "name": "Optimized PAW Workflow",
+      "category": "integration",
+      "iterations": 25,
+      "totalTime": 13.445302999999996,
+      "averageTime": 0.5378121199999998,
+      "memoryBefore": 13301192,
+      "memoryAfter": 12915176,
+      "memoryDelta": -386016
+    }
+  ]
+}
