@@ -159,13 +159,15 @@ export class HPAStar {
       const dx = Math.abs(start.x - goal.x);
       const dy = Math.abs(start.y - goal.y);
       if (dx < this.config.tolerance && dy < this.config.tolerance) {
-        this.resetStats();
+        const executionTime = performance.now() - startTime;
+        this.stats.executionTime = executionTime;
+        this.stats.success = true;
         return {
           path: [start],
           found: true,
           cost: 0,
           length: 1,
-          abstractPath: [],
+          abstractPath: [start],
           refinedPath: [start],
           stats: this.getStats(),
         };

@@ -46,6 +46,7 @@
     "format:check": "prettier --check src examples",
     "examples": "tsx examples/basic-usage.ts",
     "examples:game": "tsx examples/game-engine-integration.ts",
+    "bench": "tsx benchmark-paw.ts",
     "clean": "tsx ../../../scripts/utils/cross-platform-rm.ts dist --recursive --force coverage"
   },
   "keywords": [
