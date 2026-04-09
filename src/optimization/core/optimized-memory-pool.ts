@@ -50,9 +50,9 @@ export interface PooledObject<T> {
  * High-performance float buffer pool
  */
 export class FloatBufferPool {
-  private buffers: Float32Array[] = [];
-  private available: boolean[] = [];
-  private nextFree: number = 0;
+  public buffers: Float32Array[] = [];
+  public available: boolean[] = [];
+  public nextFree: number = 0;
 
   constructor(poolSize: number, bufferSize: number) {
     // Pre-allocate all buffers
@@ -86,7 +86,7 @@ export class FloatBufferPool {
     }
   }
 
-  private findNextFree(): number {
+  public findNextFree(): number {
     for (let i = this.nextFree; i < this.available.length; i++) {
       if (this.available[i]) {
         return i;

@@ -5,12 +5,8 @@ export class ArrayBufferPool {
   private buffers: Float32Array[] = [];
   private available: boolean[] = [];
   private nextFree: number = 0;
-  private bufferSize: number;
-  private poolSize: number;
 
   constructor(bufferSize: number, poolSize: number) {
-    this.bufferSize = bufferSize;
-    this.poolSize = poolSize;
     
     // Pre-allocate all buffers as Float32Array
     for (let i = 0; i < poolSize; i++) {

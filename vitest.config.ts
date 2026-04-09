@@ -1,9 +1,17 @@
 import { defineConfig } from "vitest/config";
+import { resolve } from "path";
 
 export default defineConfig({
   test: {
     pool: "forks",
     maxConcurrency: 2,
+    resolve: {
+      alias: {
+        "@solidjs/testing-library": resolve(__dirname, "../../../packages/third_party/solid-testing-library/src/index.ts"),
+      },
+    },
+  },
+});
     // Exclude performance and benchmark tests by default
     exclude: [
       "**/node_modules/**",

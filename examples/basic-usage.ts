@@ -312,7 +312,7 @@ export function geometryOperationsExample() {
  * // Output: Executes all examples and logs results
  */
 export async function runAllExamples() {
-  console.log("🦊 Reynard Algorithms - Practical Examples\n");
+  console.log("Reynard Algorithms - Practical Examples\n");
 
   try {
     findConnectedComponents();

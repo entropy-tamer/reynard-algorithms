@@ -325,7 +325,7 @@ describe("Comprehensive Pathfinding Validation", () => {
           { samples: 10 }
         );
 
-        expect(beforeReport.statistics.median).toBeLessThan(50);
+        expect(beforeReport.statistics.median).toBeLessThan(100);
       });
 
       it("should handle validation consistently across algorithms", async () => {

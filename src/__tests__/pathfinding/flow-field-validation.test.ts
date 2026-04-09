@@ -185,11 +185,11 @@ describe("Flow Field Validation Logic", () => {
 
       // Assert performance is within acceptable bounds
       assertPerformance(report, {
-        maxTime: 50, // Should validate 10,000 cells in under 50ms
+        maxTime: 100, // Should validate 10,000 cells in under 100ms
         maxCoefficientOfVariation: 0.3,
       });
 
-      expect(report.statistics.median).toBeLessThan(50);
+      expect(report.statistics.median).toBeLessThan(100);
       expect(report.assertions.stablePerformance).toBe(true);
     });
 

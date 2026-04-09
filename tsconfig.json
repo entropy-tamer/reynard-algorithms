@@ -23,7 +23,6 @@
         "../../../packages/ui/components-core/src"
       ]
     },
-    "composite": true,
     "declaration": true,
     "declarationMap": true
   },
@@ -35,43 +34,5 @@
     "dist",
     "**/*.test.ts",
     "**/*.test.tsx"
-  ],
-  "references": [
-    {
-      "path": "../../../packages/core/i18n"
-    },
-    {
-      "path": "../../../packages/ui/themes"
-    },
-    {
-      "path": "../../../packages/core/core"
-    },
-    {
-      "path": "../../../packages/ui/ui"
-    },
-    {
-      "path": "../../../packages/ui/primitives"
-    },
-    {
-      "path": "../../../packages/ui/components-core"
-    },
-    {
-      "path": "../../../packages/core/i18n"
-    },
-    {
-      "path": "../../../packages/ui/themes"
-    },
-    {
-      "path": "../../../packages/core/core"
-    },
-    {
-      "path": "../../../packages/ui/ui"
-    },
-    {
-      "path": "../../../packages/ui/primitives"
-    },
-    {
-      "path": "../../../packages/ui/components-core"
-    }
   ]
 }
