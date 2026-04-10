@@ -124,7 +124,7 @@ export class FenwickTree {
       });
 
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -180,7 +180,7 @@ export class FenwickTree {
         nodesVisited: nodesVisitedRef.count,
         range: { start: 0, end: index },
       };
-    } catch (error) {
+    } catch {
       return {
         result: 0,
         executionTime: performance.now() - startTime,
@@ -245,7 +245,7 @@ export class FenwickTree {
         nodesVisited: nodesVisitedRef.count,
         range: { start, end },
       };
-    } catch (error) {
+    } catch {
       return {
         result: 0,
         executionTime: performance.now() - startTime,
@@ -311,7 +311,7 @@ export class FenwickTree {
         nodesUpdated: nodesUpdatedRef.count,
         index,
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
         executionTime: performance.now() - startTime,
@@ -385,7 +385,7 @@ export class FenwickTree {
         nodesUpdated: nodesUpdatedRef.count,
         range: { start, end },
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
         executionTime: performance.now() - startTime,
@@ -494,7 +494,7 @@ export class FenwickTree {
           failed++;
           errors.push(`Failed to update index ${update.index}`);
         }
-      } catch (error) {
+      } catch {
         results.push(false);
         failed++;
         errors.push(`Error updating index ${update.index}: ${error}`);
@@ -563,7 +563,7 @@ export class FenwickTree {
       }
 
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -709,7 +709,7 @@ export class FenwickTree {
     for (const handler of this.eventHandlers) {
       try {
         handler(event);
-      } catch (error) {
+      } catch {
         console.error("Error in FenwickTree event handler:", error);
       }
     }

@@ -105,7 +105,7 @@ export class SAT {
       this.statsManager.emitEvent("collision_test_completed" as any, result);
 
       return result;
-    } catch (error) {
+    } catch {
       const result: SATCollisionResult = {
         colliding: false,
         mtv: null,

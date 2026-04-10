@@ -227,7 +227,7 @@ export class HPAStar {
       }
 
       return result;
-    } catch (error) {
+    } catch {
       return this.createFailureResult(startTime, error instanceof Error ? error.message : "Unknown error");
     }
   }
@@ -281,7 +281,7 @@ export class HPAStar {
       this.stats.abstractPathfindingTime = abstractEndTime - abstractStartTime;
 
       return abstractPath;
-    } catch (error) {
+    } catch {
       return [];
     }
   }
@@ -429,7 +429,7 @@ export class HPAStar {
       this.stats.pathRefinements++;
 
       return refinementResult.refinedPath;
-    } catch (error) {
+    } catch {
       return [];
     }
   }

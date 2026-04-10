@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /**
  * @file marching-squares-core.ts
  * @module algorithms/geometry/algorithms/marching-squares/marching-squares-core

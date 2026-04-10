@@ -92,7 +92,7 @@ function initRequire(): Promise<void> {
       if (typeof require !== "undefined") {
         nodeRequire = require;
       }
-    } catch (error) {
+    } catch {
       // All initialization attempts failed - this is expected in browser environments
       // nodeRequire will remain null, and getFs/getPath/getOs will return null
     }

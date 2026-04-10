@@ -94,7 +94,7 @@ export function findAgentPath(
         executionTime: performance.now() - startTime,
       },
     };
-  } catch (error) {
+  } catch {
     return {
       found: false,
       path: [],

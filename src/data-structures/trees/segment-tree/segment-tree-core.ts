@@ -133,7 +133,7 @@ export class SegmentTree<T> {
       });
 
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -194,7 +194,7 @@ export class SegmentTree<T> {
         nodesVisited,
         range: { start, end },
       };
-    } catch (error) {
+    } catch {
       return {
         result: this.config.identityElement!,
         executionTime: performance.now() - startTime,
@@ -261,7 +261,7 @@ export class SegmentTree<T> {
         nodesUpdated,
         range: { start: index, end: index },
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
         executionTime: performance.now() - startTime,
@@ -328,7 +328,7 @@ export class SegmentTree<T> {
         nodesUpdated,
         range: { start, end },
       };
-    } catch (error) {
+    } catch {
       return {
         success: false,
         executionTime: performance.now() - startTime,
@@ -438,7 +438,7 @@ export class SegmentTree<T> {
           failed++;
           errors.push(`Failed to update index ${update.index}`);
         }
-      } catch (error) {
+      } catch {
         results.push(false);
         failed++;
         errors.push(`Error updating index ${update.index}: ${error}`);
@@ -534,7 +534,7 @@ export class SegmentTree<T> {
       if (!built) return false;
 
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -971,7 +971,7 @@ export class SegmentTree<T> {
     for (const handler of this.eventHandlers) {
       try {
         handler(event);
-      } catch (error) {
+      } catch {
         console.error("Error in SegmentTree event handler:", error);
       }
     }

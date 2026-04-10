@@ -105,7 +105,7 @@ export interface IKResult {
 /**
  * Options for IK solving.
  */
-export interface IKOptions extends Partial<IKConfig> {}
+export type IKOptions = Partial<IKConfig>;
 
 /**
  * Default configuration.

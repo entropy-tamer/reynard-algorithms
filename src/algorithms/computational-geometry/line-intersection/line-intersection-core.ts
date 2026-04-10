@@ -358,11 +358,11 @@ export class LineIntersection {
    */
   private runSweepLineAlgorithm(): IntersectionPoint[] {
     const intersections: IntersectionPoint[] = [];
-    let eventCount = 0;
+    let _eventCount = 0;
 
     while (!this.eventQueue.isEmpty() && intersections.length < this.config.maxIntersections!) {
       const event = this.eventQueue.poll()!;
-      eventCount++;
+      _eventCount++;
 
       switch (event.type) {
         case "start":

@@ -280,29 +280,29 @@ export enum KdTreeEventType {
   /** Point inserted */
   POINT_INSERTED = "point_inserted",
   /** Alias used in some modules */
-  KD_TREE_INSERTED = "point_inserted",
+  KD_TREE_INSERTED = "kdtree_point_inserted",
   /** Point removed */
   POINT_REMOVED = "point_removed",
   /** Alias used in some modules */
-  KD_TREE_REMOVED = "point_removed",
+  KD_TREE_REMOVED = "kdtree_point_removed",
   /** Tree rebuilt */
   TREE_REBUILT = "tree_rebuilt",
   /** Alias used in some modules */
-  KD_TREE_REBUILT = "tree_rebuilt",
+  KD_TREE_REBUILT = "kdtree_tree_rebuilt",
   /** Query performed */
   QUERY_PERFORMED = "query_performed",
   /** Alias used in some modules */
-  KD_TREE_SEARCHED = "search_performed",
+  KD_TREE_SEARCHED = "kdtree_search_performed",
   /** Search performed */
   SEARCH_PERFORMED = "search_performed",
   /** Nearest neighbor query performed */
   NEAREST_NEIGHBOR_QUERY = "nearest_neighbor_query",
   /** Alias used in some modules */
-  KD_TREE_NEAREST_NEIGHBOR = "nearest_neighbor_query",
+  KD_TREE_NEAREST_NEIGHBOR = "kdtree_nearest_neighbor_query",
   /** Range query performed */
   RANGE_QUERY = "range_query",
   /** Alias used in some modules */
-  KD_TREE_RANGE_QUERY = "range_query",
+  KD_TREE_RANGE_QUERY = "kdtree_range_query",
   /** Tree cleared (alias used in some modules) */
   KD_TREE_CLEARED = "tree_cleared",
   /** KNN query alias */

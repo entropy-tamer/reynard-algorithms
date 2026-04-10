@@ -107,7 +107,7 @@ export class HPAPathRefinement {
           iterationsUsed,
         },
       };
-    } catch (error) {
+    } catch {
       const endTime = performance.now();
       return {
         refinedPath: [],

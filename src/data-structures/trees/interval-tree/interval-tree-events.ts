@@ -12,7 +12,7 @@ export function emitEvent(eventHandlers: IntervalTreeEventHandler[], type: Inter
   for (const handler of eventHandlers) {
     try {
       handler({ type, data, timestamp: Date.now() });
-    } catch (error) {
+    } catch {
       // Ignore handler errors
     }
   }

@@ -99,7 +99,7 @@ export interface FrustumCullingResult {
 /**
  * Options for frustum culling.
  */
-export interface FrustumCullingOptions extends Partial<FrustumCullingConfig> {}
+export type FrustumCullingOptions = Partial<FrustumCullingConfig>;
 
 /**
  * Object to test against frustum (can be AABB, Sphere, or Point).

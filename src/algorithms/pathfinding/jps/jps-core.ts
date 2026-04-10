@@ -304,7 +304,7 @@ export class JPS {
       }
 
       return result;
-    } catch (error) {
+    } catch {
       const executionTime = performance.now() - startTime;
       return {
         path: [],
@@ -507,7 +507,7 @@ export class JPS {
           iterations,
         },
       };
-    } catch (error) {
+    } catch {
       return {
         path,
         pointsRemoved: 0,

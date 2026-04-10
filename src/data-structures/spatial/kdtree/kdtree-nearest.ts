@@ -89,7 +89,7 @@ export function findNearestNeighbor(
       distance: searchResult.distance,
       executionTime,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       point: null,
@@ -177,7 +177,7 @@ export function findKNearestNeighbors(
       success: true,
       executionTime,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       neighbors: [],
@@ -417,7 +417,7 @@ function emitEvent(eventHandlers: KdTreeEventHandler[], type: KdTreeEventType, d
   for (const handler of eventHandlers) {
     try {
       handler({ type, data, timestamp: Date.now() });
-    } catch (error) {
+    } catch {
       // Ignore handler errors
     }
   }

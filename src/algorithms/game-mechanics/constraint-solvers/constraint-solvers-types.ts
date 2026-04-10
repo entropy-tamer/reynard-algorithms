@@ -142,7 +142,7 @@ export interface ConstraintSolverResult {
 /**
  * Options for constraint solving.
  */
-export interface ConstraintSolverOptions extends Partial<ConstraintSolverConfig> {}
+export type ConstraintSolverOptions = Partial<ConstraintSolverConfig>;
 
 /**
  * Default configuration.

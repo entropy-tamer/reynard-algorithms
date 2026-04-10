@@ -89,7 +89,7 @@ export class HPAClustering {
           generationTime,
         },
       };
-    } catch (error) {
+    } catch {
       const endTime = performance.now();
       return {
         clusters: [],
@@ -436,7 +436,7 @@ export class HPAClustering {
           detectionTime,
         },
       };
-    } catch (error) {
+    } catch {
       const endTime = performance.now();
       return {
         entrances: [],

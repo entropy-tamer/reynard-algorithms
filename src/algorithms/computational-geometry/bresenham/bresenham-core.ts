@@ -70,7 +70,7 @@ export class BresenhamLine {
         stoppedEarly: false,
         pointsProcessed: points.length,
       };
-    } catch (error) {
+    } catch {
       return {
         points: [],
         pointCount: 0,
@@ -138,7 +138,7 @@ export class BresenhamLine {
         executionTime: performance.now() - startTime,
         success: allSuccessful,
       };
-    } catch (error) {
+    } catch {
       return {
         lines,
         totalPoints,
@@ -168,7 +168,7 @@ export class BresenhamLine {
         executionTime,
         success: true,
       };
-    } catch (error) {
+    } catch {
       return {
         points: [],
         pointCount: 0,
@@ -189,7 +189,7 @@ export class BresenhamLine {
    */
   private generateLinePoints(start: Point, end: Point, options: LineDrawingOptions): Point[] {
     const points: Point[] = [];
-    let processedCount = 0;
+    let __processedCount = 0;
 
     // Handle negative coordinates if requested
     let adjustedStart = start;
@@ -230,7 +230,7 @@ export class BresenhamLine {
       }
 
       points.push(finalPoint);
-      processedCount++;
+      __processedCount++;
     }
 
     return points;

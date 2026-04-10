@@ -424,7 +424,7 @@ export function emitEvent(eventHandlers: KdTreeEventHandler[], type: KdTreeEvent
   for (const handler of eventHandlers) {
     try {
       handler({ type, data, timestamp: Date.now() });
-    } catch (error) {
+    } catch {
       // Ignore handler errors
     }
   }

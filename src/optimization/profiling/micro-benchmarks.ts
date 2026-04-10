@@ -1,4 +1,15 @@
 /**
+ * Micro-benchmarks for component-level performance testing
+ *
+ * These benchmarks measure the performance of individual components
+ * and operations in isolation, allowing for targeted optimization.
+ *
+ * NOTE: This file contains intentional unused expressions to simulate
+ * computational overhead in benchmark scenarios.
+ */
+/* eslint-disable @typescript-eslint/no-unused-expressions */
+
+/**
  * Micro-Benchmarks for PAW Components
  * 
  * Component-level performance tests that isolate and measure specific
@@ -202,9 +213,7 @@ export const algorithmSelectionBenchmarks: ComponentBenchmark = {
       test: async (context) => {
         // Simulate grid classification logic
         for (const grid of context.testGrids) {
-          const gridSize = Math.sqrt(grid.objectCount);
-          // Simulate additional classification work
-          Math.random() * gridSize;
+          const _gridSize = Math.sqrt(grid.objectCount);
         }
       }
     },
@@ -233,8 +242,7 @@ export const algorithmSelectionBenchmarks: ComponentBenchmark = {
           const adjustedComplexity = baseComplexity * (testCase.complexity > 0.7 ? 0.8 : 0.9);
           const executionTime = adjustedComplexity * 0.0006;
           const memoryUsage = testCase.gridSize * testCase.gridSize * 40;
-          // Simulate calculation overhead
-          Math.random() * executionTime + memoryUsage;
+          const _unused = Math.random() * executionTime + memoryUsage;
         }
       }
     }
@@ -300,9 +308,7 @@ export const memoryPoolBenchmarks: ComponentBenchmark = {
         const filtered = pools.filter(p => 
           p.isInUse || now - p.lastUsed <= context.maxIdleTime
         );
-        
-        // Simulate cleanup overhead
-        filtered.length;
+        void filtered.length;
       }
     }
   ]
@@ -410,7 +416,7 @@ export const highComplexityBenchmarks: ComponentBenchmark = {
           const continuity = Math.random();
           const noise = Math.random();
           const gradient = Math.random();
-          [type, continuity, noise, gradient];
+          const _unused = [type, continuity, noise, gradient];
         }
       }
     },
@@ -442,7 +448,7 @@ export const highComplexityBenchmarks: ComponentBenchmark = {
           // Simulate selection overhead
           const complexity = profile.gridSize * profile.gridSize;
           const multiplier = algorithm === 'standard-lut' ? 1.0 : 0.8;
-          complexity * multiplier;
+          const _unused = complexity * multiplier;
         }
       }
     }

@@ -80,9 +80,7 @@ export class LRUCacheNodePool<K, V> {
     }
 
     // Clear references to help GC
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     node.key = null as any;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     node.value = null as any;
     node.prev = null;
     node.next = null;

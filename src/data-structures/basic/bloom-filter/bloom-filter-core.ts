@@ -199,7 +199,7 @@ export class BloomFilter {
         hashFunctionsUsed: indices.length,
         checkedIndices: indices,
       };
-    } catch (error) {
+    } catch {
       return {
         possiblyPresent: false,
         executionTime: performance.now() - startTime,
@@ -404,7 +404,7 @@ export class BloomFilter {
       this.stats.memoryUsage = this.bitArray.length;
 
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

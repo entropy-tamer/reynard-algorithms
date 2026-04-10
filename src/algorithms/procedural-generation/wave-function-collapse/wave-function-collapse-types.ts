@@ -1,4 +1,3 @@
-/* eslint-disable max-lines, @typescript-eslint/no-explicit-any */
 /**
  * @file Wave Function Collapse type definitions
  */

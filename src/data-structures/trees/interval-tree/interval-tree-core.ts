@@ -232,7 +232,7 @@ export class IntervalTree {
       this.root = deserializeTree(serialized);
       this.stats = { ...serialized.stats };
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }

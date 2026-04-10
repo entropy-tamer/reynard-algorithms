@@ -71,7 +71,7 @@ export function optimizePath(
         iterations: optimizationOptions.maxSmoothingIterations || 0,
       },
     };
-  } catch (error) {
+  } catch {
     return {
       path: path,
       pointsRemoved: 0,

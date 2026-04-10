@@ -6,7 +6,6 @@
  * automatic optimization and performance monitoring.
  */
 
-/* eslint-disable max-lines */
 /*
 This file serves as a comprehensive barrel export that aggregates all public APIs
 from the algorithms package. It intentionally contains extensive export statements

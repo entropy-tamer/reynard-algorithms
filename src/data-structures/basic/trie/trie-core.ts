@@ -144,7 +144,7 @@ export class Trie {
       this.emitEvent(TrieEventType.WORD_INSERTED, { word: normalizedWord, data });
 
       return true;
-    } catch (error) {
+    } catch {
       return false;
     } finally {
       if (this.enableStats) {
@@ -220,7 +220,7 @@ export class Trie {
         executionTime: performance.now() - startTime,
         nodesTraversed,
       };
-    } catch (error) {
+    } catch {
       return {
         found: false,
         word: null,
@@ -263,7 +263,7 @@ export class Trie {
       }
 
       return false;
-    } catch (error) {
+    } catch {
       return false;
     } finally {
       if (this.enableStats) {
@@ -323,7 +323,7 @@ export class Trie {
         executionTime: performance.now() - startTime,
         nodesTraversed,
       };
-    } catch (error) {
+    } catch {
       return {
         words: [],
         data: [],
@@ -384,7 +384,7 @@ export class Trie {
         executionTime: performance.now() - startTime,
         nodesTraversed,
       };
-    } catch (error) {
+    } catch {
       return {
         suggestions: [],
         count: 0,
@@ -523,7 +523,7 @@ export class Trie {
           failed++;
           errors.push(`Failed to insert word: ${word}`);
         }
-      } catch (error) {
+      } catch {
         results.push(false);
         failed++;
         errors.push(`Error inserting word ${word}: ${error}`);
@@ -611,7 +611,7 @@ export class Trie {
       this.stats.maxDepth = serialized.metadata.maxDepth;
 
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -1090,7 +1090,7 @@ export class Trie {
     for (const handler of this.eventHandlers) {
       try {
         handler(event);
-      } catch (error) {
+      } catch {
         console.error("Error in Trie event handler:", error);
       }
     }

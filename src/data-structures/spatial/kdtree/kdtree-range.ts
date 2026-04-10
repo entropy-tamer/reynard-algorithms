@@ -99,12 +99,11 @@ export function performRangeQuery(
       executionTime,
       metadata: { bounds, pointCount: filteredPoints.length },
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       points: [],
       count: 0,
-      queryBox: bounds,
       executionTime: performance.now() - startTime,
     };
   }
@@ -222,7 +221,7 @@ export function findPointsInRadius(
       executionTime,
       metadata: { center, radius, pointCount: finalPoints.length },
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       points: [],
@@ -437,7 +436,7 @@ function emitEvent(eventHandlers: KdTreeEventHandler[], type: KdTreeEventType, d
   for (const handler of eventHandlers) {
     try {
       handler({ type, data, timestamp: Date.now() });
-    } catch (error) {
+    } catch {
       // Ignore handler errors
     }
   }

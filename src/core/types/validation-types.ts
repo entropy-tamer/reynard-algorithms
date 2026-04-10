@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /**
  * Unified Validation Result Interface
  *

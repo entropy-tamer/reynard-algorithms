@@ -169,14 +169,14 @@ describe("Spatial Types", () => {
         type: "render",
         sprite: "player.png",
         texture: "metal.jpg",
-        color: "#FF0000",
+        color: "oklch(62.80% 25.77% 29.2)",
         opacity: 0.8,
         layer: 2,
       };
 
       expect(renderData.sprite).toBe("player.png");
       expect(renderData.texture).toBe("metal.jpg");
-      expect(renderData.color).toBe("#FF0000");
+      expect(renderData.color).toBe("oklch(62.80% 25.77% 29.2)");
       expect(renderData.opacity).toBe(0.8);
       expect(renderData.layer).toBe(2);
     });

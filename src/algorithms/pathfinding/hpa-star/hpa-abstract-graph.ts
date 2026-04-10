@@ -69,7 +69,7 @@ export class HPAAbstractGraph {
           constructionTime,
         },
       };
-    } catch (error) {
+    } catch {
       const endTime = performance.now();
       return {
         nodes: [],

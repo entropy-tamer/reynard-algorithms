@@ -58,7 +58,7 @@ export function detectCollisions(aabbs: AABB[] | undefined, manager: DetectionMa
     );
     manager.emitEvent(SweepPruneEventType.COLLISION_DETECTION_COMPLETED, result);
     return result;
-  } catch (error) {
+  } catch {
     return handleDetectionError(startTime, manager);
   }
 }

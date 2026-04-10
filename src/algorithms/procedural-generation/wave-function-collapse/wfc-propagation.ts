@@ -1,7 +1,6 @@
 /**
  * @file Wave Function Collapse propagation and entropy operations
  */
-/* eslint-disable max-lines, @typescript-eslint/no-explicit-any */
 /**
  * Wave Function Collapse Propagation Operations
  *
