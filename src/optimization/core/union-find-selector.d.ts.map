@@ -1,1 +1,0 @@
-{"version":3,"file":"union-find-selector.d.ts","sourceRoot":"","sources":["union-find-selector.ts"],"names":[],"mappings":"AAAA;;;;;;GAMG;AAEH,OAAO,KAAK,EAAE,gBAAgB,EAAE,kBAAkB,EAAE,MAAM,4BAA4B,CAAC;AAEvF;;GAEG;AACH,qBAAa,iBAAiB;IAC5B;;;;OAIG;IACH,+BAA+B,CAAC,QAAQ,EAAE,gBAAgB,GAAG,kBAAkB;CAmChF"}

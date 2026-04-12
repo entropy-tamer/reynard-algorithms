@@ -1,1 +1,0 @@
-{"version":3,"file":"complexity-analyzer.d.ts","sourceRoot":"","sources":["complexity-analyzer.ts"],"names":[],"mappings":"AAAA;;;;;;GAMG;AAEH,OAAO,KAAK,EAAE,uBAAuB,EAAE,kBAAkB,EAAE,MAAM,4BAA4B,CAAC;AAE9F;;GAEG;AACH,qBAAa,kBAAkB;IAC7B;;;;OAIG;IACH,mBAAmB,CAAC,QAAQ,EAAE,uBAAuB,GAAG,kBAAkB;IAiB1E;;;;;OAKG;IACH,OAAO,CAAC,kBAAkB;IAK1B;;;;;;OAMG;IACH,OAAO,CAAC,2BAA2B;CAKpC"}
