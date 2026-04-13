@@ -5,8 +5,6 @@ export default defineConfig({
   test: {
     pool: "forks",
     maxConcurrency: 2,
-  },
-});
     // Exclude performance and benchmark tests by default
     exclude: [
       "**/node_modules/**",

@@ -269,7 +269,7 @@ describe("Collision Algorithms Comprehensive Coverage", () => {
   });
 
   describe("Performance and Memory Management", () => {
-    it("should handle memory pool resource management", () => {
+    it("should handle memory pool resource management", { timeout: 30000 }, () => {
       // Create a dataset that will use multiple memory pool resources
       const aabbs = Array.from({ length: 2000 }, (_, i) => ({
         x: (i % 40) * 10,

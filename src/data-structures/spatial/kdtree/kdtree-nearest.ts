@@ -76,7 +76,7 @@ export function findNearestNeighbor(
     );
 
     // Emit event
-    emitEvent(eventHandlers, KdTreeEventType.KD_TREE_NEAREST_NEIGHBOR, {
+    emitEvent(eventHandlers, KdTreeEventType.NEAREST_NEIGHBOR_QUERY, {
       queryPoint,
       nearestPoint: searchResult.point,
       distance: searchResult.distance,

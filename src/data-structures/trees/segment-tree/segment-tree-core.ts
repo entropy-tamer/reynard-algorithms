@@ -438,7 +438,7 @@ export class SegmentTree<T> {
           failed++;
           errors.push(`Failed to update index ${update.index}`);
         }
-      } catch {
+      } catch (error) {
         results.push(false);
         failed++;
         errors.push(`Error updating index ${update.index}: ${error}`);
@@ -971,7 +971,7 @@ export class SegmentTree<T> {
     for (const handler of this.eventHandlers) {
       try {
         handler(event);
-      } catch {
+      } catch (error) {
         console.error("Error in SegmentTree event handler:", error);
       }
     }

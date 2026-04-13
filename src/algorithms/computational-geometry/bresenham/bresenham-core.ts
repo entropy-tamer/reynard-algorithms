@@ -70,7 +70,7 @@ export class BresenhamLine {
         stoppedEarly: false,
         pointsProcessed: points.length,
       };
-    } catch {
+    } catch (error) {
       return {
         points: [],
         pointCount: 0,
@@ -168,7 +168,7 @@ export class BresenhamLine {
         executionTime,
         success: true,
       };
-    } catch {
+    } catch (error) {
       return {
         points: [],
         pointCount: 0,

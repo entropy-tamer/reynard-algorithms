@@ -1,6 +1,9 @@
 {
-  "extends": "../../../tsconfig.typecheck-base.json",
+  "extends": "../../../tsconfig.base.json",
   "compilerOptions": {
-    "noEmit": true
+    "noEmit": true,
+    "types": ["node"],
+    "outDir": "./dist",
+    "rootDir": "./src"
   }
 }

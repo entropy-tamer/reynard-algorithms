@@ -15,7 +15,7 @@ export class LRUCacheTTLManager<K, V> {
   private ttl: number;
   private cleanupInterval: number;
   private enableCleanup: boolean;
-  private cleanupTimer: NodeJS.Timeout | undefined;
+  private cleanupTimer: ReturnType<typeof setTimeout> | undefined;
 
   /**
    *

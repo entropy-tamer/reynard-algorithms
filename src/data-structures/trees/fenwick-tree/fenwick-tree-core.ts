@@ -494,7 +494,7 @@ export class FenwickTree {
           failed++;
           errors.push(`Failed to update index ${update.index}`);
         }
-      } catch {
+      } catch (error) {
         results.push(false);
         failed++;
         errors.push(`Error updating index ${update.index}: ${error}`);
@@ -709,7 +709,7 @@ export class FenwickTree {
     for (const handler of this.eventHandlers) {
       try {
         handler(event);
-      } catch {
+      } catch (error) {
         console.error("Error in FenwickTree event handler:", error);
       }
     }

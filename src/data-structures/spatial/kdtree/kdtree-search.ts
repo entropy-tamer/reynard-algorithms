@@ -59,7 +59,7 @@ export function searchPoint(
     stats.averageSearchTime = updateAverageTime(stats.averageSearchTime, executionTime, stats.searches);
 
     // Emit event
-    emitEvent(eventHandlers, KdTreeEventType.KD_TREE_SEARCHED, {
+    emitEvent(eventHandlers, KdTreeEventType.SEARCH_PERFORMED, {
       point,
       found,
       executionTime,

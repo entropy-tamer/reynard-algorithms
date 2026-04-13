@@ -304,7 +304,7 @@ export class JPS {
       }
 
       return result;
-    } catch {
+    } catch (error) {
       const executionTime = performance.now() - startTime;
       return {
         path: [],

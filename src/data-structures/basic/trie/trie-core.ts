@@ -523,7 +523,7 @@ export class Trie {
           failed++;
           errors.push(`Failed to insert word: ${word}`);
         }
-      } catch {
+      } catch (error) {
         results.push(false);
         failed++;
         errors.push(`Error inserting word ${word}: ${error}`);
@@ -1090,7 +1090,7 @@ export class Trie {
     for (const handler of this.eventHandlers) {
       try {
         handler(event);
-      } catch {
+      } catch (error) {
         console.error("Error in Trie event handler:", error);
       }
     }

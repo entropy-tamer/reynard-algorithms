@@ -123,6 +123,10 @@ describe("HPAStar", () => {
         { x: 15, y: 15 },
       ];
 
+      // Ensure the first goal is walkable
+      const goalIndex = multipleGoals[0]!.y * config.width + multipleGoals[0]!.x;
+      grid[goalIndex] = CellType.WALKABLE;
+
       const result = hpaStar.findPath(grid, config.width, config.height, start, multipleGoals[0]!, options);
 
       expect(result.found).toBe(true);
@@ -132,6 +136,10 @@ describe("HPAStar", () => {
 
     it("should handle start and goal at same position", () => {
       const samePoint = { x: 5, y: 5 };
+      // Ensure the position is walkable
+      const samePointIndex = samePoint.y * config.width + samePoint.x;
+      grid[samePointIndex] = CellType.WALKABLE;
+      
       const result = hpaStar.findPath(grid, config.width, config.height, samePoint, samePoint, options);
 
       expect(result.path).toBeDefined();
@@ -181,6 +189,12 @@ describe("HPAStar", () => {
         { x: 10, y: 10 },
         { x: 15, y: 15 },
       ];
+
+      // Ensure goals are walkable
+      for (const goal of multipleGoals) {
+        const index = goal.y * config.width + goal.x;
+        grid[index] = CellType.WALKABLE;
+      }
 
       // Find path to first goal (closest)
       const result = hpaStar.findPath(grid, config.width, config.height, start, multipleGoals[0]!, options);

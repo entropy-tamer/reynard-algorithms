@@ -104,6 +104,7 @@ export function performRangeQuery(
       success: false,
       points: [],
       count: 0,
+      queryBox: { min: [0, 0], max: [0, 0] },
       executionTime: performance.now() - startTime,
     };
   }

@@ -8,7 +8,7 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { memoize, memoizeMath, memoizeGeometry, MathMemo, clearMathMemo, getMathMemoStats } from "../memoization";
+import { memoize, memoizeMath, memoizeGeometry, weakMemoize, batchMemoize, MathMemo, clearMathMemo, getMathMemoStats } from "../memoization";
 
 describe("Memoization Utilities", () => {
   beforeEach(() => {
@@ -195,6 +195,209 @@ describe("Memoization Utilities", () => {
       expect(result1).toBe(result2);
       expect(time2).toBeLessThan(time1);
       expect(memoizedCalculation.stats.hits).toBe(1);
+    });
+  });
+
+  describe("memoize with custom config", () => {
+    it("should respect maxSize config", () => {
+      let callCount = 0;
+      const expensiveFunction = (x: number) => {
+        callCount++;
+        return x * x;
+      };
+
+      const memoizedFn = memoize(expensiveFunction, { maxSize: 2 });
+
+      memoizedFn(1);
+      memoizedFn(2);
+      memoizedFn(3);
+
+      // Cache should only have 2 entries
+      expect(memoizedFn.stats.cacheSize).toBeLessThanOrEqual(2);
+    });
+
+    it("should respect custom keyGenerator", () => {
+      const expensiveFunction = (x: number, y: number) => x + y;
+      const memoizedFn = memoize(expensiveFunction, {
+        keyGenerator: (x, y) => `${x}-${y}`,
+      });
+
+      expect(memoizedFn(1, 2)).toBe(3);
+      expect(memoizedFn.stats.misses).toBe(1);
+
+      // Same key should hit cache
+      expect(memoizedFn(1, 2)).toBe(3);
+      expect(memoizedFn.stats.hits).toBe(1);
+    });
+
+    it("should support enableStats config", () => {
+      const expensiveFunction = (x: number) => x * x;
+      const memoizedFn = memoize(expensiveFunction, { enableStats: false });
+
+      memoizedFn(5);
+      memoizedFn(5);
+
+      // Stats should still be available but may not be tracked
+      expect(memoizedFn.stats).toBeDefined();
+    });
+  });
+
+  describe("weakMemoize", () => {
+    it("should cache results for object arguments", () => {
+      let callCount = 0;
+      const expensiveFunction = (obj: { x: number }) => {
+        callCount++;
+        return obj.x * 2;
+      };
+
+      const memoizedFn = weakMemoize(expensiveFunction);
+      const obj = { x: 5 };
+
+      expect(memoizedFn(obj)).toBe(10);
+      expect(callCount).toBe(1);
+
+      expect(memoizedFn(obj)).toBe(10);
+      expect(callCount).toBe(1);
+    });
+
+    it("should handle non-object arguments", () => {
+      let callCount = 0;
+      const expensiveFunction = (x: number, y: number) => {
+        callCount++;
+        return x + y;
+      };
+
+      const memoizedFn = weakMemoize(expensiveFunction);
+
+      expect(memoizedFn(1, 2)).toBe(3);
+      expect(callCount).toBe(1);
+
+      expect(memoizedFn(1, 2)).toBe(3);
+      expect(callCount).toBe(2); // Non-object args create synthetic key each time
+    });
+
+    it("should provide clear method", () => {
+      const expensiveFunction = (obj: { x: number }) => obj.x * 2;
+      const memoizedFn = weakMemoize(expensiveFunction);
+
+      expect(typeof memoizedFn.clear).toBe("function");
+      memoizedFn.clear();
+    });
+  });
+
+  describe("batchMemoize", () => {
+    it("should cache batch processing results", () => {
+      let callCount = 0;
+      const batchFunction = (inputs: number[]) => {
+        callCount++;
+        return inputs.map(x => x * 2);
+      };
+
+      const memoizedFn = batchMemoize(batchFunction);
+
+      const inputs = [1, 2, 3];
+      expect(memoizedFn(inputs)).toEqual([2, 4, 6]);
+      expect(callCount).toBe(1);
+
+      expect(memoizedFn(inputs)).toEqual([2, 4, 6]);
+      expect(callCount).toBe(1);
+    });
+
+    it("should provide statistics", () => {
+      const batchFunction = (inputs: number[]) => inputs.map(x => x * 2);
+      const memoizedFn = batchMemoize(batchFunction);
+
+      memoizedFn([1, 2, 3]);
+      memoizedFn([1, 2, 3]);
+      memoizedFn([4, 5, 6]);
+
+      const stats = memoizedFn.stats;
+      expect(stats.hits).toBe(1);
+      expect(stats.misses).toBe(2);
+      expect(stats.hitRate).toBe(1 / 3);
+    });
+
+    it("should support clear method", () => {
+      const batchFunction = (inputs: number[]) => inputs.map(x => x * 2);
+      const memoizedFn = batchMemoize(batchFunction);
+
+      memoizedFn([1, 2, 3]);
+      expect(memoizedFn.stats.cacheSize).toBe(1);
+
+      memoizedFn.clear();
+      expect(memoizedFn.stats.cacheSize).toBe(0);
+    });
+
+    it("should respect maxSize config", () => {
+      const batchFunction = (inputs: number[]) => inputs.map(x => x * 2);
+      const memoizedFn = batchMemoize(batchFunction, { maxSize: 2 });
+
+      memoizedFn([1]);
+      memoizedFn([2]);
+      memoizedFn([3]);
+
+      expect(memoizedFn.stats.cacheSize).toBeLessThanOrEqual(2);
+    });
+  });
+
+  describe("memoizeGeometry with complex arguments", () => {
+    it("should handle array arguments", () => {
+      const distance = (points: number[][]) => {
+        const [p1, p2] = points;
+        return Math.sqrt((p2[0] - p1[0]) ** 2 + (p2[1] - p1[1]) ** 2);
+      };
+
+      const memoizedDistance = memoizeGeometry(distance);
+      const points = [
+        [0, 0],
+        [3, 4],
+      ];
+
+      expect(memoizedDistance(points)).toBe(5);
+      expect(memoizedDistance(points)).toBe(5);
+      expect(memoizedDistance.stats.hits).toBe(1);
+    });
+
+    it("should handle object arguments", () => {
+      const distance = (p1: { x: number; y: number }, p2: { x: number; y: number }) => {
+        return Math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2);
+      };
+
+      const memoizedDistance = memoizeGeometry(distance);
+      const p1 = { x: 0, y: 0 };
+      const p2 = { x: 3, y: 4 };
+
+      expect(memoizedDistance(p1, p2)).toBe(5);
+      expect(memoizedDistance(p1, p2)).toBe(5);
+      expect(memoizedDistance.stats.hits).toBe(1);
+    });
+  });
+
+  describe("MathMemo additional functions", () => {
+    it("should support power function", () => {
+      expect(MathMemo.pow(2, 3)).toBe(8);
+      expect(MathMemo.pow(2, 3)).toBe(8);
+      expect(MathMemo.pow.stats.hits).toBe(1);
+    });
+
+    it("should support logarithm functions", () => {
+      expect(MathMemo.log(Math.E)).toBeCloseTo(1, 5);
+      expect(MathMemo.ln(Math.E)).toBeCloseTo(1, 5);
+    });
+
+    it("should support exponential function", () => {
+      expect(MathMemo.exp(0)).toBe(1);
+      expect(MathMemo.exp(1)).toBeCloseTo(Math.E, 5);
+    });
+
+    it("should support cross product", () => {
+      const result = MathMemo.cross3D(1, 0, 0, 0, 1, 0);
+      expect(result).toEqual([0, 0, 1]);
+    });
+
+    it("should support add and multiply", () => {
+      expect(MathMemo.add(2, 3)).toBe(5);
+      expect(MathMemo.multiply(2, 3)).toBe(6);
     });
   });
 });

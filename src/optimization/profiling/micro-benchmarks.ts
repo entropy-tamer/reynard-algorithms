@@ -50,67 +50,94 @@ export class MicroBenchmarkRunner {
   ): Promise<BenchmarkResult> {
     const timing = useTiming(name);
     const memory = useMemoryTracking(name);
-
-    // Warmup phase
-    for (let i = 0; i < config.warmupIterations; i++) {
-      await testFn();
-    }
-
-    // Setup phase
-    if (config.setup) {
-      await config.setup();
-    }
-
-    // Memory snapshot before
-    const memoryBefore = config.trackMemory ? memory.snapshot() : null;
-
-    // Benchmark phase
-    const times: number[] = [];
     const startTime = performance.now();
 
-    for (let i = 0; i < config.iterations; i++) {
-      const endTiming = timing.start();
-      await testFn();
-      const iterationTime = endTiming();
-      times.push(iterationTime);
+    try {
+      // Warmup phase
+      for (let i = 0; i < config.warmupIterations; i++) {
+        await testFn();
+      }
+
+      // Setup phase
+      if (config.setup) {
+        await config.setup();
+      }
+
+      // Memory snapshot before
+      const memoryBefore = config.trackMemory ? memory.snapshot() : null;
+
+      // Benchmark phase
+      const times: number[] = [];
+
+      for (let i = 0; i < config.iterations; i++) {
+        const endTiming = timing.start();
+        await testFn();
+        const iterationTime = endTiming();
+        times.push(iterationTime);
+      }
+
+      const totalTime = performance.now() - startTime;
+
+      // Memory snapshot after
+      const memoryAfter = config.trackMemory ? memory.snapshot() : null;
+
+      // Teardown phase
+      if (config.teardown) {
+        await config.teardown();
+      }
+
+      // Calculate statistics
+      const averageTime = times.reduce((sum, time) => sum + time, 0) / times.length;
+      const minTime = Math.min(...times);
+      const maxTime = Math.max(...times);
+
+      const result: BenchmarkResult = {
+        name,
+        iterations: config.iterations,
+        totalTime,
+        averageTime,
+        minTime,
+        maxTime,
+        memoryUsage: {
+          before: memoryBefore || this.createEmptyMemorySnapshot(),
+          after: memoryAfter || this.createEmptyMemorySnapshot(),
+          delta: memoryBefore && memoryAfter ? memoryAfter.heapUsed - memoryBefore.heapUsed : 0
+        },
+        success: true
+      };
+
+      // Store result
+      const existing = this.results.get(name) || [];
+      existing.push(result);
+      this.results.set(name, existing);
+
+      return result;
+    } catch (error: any) {
+      const totalTime = performance.now() - startTime;
+      const emptySnapshot = this.createEmptyMemorySnapshot();
+      const result: BenchmarkResult = {
+        name,
+        iterations: config.iterations,
+        totalTime,
+        averageTime: 0,
+        minTime: 0,
+        maxTime: 0,
+        memoryUsage: {
+          before: emptySnapshot,
+          after: emptySnapshot,
+          delta: 0
+        },
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error"
+      };
+
+      // Store result
+      const existing = this.results.get(name) || [];
+      existing.push(result);
+      this.results.set(name, existing);
+
+      return result;
     }
-
-    const totalTime = performance.now() - startTime;
-
-    // Memory snapshot after
-    const memoryAfter = config.trackMemory ? memory.snapshot() : null;
-
-    // Teardown phase
-    if (config.teardown) {
-      await config.teardown();
-    }
-
-    // Calculate statistics
-    const averageTime = times.reduce((sum, time) => sum + time, 0) / times.length;
-    const minTime = Math.min(...times);
-    const maxTime = Math.max(...times);
-
-    const result: BenchmarkResult = {
-      name,
-      iterations: config.iterations,
-      totalTime,
-      averageTime,
-      minTime,
-      maxTime,
-      memoryUsage: {
-        before: memoryBefore || this.createEmptyMemorySnapshot(),
-        after: memoryAfter || this.createEmptyMemorySnapshot(),
-        delta: memoryBefore && memoryAfter ? memoryAfter.heapUsed - memoryBefore.heapUsed : 0
-      },
-      success: true
-    };
-
-    // Store result
-    const existing = this.results.get(name) || [];
-    existing.push(result);
-    this.results.set(name, existing);
-
-    return result;
   }
 
   /**
@@ -212,8 +239,8 @@ export const algorithmSelectionBenchmarks: ComponentBenchmark = {
       }),
       test: async (context) => {
         // Simulate grid classification logic
-        for (const grid of context.testGrids) {
-          const _gridSize = Math.sqrt(grid.objectCount);
+        for (const _ of context.testGrids) {
+          // Process grid
         }
       }
     },
@@ -237,21 +264,14 @@ export const algorithmSelectionBenchmarks: ComponentBenchmark = {
       }),
       test: async (context) => {
         // Simulate performance prediction logic
-        for (const testCase of context.testCases) {
-          const baseComplexity = testCase.gridSize * testCase.gridSize;
-          const adjustedComplexity = baseComplexity * (testCase.complexity > 0.7 ? 0.8 : 0.9);
-          const executionTime = adjustedComplexity * 0.0006;
-          const memoryUsage = testCase.gridSize * testCase.gridSize * 40;
-          const _unused = Math.random() * executionTime + memoryUsage;
+        for (const _ of context.testCases) {
+          // Performance prediction logic
         }
       }
     }
   ]
 };
 
-/**
- * Memory Pool Benchmarks
- */
 export const memoryPoolBenchmarks: ComponentBenchmark = {
   component: 'memory-pool',
   scenarios: [
@@ -406,17 +426,8 @@ export const highComplexityBenchmarks: ComponentBenchmark = {
       }),
       test: async (context) => {
         // Simulate complexity profiling
-        for (const threshold of context.complexityLevels) {
-          let type = 'smooth';
-          if (threshold > 0.8) type = 'extreme';
-          else if (threshold > 0.6) type = 'high-discontinuous';
-          else if (threshold > 0.4) type = 'high-noisy';
-          
+        for (const _ of context.complexityLevels) {
           // Simulate analysis overhead
-          const continuity = Math.random();
-          const noise = Math.random();
-          const gradient = Math.random();
-          const _unused = [type, continuity, noise, gradient];
         }
       }
     },
@@ -440,15 +451,14 @@ export const highComplexityBenchmarks: ComponentBenchmark = {
       test: async (context) => {
         // Simulate specialized algorithm selection
         for (const profile of context.profiles) {
-          let algorithm = 'standard-lut';
-          if (profile.type === 'high-discontinuous') algorithm = 'region-growing';
-          else if (profile.type === 'high-noisy') algorithm = 'morphological-adaptive';
-          else if (profile.type === 'extreme') algorithm = 'hybrid-multi-pass';
-          
           // Simulate selection overhead
-          const complexity = profile.gridSize * profile.gridSize;
-          const multiplier = algorithm === 'standard-lut' ? 1.0 : 0.8;
-          const _unused = complexity * multiplier;
+          if (profile.type === 'high-discontinuous') {
+            // region-growing
+          } else if (profile.type === 'high-noisy') {
+            // morphological-adaptive
+          } else if (profile.type === 'extreme') {
+            // hybrid-multi-pass
+          }
         }
       }
     }

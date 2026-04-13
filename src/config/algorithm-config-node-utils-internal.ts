@@ -117,30 +117,27 @@ export function getFs(): FSLike | null {
   // If not initialized, try to use global require synchronously (CommonJS)
   if (!nodeRequire) {
     if (typeof require !== "undefined") {
-      // CommonJS environment - use global require directly
+      // CommonJS environment
+      nodeRequire = require;
+      if (nodeRequire) {
+        const fs = nodeRequire("fs");
+        return fs as FSLike;
+      }
+      return null;
+    }
+  }
+
+  if (nodeRequire) {
+    if (nodeRequire !== null) {
       try {
-        nodeRequire = require;
         const fs = nodeRequire("fs");
         return fs as FSLike;
       } catch {
         return null;
       }
-    } else {
-      // ES module environment - initialize asynchronously in background
-      // Return null on first call, subsequent calls will have nodeRequire initialized
-      initRequire().catch(() => {
-        // Ignore initialization errors (expected in browsers)
-      });
-      return null;
     }
   }
-
-  try {
-    const fs = nodeRequire("fs");
-    return fs as FSLike;
-  } catch {
-    return null;
-  }
+  return null;
 }
 
 /**
@@ -177,12 +174,17 @@ export function getPath(): PathLike | null {
     }
   }
 
-  try {
-    const path = nodeRequire("path");
-    return path as PathLike;
-  } catch {
-    return null;
+  if (nodeRequire) {
+    try {
+      if (nodeRequire) {
+        const path = nodeRequire("path");
+        return path as PathLike;
+      }
+    } catch {
+      return null;
+    }
   }
+  return null;
 }
 
 /**
@@ -219,10 +221,13 @@ export function getOs(): OSLike | null {
     }
   }
 
-  try {
-    const os = nodeRequire("node:os");
-    return os as unknown as OSLike;
-  } catch {
-    return null;
+  if (nodeRequire) {
+    try {
+      const os = nodeRequire("node:os");
+      return os as unknown as OSLike;
+    } catch {
+      return null;
+    }
   }
+  return null;
 }

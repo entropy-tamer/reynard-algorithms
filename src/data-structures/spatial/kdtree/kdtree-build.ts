@@ -79,7 +79,7 @@ export function insertPoint(
     stats.maxDepth = Math.max(stats.maxDepth, depth);
 
     // Emit event
-    emitEvent(eventHandlers, KdTreeEventType.KD_TREE_INSERTED, {
+    emitEvent(eventHandlers, KdTreeEventType.POINT_INSERTED, {
       point,
       depth,
       executionTime: performance.now() - startTime,

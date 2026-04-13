@@ -227,7 +227,7 @@ export class HPAStar {
       }
 
       return result;
-    } catch {
+    } catch (error) {
       return this.createFailureResult(startTime, error instanceof Error ? error.message : "Unknown error");
     }
   }

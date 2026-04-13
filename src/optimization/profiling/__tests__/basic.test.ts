@@ -29,6 +29,7 @@ describe('Performance Profiling - Basic Tests', () => {
       time += 10; // Increment by 10ms each call
       return time;
     });
+    profiler.clear();
   });
 
   afterEach(() => {
