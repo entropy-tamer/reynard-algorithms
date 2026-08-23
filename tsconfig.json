@@ -6,24 +6,18 @@
     "rootDir": "./src",
     "paths": {
       "@entropy-tamer/reynard-i18n": [
-        "../packages/core/i18n/src"
+        "../i18n/src"
       ],
       "@entropy-tamer/reynard-themes": [
-        "../packages/ui/themes/src"
+        "../themes/src"
       ],
       "@entropy-tamer/reynard-core": [
-        "../packages/core/core/src"
-      ],
-      "@entropy-tamer/reynard-ui": [
-        "../packages/ui/ui/src"
+        "../core/src"
       ],
       "@entropy-tamer/reynard-primitives": [
-        "../packages/ui/primitives/src"
-      ],
-      "@entropy-tamer/reynard-components-core": [
-        "../packages/ui/components-core/src"
+        "../primitives/src"
       ]
-    },
+      },
     "declaration": true,
     "declarationMap": true
   },
