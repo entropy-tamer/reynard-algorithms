@@ -3,19 +3,19 @@
   "version": "0.3.5",
   "description": "Algorithms, data structures, and computational utilities for spatial computing, collision detection, pathfinding, and procedural generation",
   "type": "module",
-  "main": "./src/index.js",
-  "module": "./src/index.js",
-  "types": "./src/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./src/index.d.ts",
-      "import": "./src/index.js",
-      "require": "./src/index.cjs"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
     },
     "./optimization": {
-      "types": "./src/optimization/index.d.ts",
-      "import": "./src/optimization/index.js",
-      "require": "./src/optimization/index.cjs"
+      "types": "./dist/optimized.d.ts",
+      "import": "./dist/optimized.js",
+      "require": "./dist/optimized.cjs"
     }
   },
   "files": [
@@ -154,7 +154,7 @@
     "@vitest/ui": "4.1.4",
     "happy-dom": "20.8.9",
     "@entropy-tamer/reynard-testing": "workspace:*",
-    "typescript": "6.0.2",
+    "typescript": "7.0.2",
     "vite": "8.0.7",
     "vite-plugin-solid": "workspace:*",
     "vitest": "4.1.4"
