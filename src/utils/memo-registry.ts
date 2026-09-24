@@ -20,7 +20,7 @@ class MemoRegistry {
   private entries = new Map<string, MemoEntry>();
 
   /**
-   *
+   * Register a memo controller under a unique name.
    * @param name
    * @param controller
    * @example
@@ -30,7 +30,7 @@ class MemoRegistry {
   }
 
   /**
-   *
+   * Hit/miss/size statistics for one registered memo; null if unknown.
    * @param name
    * @example
    */
@@ -41,7 +41,7 @@ class MemoRegistry {
   }
 
   /**
-   *
+   * Statistics for every registered memo, keyed by name.
    * @example
    */
   getAllStats(): Record<string, any> {
@@ -53,7 +53,7 @@ class MemoRegistry {
   }
 
   /**
-   *
+   * Apply a partial tuning policy to a specific memo.
    * @param name
    * @param policy
    * @example
@@ -66,7 +66,7 @@ class MemoRegistry {
   }
 
   /**
-   *
+   * Enable a memo (calls pass through to the controller).
    * @param name
    * @example
    */
@@ -78,7 +78,7 @@ class MemoRegistry {
   }
 
   /**
-   *
+   * Disable a memo (calls bypass caching entirely).
    * @param name
    * @example
    */
@@ -90,7 +90,7 @@ class MemoRegistry {
   }
 
   /**
-   *
+   * Clear hit/miss counters for one or all memos.
    * @param name
    * @example
    */
@@ -109,7 +109,7 @@ class MemoRegistry {
   }
 
   /**
-   *
+   * Names of all currently registered memos.
    * @example
    */
   listEntries(): string[] {
@@ -121,7 +121,7 @@ export const memoRegistry = new MemoRegistry();
 
 // Convenience functions
 /**
- *
+ * Module-level convenience: stats for one or all memos.
  * @param name
  * @example
  */
@@ -130,7 +130,7 @@ export function getMemoStats(name?: string) {
 }
 
 /**
- *
+ * Module-level convenience: apply a tuning policy by name.
  * @param name
  * @param policy
  * @example
@@ -140,7 +140,7 @@ export function setMemoPolicy(name: string, policy: Partial<MemoTuningPolicy>) {
 }
 
 /**
- *
+ * Module-level convenience: reset stats for one or all memos.
  * @param name
  * @example
  */
@@ -149,7 +149,7 @@ export function resetMemoStats(name?: string) {
 }
 
 /**
- *
+ * Module-level convenience: enable a memo by name.
  * @param name
  * @example
  */
@@ -158,7 +158,7 @@ export function enableMemo(name: string) {
 }
 
 /**
- *
+ * Module-level convenience: disable a memo by name.
  * @param name
  * @example
  */

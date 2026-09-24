@@ -71,8 +71,8 @@ export type {
 // ============================================================================
 // Core Geometry - Basic geometric primitives
 // ============================================================================
-export { PointOps } from "./core/geometry/point";
-export { VectorOps } from "./core/geometry/vector";
+export { PointOps } from "./core/geometry/point.ts";
+export { VectorOps } from "./core/geometry/vector.ts";
 // Note: LineOps, RectangleOps, CircleOps, PolygonOps, TransformOps
 // are exported from their respective modules in geometry/shapes
 // These will be added when the shape algorithm files are properly organized
@@ -81,11 +81,11 @@ export { VectorOps } from "./core/geometry/vector";
 // Data Structures - Basic
 // ============================================================================
 // Union-Find
-export { UnionFind } from "./data-structures/basic/union-find/union-find-core";
-export type { UnionFindNode, UnionFindStats } from "./data-structures/basic/union-find/union-find-types";
+export { UnionFind } from "./data-structures/basic/union-find/union-find-core.ts";
+export type { UnionFindNode, UnionFindStats } from "./data-structures/basic/union-find/union-find-types.ts";
 
 // Priority Queue / Binary Heap
-export { PriorityQueue } from "./data-structures/basic/priority-queue";
+export { PriorityQueue } from "./data-structures/basic/priority-queue/index.ts";
 export type {
   PriorityQueueBatchResult,
   PriorityQueueComparator,
@@ -101,7 +101,7 @@ export type {
 } from "./data-structures/basic/priority-queue";
 
 // LRU Cache
-export { LRUCache } from "./data-structures/basic/lru-cache";
+export { LRUCache } from "./data-structures/basic/lru-cache/index.ts";
 export type {
   LRUCacheBatchResult,
   LRUCacheConfig,
@@ -118,22 +118,22 @@ export type {
 } from "./data-structures/basic/lru-cache";
 
 // Trie (Prefix Tree)
-export { Trie } from "./data-structures/basic/trie/trie-core";
-export type { TrieConfig, TrieNode, TrieSearchResult } from "./data-structures/basic/trie/trie-types";
+export { Trie } from "./data-structures/basic/trie/trie-core.ts";
+export type { TrieConfig, TrieNode, TrieSearchResult } from "./data-structures/basic/trie/trie-types.ts";
 
 // Bloom Filter
-export { BloomFilter } from "./data-structures/basic/bloom-filter/bloom-filter-core";
-export type { BloomFilterConfig, BloomFilterStats } from "./data-structures/basic/bloom-filter/bloom-filter-types";
+export { BloomFilter } from "./data-structures/basic/bloom-filter/bloom-filter-core.ts";
+export type { BloomFilterConfig, BloomFilterStats } from "./data-structures/basic/bloom-filter/bloom-filter-types.ts";
 
 // ============================================================================
 // Data Structures - Trees
 // ============================================================================
 // Fenwick Tree (Binary Indexed Tree)
-export { FenwickTree } from "./data-structures/trees/fenwick-tree/fenwick-tree-core";
-export type { FenwickTreeConfig, FenwickTreeStats } from "./data-structures/trees/fenwick-tree/fenwick-tree-types";
+export { FenwickTree } from "./data-structures/trees/fenwick-tree/fenwick-tree-core.ts";
+export type { FenwickTreeConfig, FenwickTreeStats } from "./data-structures/trees/fenwick-tree/fenwick-tree-types.ts";
 
 // Interval Tree
-export { IntervalTree } from "./data-structures/trees/interval-tree/interval-tree-core";
+export { IntervalTree } from "./data-structures/trees/interval-tree/interval-tree-core.ts";
 export type {
   Interval,
   IntervalTreeConfig,
@@ -142,7 +142,7 @@ export type {
 } from "./data-structures/trees/interval-tree/interval-tree-types";
 
 // Segment Tree
-export { SegmentTree } from "./data-structures/trees/segment-tree/segment-tree-core";
+export { SegmentTree } from "./data-structures/trees/segment-tree/segment-tree-core.ts";
 export type {
   SegmentTreeConfig,
   SegmentTreeNode,
@@ -153,12 +153,12 @@ export type {
 // Data Structures - Spatial
 // ============================================================================
 // Spatial Hash
-export { SpatialHash } from "./data-structures/spatial/spatial-hash/spatial-hash-core";
-export type { QueryResult } from "./data-structures/spatial/spatial-hash/spatial-hash-types";
+export { SpatialHash } from "./data-structures/spatial/spatial-hash/spatial-hash-core.ts";
+export type { QueryResult } from "./data-structures/spatial/spatial-hash/spatial-hash-types.ts";
 // Note: SpatialHashConfig, SpatialHashStats, SpatialObject are exported from core/types to avoid duplicates
 
 // K-d Tree
-export { KdTree, KdTreeEventType } from "./data-structures/spatial/kdtree";
+export { KdTree, KdTreeEventType } from "./data-structures/spatial/kdtree/index.ts";
 export type {
   KdNode,
   BatchOperationResult as KdTreeBatchOperationResult,
@@ -183,7 +183,7 @@ export type {
 } from "./data-structures/spatial/kdtree";
 
 // Octree
-export { Octant, Octree, OctreeEventType } from "./data-structures/spatial/octree";
+export { Octant, Octree, OctreeEventType } from "./data-structures/spatial/octree/index.ts";
 export type {
   Bounds3D,
   BatchOperationResult as OctreeBatchOperationResult,
@@ -211,7 +211,7 @@ export type {
 } from "./data-structures/spatial/octree";
 
 // BVH (Bounding Volume Hierarchy)
-export { BVH, BVHEventType } from "./data-structures/spatial/bvh";
+export { BVH, BVHEventType } from "./data-structures/spatial/bvh/index.ts";
 export type {
   AABBIntersectionOptions,
   AABBIntersectionResult,
@@ -236,7 +236,7 @@ export type {
 } from "./data-structures/spatial/bvh";
 
 // Quadtree
-export { Quadtree } from "./data-structures/spatial/quadtree";
+export { Quadtree } from "./data-structures/spatial/quadtree/index.ts";
 export type {
   CircleQuery,
   PointQuery,
@@ -259,7 +259,7 @@ export type {
 } from "./data-structures/spatial/quadtree";
 
 // R-Tree
-export { RTree } from "./data-structures/spatial/rtree/rtree-core";
+export { RTree } from "./data-structures/spatial/rtree/rtree-core.ts";
 export type {
   RTreeConfig,
   RTreeDeleteResult,
@@ -277,7 +277,7 @@ export type {
 // Algorithms - Computational Geometry
 // ============================================================================
 // Bresenham's Line Algorithm
-export { BresenhamLine } from "./algorithms/computational-geometry/bresenham/bresenham-core";
+export { BresenhamLine } from "./algorithms/computational-geometry/bresenham/bresenham-core.ts";
 export type {
   BresenhamConfig,
   Point as BresenhamPoint,
@@ -290,16 +290,16 @@ export type {
 } from "./algorithms/computational-geometry/bresenham/bresenham-types";
 
 // Additional Line Algorithms
-export { DDALine } from "./algorithms/computational-geometry/dda/dda-core";
-export type { DDALineResult, Point2D as DDAPoint } from "./algorithms/computational-geometry/dda/dda-core";
-export { SupercoverLine } from "./algorithms/computational-geometry/supercover/supercover-core";
+export { DDALine } from "./algorithms/computational-geometry/dda/dda-core.ts";
+export type { DDALineResult, Point2D as DDAPoint } from "./algorithms/computational-geometry/dda/dda-core.ts";
+export { SupercoverLine } from "./algorithms/computational-geometry/supercover/supercover-core.ts";
 export type {
   SupercoverLineResult,
   Point2D as SupercoverPoint,
 } from "./algorithms/computational-geometry/supercover/supercover-core";
 
 // Delaunay Triangulation
-export { DelaunayTriangulation } from "./algorithms/computational-geometry/delaunay/delaunay-core";
+export { DelaunayTriangulation } from "./algorithms/computational-geometry/delaunay/delaunay-core.ts";
 export type {
   Circumcircle,
   ConstrainedDelaunayOptions,
@@ -317,7 +317,7 @@ export type {
 } from "./algorithms/computational-geometry/delaunay/delaunay-types";
 
 // Voronoi Diagram
-export { VoronoiDiagram } from "./algorithms/computational-geometry/voronoi/voronoi-core";
+export { VoronoiDiagram } from "./algorithms/computational-geometry/voronoi/voronoi-core.ts";
 export type {
   LloydRelaxationOptions,
   LloydRelaxationResult,
@@ -334,7 +334,7 @@ export type {
 } from "./algorithms/computational-geometry/voronoi/voronoi-types";
 
 // Polygon Clipping
-export { PolygonClipping } from "./algorithms/computational-geometry/polygon-clipping/polygon-clipping-core";
+export { PolygonClipping } from "./algorithms/computational-geometry/polygon-clipping/polygon-clipping-core.ts";
 export type {
   ClipOperation,
   ClippingPlane,
@@ -356,8 +356,8 @@ export type {
   WAVertex,
   WeilerAthertonOptions,
 } from "./algorithms/computational-geometry/polygon-clipping/polygon-clipping-types";
-export { SutherlandHodgmanClipper } from "./algorithms/computational-geometry/polygon-clipping/sutherland-hodgman";
-export { WeilerAthertonClipper } from "./algorithms/computational-geometry/polygon-clipping/weiler-atherton";
+export { SutherlandHodgmanClipper } from "./algorithms/computational-geometry/polygon-clipping/sutherland-hodgman.ts";
+export { WeilerAthertonClipper } from "./algorithms/computational-geometry/polygon-clipping/weiler-atherton.ts";
 
 // Polygon Simplification
 export {
@@ -385,7 +385,7 @@ export type {
 } from "./algorithms/computational-geometry/polygon/polygon-boolean-types";
 
 // Line Segment Intersection
-export { LineIntersection } from "./algorithms/computational-geometry/line-intersection/line-intersection-core";
+export { LineIntersection } from "./algorithms/computational-geometry/line-intersection/line-intersection-core.ts";
 export type {
   EventQueue,
   IntersectionFilterOptions,
@@ -501,7 +501,7 @@ export type {
 } from "./algorithms/computational-geometry/splines/hermite-types";
 
 // Oriented Bounding Box (OBB)
-export { OBB } from "./algorithms/collision/narrow-phase/obb/obb-core";
+export { OBB } from "./algorithms/collision/narrow-phase/obb/obb-core.ts";
 export type {
   OBBCollisionResult,
   OBBConfig,
@@ -524,10 +524,10 @@ export type {
   Vector as OBBVector,
   SATOptions,
 } from "./algorithms/collision/narrow-phase/obb/obb-types";
-export { OBBUtils } from "./algorithms/collision/narrow-phase/obb/obb-utils";
+export { OBBUtils } from "./algorithms/collision/narrow-phase/obb/obb-utils.ts";
 
 // Minimum Bounding Box
-export { MinimumBoundingBox } from "./algorithms/computational-geometry/minimum-bounding-box/minimum-bounding-box-core";
+export { MinimumBoundingBox } from "./algorithms/computational-geometry/minimum-bounding-box/minimum-bounding-box-core.ts";
 export type {
   BoundingBoxComparisonOptions,
   BoundingBoxComparisonResult,
@@ -547,10 +547,10 @@ export type {
   Vector as MinimumBoundingBoxVector,
   RotatingCalipersOptions,
 } from "./algorithms/computational-geometry/minimum-bounding-box/minimum-bounding-box-types";
-export { MinimumBoundingBoxUtils } from "./algorithms/computational-geometry/minimum-bounding-box/minimum-bounding-box-utils";
+export { MinimumBoundingBoxUtils } from "./algorithms/computational-geometry/minimum-bounding-box/minimum-bounding-box-utils.ts";
 
 // Convex Hull Algorithms
-export { ConvexHull } from "./algorithms/computational-geometry/convex-hull/convex-hull-core";
+export { ConvexHull } from "./algorithms/computational-geometry/convex-hull/convex-hull-core.ts";
 export type {
   ConvexHullAlgorithm,
   ConvexHullConfig,
@@ -585,7 +585,7 @@ export type {
 } from "./algorithms/computational-geometry/circular";
 
 // Marching Squares Algorithm
-export { MarchingSquares } from "./algorithms/computational-geometry/marching-squares/marching-squares-core";
+export { MarchingSquares } from "./algorithms/computational-geometry/marching-squares/marching-squares-core.ts";
 export type {
   Point as MarchingSquaresPoint,
   LineSegment as MarchingSquaresLineSegment,
@@ -603,7 +603,7 @@ export type {
 // ============================================================================
 
 // Simplex Noise Algorithm
-export { SimplexNoise } from "./algorithms/procedural-generation/simplex-noise/simplex-noise-core";
+export { SimplexNoise } from "./algorithms/procedural-generation/simplex-noise/simplex-noise-core.ts";
 export {
   generateMultiscaleNoise2D as generateMultiscaleSimplexNoise2D,
   generateMultiscaleNoise3D as generateMultiscaleSimplexNoise3D,
@@ -656,7 +656,7 @@ export type {
 } from "./algorithms/procedural-generation/perlin-noise/perlin-noise-types";
 
 // Poisson Disk Sampling Algorithm
-export { PoissonDisk } from "./algorithms/procedural-generation/poisson-disk/poisson-disk-core";
+export { PoissonDisk } from "./algorithms/procedural-generation/poisson-disk/poisson-disk-core.ts";
 export type {
   AdaptivePoissonDiskOptions,
   AdaptivePoissonDiskResult,
@@ -674,7 +674,7 @@ export type {
 } from "./algorithms/procedural-generation/poisson-disk/poisson-disk-types";
 
 // Wave Function Collapse Algorithm
-export { WaveFunctionCollapse } from "./algorithms/procedural-generation/wave-function-collapse/wave-function-collapse-core";
+export { WaveFunctionCollapse } from "./algorithms/procedural-generation/wave-function-collapse/wave-function-collapse-core.ts";
 export type {
   Cell,
   Constraint,
@@ -701,7 +701,7 @@ export type {
 } from "./algorithms/procedural-generation/wave-function-collapse/wave-function-collapse-types";
 
 // StructureForge Algorithm
-export { StructureForge } from "./algorithms/procedural-generation/structure-forge/structure-forge-core";
+export { StructureForge } from "./algorithms/procedural-generation/structure-forge/structure-forge-core.ts";
 export {
   createBuildingConfig,
   createTowerConfig,
@@ -742,11 +742,11 @@ export type {
 } from "./algorithms/collision/narrow-phase/aabb/aabb-types";
 
 // Separating Axis Theorem (SAT) Collision Detection
-export { SAT } from "./algorithms/collision/narrow-phase/sat/sat-core";
-export type { Projection, SATCollisionResult } from "./algorithms/collision/narrow-phase/sat/sat-types";
+export { SAT } from "./algorithms/collision/narrow-phase/sat/sat-core.ts";
+export type { Projection, SATCollisionResult } from "./algorithms/collision/narrow-phase/sat/sat-types.ts";
 
 // Sweep and Prune Broad-Phase Collision Detection
-export { SweepPrune } from "./algorithms/collision/broad-phase/sweep-prune/sweep-prune-core";
+export { SweepPrune } from "./algorithms/collision/broad-phase/sweep-prune/sweep-prune-core.ts";
 export type {
   Endpoint,
   AABB as SweepPruneAABB,
@@ -755,17 +755,17 @@ export type {
 } from "./algorithms/collision/broad-phase/sweep-prune/sweep-prune-types";
 
 // Spatial collision optimization
-export { SpatialCollisionOptimizer } from "./algorithms/collision/optimization";
+export { SpatialCollisionOptimizer } from "./algorithms/collision/optimization/index.ts";
 
 // ============================================================================
 // Algorithms - Pathfinding
 // ============================================================================
 // A* Pathfinding Algorithm
-export { AStar, chebyshevDistance, euclideanDistance, manhattanDistance } from "./algorithms/pathfinding/astar";
-export type { AStarConfig, AStarHeuristic, AStarNode, AStarResult } from "./algorithms/pathfinding/astar";
+export { AStar, chebyshevDistance, euclideanDistance, manhattanDistance } from "./algorithms/pathfinding/astar/index.ts";
+export type { AStarConfig, AStarHeuristic, AStarNode, AStarResult } from "./algorithms/pathfinding/astar/index.ts";
 
 // Jump Point Search (JPS)
-export { JPS } from "./algorithms/pathfinding/jps/jps-core";
+export { JPS } from "./algorithms/pathfinding/jps/jps-core.ts";
 export type {
   Direction,
   GridCell,
@@ -792,10 +792,10 @@ export type {
   PathOptimizationOptions,
   PathOptimizationResult,
 } from "./algorithms/pathfinding/jps/jps-types";
-export { JPSUtils } from "./algorithms/pathfinding/jps/jps-utils";
+export { JPSUtils } from "./algorithms/pathfinding/jps/jps-utils.ts";
 
 // Theta* Any-Angle Pathfinding
-export { CellType, LineOfSight, ThetaStar, ThetaStarUtils } from "./algorithms/pathfinding/theta-star";
+export { CellType, LineOfSight, ThetaStar, ThetaStarUtils } from "./algorithms/pathfinding/theta-star/index.ts";
 export type {
   LazyEvaluationOptions,
   LazyEvaluationResult,
@@ -823,11 +823,11 @@ export type {
 } from "./algorithms/pathfinding/theta-star/theta-star-types";
 
 // Visibility (Shadowcasting FOV)
-export { shadowcastingFOV } from "./algorithms/pathfinding/visibility/shadowcasting";
+export { shadowcastingFOV } from "./algorithms/pathfinding/visibility/shadowcasting.ts";
 
 // Flow Field Pathfinding
-export { FlowField } from "./algorithms/pathfinding/flow-field/flow-field-core";
-export { FlowFieldGenerator } from "./algorithms/pathfinding/flow-field/flow-field-generator";
+export { FlowField } from "./algorithms/pathfinding/flow-field/flow-field-core.ts";
+export { FlowFieldGenerator } from "./algorithms/pathfinding/flow-field/flow-field-generator.ts";
 export type {
   AgentPathfindingOptions,
   AgentPathfindingResult,
@@ -856,13 +856,13 @@ export type {
   MultiGoalOptions,
   MultiGoalResult,
 } from "./algorithms/pathfinding/flow-field/flow-field-types";
-export { FlowFieldUtils } from "./algorithms/pathfinding/flow-field/flow-field-utils";
+export { FlowFieldUtils } from "./algorithms/pathfinding/flow-field/flow-field-utils.ts";
 
 // HPA* Hierarchical Pathfinding
-export { HPAAbstractGraph } from "./algorithms/pathfinding/hpa-star/hpa-abstract-graph";
-export { HPAClustering } from "./algorithms/pathfinding/hpa-star/hpa-clustering";
-export { HPAPathRefinement } from "./algorithms/pathfinding/hpa-star/hpa-path-refinement";
-export { HPAStar } from "./algorithms/pathfinding/hpa-star/hpa-star-core";
+export { HPAAbstractGraph } from "./algorithms/pathfinding/hpa-star/hpa-abstract-graph.ts";
+export { HPAClustering } from "./algorithms/pathfinding/hpa-star/hpa-clustering.ts";
+export { HPAPathRefinement } from "./algorithms/pathfinding/hpa-star/hpa-path-refinement.ts";
+export { HPAStar } from "./algorithms/pathfinding/hpa-star/hpa-star-core.ts";
 export type {
   AbstractEdge,
   AbstractGraphOptions,
@@ -887,7 +887,7 @@ export type {
   HPAValidationResult,
   PathRefinementOptions,
 } from "./algorithms/pathfinding/hpa-star/hpa-star-types";
-export { HPAStarUtils } from "./algorithms/pathfinding/hpa-star/hpa-star-utils";
+export { HPAStarUtils } from "./algorithms/pathfinding/hpa-star/hpa-star-utils.ts";
 
 // ============================================================================
 // Algorithms - Graph Layout
@@ -911,8 +911,8 @@ export type {
 // Algorithms - Machine Learning - Dimensionality Reduction
 // ============================================================================
 // Isomap
-export { Isomap } from "./algorithms/machine-learning/dimensionality-reduction/isomap";
-export { DEFAULT_ISOMAP_CONFIG } from "./algorithms/machine-learning/dimensionality-reduction/isomap/isomap-types";
+export { Isomap } from "./algorithms/machine-learning/dimensionality-reduction/isomap/index.ts";
+export { DEFAULT_ISOMAP_CONFIG } from "./algorithms/machine-learning/dimensionality-reduction/isomap/isomap-types.ts";
 export type {
   IsomapConfig,
   IsomapOptions,
@@ -920,8 +920,8 @@ export type {
 } from "./algorithms/machine-learning/dimensionality-reduction/isomap/isomap-types";
 
 // PCA
-export { PCA } from "./algorithms/machine-learning/dimensionality-reduction/pca";
-export { DEFAULT_PCA_CONFIG } from "./algorithms/machine-learning/dimensionality-reduction/pca/pca-types";
+export { PCA } from "./algorithms/machine-learning/dimensionality-reduction/pca/index.ts";
+export { DEFAULT_PCA_CONFIG } from "./algorithms/machine-learning/dimensionality-reduction/pca/pca-types.ts";
 export type {
   PCAConfig,
   PCAOptions,
@@ -929,8 +929,8 @@ export type {
 } from "./algorithms/machine-learning/dimensionality-reduction/pca/pca-types";
 
 // MDS
-export { MDS } from "./algorithms/machine-learning/dimensionality-reduction/mds";
-export { DEFAULT_MDS_CONFIG } from "./algorithms/machine-learning/dimensionality-reduction/mds/mds-types";
+export { MDS } from "./algorithms/machine-learning/dimensionality-reduction/mds/index.ts";
+export { DEFAULT_MDS_CONFIG } from "./algorithms/machine-learning/dimensionality-reduction/mds/mds-types.ts";
 export type {
   MDSConfig,
   MDSOptions,
@@ -941,11 +941,11 @@ export type {
 // Algorithms - Signal Processing
 // ============================================================================
 // Fast Fourier Transform (FFT)
-export { BitReversal } from "./algorithms/signal-processing/fft/core/bit-reversal";
-export { ComplexArrayOps, ComplexNumber } from "./algorithms/signal-processing/fft/core/complex-number";
-export { OptimizedTwiddleFactors, TwiddleFactors } from "./algorithms/signal-processing/fft/core/twiddle-factors";
-export { FFTBase } from "./algorithms/signal-processing/fft/fft-base";
-export { FFTFactory } from "./algorithms/signal-processing/fft/fft-factory";
+export { BitReversal } from "./algorithms/signal-processing/fft/core/bit-reversal.ts";
+export { ComplexArrayOps, ComplexNumber } from "./algorithms/signal-processing/fft/core/complex-number.ts";
+export { OptimizedTwiddleFactors, TwiddleFactors } from "./algorithms/signal-processing/fft/core/twiddle-factors.ts";
+export { FFTBase } from "./algorithms/signal-processing/fft/fft-base.ts";
+export { FFTFactory } from "./algorithms/signal-processing/fft/fft-factory.ts";
 export {
   FFTAlgorithm,
   FFTCoefficientStrategy,
@@ -961,10 +961,10 @@ export type {
   FrequencyBin,
   HarmonicCoefficients,
 } from "./algorithms/signal-processing/fft/fft-types";
-export { MixedRadixFFT } from "./algorithms/signal-processing/fft/mixed-radix-fft";
-export { Radix2FFT } from "./algorithms/signal-processing/fft/radix2-fft";
-export { Radix4FFT } from "./algorithms/signal-processing/fft/radix4-fft";
-export { RealFFT } from "./algorithms/signal-processing/fft/real-fft";
+export { MixedRadixFFT } from "./algorithms/signal-processing/fft/mixed-radix-fft.ts";
+export { Radix2FFT } from "./algorithms/signal-processing/fft/radix2-fft.ts";
+export { Radix4FFT } from "./algorithms/signal-processing/fft/radix4-fft.ts";
+export { RealFFT } from "./algorithms/signal-processing/fft/real-fft.ts";
 
 // Discrete Cosine Transform (DCT)
 export {
@@ -976,7 +976,7 @@ export {
   DCTTypeIII,
   DCTTypeIV,
 } from "./algorithms/signal-processing/fft/dct";
-export type { DCTConfig, DCTResult } from "./algorithms/signal-processing/fft/dct";
+export type { DCTConfig, DCTResult } from "./algorithms/signal-processing/fft/dct.ts";
 
 // Discrete Sine Transform (DST)
 export {
@@ -988,22 +988,22 @@ export {
   DSTTypeIII,
   DSTTypeIV,
 } from "./algorithms/signal-processing/fft/dst";
-export type { DSTConfig, DSTResult } from "./algorithms/signal-processing/fft/dst";
+export type { DSTConfig, DSTResult } from "./algorithms/signal-processing/fft/dst.ts";
 
 // ============================================================================
 // Utils - Performance
 // ============================================================================
-export { MemoryLeakDetector, MemoryMonitor } from "./utils/memory/memory";
-export { measureAsync, measureSync, PerformanceBenchmark } from "./utils/performance/benchmark";
-export { PerformanceBudgetChecker } from "./utils/performance/budget";
-export { FrameRateMonitor } from "./utils/performance/framerate";
-export { debounce, throttle } from "./utils/performance/throttle";
-export { PerformanceTimer } from "./utils/performance/timer";
+export { MemoryLeakDetector, MemoryMonitor } from "./utils/memory/memory.ts";
+export { measureAsync, measureSync, PerformanceBenchmark } from "./utils/performance/benchmark.ts";
+export { PerformanceBudgetChecker } from "./utils/performance/budget.ts";
+export { FrameRateMonitor } from "./utils/performance/framerate.ts";
+export { debounce, throttle } from "./utils/performance/throttle.ts";
+export { PerformanceTimer } from "./utils/performance/timer.ts";
 
 // ============================================================================
 // Utils - Memory
 // ============================================================================
-export { MemoryPool } from "./utils/memory/memory-pool-core";
+export { MemoryPool } from "./utils/memory/memory-pool-core.ts";
 export type {
   PooledObject as MemoryPooledObject,
   PerformanceMemoryPoolConfig,
@@ -1024,9 +1024,8 @@ export {
   memoizeMath,
   weakMemoize,
 } from "./utils/memoization";
-export type { MemoizationConfig, MemoizationStats, MemoizedResult } from "./utils/memoization";
+export type { MemoizationConfig, MemoizationStats, MemoizedResult } from "./utils/memoization.ts";
 
-// ============================================================================
 // Optimization Framework
 // ============================================================================
 export {
@@ -1037,19 +1036,14 @@ export {
   PerformanceMonitor,
   performSpatialQuery,
 } from "./optimized";
-
-// PAW Optimization Adapters
-export { OptimizedMarchingSquaresAdapter } from "./optimization/adapters/optimized-marching-squares-adapter";
-export type {
-  MarchingSquaresPerformanceStats,
-  OptimizedMarchingSquaresConfig,
-} from "./optimization/adapters/optimized-marching-squares-adapter";
+export type { OptimizedCollisionConfig, SpatialCollisionConfig, SpatialCollisionStats } from "./algorithms/collision/optimization";
+export { getImmutableOptimizationConfig, updateImmutableConfig, addConfigChangeListener, removeConfigChangeListener } from "./config/immutable-config-utils";
 
 // ============================================================================
 // Algorithms - Machine Learning - Clustering
 // ============================================================================
 // K-Means Clustering
-export { KMeans } from "./algorithms/machine-learning/clustering";
+export { KMeans } from "./algorithms/machine-learning/clustering/index.ts";
 export type {
   ElbowMethodResult,
   KMeansConfig,
@@ -1063,7 +1057,7 @@ export type {
 // Algorithms - Machine Learning - Markov Chains
 // ============================================================================
 // Markov Chains and Hidden Markov Models
-export { HiddenMarkovModel, MarkovChain } from "./algorithms/machine-learning/markov-chains";
+export { HiddenMarkovModel, MarkovChain } from "./algorithms/machine-learning/markov-chains/index.ts";
 export type {
   HMMConfig,
   HMMForwardResult,
@@ -1078,7 +1072,7 @@ export type {
 // Algorithms - Machine Learning - Decision Trees
 // ============================================================================
 // Decision Trees
-export { DecisionTree } from "./algorithms/machine-learning/decision-trees";
+export { DecisionTree } from "./algorithms/machine-learning/decision-trees/index.ts";
 export type {
   DataPoint,
   DecisionTreeConfig,
@@ -1091,7 +1085,7 @@ export type {
 // Algorithms - Machine Learning - Behavior Trees
 // ============================================================================
 // Behavior Trees
-export { BehaviorTree } from "./algorithms/machine-learning/behavior-trees";
+export { BehaviorTree } from "./algorithms/machine-learning/behavior-trees/index.ts";
 export type {
   BehaviorTreeConfig,
   BehaviorTreeNode,
@@ -1105,7 +1099,7 @@ export type {
 // Algorithms - Machine Learning - NEAT
 // ============================================================================
 // NEAT (NeuroEvolution of Augmenting Topologies)
-export { NEAT } from "./algorithms/machine-learning/neat";
+export { NEAT } from "./algorithms/machine-learning/neat/index.ts";
 export type {
   Connection,
   Genome,
@@ -1118,7 +1112,7 @@ export type {
 // Algorithms - Machine Learning - Reinforcement Learning
 // ============================================================================
 // Q-Learning and DQN
-export { DQN, QLearning } from "./algorithms/machine-learning/reinforcement-learning";
+export { DQN, QLearning } from "./algorithms/machine-learning/reinforcement-learning/index.ts";
 export type {
   Action,
   DQNConfig,
@@ -1132,7 +1126,7 @@ export type {
 // Algorithms - Game Mechanics - Steering Behaviors
 // ============================================================================
 // Steering Behaviors (Boids/Flocking)
-export { SteeringBehaviors } from "./algorithms/game-mechanics/steering-behaviors";
+export { SteeringBehaviors } from "./algorithms/game-mechanics/steering-behaviors/index.ts";
 export type {
   Agent,
   EvasionParams,
@@ -1151,14 +1145,14 @@ export type {
 // Algorithms - Game Mechanics - Inverse Kinematics
 // ============================================================================
 // Inverse Kinematics
-export { InverseKinematics } from "./algorithms/game-mechanics/inverse-kinematics";
-export type { IKChain, IKConfig, IKOptions, IKResult, Joint } from "./algorithms/game-mechanics/inverse-kinematics";
+export { InverseKinematics } from "./algorithms/game-mechanics/inverse-kinematics/index.ts";
+export type { IKChain, IKConfig, IKOptions, IKResult, Joint } from "./algorithms/game-mechanics/inverse-kinematics/index.ts";
 
 // ============================================================================
 // Algorithms - Game Mechanics - Constraint Solvers
 // ============================================================================
 // Constraint Solvers
-export { ConstraintSolver } from "./algorithms/game-mechanics/constraint-solvers";
+export { ConstraintSolver } from "./algorithms/game-mechanics/constraint-solvers/index.ts";
 export type {
   AngleConstraint,
   ConstraintSolverConfig,
@@ -1173,7 +1167,7 @@ export type {
 // Algorithms - Game Mechanics - Navmesh
 // ============================================================================
 // Navmesh Generation and Pathfinding
-export { Navmesh } from "./algorithms/game-mechanics/navmesh";
+export { Navmesh } from "./algorithms/game-mechanics/navmesh/index.ts";
 export type {
   NavmeshConfig,
   NavmeshPathfindingOptions,
@@ -1186,7 +1180,7 @@ export type {
 // Algorithms - Pathfinding - Visibility Graph
 // ============================================================================
 // Visibility Graph
-export { VisibilityGraph } from "./algorithms/pathfinding/visibility-graph";
+export { VisibilityGraph } from "./algorithms/pathfinding/visibility-graph/index.ts";
 export type {
   Obstacle,
   VisibilityEdge,
@@ -1200,7 +1194,7 @@ export type {
 // Algorithms - Computational Geometry - Triangulation - Ear Clipping
 // ============================================================================
 // Ear Clipping Triangulation
-export { EarClipping } from "./algorithms/computational-geometry/triangulation/ear-clipping";
+export { EarClipping } from "./algorithms/computational-geometry/triangulation/ear-clipping/index.ts";
 export type {
   EarClippingConfig,
   EarClippingOptions,
@@ -1213,7 +1207,7 @@ export type {
 // Algorithms - Procedural Generation - Cellular Automata
 // ============================================================================
 // Cellular Automata
-export { CellularAutomata } from "./algorithms/procedural-generation/cellular-automata";
+export { CellularAutomata } from "./algorithms/procedural-generation/cellular-automata/index.ts";
 export type {
   BoundaryCondition,
   CaveGenerationConfig,
@@ -1230,7 +1224,7 @@ export type {
 // Algorithms - Rendering - Frustum Culling
 // ============================================================================
 // Frustum Culling
-export { FrustumCulling } from "./algorithms/rendering/frustum-culling";
+export { FrustumCulling } from "./algorithms/rendering/frustum-culling/index.ts";
 export type {
   CullableObject,
   CullingResult,

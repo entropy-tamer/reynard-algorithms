@@ -43,7 +43,7 @@ export abstract class DSTBase {
   protected type: DSTType;
 
   /**
-   *
+   * Validate config and precompute the type-I sine tables.
    * @param config
    * @example
    */
@@ -94,7 +94,7 @@ export abstract class DSTBase {
  */
 export class DSTTypeI extends DSTBase {
   /**
-   *
+   * Validate config and precompute the type-II sine tables.
    * @param config
    * @example
    */
@@ -106,7 +106,7 @@ export class DSTTypeI extends DSTBase {
   }
 
   /**
-   *
+   * Forward DST-I transform (odd, antisymmetric boundary conditions).
    * @param input
    * @example
    */
@@ -132,7 +132,7 @@ export class DSTTypeI extends DSTBase {
   }
 
   /**
-   *
+   * Inverse (normalized) DST-I reconstruction.
    * @param coefficients
    * @example
    */
@@ -161,7 +161,7 @@ export class DSTTypeI extends DSTBase {
  */
 export class DSTTypeII extends DSTBase {
   /**
-   *
+   * Validate config and precompute the type-II sine tables.
    * @param config
    * @example
    */
@@ -170,7 +170,7 @@ export class DSTTypeII extends DSTBase {
   }
 
   /**
-   *
+   * Forward DST-II transform.
    * @param input
    * @example
    */
@@ -196,7 +196,7 @@ export class DSTTypeII extends DSTBase {
   }
 
   /**
-   *
+   * Inverse DST-III reconstruction (pairs with forward DST-II).
    * @param coefficients
    * @example
    */
@@ -225,7 +225,7 @@ export class DSTTypeII extends DSTBase {
  */
 export class DSTTypeIII extends DSTBase {
   /**
-   *
+   * Validate config and precompute the type-III sine tables.
    * @param config
    * @example
    */
@@ -234,7 +234,7 @@ export class DSTTypeIII extends DSTBase {
   }
 
   /**
-   *
+   * Forward DST-III transform.
    * @param input
    * @example
    */
@@ -260,7 +260,7 @@ export class DSTTypeIII extends DSTBase {
   }
 
   /**
-   *
+   * Inverse DST-II reconstruction (pairs with forward DST-III).
    * @param coefficients
    * @example
    */
@@ -289,7 +289,7 @@ export class DSTTypeIII extends DSTBase {
  */
 export class DSTTypeIV extends DSTBase {
   /**
-   *
+   * Validate config and precompute the type-IV sine tables.
    * @param config
    * @example
    */
@@ -298,7 +298,7 @@ export class DSTTypeIV extends DSTBase {
   }
 
   /**
-   *
+   * Forward DST-IV transform (orthogonal, no special boundary cases).
    * @param input
    * @example
    */
@@ -324,7 +324,7 @@ export class DSTTypeIV extends DSTBase {
   }
 
   /**
-   *
+   * Inverse DST-IV reconstruction (identical kernel to forward).
    * @param coefficients
    * @example
    */

@@ -415,7 +415,7 @@ export class PoissonDisk {
   // Private helper methods
 
   /**
-   *
+   * Create a deterministic PRNG (mulberry32-style) from an integer seed.
    * @param seed
    * @example
    */
@@ -428,7 +428,8 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Bridson's algorithm in 2D: active-list sampling with a spatial grid,
+   * yielding near-maximal blue-noise distributions.
    * @param config
    * @example
    */
@@ -496,7 +497,8 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Bridson's algorithm extended to 3D volumes using a spherical candidate
+   * annulus and 3D background grid.
    * @param config
    * @example
    */
@@ -569,7 +571,8 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Naive dart throwing in 2D: rejection-sample random points until the
+   * sample count or attempt budget is exhausted.
    * @param config
    * @example
    */
@@ -604,7 +607,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Naive dart throwing in 3D: same rejection strategy as the 2D variant.
    * @param config
    * @example
    */
@@ -639,7 +642,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Uniform random point in the configured 2D domain.
    * @param config
    * @example
    */
@@ -652,7 +655,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Uniform random point in the configured 3D volume.
    * @param config
    * @example
    */
@@ -666,7 +669,8 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Random candidate in the annulus [minDistance, 2*minDistance) around an
+   * existing sample (Bridson step).
    * @param point
    * @param minDistance
    * @example
@@ -681,7 +685,8 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * 3D analogue: random candidate on a spherical shell around an existing
+   * sample.
    * @param point
    * @param minDistance
    * @example
@@ -698,7 +703,8 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Check a 2D candidate against all accepted points using the spatial grid;
+   * valid if no neighbor is closer than minDistance.
    * @param candidate
    * @param points
    * @param config
@@ -727,7 +733,8 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * 3D validity check: distance test against grid neighbors within
+   * minDistance radius.
    * @param candidate
    * @param points
    * @param config
@@ -758,7 +765,8 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Full 2D validity check: bounds, obstacle avoidance and distance
+   * to existing samples.
    * @param candidate
    * @param grid
    * @param cellSize
@@ -814,7 +822,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Full 3D validity check: bounds and distance to existing samples.
    * @param candidate
    * @param grid
    * @param cellSize
@@ -883,7 +891,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Insert a 2D point into its background-grid cell for O(1) neighbor lookups.
    * @param point
    * @param grid
    * @param cellSize
@@ -908,7 +916,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Insert a 3D point into its background-grid cell.
    * @param point
    * @param grid
    * @param cellSize
@@ -941,7 +949,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Euclidean distance between two 2D points.
    * @param p1
    * @param p2
    * @example
@@ -953,7 +961,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Euclidean distance between two 3D points.
    * @param p1
    * @param p2
    * @example
@@ -966,7 +974,8 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Fraction of the 2D domain covered by minDistance-radius disks around
+   * the samples (upper bound 1).
    * @param points
    * @param config
    * @example
@@ -979,7 +988,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Coverage fraction for the 3D volume analogue.
    * @param points
    * @param config
    * @example
@@ -992,7 +1001,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Mean nearest-neighbor spacing over all 2D samples (0 if fewer than 2).
    * @param points
    * @example
    */
@@ -1014,7 +1023,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Mean nearest-neighbor spacing over all 3D samples.
    * @param points
    * @example
    */
@@ -1036,7 +1045,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Smallest pairwise distance among 2D samples (Infinity if fewer than 2).
    * @param points
    * @example
    */
@@ -1059,7 +1068,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Smallest pairwise distance among 3D samples.
    * @param points
    * @example
    */
@@ -1082,7 +1091,8 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Distance statistics (min/max/mean/median nearest-neighbor) shared by
+   * both dimensionalities.
    * @param points
    * @example
    */
@@ -1125,7 +1135,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Domain coverage ratio used in generation stats.
    * @param points
    * @param bounds
    * @param bounds.width
@@ -1150,7 +1160,8 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Uniformity score derived from nearest-neighbor distance variance:
+   * 1.0 when all spacings are identical.
    * @param points
    * @example
    */
@@ -1178,7 +1189,8 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Spatial distribution metrics: quadrant/occupancy breakdown of the
+   * samples across the domain.
    * @param points
    * @param bounds
    * @param bounds.width
@@ -1224,7 +1236,7 @@ export class PoissonDisk {
   }
 
   /**
-   *
+   * Type guard narrowing a 2D-or-3D point to Point2D.
    * @param point
    * @example
    */

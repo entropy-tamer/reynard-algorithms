@@ -415,6 +415,19 @@ describe('useMemoryTracking Hook', () => {
   });
 });
 
+/**
+ * Apply the `profile` decorator factory to a class method without using
+ * decorator syntax: this suite must remain plain erasable TypeScript
+ * (decorators are not stripped by the vitest/Node transform chain here and
+ * previously caused "SyntaxError: Invalid or unexpected token" at load).
+ */
+function applyProfile(proto: object, key: string, operation: string, options: { trackMemory?: boolean } = {}): void {
+  const descriptor = Object.getOwnPropertyDescriptor(proto, key);
+  if (!descriptor) throw new Error(`method ${key} not found`);
+  const result = profile(operation, options)(proto, key, descriptor);
+  if (result) Object.defineProperty(proto, key, result);
+}
+
 describe('profile Decorator', () => {
   beforeEach(() => {
     (PerformanceProfiler as any).instance = null;
@@ -422,64 +435,64 @@ describe('profile Decorator', () => {
 
   it('should profile synchronous methods', () => {
     class TestClass {
-      @profile('test-method')
       testMethod(value: number): number {
         return value * 2;
       }
     }
-    
+    applyProfile(TestClass.prototype, 'testMethod', 'test-method');
+
     const instance = new TestClass();
     const result = instance.testMethod(5);
-    
+
     expect(result).toBe(10); // 5 * 2 = 10
-    
+
     const report = PerformanceProfiler.getInstance().getPerformanceReport();
     const operation = report.operations.find((op: any) => op.name === 'test-method');
-    
+
     expect(operation).toBeDefined();
     expect(operation?.count).toBe(1);
   });
 
   it('should profile asynchronous methods', async () => {
     class TestClass {
-      @profile('async-test-method')
       async asyncTestMethod(value: number): Promise<number> {
         return new Promise(resolve => {
           setTimeout(() => resolve(value * 3), 10);
         });
       }
     }
-    
+    applyProfile(TestClass.prototype, 'asyncTestMethod', 'async-test-method');
+
     const instance = new TestClass();
     const result = await instance.asyncTestMethod(5);
-    
+
     expect(result).toBe(15);
-    
+
     const report = PerformanceProfiler.getInstance().getPerformanceReport();
     const operation = report.operations.find((op: any) => op.name === 'async-test-method');
-    
+
     expect(operation).toBeDefined();
     expect(operation?.count).toBe(1);
   });
 
   it('should track memory when requested', () => {
     class TestClass {
-      @profile('test-method-with-memory', { trackMemory: true })
       testMethod(): void {
         // Allocate some memory
         const data = new Array(1000).fill(0);
         data.length = 0; // Clear
       }
     }
-    
+    applyProfile(TestClass.prototype, 'testMethod', 'test-method-with-memory', { trackMemory: true });
+
     const instance = new TestClass();
     instance.testMethod();
-    
+
     const report = PerformanceProfiler.getInstance().getPerformanceReport();
     const snapshots = report.memorySnapshots.filter(
       (snapshot: any) => snapshot.label.includes('test-method-with-memory')
     );
-    
+
     expect(snapshots.length).toBeGreaterThan(0);
   });
 });

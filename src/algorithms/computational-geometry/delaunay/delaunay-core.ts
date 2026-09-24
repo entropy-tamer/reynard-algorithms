@@ -315,7 +315,8 @@ export class DelaunayTriangulation {
   // Private helper methods
 
   /**
-   *
+   * Reject invalid inputs: fewer than 3 points, duplicate coordinates,
+   * or non-finite values.
    * @param points
    * @example
    */
@@ -348,7 +349,8 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Sort points by x then y; gives deterministic insertion order for
+   * the incremental algorithm.
    * @param points
    * @example
    */
@@ -362,7 +364,8 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Build a triangle large enough to contain every input point, used
+   * as the seed for incremental insertion.
    * @param points
    * @example
    */
@@ -395,7 +398,8 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Bowyer-Watson insertion step: find triangles whose circumcircles
+   * contain the point, remove them, and re-triangulate the cavity.
    * @param triangles
    * @param point
    * @example
@@ -443,7 +447,8 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Strip triangles that reference super-triangle vertices before
+   * returning the final triangulation.
    * @param triangles
    * @param superTriangle
    * @example
@@ -458,7 +463,8 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Derive the unique edge set from a triangle list (shared edges
+   * deduplicated).
    * @param triangles
    * @example
    */
@@ -483,7 +489,7 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Convert a triangle's three vertex pairs into Edge objects.
    * @param triangle
    * @example
    */
@@ -496,7 +502,7 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Whether the triangle contains the given edge (in either direction).
    * @param triangle
    * @param edge
    * @example
@@ -507,7 +513,7 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Order-independent endpoint comparison for two edges.
    * @param edge1
    * @param edge2
    * @example
@@ -520,7 +526,7 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Exact coordinate equality for two points.
    * @param p1
    * @param p2
    * @example
@@ -530,7 +536,7 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Whether any of the triangle's three vertices equals the given point.
    * @param triangle
    * @param vertex
    * @example
@@ -544,7 +550,8 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Delaunay predicate: is the point strictly inside the triangle's
+   * circumcircle?
    * @param point
    * @param triangle
    * @example
@@ -558,7 +565,8 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Compute center and squared radius of the triangle's circumcircle;
+   * returns null-like degenerate values for collinear vertices.
    * @param triangle
    * @example
    */
@@ -592,7 +600,7 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Barycentric/area-sign test for point inclusion in a triangle.
    * @param point
    * @param triangle
    * @example
@@ -613,7 +621,8 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Approximate adjacency test: is the point within maxDistance of any
+   * triangle edge?
    * @param triangle
    * @param point
    * @param maxDistance
@@ -633,7 +642,8 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Perpendicular distance from a point to a line segment (clamped to
+   * the segment endpoints).
    * @param point
    * @param edge
    * @example
@@ -665,7 +675,8 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Constrained Delaunay post-pass: force constraint edges into the
+   * triangulation, flipping/retriangulating as needed.
    * @param triangles
    * @param constrainedEdges
    * @param enforceConstraints
@@ -702,7 +713,8 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Whether some triangle in the current triangulation already contains
+   * the given edge.
    * @param triangles
    * @param edge
    * @example
@@ -717,7 +729,7 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Uniform failure result with elapsed time filled in.
    * @param startTime
    * @param error
    * @example
@@ -738,7 +750,7 @@ export class DelaunayTriangulation {
   }
 
   /**
-   *
+   * Degenerate-but-valid result when only 3 input points are supplied.
    * @param points
    * @param startTime
    * @example

@@ -360,7 +360,7 @@ export class MarchingSquares {
   // Private helper methods
 
   /**
-   *
+   * Reject invalid grids: empty rows, ragged widths, or non-finite values.
    * @param grid
    * @example
    */
@@ -404,7 +404,8 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Walk every cell, emit contour segments per cell case, then merge
+   * fragments into continuous contours.
    * @param grid
    * @param threshold
    * @example
@@ -429,7 +430,8 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Classify one cell into its 4-bit marching-squares case and produce
+   * the crossing segments for that case.
    * @param grid
    * @param x
    * @param y
@@ -476,7 +478,8 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Map a resolved cell case to its segment endpoint pairs via the
+   * standard 16-case lookup table.
    * @param caseIndex
    * @param x
    * @param y
@@ -518,7 +521,8 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Break saddle-case (5/10) ambiguity using the interpolated center
+   * value to pick the connected pairing.
    * @param caseIndex
    * @param grid
    * @param x
@@ -537,7 +541,8 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Average of the four corner values of a cell, used as the center
+   * sample for ambiguity resolution.
    * @param grid
    * @param x
    * @param y
@@ -564,7 +569,8 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Interpolated iso-crossing point on a specific cell edge; null if
+   * the edge is not crossed at this threshold.
    * @param edgeIndex
    * @param x
    * @param y
@@ -634,7 +640,7 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Linear interpolation factor locating the iso-value along an edge.
    * @param threshold
    * @param value1
    * @param value2
@@ -648,7 +654,8 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Join per-cell segment fragments sharing endpoints into longer
+   * polyline contours.
    * @param contours
    * @example
    */
@@ -701,7 +708,8 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Attempt to concatenate two contours whose endpoints coincide;
+   * returns null when they do not connect.
    * @param contour1
    * @param contour2
    * @example
@@ -767,7 +775,7 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Exact coordinate equality for two points.
    * @param p1
    * @param p2
    * @example
@@ -777,7 +785,7 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Total polyline length of a contour (sum of segment lengths).
    * @param contour
    * @example
    */
@@ -792,7 +800,7 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Signed area enclosed by a contour via the shoelace formula.
    * @param contour
    * @example
    */
@@ -810,7 +818,7 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Area-weighted centroid of the polygon bounded by the contour.
    * @param contour
    * @example
    */
@@ -837,7 +845,7 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Axis-aligned bounding box of all contour points.
    * @param contour
    * @example
    */
@@ -862,7 +870,8 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Douglas-Peucker polyline simplification with optional endpoint
+   * preservation and recursion depth safety.
    * @param points
    * @param maxDistance
    * @param preserveEndpoints
@@ -904,7 +913,8 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Perpendicular distance from a point to the infinite line through
+   * two points (used by Douglas-Peucker).
    * @param point
    * @param lineStart
    * @param lineEnd
@@ -934,7 +944,7 @@ export class MarchingSquares {
   }
 
   /**
-   *
+   * Uniform failure/empty result carrying grid dimensions and elapsed time.
    * @param width
    * @param height
    * @param startTime
@@ -955,4 +965,41 @@ export class MarchingSquares {
       },
     };
   }
+}
+
+/**
+ * Create an optimal MarchingSquaresConfig based on grid size.
+ * Extracted from the PAW OptimizedMarchingSquaresAdapter — direct config helper
+ * without adapter indirection.
+ *
+ * @param gridSize - Approximate grid dimension (sqrt of total cells)
+ * @returns Partial config optimized for the given grid size
+ * @example
+ * ```typescript
+ * const gridSize = Math.sqrt(grid.length * grid[0].length);
+ * const ms = new MarchingSquares(createMarchingSquaresConfig(gridSize));
+ * const result = ms.compute(grid, 0.5);
+ * ```
+ */
+export function createMarchingSquaresConfig(gridSize: number): Partial<MarchingSquaresConfig> {
+  if (gridSize < 50) {
+    // Small grids: no interpolation, fast saddle-point ambiguity resolution
+    return {
+      interpolate: false,
+      ambiguityResolution: "saddle",
+    };
+  }
+  if (gridSize < 100) {
+    // Medium grids: interpolation for smoother contours
+    return {
+      interpolate: true,
+      ambiguityResolution: "saddle",
+    };
+  }
+  // Large grids: interpolation with relaxed tolerance for performance
+  return {
+    interpolate: true,
+    ambiguityResolution: "saddle",
+    tolerance: 1e-8,
+  };
 }

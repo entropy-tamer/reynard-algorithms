@@ -56,6 +56,49 @@ function segmentsIntersect(p1: Point, p2: Point, p3: Point, p4: Point, tolerance
 }
 
 /**
+ * Check if a point lies on segment a-b (within tolerance).
+ * Used to exempt polygon-boundary points from the inside test.
+ */
+function pointOnSegment(p: Point, a: Point, b: Point, tolerance: number): boolean {
+  const cross = (p.x - a.x) * (b.y - a.y) - (p.y - a.y) * (b.x - a.x);
+  if (Math.abs(cross) > tolerance * Math.max(distance(a, b), tolerance)) return false;
+  return (
+    p.x >= Math.min(a.x, b.x) - tolerance &&
+    p.x <= Math.max(a.x, b.x) + tolerance &&
+    p.y >= Math.min(a.y, b.y) - tolerance &&
+    p.y <= Math.max(a.y, b.y) + tolerance
+  );
+}
+
+/**
+ * Check if a point is strictly inside a polygon (even-odd ray casting).
+ * Points on the polygon boundary count as OUTSIDE — visibility-graph edges
+ * legitimately run along obstacle boundaries and between their vertices.
+ */
+function pointInPolygon(p: Point, vertices: Point[], tolerance: number): boolean {
+  for (let i = 0; i < vertices.length; i++) {
+    const v1 = vertices[i]!;
+    const v2 = vertices[(i + 1) % vertices.length]!;
+    if (pointOnSegment(p, v1, v2, tolerance)) {
+      return false;
+    }
+  }
+
+  let inside = false;
+  for (let i = 0, j = vertices.length - 1; i < vertices.length; j = i++) {
+    const vi = vertices[i]!;
+    const vj = vertices[j]!;
+    if (vi.y > p.y !== vj.y > p.y) {
+      const xIntersect = ((vj.x - vi.x) * (p.y - vi.y)) / (vj.y - vi.y) + vi.x;
+      if (p.x < xIntersect) {
+        inside = !inside;
+      }
+    }
+  }
+  return inside;
+}
+
+/**
  * Check if line segment intersects obstacle.
  * @param p1
  * @param p2
@@ -64,7 +107,18 @@ function segmentsIntersect(p1: Point, p2: Point, p3: Point, p4: Point, tolerance
  * @example
  */
 function lineIntersectsObstacle(p1: Point, p2: Point, obstacle: Obstacle, tolerance: number): boolean {
+  // Edge-crossing check alone misses segments that ENTER/EXIT through
+  // vertices or lie fully inside: probe interior sample points as well.
+  // Three samples (not just the midpoint) are needed because a midpoint can
+  // land exactly ON a boundary vertex (boundary counts as outside) while
+  // part of the segment still passes through the interior.
   const vertices = obstacle.vertices;
+  for (const t of [0.25, 0.5, 0.75]) {
+    const sample = { x: p1.x + (p2.x - p1.x) * t, y: p1.y + (p2.y - p1.y) * t };
+    if (pointInPolygon(sample, vertices, tolerance)) {
+      return true;
+    }
+  }
   for (let i = 0; i < vertices.length; i++) {
     const v1 = vertices[i]!;
     const v2 = vertices[(i + 1) % vertices.length]!;

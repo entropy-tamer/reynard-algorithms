@@ -169,6 +169,30 @@ export function validateFlowField(
       continue;
     }
 
+    // Issue #1 fix: detect inconsistent states between the `valid` flag and
+    // the cell's magnitude. A cell marked valid must carry flow; a cell marked
+    // invalid must not. The generator maintains this invariant
+    // (`valid: magnitude > 0`), so violations indicate corrupted fields.
+    // Uses strict > 0 (not tolerance-based) so legitimately tiny magnitudes
+    // (e.g. 1e-10) on valid cells are not false-flagged.
+    if (validationOptions.checkFlowFieldValidity) {
+      const hasFlow = cell.magnitude > 0;
+      if (cell.valid && !hasFlow) {
+        errors.push(
+          `Inconsistent flow cell at (${point.x}, ${point.y}): marked valid but magnitude is 0`
+        );
+        stats.invalidCells++;
+        continue;
+      }
+      if (!cell.valid && hasFlow) {
+        errors.push(
+          `Inconsistent flow cell at (${point.x}, ${point.y}): marked invalid but magnitude is ${cell.magnitude}`
+        );
+        stats.invalidCells++;
+        continue;
+      }
+    }
+
     stats.validCells++;
 
     if (validationOptions.checkMagnitude) {

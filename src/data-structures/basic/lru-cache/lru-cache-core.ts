@@ -105,9 +105,13 @@ export class LRUCache<K, V> {
   }
 
   /**
+   * Returns the value for `key` and promotes it to most-recently-used.
    *
-   * @param key
-   * @example
+   * Respects TTL expiry: an expired entry is lazily deleted and reported as a
+   * miss. Updates hit/miss statistics when stats are enabled.
+   *
+   * @param key The key to look up.
+   * @returns The cached value, or `undefined` on miss or expiry.
    */
   get(key: K): V | undefined {
     return getValue(
@@ -123,10 +127,14 @@ export class LRUCache<K, V> {
   }
 
   /**
+   * Inserts or updates `key`, promoting it to most-recently-used.
    *
-   * @param key
-   * @param value
-   * @example
+   * When the cache is at capacity, the least-recently-used entry is evicted
+   * first (pooled nodes are recycled to reduce GC pressure).
+   *
+   * @param key The key to insert or update.
+   * @param value The value to associate with the key.
+   * @returns `true` if the operation succeeded.
    */
   set(key: K, value: V): boolean {
     return setValue(
@@ -144,9 +152,10 @@ export class LRUCache<K, V> {
   }
 
   /**
+   * Removes `key` from the cache and recycles its node to the pool.
    *
-   * @param key
-   * @example
+   * @param key The key to remove.
+   * @returns `true` if the key existed and was removed, `false` otherwise.
    */
   delete(key: K): boolean {
     return deleteValue(
@@ -161,9 +170,12 @@ export class LRUCache<K, V> {
   }
 
   /**
+   * Checks whether `key` is cached WITHOUT promoting it in the LRU order.
    *
-   * @param key
-   * @example
+   * Expired entries are lazily deleted here too — `has` returning false for a
+   * previously-present key may have removed it as a side effect.
+   *
+   * @param key The key to test for membership.
    */
   has(key: K): boolean {
     const node = this.cache.get(key);
@@ -176,8 +188,9 @@ export class LRUCache<K, V> {
   }
 
   /**
-   *
-   * @example
+   * Removes ALL entries, recycling every node to the pool, and emits a
+   * `clear` event. Statistics size resets to zero; cumulative hit/miss counts
+   * (managed by the stats manager) are preserved.
    */
   clear(): void {
     for (const node of this.cache.values()) {
@@ -190,36 +203,35 @@ export class LRUCache<K, V> {
   }
 
   /**
-   *
-   * @example
+   * Current number of live (non-expired-removed) entries in the cache.
    */
   size(): number {
     return this.statsManager.getSize();
   }
   /**
-   *
-   * @example
+   * Configured maximum number of entries before LRU eviction kicks in.
    */
   maxSize(): number {
     return this.config.maxSize;
   }
   /**
-   *
-   * @example
+   * Aggregate statistics: hits, misses, evictions, hit rate, and current size.
+   * Only meaningful when `enableStats` was on at construction.
    */
   getStats() {
     return this.statsManager.getStats();
   }
   /**
-   *
-   * @example
+   * Fine-grained performance metrics (memory usage estimates, operation
+   * timings) collected by the stats manager.
    */
   getPerformanceMetrics() {
     return this.statsManager.getPerformanceMetrics();
   }
   /**
-   *
-   * @example
+   * Point-in-time copy of the cache contents in LRU order (MRU first),
+   * excluding already-expired-but-uncollected entries per TTL rules.
+   * Useful for debugging and serialization; O(n).
    */
   snapshot(): LRUCacheSnapshot<K, V> {
     return createCacheSnapshot(this.linkedList, this.ttlManager, this.config, () => this.getStats());
@@ -276,8 +288,9 @@ export class LRUCache<K, V> {
   }
 
   /**
-   *
-   * @example
+   * Tears down the cache: stops the TTL cleanup timer, removes all entries,
+   * and drains the node pool. Call this when done with the instance to avoid
+   * leaking the cleanup timer; the cache should not be used afterwards.
    */
   destroy(): void {
     this.ttlManager.stopCleanupTimer();

@@ -22,50 +22,36 @@ export class PointOps {
   );
 
   /**
-   *
-   * @param x
-   * @param y
-   * @example
+   * Creates a Point from x/y components.
    */
   static create(x: number, y: number): Point {
     return { x, y };
   }
 
   /**
-   *
-   * @param a
-   * @param b
-   * @example
+   * Component-wise vector addition `a + b`. Returns a new point; inputs unmodified.
    */
   static add(a: Point, b: Point): Point {
     return { x: a.x + b.x, y: a.y + b.y };
   }
 
   /**
-   *
-   * @param a
-   * @param b
-   * @example
+   * Component-wise vector subtraction `a - b` (the vector from b to a when
+   * interpreted positionally). Returns a new point.
    */
   static subtract(a: Point, b: Point): Point {
     return { x: a.x - b.x, y: a.y - b.y };
   }
 
   /**
-   *
-   * @param a
-   * @param scalar
-   * @example
+   * Uniform scalar multiplication. Returns a new point.
    */
   static multiply(a: Point, scalar: number): Point {
     return { x: a.x * scalar, y: a.y * scalar };
   }
 
   /**
-   *
-   * @param a
-   * @param scalar
-   * @example
+   * Uniform scalar division. Throws on zero divisor.
    */
   static divide(a: Point, scalar: number): Point {
     if (scalar === 0) {
@@ -75,20 +61,16 @@ export class PointOps {
   }
 
   /**
-   *
-   * @param a
-   * @param b
-   * @example
+   * Euclidean distance between two points. Memoized internally — repeated
+   * identical coordinate queries skip the sqrt.
    */
   static distance(a: Point, b: Point): number {
     return PointOps.memoizedDistance(a.x, a.y, b.x, b.y);
   }
 
   /**
-   *
-   * @param a
-   * @param b
-   * @example
+   * Squared Euclidean distance — avoids the sqrt for cheap comparisons
+   * (e.g. radius checks: compare against `r*r` instead of `r`).
    */
   static distanceSquared(a: Point, b: Point): number {
     const dx = b.x - a.x;
@@ -97,40 +79,29 @@ export class PointOps {
   }
 
   /**
-   *
-   * @param a
-   * @param b
-   * @example
+   * Midpoint of the segment from a to b.
    */
   static midpoint(a: Point, b: Point): Point {
     return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
   }
 
   /**
-   *
-   * @param a
-   * @param b
-   * @param t
-   * @example
+   * Linear interpolation: `t = 0` yields a, `t = 1` yields b; values outside
+   * [0,1] extrapolate beyond the segment.
    */
   static lerp(a: Point, b: Point, t: number): Point {
     return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
   }
 
   /**
-   *
-   * @param a
-   * @param b
-   * @example
+   * Exact-equality test within a fixed epsilon of 1e-10 per component.
    */
   static equals(a: Point, b: Point): boolean {
     return Math.abs(a.x - b.x) < 1e-10 && Math.abs(a.y - b.y) < 1e-10;
   }
 
   /**
-   *
-   * @param point
-   * @example
+   * Shallow copy of the point (new object, same coordinates).
    */
   static clone(point: Point): Point {
     return { x: point.x, y: point.y };

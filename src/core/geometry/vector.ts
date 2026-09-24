@@ -25,60 +25,42 @@ export class VectorOps {
   private static readonly memoizedMagnitude = memoizeGeometry((x: number, y: number) => Math.sqrt(x * x + y * y));
 
   /**
-   *
-   * @param x
-   * @param y
-   * @example
+   * Creates a Vector from x/y components.
    */
   static create(x: number, y: number): Vector {
     return { x, y };
   }
 
   /**
-   *
-   * @param start
-   * @param end
-   * @example
+   * Displacement vector pointing from `start` to `end`.
    */
   static fromPoints(start: Point, end: Point): Vector {
     return { x: end.x - start.x, y: end.y - start.y };
   }
 
   /**
-   *
-   * @param a
-   * @param b
-   * @example
+   * Component-wise addition. Returns a new vector.
    */
   static add(a: Vector, b: Vector): Vector {
     return { x: a.x + b.x, y: a.y + b.y };
   }
 
   /**
-   *
-   * @param a
-   * @param b
-   * @example
+   * Component-wise subtraction `a - b`. Returns a new vector.
    */
   static subtract(a: Vector, b: Vector): Vector {
     return { x: a.x - b.x, y: a.y - b.y };
   }
 
   /**
-   *
-   * @param a
-   * @param scalar
-   * @example
+   * Uniform scalar multiplication.
    */
   static multiply(a: Vector, scalar: number): Vector {
     return { x: a.x * scalar, y: a.y * scalar };
   }
 
   /**
-   *
-   * @param a
-   * @param scalar
-   * @example
+   * Uniform scalar division. Throws on zero divisor.
    */
   static divide(a: Vector, scalar: number): Vector {
     if (scalar === 0) {
@@ -88,47 +70,39 @@ export class VectorOps {
   }
 
   /**
-   *
-   * @param a
-   * @param b
-   * @example
+   * Dot product — measures alignment; sign tells whether two vectors point
+   * within the same half-plane (positive), perpendicular (zero), or opposed (negative).
    */
   static dot(a: Vector, b: Vector): number {
     return a.x * b.x + a.y * b.y;
   }
 
   /**
-   *
-   * @param a
-   * @param b
-   * @example
+   * 2D cross product (z-component of the 3D cross). Sign indicates turn
+   * orientation: positive = b counter-clockwise from a, negative = clockwise,
+   * zero = collinear. Cornerstone of point-in-polygon and hull orientation tests.
    */
   static cross(a: Vector, b: Vector): number {
     return a.x * b.y - a.y * b.x;
   }
 
   /**
-   *
-   * @param vector
-   * @example
+   * Euclidean length. Memoized internally for repeated identical vectors.
    */
   static magnitude(vector: Vector): number {
     return VectorOps.memoizedMagnitude(vector.x, vector.y);
   }
 
   /**
-   *
-   * @param vector
-   * @example
+   * Squared length — avoids the sqrt for comparisons.
    */
   static magnitudeSquared(vector: Vector): number {
     return vector.x * vector.x + vector.y * vector.y;
   }
 
   /**
-   *
-   * @param vector
-   * @example
+   * Unit vector in the same direction. The zero vector maps to itself
+   * (no NaN propagation). Adaptively memoized for hot paths.
    */
   static normalize(vector: Vector): Vector {
     if (!this._normalizeMemo) {
@@ -148,10 +122,8 @@ export class VectorOps {
   private static _normalizeMemo?: (x: number, y: number) => Vector;
 
   /**
-   *
-   * @param vector
-   * @param angle
-   * @example
+   * Rotates the vector counter-clockwise by `angle` radians around the origin.
+   * Trig results are memoized for repeated angles.
    */
   static rotate(vector: Vector, angle: number): Vector {
     const cos = VectorOps.memoizedCos(angle);
@@ -163,19 +135,15 @@ export class VectorOps {
   }
 
   /**
-   *
-   * @param vector
-   * @example
+   * Heading angle of the vector in radians, measured counter-clockwise from
+   * the +x axis, in range (-π, π].
    */
   static angle(vector: Vector): number {
     return VectorOps.memoizedAtan2(vector.y, vector.x);
   }
 
   /**
-   *
-   * @param a
-   * @param b
-   * @example
+   * Unsigned angle between two vectors in radians, in range [0, π].
    */
   static angleBetween(a: Vector, b: Vector): number {
     const dot = this.dot(a, b);

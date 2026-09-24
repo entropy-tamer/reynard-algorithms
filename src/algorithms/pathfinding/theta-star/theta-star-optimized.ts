@@ -29,10 +29,10 @@ class ObjectPool<T> {
   private resetFn: (obj: T) => void;
 
   /**
-   *
-   * @param createFn
-   * @param resetFn
-   * @param initialSize
+   * Create a pool pre-allocated with initialSize objects.
+   * @param createFn Factory used to build new objects when the pool is exhausted
+   * @param resetFn Clears an object's state before it re-enters the pool
+   * @param initialSize Number of objects allocated up front
    * @example
    */
   constructor(createFn: () => T, resetFn: (obj: T) => void, initialSize: number = 100) {
@@ -46,7 +46,7 @@ class ObjectPool<T> {
   }
 
   /**
-   *
+   * Take an object from the pool; falls back to createFn when empty.
    * @example
    */
   acquire(): T {
@@ -57,8 +57,8 @@ class ObjectPool<T> {
   }
 
   /**
-   *
-   * @param obj
+   * Reset and return an object to the pool for reuse.
+   * @param obj Object previously obtained via acquire()
    * @example
    */
   release(obj: T): void {
@@ -67,7 +67,7 @@ class ObjectPool<T> {
   }
 
   /**
-   *
+   * Number of objects currently available in the pool.
    */
   get size(): number {
     return this.pool.length;
@@ -84,10 +84,10 @@ class BitPackedGrid {
   private bitsPerCell: number;
 
   /**
-   *
-   * @param width
-   * @param height
-   * @param bitsPerCell
+   * Allocate the packed bit storage for a width x height grid.
+   * @param width Grid width in cells
+   * @param height Grid height in cells
+   * @param bitsPerCell Bits used per cell (must fit CellType values)
    * @example
    */
   constructor(width: number, height: number, bitsPerCell: number = 2) {
@@ -101,10 +101,10 @@ class BitPackedGrid {
   }
 
   /**
-   *
-   * @param x
-   * @param y
-   * @param value
+   * Write a cell value into the packed storage (no-op if out of bounds).
+   * @param x Cell column
+   * @param y Cell row
+   * @param value CellType value to store
    * @example
    */
   set(x: number, y: number, value: CellType): void {
@@ -127,9 +127,9 @@ class BitPackedGrid {
   }
 
   /**
-   *
-   * @param x
-   * @param y
+   * Read a cell value; out-of-bounds reads return obstacle (1).
+   * @param x Cell column
+   * @param y Cell row
    * @example
    */
   get(x: number, y: number): CellType {
@@ -148,10 +148,10 @@ class BitPackedGrid {
   }
 
   /**
-   *
-   * @param grid
-   * @param width
-   * @param height
+   * Bulk-load a flat row-major cell array into the packed representation.
+   * @param grid Flat array of CellType values, length width*height
+   * @param width Grid width in cells
+   * @param height Grid height in cells
    * @example
    */
   fromArray(grid: CellType[], width: number, height: number): void {
@@ -166,7 +166,7 @@ class BitPackedGrid {
   }
 
   /**
-   *
+   * Unpack the grid back into a flat row-major cell array.
    * @example
    */
   toArray(): CellType[] {
@@ -191,9 +191,9 @@ class HierarchicalPathfinder {
   private level2Size: number = 100;
 
   /**
-   *
-   * @param width
-   * @param height
+   * Build the three-level cluster hierarchy for a width x height grid.
+   * @param width Grid width in cells
+   * @param height Grid height in cells
    * @example
    */
   constructor(width: number, height: number) {
@@ -203,10 +203,11 @@ class HierarchicalPathfinder {
   }
 
   /**
-   *
-   * @param grid
-   * @param width
-   * @param height
+   * Populate all hierarchy levels from a flat cell array: level 1 marks
+   * 10x10 clusters containing any obstacle; level 2 aggregates 100x100.
+   * @param grid Flat row-major cell array
+   * @param width Grid width in cells
+   * @param height Grid height in cells
    * @example
    */
   buildHierarchy(grid: CellType[], width: number, height: number): void {
@@ -251,11 +252,12 @@ class HierarchicalPathfinder {
   }
 
   /**
-   *
-   * @param start
-   * @param goal
-   * @param width
-   * @param height
+   * Route via the hierarchy on very large grids (area > 10000 cells),
+   * otherwise take the direct path.
+   * @param start Path start point
+   * @param goal Path end point
+   * @param width Grid width in cells
+   * @param height Grid height in cells
    * @example
    */
   findPath(start: Point, goal: Point, width: number, height: number): Point[] {
@@ -268,11 +270,13 @@ class HierarchicalPathfinder {
   }
 
   /**
-   *
-   * @param start
-   * @param goal
-   * @param width
-   * @param height
+   * Coarse-to-fine route through the cluster hierarchy. Currently a stub:
+   * it delegates straight to findDirectPath instead of refining at lower
+   * levels, so large grids do not yet benefit from the hierarchy.
+   * @param start Path start point
+   * @param goal Path end point
+   * @param width Grid width in cells
+   * @param height Grid height in cells
    * @example
    */
   private findHierarchicalPath(start: Point, goal: Point, width: number, height: number): Point[] {
@@ -283,13 +287,13 @@ class HierarchicalPathfinder {
   }
 
   /**
-   *
-   * @param start
-   * @param goal
-   * @param width
-   * @param height
-   * @param _width
-   * @param _height
+   * Walk a greedy diagonal staircase from start to goal WITHOUT collision
+   * checking -- callers must guarantee a clear corridor or validate the
+   * result afterwards (see OptimizedThetaStar.validatePath).
+   * @param start Path start point (mutated during the walk)
+   * @param goal Path end point
+   * @param _width Unused; kept for signature compatibility
+   * @param _height Unused; kept for signature compatibility
    * @example
    */
   private findDirectPath(start: Point, goal: Point, _width: number, _height: number): Point[] {
@@ -319,9 +323,9 @@ class HierarchicalPathfinder {
  */
 class SIMDDistanceCalculator {
   /**
-   *
-   * @param a
-   * @param b
+   * Euclidean distance sqrt(dx^2 + dy^2).
+   * @param a First point
+   * @param b Second point
    * @example
    */
   static euclideanDistance(a: Point, b: Point): number {
@@ -331,9 +335,9 @@ class SIMDDistanceCalculator {
   }
 
   /**
-   *
-   * @param a
-   * @param b
+   * Manhattan distance |dx| + |dy| (4-connected grid cost).
+   * @param a First point
+   * @param b Second point
    * @example
    */
   static manhattanDistance(a: Point, b: Point): number {
@@ -341,9 +345,9 @@ class SIMDDistanceCalculator {
   }
 
   /**
-   *
-   * @param a
-   * @param b
+   * Chebyshev distance max(|dx|, |dy|) (8-connected grid cost).
+   * @param a First point
+   * @param b Second point
    * @example
    */
   static chebyshevDistance(a: Point, b: Point): number {
@@ -351,9 +355,10 @@ class SIMDDistanceCalculator {
   }
 
   /**
-   *
-   * @param points
-   * @param target
+   * Compute distances from every point to a common target in one pass,
+   * suitable for vectorized/SIMD execution.
+   * @param points Source points
+   * @param target Common target point
    * @example
    */
   static batchEuclideanDistances(points: Point[], target: Point): number[] {
@@ -390,8 +395,8 @@ export class OptimizedThetaStar extends ThetaStar {
   };
 
   /**
-   *
-   * @param config
+   * Initialize the object pool (1000 nodes) and the result LRU cache.
+   * @param config Optional Theta* configuration overrides
    * @example
    */
   constructor(config: Partial<ThetaStarConfig> = {}) {
@@ -419,13 +424,14 @@ export class OptimizedThetaStar extends ThetaStar {
   }
 
   /**
-   *
-   * @param grid
-   * @param width
-   * @param height
-   * @param start
-   * @param goal
-   * @param options
+   * Pathfind with caching, bit-packed grid storage and hierarchical
+   * routing for large grids; falls back to standard Theta* otherwise.
+   * @param grid Flat row-major cell array
+   * @param width Grid width in cells
+   * @param height Grid height in cells
+   * @param start Path start point
+   * @param goal Path end point
+   * @param options Per-call option overrides
    * @example
    */
   override findPath(
@@ -496,13 +502,14 @@ export class OptimizedThetaStar extends ThetaStar {
   }
 
   /**
-   *
-   * @param grid
-   * @param width
-   * @param height
-   * @param start
-   * @param goal
-   * @param options
+   * Build a stable cache key from a grid hash, dimensions, endpoints,
+   * and hashed config/options.
+   * @param grid Flat row-major cell array
+   * @param width Grid width in cells
+   * @param height Grid height in cells
+   * @param start Path start point
+   * @param goal Path end point
+   * @param options Per-call options included in the key
    * @example
    */
   private generateCacheKey(
@@ -522,8 +529,9 @@ export class OptimizedThetaStar extends ThetaStar {
   }
 
   /**
-   *
-   * @param grid
+   * Cheap rolling hash over the first 1000 cells of the grid; collisions
+   * are possible but unlikely for typical grids.
+   * @param grid Flat row-major cell array
    * @example
    */
   private hashGrid(grid: CellType[]): string {
@@ -540,8 +548,8 @@ export class OptimizedThetaStar extends ThetaStar {
   }
 
   /**
-   *
-   * @param config
+   * Serialize the config fields that affect path results into the cache key.
+   * @param config Theta* configuration to hash
    * @example
    */
   private hashConfig(config: ThetaStarConfig): string {
@@ -549,8 +557,8 @@ export class OptimizedThetaStar extends ThetaStar {
   }
 
   /**
-   *
-   * @param options
+   * Serialize per-call options that affect path results into the cache key.
+   * @param options Options to hash
    * @example
    */
   private hashOptions(options: Partial<ThetaStarOptions>): string {
@@ -558,8 +566,8 @@ export class OptimizedThetaStar extends ThetaStar {
   }
 
   /**
-   *
-   * @param path
+   * Sum Euclidean segment lengths along a polyline.
+   * @param path Points to measure
    * @example
    */
   private calculatePathCost(path: Point[]): number {
@@ -577,7 +585,7 @@ export class OptimizedThetaStar extends ThetaStar {
   }
 
   /**
-   *
+   * Drop cached results and rebuild the object pool.
    * @example
    */
   override clearCache(): void {
@@ -598,7 +606,7 @@ export class OptimizedThetaStar extends ThetaStar {
   }
 
   /**
-   *
+   * Cache hit/miss rates, object pool state and LRU stats in one report.
    * @example
    */
   getPerformanceMetrics() {
@@ -699,11 +707,11 @@ export class OptimizedThetaStar extends ThetaStar {
   }
 
   /**
-   *
-   * @param path
-   * @param grid
-   * @param width
-   * @param height
+   * Validate that every path point is in bounds and not an obstacle.
+   * @param path Candidate path points
+   * @param grid Flat row-major cell array
+   * @param width Grid width in cells
+   * @param height Grid height in cells
    * @example
    */
   private validatePath(path: Point[], grid: CellType[], width: number, height: number): boolean {
@@ -720,8 +728,8 @@ export class OptimizedThetaStar extends ThetaStar {
 }
 
 /**
- * Factory function for creating optimized Theta* instances
- * @param config
+ * Factory for optimized Theta* instances.
+ * @param config Optional Theta* configuration overrides
  * @example
  */
 export function createOptimizedThetaStar(config: Partial<ThetaStarConfig> = {}): OptimizedThetaStar {
@@ -736,7 +744,7 @@ export class PerformanceMonitor {
   private metrics: Map<string, any> = new Map();
 
   /**
-   *
+   * Singleton accessor.
    * @example
    */
   static getInstance(): PerformanceMonitor {
@@ -747,8 +755,8 @@ export class PerformanceMonitor {
   }
 
   /**
-   *
-   * @param name
+   * Record a start timestamp under the given timer name.
+   * @param name Timer identifier
    * @example
    */
   startTimer(name: string): void {
@@ -756,8 +764,8 @@ export class PerformanceMonitor {
   }
 
   /**
-   *
-   * @param name
+   * Stop the named timer and return elapsed ms (0 if never started).
+   * @param name Timer identifier previously passed to startTimer
    * @example
    */
   endTimer(name: string): number {
@@ -770,7 +778,7 @@ export class PerformanceMonitor {
   }
 
   /**
-   *
+   * Snapshot of all recorded timestamps/durations as a plain object.
    * @example
    */
   getMetrics(): Record<string, any> {
@@ -782,7 +790,7 @@ export class PerformanceMonitor {
   }
 
   /**
-   *
+   * Discard all recorded metrics.
    * @example
    */
   reset(): void {

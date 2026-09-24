@@ -492,7 +492,7 @@ export class ConvexHull {
   // Helper methods
 
   /**
-   *
+   * Reject invalid inputs: fewer than 3 unique points or non-finite coordinates.
    * @param points
    * @example
    */
@@ -514,7 +514,7 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Deduplicate exact coordinate matches, preserving first occurrence order.
    * @param points
    * @example
    */
@@ -534,7 +534,7 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Lexicographic sort by x then y; anchor ordering for hull scans.
    * @param points
    * @example
    */
@@ -548,7 +548,7 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Pair consecutive hull vertices (wrapping) into HullEdge objects.
    * @param hull
    * @example
    */
@@ -565,7 +565,7 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Polar angle of a point relative to an origin, used by Graham scan.
    * @param origin
    * @param point
    * @example
@@ -575,7 +575,7 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Cross product (o->a) x (o->b); sign encodes turn direction.
    * @param o
    * @param a
    * @param b
@@ -586,7 +586,7 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Squared Euclidean distance between two points.
    * @param p1
    * @param p2
    * @example
@@ -598,7 +598,8 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * QuickHull divide step: find the farthest point outside line p1-p2,
+   * recurse on the two sub-problems it creates.
    * @param p1
    * @param p2
    * @param points
@@ -648,7 +649,8 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Perpendicular distance from a point to the infinite line through
+   * two points (farthest-point selection in QuickHull).
    * @param point
    * @param lineStart
    * @param lineEnd
@@ -678,7 +680,7 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Shoelace-formula area of the hull polygon.
    * @param hull
    * @example
    */
@@ -698,7 +700,7 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Sum of consecutive vertex distances around the hull.
    * @param hull
    * @example
    */
@@ -719,7 +721,7 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Arithmetic mean of hull vertices (vertex centroid).
    * @param hull
    * @example
    */
@@ -736,7 +738,7 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Axis-aligned bounding box of the hull vertices.
    * @param hull
    * @example
    */
@@ -762,7 +764,8 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Symmetric Hausdorff-style distance: max over both hulls of the
+   * greatest gap from a vertex to the other hull.
    * @param hull1
    * @param hull2
    * @example
@@ -792,7 +795,7 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Order-independent comparison of two hulls as identical point sets.
    * @param hull1
    * @param hull2
    * @example
@@ -819,7 +822,8 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Douglas-Peucker simplification applied to hull polylines when
+   * simplification options are requested.
    * @param points
    * @param maxDistance
    * @param preserveEndpoints
@@ -864,7 +868,7 @@ export class ConvexHull {
   }
 
   /**
-   *
+   * Uniform failure/empty result carrying elapsed time and error text.
    * @param pointCount
    * @param startTime
    * @param algorithm

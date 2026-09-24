@@ -43,7 +43,7 @@ export abstract class DCTBase {
   protected type: DCTType;
 
   /**
-   *
+   * Validate config and precompute the type-I twiddle tables.
    * @param config
    * @example
    */
@@ -94,7 +94,7 @@ export abstract class DCTBase {
  */
 export class DCTTypeI extends DCTBase {
   /**
-   *
+   * Validate config and precompute the type-II twiddle tables.
    * @param config
    * @example
    */
@@ -106,7 +106,7 @@ export class DCTTypeI extends DCTBase {
   }
 
   /**
-   *
+   * Forward DCT-I transform (symmetric boundary conditions).
    * @param input
    * @example
    */
@@ -133,7 +133,7 @@ export class DCTTypeI extends DCTBase {
   }
 
   /**
-   *
+   * Inverse (normalized) DCT-I reconstruction.
    * @param coefficients
    * @example
    */
@@ -162,7 +162,7 @@ export class DCTTypeI extends DCTBase {
  */
 export class DCTTypeII extends DCTBase {
   /**
-   *
+   * Validate config and precompute the type-II twiddle tables.
    * @param config
    * @example
    */
@@ -171,7 +171,7 @@ export class DCTTypeII extends DCTBase {
   }
 
   /**
-   *
+   * Forward DCT-II transform (the "standard" DCT used in compression).
    * @param input
    * @example
    */
@@ -201,7 +201,7 @@ export class DCTTypeII extends DCTBase {
   }
 
   /**
-   *
+   * Inverse DCT-III reconstruction (pairs with forward DCT-II).
    * @param coefficients
    * @example
    */
@@ -230,7 +230,7 @@ export class DCTTypeII extends DCTBase {
  */
 export class DCTTypeIII extends DCTBase {
   /**
-   *
+   * Validate config and precompute the type-III twiddle tables.
    * @param config
    * @example
    */
@@ -239,7 +239,7 @@ export class DCTTypeIII extends DCTBase {
   }
 
   /**
-   *
+   * Forward DCT-III transform.
    * @param input
    * @example
    */
@@ -265,7 +265,7 @@ export class DCTTypeIII extends DCTBase {
   }
 
   /**
-   *
+   * Inverse DCT-II reconstruction (pairs with forward DCT-III).
    * @param coefficients
    * @example
    */
@@ -293,7 +293,7 @@ export class DCTTypeIII extends DCTBase {
  */
 export class DCTTypeIV extends DCTBase {
   /**
-   *
+   * Validate config and precompute the type-IV twiddle tables.
    * @param config
    * @example
    */
@@ -302,7 +302,7 @@ export class DCTTypeIV extends DCTBase {
   }
 
   /**
-   *
+   * Forward DCT-IV transform (orthogonal, no special boundary cases).
    * @param input
    * @example
    */
@@ -328,7 +328,7 @@ export class DCTTypeIV extends DCTBase {
   }
 
   /**
-   *
+   * Inverse DCT-IV reconstruction (identical kernel to forward).
    * @param coefficients
    * @example
    */

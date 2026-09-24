@@ -6,7 +6,7 @@ import type {
 } from "./interval-tree-types";
 
 /**
- *
+ * Total node count of the subtree rooted at the given node.
  * @param root
  * @example
  */
@@ -15,7 +15,7 @@ export function getTreeSize(root: IntervalTreeNode | null): number {
 }
 
 /**
- *
+ * Whether the tree has no root (and therefore no intervals).
  * @param root
  * @example
  */
@@ -24,7 +24,7 @@ export function isTreeEmpty(root: IntervalTreeNode | null): boolean {
 }
 
 /**
- *
+ * Height of the tree: longest root-to-leaf path in nodes.
  * @param root
  * @example
  */
@@ -33,7 +33,8 @@ export function getTreeHeight(root: IntervalTreeNode | null): number {
 }
 
 /**
- *
+ * Populate an IntervalTreeStats object: node count, height and mean
+ * interval length.
  * @param root
  * @param stats
  * @example
@@ -45,7 +46,8 @@ export function calculateTreeStats(root: IntervalTreeNode | null, stats: Interva
 }
 
 /**
- *
+ * Running-mean update: fold newTime into currentAverage over count
+ * samples.
  * @param stats
  * @example
  */
@@ -94,7 +96,7 @@ export function updateAverageTime(currentAverage: number, newTime: number, count
 }
 
 /**
- *
+ * Recursive node counter.
  * @param node
  * @example
  */
@@ -104,7 +106,7 @@ function countNodes(node: IntervalTreeNode | null): number {
 }
 
 /**
- *
+ * Recursive height computation.
  * @param node
  * @example
  */
@@ -114,7 +116,7 @@ function getHeight(node: IntervalTreeNode | null): number {
 }
 
 /**
- *
+ * Mean interval length across every interval stored in the subtree.
  * @param node
  * @example
  */
@@ -131,7 +133,7 @@ function calculateAverageIntervalLength(node: IntervalTreeNode | null): number {
 }
 
 /**
- *
+ * In-order collection of all intervals held by the subtree into a list.
  * @param node
  * @param intervals
  * @example

@@ -252,7 +252,7 @@ export class RTree<T = any> {
   // Private helper methods
 
   /**
-   *
+   * Allocate an empty leaf node (no children yet, height 0).
    * @example
    */
   private createLeafNode(): RTreeNode<T> {
@@ -264,7 +264,7 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Allocate an empty internal node one level above the leaves.
    * @example
    */
   private createInternalNode(): RTreeNode<T> {
@@ -276,7 +276,8 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Descend to the appropriate leaf and place the entry; returns a
+   * new sibling node if the leaf split.
    * @param node
    * @param entry
    * @example
@@ -312,7 +313,8 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Pick the child whose bounding box needs the least enlargement to
+   * absorb the entry (R-tree insertion descent step).
    * @param node
    * @param entry
    * @example
@@ -340,7 +342,8 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Split an overfull node into two according to the configured strategy
+   * (quadratic or linear).
    * @param node
    * @example
    */
@@ -353,7 +356,8 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Quadratic split: repeatedly pick the seed pair with the largest
+   * wasted area, then assign remaining entries by cost difference.
    * @param node
    * @example
    */
@@ -445,7 +449,8 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Linear split: choose seeds from the projections with the greatest
+   * separation along one axis, then partition the rest by center position.
    * @param node
    * @example
    */
@@ -546,7 +551,8 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Locate and remove the entry with the given id from the subtree;
+   * returns whether it was found.
    * @param node
    * @param id
    * @example
@@ -578,7 +584,8 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Depth-first range search: recurse into children whose bounds
+   * intersect the query rectangle and collect matching entries.
    * @param node
    * @param bounds
    * @param results
@@ -624,7 +631,8 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Best-first nearest-neighbor search ordered by minimum possible
+   * distance from the query point.
    * @param node
    * @param point
    * @param nearestEntry
@@ -666,7 +674,7 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Find the leaf node currently holding a specific entry (top-down search).
    * @param entry
    * @example
    */
@@ -679,7 +687,8 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Recursive worker for findNodeByEntry: compares ids across all
+   * entries in each visited node.
    * @param node
    * @param targetEntry
    * @example
@@ -703,7 +712,8 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Recompute a node's bounding box as the union of its entries' boxes,
+   * propagating up is handled by callers.
    * @param node
    * @example
    */
@@ -729,7 +739,8 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Aggregate structural stats (node count, tree height, total entries)
+   * for the whole subtree rooted at the given node.
    * @param node
    * @example
    */
@@ -760,7 +771,7 @@ export class RTree<T = any> {
   // Utility methods
 
   /**
-   *
+   * Rectangle intersection test; optionally counts edge-touching as overlap.
    * @param bounds1
    * @param bounds2
    * @param includeTouching
@@ -785,7 +796,7 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Area added to bounds1 to fully contain bounds2 (insertion cost heuristic).
    * @param bounds1
    * @param bounds2
    * @example
@@ -801,7 +812,8 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Total enlargement of the group's bounds needed to absorb the entry
+   * (distribution step of the quadratic split).
    * @param group
    * @param entry
    * @example
@@ -814,7 +826,7 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Union of all member entries' bounding boxes.
    * @param group
    * @example
    */
@@ -839,7 +851,7 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Area of the group's combined bounding box.
    * @param group
    * @example
    */
@@ -849,7 +861,7 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Area of a single rectangle (width * height).
    * @param bounds
    * @example
    */
@@ -858,7 +870,7 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Euclidean distance between rectangle centers (used for seeding splits).
    * @param bounds1
    * @param bounds2
    * @example
@@ -870,7 +882,8 @@ export class RTree<T = any> {
   }
 
   /**
-   *
+   * Minimum distance from a point to a rectangle: 0 inside, else distance
+   * to the closest edge/corner.
    * @param point
    * @param bounds
    * @example

@@ -1,27 +1,25 @@
 /**
- * @file Internal Node.js environment utilities implementation
+ * @file Internal Node.js environment utilities implementation.
+ *
+ * All three helpers (getFs, getPath, getOs) return null when running outside
+ * real Node.js — this includes vitest/rolldown bundler environments where the
+ * __require shim exists but does not actually work with Node built-in modules.
  */
 
-// NOTE: This module is used in both Node and browser contexts. Avoid top-level Node imports.
-// Gate all filesystem and OS usage behind runtime checks to keep browser bundles clean.
+// Avoid top-level Node imports so this module is safe to import from browser builds.
 
 /**
- * Check if running in Node.js environment
- *
- * @returns True if running in Node.js, false otherwise
- * @example
+ * Check if running in a real Node.js environment (not browser, not bundler).
  */
 export function isNodeEnvironment(): boolean {
-  if (typeof process === "undefined") {
-    return false;
-  }
+  if (typeof process === "undefined") return false;
   const proc = process as { versions?: { node?: string } };
-  return typeof proc.versions?.node === "string";
+  if (!proc.versions?.node) return false;
+  if (typeof window !== "undefined") return false;
+  return true;
 }
 
-/**
- * Filesystem module interface
- */
+/** Filesystem module interface */
 export type FSLike = {
   readFileSync: (path: string, enc: string) => string;
   writeFileSync: (path: string, data: string) => void;
@@ -29,17 +27,13 @@ export type FSLike = {
   mkdirSync: (path: string, opts?: { recursive?: boolean }) => void;
 };
 
-/**
- * Path module interface
- */
+/** Path module interface */
 export type PathLike = {
   join: (...parts: string[]) => string;
   dirname: (p: string) => string;
 };
 
-/**
- * OS module interface
- */
+/** OS module interface */
 export type OSLike = {
   cpus: () => Array<{ model?: string }>;
   totalmem: () => number;
@@ -47,187 +41,72 @@ export type OSLike = {
   platform: () => string;
 };
 
-/**
- * Cached require function for ES module compatibility
- * Uses createRequire when in ES module context, falls back to global require
- */
 let nodeRequire: ((id: string) => unknown) | null = null;
-let requireInitPromise: Promise<void> | null = null;
 
 /**
- * Initialize require function using createRequire for ES module compatibility
- * This function safely handles both Node.js and browser environments
- * @example
+ * Safely require a Node.js module. Returns null if not available or under a bundler shim.
  */
-function initRequire(): Promise<void> {
-  if (nodeRequire) return Promise.resolve();
-  if (requireInitPromise) return requireInitPromise;
-
-  requireInitPromise = (async () => {
-    // Early return for browser environments
-    if (!isNodeEnvironment()) return;
-
-    // Check for browser-specific globals that indicate we're not in Node.js
-    if (typeof window !== "undefined" || typeof navigator !== "undefined") {
-      // In browser environment, Node.js modules are not available
-      return;
-    }
-
-    try {
-      if (typeof import.meta !== "undefined" && import.meta.url) {
-        // In ES modules (Node.js), use createRequire
-        // Only import "module" in Node.js environment - it will fail gracefully in browsers
-        try {
-          // Use string concatenation to avoid Vite static analysis
-          const modulePackage = await import("mod" + "ule");
-          nodeRequire = modulePackage.createRequire(import.meta.url);
-          return;
-        } catch {
-          // "module" package not available (e.g., in browser or bundled environment)
-          // Fall through to CommonJS require fallback
-        }
-      }
-
-      // Fallback to global require in CommonJS or if module import failed
-      if (typeof require !== "undefined") {
-        nodeRequire = require;
-      }
-    } catch {
-      // All initialization attempts failed - this is expected in browser environments
-      // nodeRequire will remain null, and getFs/getPath/getOs will return null
-    }
-  })();
-
-  return requireInitPromise;
+function safeRequire<T>(id: string): T | null {
+  // Skip non-Node environments entirely.
+  if (!isNodeEnvironment()) return null;
+  // Bail out of rolled-up/rolldown bundles — their __require shim crashes on Node built-ins.
+  const g = globalThis as unknown as { __require?: unknown };
+  if (typeof g.__require !== "undefined") return null;
+  try {
+    return ((globalThis as unknown as { require: typeof import("node:fs")["default"] }).require(id) ?? null) as T | null;
+  } catch {
+    return null;
+  }
 }
 
 /**
- * Get filesystem module (Node.js only)
- * Returns null in browser environments
- * Note: First call may be slower due to async initialization in ES modules
- *
- * @returns Filesystem module or null if not in Node.js
- * @example
+ * Get filesystem module. Returns null in browser or bundled ESM environments.
  */
 export function getFs(): FSLike | null {
-  // Early return for browser environments
   if (!isNodeEnvironment()) return null;
-  if (typeof window !== "undefined") return null; // Browser environment
-
-  // If not initialized, try to use global require synchronously (CommonJS)
-  if (!nodeRequire) {
-    if (typeof require !== "undefined") {
-      // CommonJS environment
-      nodeRequire = require;
-      if (nodeRequire) {
-        const fs = nodeRequire("fs");
-        return fs as FSLike;
-      }
-      return null;
+  if (nodeRequire !== null) {
+    try { return nodeRequire("fs") as unknown as FSLike; } catch {}
+  } else {
+    const m = safeRequire<FSLike>("fs");
+    if (m) {
+      // Cache the require function for future calls.
+      nodeRequire = ((id: string) => globalThis.require(id)) as never;
     }
-  }
-
-  if (nodeRequire) {
-    if (nodeRequire !== null) {
-      try {
-        const fs = nodeRequire("fs");
-        return fs as FSLike;
-      } catch {
-        return null;
-      }
-    }
+    return m;
   }
   return null;
 }
 
 /**
- * Get path module (Node.js only)
- * Returns null in browser environments
- * Note: First call may be slower due to async initialization in ES modules
- *
- * @returns Path module or null if not in Node.js
- * @example
+ * Get path module. Returns null in browser or bundled ESM environments.
  */
 export function getPath(): PathLike | null {
-  // Early return for browser environments
   if (!isNodeEnvironment()) return null;
-  if (typeof window !== "undefined") return null; // Browser environment
-
-  // If not initialized, try to use global require synchronously (CommonJS)
-  if (!nodeRequire) {
-    if (typeof require !== "undefined") {
-      // CommonJS environment - use global require directly
-      try {
-        nodeRequire = require;
-        const path = nodeRequire("path");
-        return path as PathLike;
-      } catch {
-        return null;
-      }
-    } else {
-      // ES module environment - initialize asynchronously in background
-      // Return null on first call, subsequent calls will have nodeRequire initialized
-      initRequire().catch(() => {
-        // Ignore initialization errors (expected in browsers)
-      });
-      return null;
+  if (nodeRequire !== null) {
+    try { return nodeRequire("path") as unknown as PathLike; } catch {}
+  } else {
+    const m = safeRequire<PathLike>("path");
+    if (m) {
+      nodeRequire = ((id: string) => globalThis.require(id)) as never;
     }
-  }
-
-  if (nodeRequire) {
-    try {
-      if (nodeRequire) {
-        const path = nodeRequire("path");
-        return path as PathLike;
-      }
-    } catch {
-      return null;
-    }
+    return m;
   }
   return null;
 }
 
 /**
- * Get OS module (Node.js only)
- * Returns null in browser environments
- * Note: First call may be slower due to async initialization in ES modules
- *
- * @returns OS module or null if not in Node.js
- * @example
+ * Get OS module. Returns null in browser or bundled ESM environments.
  */
 export function getOs(): OSLike | null {
-  // Early return for browser environments
   if (!isNodeEnvironment()) return null;
-  if (typeof window !== "undefined") return null; // Browser environment
-
-  // If not initialized, try to use global require synchronously (CommonJS)
-  if (!nodeRequire) {
-    if (typeof require !== "undefined") {
-      // CommonJS environment - use global require directly
-      try {
-        nodeRequire = require;
-        const os = nodeRequire("node:os");
-        return os as unknown as OSLike;
-      } catch {
-        return null;
-      }
-    } else {
-      // ES module environment - initialize asynchronously in background
-      // Return null on first call, subsequent calls will have nodeRequire initialized
-      initRequire().catch(() => {
-        // Ignore initialization errors (expected in browsers)
-      });
-      return null;
+  if (nodeRequire !== null) {
+    try { return nodeRequire("node:os") as unknown as OSLike; } catch {}
+  } else {
+    const m = safeRequire<OSLike>("node:os");
+    if (m) {
+      nodeRequire = ((id: string) => globalThis.require(id)) as never;
     }
-  }
-
-  if (nodeRequire) {
-    try {
-      const os = nodeRequire("node:os");
-      return os as unknown as OSLike;
-    } catch {
-      return null;
-    }
+    return m;
   }
   return null;
 }

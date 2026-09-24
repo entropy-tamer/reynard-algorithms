@@ -15,6 +15,7 @@ export default defineConfig(({ mode }) => {
         fileName: "index",
         formats: isCjsBuild ? ["cjs"] : ["es"],
       },
+      target: "node20",
       rollupOptions: {
         external: ["fs", "path", "os", "node:os", "module", "node:module"],
         output: {

@@ -55,9 +55,15 @@ export class SegmentTree<T> {
   private array: T[];
 
   /**
+   * Creates a Segment Tree with the given configuration and optional initial data.
    *
-   * @param options
-   * @example
+   * A segment tree is an array-based binary tree that allows efficient range queries
+   * (e.g. sum, min, max) and updates on arbitrary contiguous subarrays of a static or
+   * dynamically-updated sequence. With lazy propagation enabled by default, range
+   * updates also run in O(log n).
+   *
+   * @param options Configuration for the tree including aggregation function,
+   *                identity element, lazy propagation settings, and initial array data.
    */
   constructor(options: Partial<SegmentTreeOptions<T>> = {}) {
     const opts = { ...DEFAULT_SEGMENT_TREE_OPTIONS, ...options };

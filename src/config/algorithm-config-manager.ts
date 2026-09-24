@@ -11,22 +11,44 @@ import { loadMachineConfig, saveMachineConfig as saveMachineConfigUtil } from ".
 import { validateConfig as validateConfigUtil } from "./algorithm-config-utils";
 
 /**
- * Configuration manager class
+ * Configuration manager class — lazy-loads on first access to avoid breaking browser builds.
+ * All I/O operations are deferred until the configuration is actually needed.
  */
 export class AlgorithmConfigManager {
-  private config: AlgorithmConfig;
+  private config: AlgorithmConfig | null = null;
+  private _loaded = false;
   private configPath: string;
-  private machineFingerprint: MachineFingerprint | null = null;
+  private _fingerprintSet = false;
+  private machineFingerprint: MachineFingerprint | null;
 
   /**
-   *
-   * @param configPath
+   * @param configPath path to config file (default: ./algorithm-config.json)
+   * @example
+   */
+    /**
+   * @param configPath path to config file (default: ./algorithm-config.json)
    * @example
    */
   constructor(configPath: string = "./algorithm-config.json") {
     this.configPath = configPath;
-    this.config = this.loadConfig();
-    this.machineFingerprint = generateMachineFingerprint();
+    // Defer fingerprint generation — getOs() calls require('os') which fails in browser builds
+    this.machineFingerprint = null as unknown as MachineFingerprint | null;
+  }
+
+  private ensureFingerprint(): void {
+    if (this._fingerprintSet) return;
+    this._fingerprintSet = true;
+    try { this.machineFingerprint = generateMachineFingerprint(); } catch { /* browser */ }
+  }
+
+  private ensureLoaded(): void {
+    if (this._loaded) return;
+    try {
+      this.config = this.loadConfig();
+    } catch { /* ignore load errors in browser */ }
+    finally {
+      this._loaded = true;
+    }
   }
 
   /**
@@ -57,6 +79,8 @@ export class AlgorithmConfigManager {
    * @example
    */
   public saveConfig(): void {
+    this.ensureLoaded();
+    if (!this._loaded) return; // No-op in browser
     const fs = getFs();
     const path = getPath();
     if (!fs || !path) return; // No-op in browser
@@ -78,6 +102,8 @@ export class AlgorithmConfigManager {
    * @example
    */
   public getConfig(): AlgorithmConfig {
+    this.ensureLoaded();
+    if (!this._loaded) return { ...DEFAULT_CONFIG };
     return { ...this.config };
   }
 
@@ -88,6 +114,8 @@ export class AlgorithmConfigManager {
    * @example
    */
   public updateConfig(updates: Partial<AlgorithmConfig>): void {
+    this.ensureLoaded();
+    if (!this._loaded) return; // No-op in browser
     this.config = mergeConfigs(this.config, updates);
   }
 
@@ -98,7 +126,9 @@ export class AlgorithmConfigManager {
    * @example
    */
   public getMachineConfig(): AlgorithmConfig {
-    return loadMachineConfig(this.config, this.machineFingerprint);
+    this.ensureLoaded();
+    if (!this._loaded) return { ...DEFAULT_CONFIG };
+    return loadMachineConfig(this.config!, this.machineFingerprint);
   }
 
   /**
@@ -108,7 +138,9 @@ export class AlgorithmConfigManager {
    * @example
    */
   public saveMachineConfig(machineConfig: Partial<AlgorithmConfig>): void {
-    saveMachineConfigUtil(machineConfig, this.config, this.machineFingerprint);
+    this.ensureLoaded();
+    if (!this._loaded) return; // No-op in browser
+    saveMachineConfigUtil(machineConfig, this.config!, this.machineFingerprint);
   }
 
   /**
@@ -117,8 +149,11 @@ export class AlgorithmConfigManager {
    * @returns Machine fingerprint or null if not available
    * @example
    */
-  public getMachineFingerprint(): MachineFingerprint | null {
-    return this.machineFingerprint;
+    public getMachineFingerprint(): MachineFingerprint | null {
+    this.ensureFingerprint();
+    if (this._fingerprintSet) return this.machineFingerprint as MachineFingerprint | null;
+    // generateMachineFingerprint returned null — create a basic one
+    try { return generateMachineFingerprint() ?? null; } catch { return null; }
   }
 
   /**
@@ -126,6 +161,8 @@ export class AlgorithmConfigManager {
    * @example
    */
   public resetToDefaults(): void {
+    this.ensureLoaded();
+    if (!this._loaded) return; // No-op in browser
     this.config = { ...DEFAULT_CONFIG };
   }
 
@@ -136,6 +173,8 @@ export class AlgorithmConfigManager {
    * @example
    */
   public validateConfig(): { isValid: boolean; errors: string[] } {
-    return validateConfigUtil(this.config);
+    this.ensureLoaded();
+    if (!this._loaded) return { isValid: true, errors: [] };
+    return validateConfigUtil(this.config!);
   }
 }

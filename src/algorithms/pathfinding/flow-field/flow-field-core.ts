@@ -47,9 +47,18 @@ export class FlowField {
   private flowField: FlowCell[] = [];
 
   /**
+   * Creates a Flow Field pathfinding instance for the given configuration.
    *
-   * @param config
-   * @example
+   * A flow field is a grid-based vector field where each cell contains a direction
+   * vector pointing toward a goal. All agents in the same field follow their local
+   * vectors to converge on the target, making it far cheaper than per-agent pathfinding
+   * when many agents share the same goal (e.g., RTS crowd behaviors).
+   *
+   * The implementation includes an integration pass that converts discrete vector cells
+   * into smooth movement directions, plus caching for repeated queries with identical configs.
+   *
+   * @param config Configuration for grid dimensions, generation method,
+   *               and smoothing parameters.
    */
   constructor(config: Partial<FlowFieldConfig> = {}) {
     this.config = {

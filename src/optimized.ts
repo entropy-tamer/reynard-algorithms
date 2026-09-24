@@ -9,10 +9,7 @@
 
 import type { SpatialDataType } from "./core/types/spatial-types";
 
-import {
-  OptimizedCollisionAdapter,
-  type OptimizedCollisionConfig,
-} from "./optimization/adapters/optimized-collision-adapter";
+import { SpatialCollisionOptimizer } from "./algorithms/collision/optimization";
 import { checkCollision } from "./algorithms/collision/narrow-phase/aabb/aabb-collision";
 import type { AABB, CollisionPair } from "./algorithms/collision/narrow-phase/aabb/aabb-types";
 
@@ -20,18 +17,23 @@ import {
   getImmutableOptimizationConfig,
   updateImmutableConfig,
   addConfigChangeListener,
-} from "./config/immutable-config";
+  type OptimizedCollisionConfig,
+} from "./config/immutable-config-utils";
 
-import { PerformanceMonitor } from "./optimization/monitors/performance-monitor-public";
-import { OptimizationConfig } from "./optimization/config/optimization-config-public";
-
-let globalCollisionAdapter: OptimizedCollisionAdapter | null = null;
+let globalCollisionOptimizer: SpatialCollisionOptimizer | null = null;
 
 addConfigChangeListener(event => {
   if (event.changedKeys.some(key => key.startsWith("optimization"))) {
-    if (globalCollisionAdapter) {
-      globalCollisionAdapter.destroy();
-      globalCollisionAdapter = new OptimizedCollisionAdapter(getImmutableOptimizationConfig());
+    if (globalCollisionOptimizer) {
+      // Recreate optimizer with new config
+      const config = getImmutableOptimizationConfig();
+      globalCollisionOptimizer = new SpatialCollisionOptimizer({
+        cellSize: config.cellSize,
+        maxObjectsPerCell: config.maxObjectsPerCell,
+        enableCaching: config.enableCaching,
+        cacheSize: config.cacheSize,
+        hybridThreshold: config.hybridThreshold,
+      });
     }
   }
 });
@@ -116,25 +118,38 @@ function validateAABBs(aabbs: AABB[]): void {
 export async function configureOptimization(config: Partial<OptimizedCollisionConfig>): Promise<void> {
   await updateImmutableConfig(undefined, config);
 
-  if (globalCollisionAdapter) {
-    globalCollisionAdapter.destroy();
-    globalCollisionAdapter = new OptimizedCollisionAdapter(getImmutableOptimizationConfig());
+  if (globalCollisionOptimizer) {
+    const newConfig = getImmutableOptimizationConfig();
+    globalCollisionOptimizer = new SpatialCollisionOptimizer({
+      cellSize: newConfig.cellSize,
+      maxObjectsPerCell: newConfig.maxObjectsPerCell,
+      enableCaching: newConfig.enableCaching,
+      cacheSize: newConfig.cacheSize,
+      hybridThreshold: newConfig.hybridThreshold,
+    });
   }
 }
 
 /**
- * Get the global collision adapter instance
- * @returns The global collision adapter instance
+ * Get the global collision optimizer instance
+ * @returns The global collision optimizer instance
  * @example
  * ```typescript
- * const adapter = getGlobalCollisionAdapter();
+ * const optimizer = getGlobalCollisionOptimizer();
  * ```
  */
-function getGlobalCollisionAdapter(): OptimizedCollisionAdapter {
-  if (!globalCollisionAdapter) {
-    globalCollisionAdapter = new OptimizedCollisionAdapter(getImmutableOptimizationConfig());
+function getGlobalCollisionOptimizer(): SpatialCollisionOptimizer {
+  if (!globalCollisionOptimizer) {
+    const config = getImmutableOptimizationConfig();
+    globalCollisionOptimizer = new SpatialCollisionOptimizer({
+      cellSize: config.cellSize,
+      maxObjectsPerCell: config.maxObjectsPerCell,
+      enableCaching: config.enableCaching,
+      cacheSize: config.cacheSize,
+      hybridThreshold: config.hybridThreshold,
+    });
   }
-  return globalCollisionAdapter;
+  return globalCollisionOptimizer;
 }
 
 /**
@@ -169,8 +184,8 @@ export function detectCollisions(aabbs: AABB[]): CollisionPair[] {
     return [];
   }
 
-  const adapter = getGlobalCollisionAdapter();
-  return adapter.detectCollisions(aabbs);
+  const optimizer = getGlobalCollisionOptimizer();
+  return optimizer.detectCollisions(aabbs);
 }
 
 /**
@@ -207,10 +222,56 @@ export function performSpatialQuery<T extends SpatialDataType>(
  * ```
  */
 export function cleanup(): void {
-  if (globalCollisionAdapter) {
-    globalCollisionAdapter.destroy();
-    globalCollisionAdapter = null;
+  globalCollisionOptimizer = null;
+}
+
+/**
+ * Performance monitoring utilities
+ * @deprecated Use SpatialCollisionOptimizer.getStats() directly
+ */
+export class PerformanceMonitor {
+  private stats: { queries: number; totalTime: number } = { queries: 0, totalTime: 0 };
+
+  recordQuery(duration: number): void {
+    this.stats.queries++;
+    this.stats.totalTime += duration;
+  }
+
+  getAverageTime(): number {
+    return this.stats.queries > 0 ? this.stats.totalTime / this.stats.queries : 0;
+  }
+
+  getQueryCount(): number {
+    return this.stats.queries;
+  }
+
+  reset(): void {
+    this.stats = { queries: 0, totalTime: 0 };
   }
 }
 
-export { PerformanceMonitor, OptimizationConfig };
+/**
+ * Optimization configuration wrapper
+ * @deprecated Use getImmutableOptimizationConfig() from config/immutable-config-utils
+ */
+export class OptimizationConfig {
+  private config: OptimizedCollisionConfig;
+
+  constructor(config?: Partial<OptimizedCollisionConfig>) {
+    this.config = getImmutableOptimizationConfig();
+    if (config) {
+      this.config = { ...this.config, ...config };
+    }
+  }
+
+  get(): OptimizedCollisionConfig {
+    return this.config;
+  }
+
+  set(key: keyof OptimizedCollisionConfig, value: unknown): void {
+    (this.config as Record<string, unknown>)[key] = value;
+  }
+}
+
+export type { OptimizedCollisionConfig, SpatialCollisionConfig, SpatialCollisionStats } from "./algorithms/collision/optimization";
+export { getImmutableOptimizationConfig, updateImmutableConfig, addConfigChangeListener, removeConfigChangeListener } from "./config/immutable-config-utils";

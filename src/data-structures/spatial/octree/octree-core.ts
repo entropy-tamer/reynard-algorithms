@@ -62,8 +62,13 @@ export class Octree {
 
   /**
    *
-   * @param bounds
-   * @param options
+   * Creates an Octree with the given 3D bounding box and configuration.
+   *
+   * An octree is a recursive 3D space subdivision: each node has up to 8 children
+   * corresponding to the octants of its spatial region. Useful for broad-phase
+   * collision detection, physics simulations, and rendering culling in 3D scenes.
+   *
+   * @param bounds The initial 3D bounding box containing all objects.
    * @example
    */
   constructor(bounds: Bounds3D, options: Partial<OctreeOptions> = {}) {

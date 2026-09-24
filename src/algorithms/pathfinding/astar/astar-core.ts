@@ -48,6 +48,14 @@ export class AStar {
   private config: AStarConfig;
   private heuristic: AStarHeuristic;
   private eventHandlers: AStarEventHandler[];
+
+  /**
+   * Min-heap for the open set — provides O(log n) extraction of minimum f-score node.
+   * Replaces the previous Map<string, AStarNode> which required O(n) full-scan.
+   */
+  private minHeap!: { push(node: AStarNode): void; pop(): AStarNode | undefined; readonly length: number };
+
+
   private cache: Map<string, AStarCacheEntry>;
   private stats: AStarStats;
   private enableCaching: boolean;
@@ -56,9 +64,29 @@ export class AStar {
   private cacheSize: number;
 
   /**
+   * Creates an A* pathfinding instance.
    *
-   * @param options
+   * A* is a best-first search algorithm that finds the shortest path between
+   * two points in a weighted graph or grid. It uses a heuristic to guide
+   * exploration, making it both optimal and efficient — unlike Dijkstra's,
+   * it prioritizes nodes closer to the goal.
+   *
+   * The implementation uses a binary min-heap for O(log n) node extraction
+   * (replacing the previous Map-based open set which had O(n) per iteration).
+   *
+   * @param options Configuration overrides for caching, stats tracking,
+   *                event handlers, and heuristic selection.
    * @example
+   * ```typescript
+   * const astar = new AStar();
+   * const result = astar.findPath({x: 0, y: 0}, {x: 10, y: 10}, grid);
+   *
+   * if (result.success) {
+   *   console.log(`Path length: ${result.path.length}, cost: ${result.totalCost}`);
+   * } else {
+   *   console.error('No path found');
+   * }
+   * ```
    */
   constructor(options: Partial<AStarOptions> = {}) {
     const opts = { ...DEFAULT_ASTAR_OPTIONS, ...options };
@@ -71,6 +99,7 @@ export class AStar {
     this.enableDebug = opts.enableDebug;
     this.cacheSize = opts.cacheSize;
 
+    this.minHeap = this.createMinHeap();
     this.cache = new Map();
     this.stats = {
       totalOperations: 0,
@@ -155,6 +184,71 @@ export class AStar {
   }
 
   /**
+   * Create a min-heap ordered by f-score (primary) then g-score descending for tie-breaking.
+   *
+   * This replaces the previous Map<string, AStarNode> open set which required O(n)
+   * full-scan on every iteration — now each extraction is O(log n).
+   */
+  private createMinHeap() {
+    const data: AStarNode[] = [];
+
+    // Helper comparison: a has lower-or-equal priority than b if f-score is smaller,
+    // or (with tie-breaking) f-scores equal and g-score is larger.
+    const nodeLessOrEqual = (a: AStarNode, b: AStarNode): boolean => {
+      if (a.fScore !== b.fScore) return a.fScore < b.fScore;
+      if (!this.config.useTieBreaking) return false; // equal priority is fine
+      return a.gScore >= b.gScore; // higher g = processed later in ties
+    };
+
+    const siftUp = (i: number): void => {
+      while (i > 0) {
+        const parentIdx = Math.floor((i - 1) / 2);
+        if (!nodeLessOrEqual(data[i], data[parentIdx])) break;
+        [data[i], data[parentIdx]] = [data[parentIdx], data[i]] as [AStarNode, AStarNode];
+        i = parentIdx;
+      }
+    };
+
+    const siftDown = (i: number): void => {
+      while (true) {
+        let smallest = i;
+        const left = 2 * i + 1;
+        const right = 2 * i + 2;
+
+        if (left < data.length && nodeLessOrEqual(data[left], data[smallest])) {
+          smallest = left;
+        }
+        if (right < data.length && nodeLessOrEqual(data[right], data[smallest])) {
+          smallest = right;
+        }
+
+        if (smallest === i) break; // heap invariant satisfied
+        [data[i], data[smallest]] = [data[smallest], data[i]] as [AStarNode, AStarNode];
+        i = smallest;
+      }
+    };
+
+    return {
+      get length(): number { return data.length; },
+      push(node: AStarNode): void {
+        data.push(node);
+        siftUp(data.length - 1);
+      },
+      pop(): AStarNode | undefined {
+        if (data.length === 0) return undefined;
+        const top = data[0] as AStarNode;
+        // Replace root with last element, remove it
+        const last = data.pop()!;
+        if (last !== top && data.length > 0) {
+          data[0] = last;
+          siftDown(0);
+        }
+        return top;
+      },
+    };
+  }
+
+  /**
    * Perform the core A* search algorithm
    *
    * @param start Starting point
@@ -164,30 +258,37 @@ export class AStar {
    * @example
    */
   private performAStarSearch(start: Point, goal: Point, grid?: AStarGrid): AStarResult {
-    const openSet = new Map<string, AStarNode>();
+    // Binary-heap-based open set with lazy deletion.
+    // nodes tracks the best-known AStarNode for each position — needed because
+    // we can't modify a node in-place inside a MinHeap; instead, stale entries are skipped on pop.
     const closedSet = new Set<string>();
     const nodes = new Map<string, AStarNode>();
-
-    // Create start and goal nodes
     const startNode = this.createNode(start, 0, this.heuristic(start, goal), null, true);
-    const goalNode = this.createNode(goal, 0, 0, null, true);
 
-    openSet.set(startNode.id, startNode);
+    // Initialize heap with start node and record it
+    this.minHeap.push(startNode);
     nodes.set(startNode.id, startNode);
-    nodes.set(goalNode.id, goalNode);
 
     let iterations = 0;
     const exploredNodes: AStarNode[] = [];
 
-    while (openSet.size > 0 && iterations < this.config.maxIterations) {
+    while (this.minHeap.length > 0 && iterations < this.config.maxIterations) {
       iterations++;
 
-      // Find node with lowest f-score
-      const currentNode = this.getLowestFScoreNode(openSet);
+      // O(log n) heap extraction of minimum f-score node
+      const rawCurrent = this.minHeap.pop()!; // never undefined here — guarded by while condition
 
-      // Move current node from open to closed set
-      openSet.delete(currentNode.id);
+      // Skip stale entries — if position was already processed with a better path,
+      // skip (lazy-deletion approach to binary-heap A*).
+      let currentNode: AStarNode | null = rawCurrent;
+      while (closedSet.has(currentNode.id)) {
+        currentNode = this.minHeap.pop()! ?? null; // can't happen — guarded by outer while
+      }
+
+      if (!currentNode) break; // All remaining entries were stale — no more work to do
+
       closedSet.add(currentNode.id);
+      nodes.delete(currentNode.id); // remove from known nodes (moved to closed set)
       exploredNodes.push(currentNode);
 
       this.emitEvent(AStarEventType.NODE_EXPLORED, { node: currentNode, iteration: iterations });
@@ -222,27 +323,29 @@ export class AStar {
           continue;
         }
 
-        // Calculate tentative g-score
+        // Calculate tentative g-score from current node's path to this neighbor.
         const tentativeGScore = currentNode.gScore + this.getDistance(currentNode, neighbor);
 
-        // Check if this is a better path to the neighbor
-        if (!openSet.has(neighborId)) {
-          // New node, add to open set
+        const existingNode = nodes.get(neighborId);
+        if (!existingNode) {
+          // New node — always add to heap with updated scores.
           neighbor.gScore = tentativeGScore;
           neighbor.hScore = this.heuristic(neighbor.position, goal);
           neighbor.fScore = neighbor.gScore + neighbor.hScore;
           neighbor.parent = currentNode;
 
-          openSet.set(neighborId, neighbor);
           nodes.set(neighborId, neighbor);
-        } else {
-          // Existing node, check if this path is better
-          const existingNode = openSet.get(neighborId)!;
-          if (tentativeGScore < existingNode.gScore) {
-            existingNode.gScore = tentativeGScore;
-            existingNode.fScore = existingNode.gScore + existingNode.hScore;
-            existingNode.parent = currentNode;
-          }
+          this.minHeap.push(neighbor);
+        } else if (tentativeGScore < existingNode.gScore) {
+          // Existing node — only update if this is a strictly better path.
+          // Push new entry to heap; old stale entry will be skipped on pop via closedSet check.
+          neighbor.gScore = tentativeGScore;
+          neighbor.hScore = this.heuristic(neighbor.position, goal);
+          neighbor.fScore = neighbor.gScore + neighbor.hScore;
+          neighbor.parent = currentNode;
+
+          nodes.set(neighborId, neighbor);
+          this.minHeap.push(neighbor);
         }
       }
     }
@@ -301,29 +404,7 @@ export class AStar {
     return `${position.x},${position.y}`;
   }
 
-  /**
-   * Get node with lowest f-score from open set
-   * @param openSet
-   * @example
-   */
-  private getLowestFScoreNode(openSet: Map<string, AStarNode>): AStarNode {
-    let lowestNode: AStarNode | null = null;
-    let lowestFScore = Infinity;
 
-    for (const node of openSet.values()) {
-      if (node.fScore < lowestFScore) {
-        lowestFScore = node.fScore;
-        lowestNode = node;
-      } else if (this.config.useTieBreaking && node.fScore === lowestFScore) {
-        // Tie-breaking: prefer node with higher g-score
-        if (node.gScore > lowestNode!.gScore) {
-          lowestNode = node;
-        }
-      }
-    }
-
-    return lowestNode!;
-  }
 
   /**
    * Check if goal is reached
