@@ -156,7 +156,6 @@
     "@entropy-tamer/reynard-testing": "workspace:*",
     "typescript": "7.0.2",
     "vite": "8.0.7",
-    "vite-plugin-solid": "workspace:*",
     "vitest": "4.1.4"
   },
   "peerDependencies": {
