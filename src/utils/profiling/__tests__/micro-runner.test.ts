@@ -1,11 +1,11 @@
 /**
  * Tests for Micro-Benchmarks
- * 
+ *
  * Comprehensive test suite for the micro-benchmark system
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { 
+import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import {
   MicroBenchmarkRunner,
   algorithmSelectionBenchmarks,
   memoryPoolBenchmarks,
@@ -15,7 +15,7 @@ import {
   benchmarkRunner,
   pawBenchmarks
 } from '../micro-benchmarks';
-import type { BenchmarkResult, MicroBenchmarkConfig } from '../profiling-types';
+import type { MicroBenchmarkConfig } from '../profiling-types';
 
 describe('MicroBenchmarkRunner', () => {
   let runner: MicroBenchmarkRunner;
