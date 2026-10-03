@@ -17,6 +17,7 @@ import {
   insertImpl,
   queryRadiusImpl,
   queryRectImpl,
+  queryCellsImpl,
   removeImpl,
   resizeReindexImpl,
 } from "./spatial-hash-ops";
@@ -111,6 +112,31 @@ export class SpatialHash<T extends SpatialDataType = SpatialDataType> {
    */
   queryRect(x: number, y: number, width: number, height: number): Array<SpatialObject & { data: T }> {
     return queryRectImpl<T>(
+      { cells: this.cells, objectToCells: this.objectToCells, config: this.config, stats: this.stats },
+      x,
+      y,
+      width,
+      height
+    );
+  }
+
+  /**
+   * Collect every object registered in a cell overlapping the given rect.
+   *
+   * Unlike {@link SpatialHash.queryRect}, candidates are NOT filtered to those
+   * fully contained in the rect, so this returns a superset of the objects that
+   * actually overlap it. That is what broad-phase culling needs: run an exact
+   * overlap test per candidate and let the exact test discard the rest.
+   *
+   * @param x Rectangle left coordinate
+   * @param y Rectangle top coordinate
+   * @param width Rectangle width
+   * @param height Rectangle height
+   * @returns Objects registered in any cell the rectangle touches, deduplicated by id
+   * @example
+   */
+  queryCells(x: number, y: number, width: number, height: number): Array<SpatialObject & { data: T }> {
+    return queryCellsImpl<T>(
       { cells: this.cells, objectToCells: this.objectToCells, config: this.config, stats: this.stats },
       x,
       y,

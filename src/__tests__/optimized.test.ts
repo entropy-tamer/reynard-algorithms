@@ -14,6 +14,7 @@ import {
 } from "../optimized";
 import type { AABB } from "../algorithms/collision/narrow-phase/aabb/aabb-types";
 import type { SpatialObjectData } from "../core/types/spatial-types";
+import { SpatialCollisionOptimizer } from "../algorithms/collision/optimization/spatial-collision-optimizer";
 
 // Helper function to create test spatial data
 /**
@@ -223,45 +224,48 @@ describe("Optimized Algorithms API", () => {
   });
 
   describe("performance monitoring", () => {
-    it("should provide optimization statistics", () => {
-      const monitor = new PerformanceMonitor();
-      const stats = monitor.getPerformanceStats();
-
-      expect(stats).toBeDefined();
-      expect(typeof stats.totalQueries).toBe("number");
-    });
-
-    it("should track performance over multiple operations", () => {
-      const monitor = new PerformanceMonitor();
-
+    it("counts every query on the optimizer that serves detectCollisions", () => {
+      const optimizer = new SpatialCollisionOptimizer();
       const aabbs: AABB[] = [
         { x: 0, y: 0, width: 10, height: 10 },
         { x: 5, y: 5, width: 10, height: 10 },
       ];
 
-      detectCollisions(aabbs);
-      detectCollisions(aabbs);
+      const before = optimizer.getStats().totalQueries;
+      expect(before).toBe(0); // precondition: a fresh optimizer has no history
 
-      const stats = monitor.getPerformanceStats();
-      expect(typeof stats.totalQueries).toBe("number");
-      expect(stats.totalQueries).toBeGreaterThanOrEqual(0);
+      const pairs = optimizer.detectCollisions(aabbs);
+      const after = optimizer.getStats();
+
+      // Precondition: the query must have done real work, otherwise the
+      // counting assertions below would pass against a no-op.
+      expect(pairs.length).toBe(1);
+
+      expect(after.totalQueries).toBe(before + 1);
     });
 
-    it("should reset statistics when state is cleared", () => {
+    it("averages recorded query durations", () => {
       const monitor = new PerformanceMonitor();
 
-      // Perform some operations
-      const aabbs: AABB[] = [
-        { x: 0, y: 0, width: 10, height: 10 },
-        { x: 5, y: 5, width: 10, height: 10 },
-      ];
+      expect(monitor.getQueryCount()).toBe(0); // precondition: empty monitor
+      expect(monitor.getAverageTime()).toBe(0);
 
-      detectCollisions(aabbs);
+      monitor.recordQuery(10);
+      monitor.recordQuery(30);
 
-      monitor.resetStatistics();
-      const stats = monitor.getPerformanceStats();
+      expect(monitor.getQueryCount()).toBe(2);
+      expect(monitor.getAverageTime()).toBe(20);
+    });
 
-      expect(stats.totalQueries).toBe(0);
+    it("clears accumulated statistics on reset", () => {
+      const monitor = new PerformanceMonitor();
+      monitor.recordQuery(10);
+      expect(monitor.getQueryCount()).toBe(1); // precondition: reset has something to clear
+
+      monitor.reset();
+
+      expect(monitor.getQueryCount()).toBe(0);
+      expect(monitor.getAverageTime()).toBe(0);
     });
   });
 

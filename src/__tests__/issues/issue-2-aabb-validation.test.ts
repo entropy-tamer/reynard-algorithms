@@ -12,11 +12,8 @@
  */
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import {
-  checkCollision,
-  createCollisionResult,
-  executeNaiveCollisionDetection,
-} from "../../optimization/adapters/collision-algorithms";
+import { checkCollision } from "../../algorithms/collision/narrow-phase/aabb/aabb-collision";
+import { detectCollisions } from "../../optimized";
 import { validateAABB, validateAABBArray } from "../../algorithms/collision/narrow-phase/aabb/aabb-validation";
 import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
@@ -33,9 +30,9 @@ describe("Issue #2: AABB Validation Missing", () => {
       description:
         "AABBs with negative dimensions are accepted without validation, which could lead to incorrect collision results. The implementation should validate that width >= 0 and height >= 0.",
       affectedFiles: [
-        "src/optimization/adapters/collision-algorithms.ts",
-        "src/geometry/collision/aabb/aabb-validation.ts",
-        "src/__tests__/geometry/collision/aabb-validation.test.ts",
+        "src/optimized.ts",
+        "src/algorithms/collision/narrow-phase/aabb/aabb-validation.ts",
+        "src/algorithms/collision/narrow-phase/aabb/aabb-collision.ts",
       ],
       fixDescription:
         "Added comprehensive AABB input validation to all collision detection functions, including validation for negative dimensions, NaN values, Infinity, and missing properties.",
@@ -129,18 +126,45 @@ describe("Issue #2: AABB Validation Missing", () => {
       expect(invalidValidation.errors[0]!.field).toBe("width");
     });
 
-    it("should throw errors for invalid AABBs in collision detection", () => {
+    it("should reject invalid AABBs at the batch entry point", () => {
       const validAABB = { x: 0, y: 0, width: 10, height: 10 };
       const invalidAABB = { x: 0, y: 0, width: -10, height: 10 };
 
-      // Should throw for invalid AABBs
+      // Validation lives at the BATCH boundary -- `detectCollisions` checks the
+      // whole array once, before dispatching to a strategy. That is both the
+      // correct place and the cheap one: the per-pair inner loop would otherwise
+      // re-validate the same AABB O(n) times.
+      //
+      // The pair-level `checkCollision` below is deliberately NOT a guard. It
+      // takes a typed `AABB` and assumes validated input; a negative width there
+      // yields nonsense rather than an exception. The 2026-09-30 version of this
+      // file asserted `checkCollision` itself throws, which was true only of the
+      // now-deleted `src/optimization/adapters/collision-algorithms.ts` and
+      // guarded nothing once that module was removed in ce00e84.
       expect(() => {
-        checkCollision(validAABB, invalidAABB);
-      }).toThrow("Invalid AABBs for collision detection");
+        detectCollisions([validAABB, invalidAABB]);
+      }).toThrow(/invalid width: -10/);
+
+      // NaN and Infinity are rejected on the same path.
+      expect(() => {
+        detectCollisions([validAABB, { x: NaN, y: 0, width: 10, height: 10 }]);
+      }).toThrow(/invalid x coordinate/);
 
       expect(() => {
-        createCollisionResult(validAABB, invalidAABB);
-      }).toThrow("Invalid AABBs for collision result");
+        detectCollisions([validAABB, { x: 0, y: Infinity, width: 10, height: 10 }]);
+      }).toThrow(/invalid y coordinate/);
+
+      // A missing dimension is rejected too.
+      expect(() => {
+        detectCollisions([validAABB, { x: 0, y: 0, width: 10 } as never]);
+      }).toThrow(/missing required property 'height'/);
+
+      // The pair-level predicate still returns a full result for valid input.
+      const result = checkCollision(validAABB, { x: 5, y: 5, width: 10, height: 10 });
+      expect(result).toHaveProperty("colliding");
+      expect(result).toHaveProperty("overlap");
+      expect(result).toHaveProperty("overlapArea");
+      expect(result).toHaveProperty("distance");
     });
 
     it("should handle arrays with mixed valid/invalid AABBs", () => {
@@ -159,7 +183,7 @@ describe("Issue #2: AABB Validation Missing", () => {
     it.skip("should benchmark performance after fix", async () => {
       const aabbs = generateTestAABBs(1000, { includeInvalid: false });
 
-      afterReport = await runBenchmark("aabb-collision-after-fix", () => executeNaiveCollisionDetection(aabbs), {
+      afterReport = await runBenchmark("aabb-collision-after-fix", () => detectCollisions(aabbs), {
         samples: 20,
       });
 
@@ -207,7 +231,7 @@ describe("Issue #2: AABB Validation Missing", () => {
       for (const size of sizes) {
         const aabbs = generateTestAABBs(size, { includeInvalid: false });
 
-        const report = await runBenchmark(`aabb-validation-size-${size}`, () => executeNaiveCollisionDetection(aabbs), {
+        const report = await runBenchmark(`aabb-validation-size-${size}`, () => detectCollisions(aabbs), {
           samples: 10,
         });
 
@@ -233,9 +257,8 @@ describe("Issue #2: AABB Validation Missing", () => {
       const startTime = performance.now();
 
       try {
-        executeNaiveCollisionDetection(invalidAABBs);
+        detectCollisions(invalidAABBs);
       } catch (error) {
-        // Expected to throw
       }
 
       const endTime = performance.now();
@@ -256,7 +279,7 @@ describe("Issue #2: AABB Validation Missing", () => {
 
       // Should work without throwing
       expect(() => {
-        const collisions = executeNaiveCollisionDetection(validAABBs);
+        const collisions = detectCollisions(validAABBs);
         expect(Array.isArray(collisions)).toBe(true);
       }).not.toThrow();
     });
@@ -268,11 +291,11 @@ describe("Issue #2: AABB Validation Missing", () => {
       // Should work the same as before for valid AABBs
       expect(() => {
         const colliding = checkCollision(a, b);
-        expect(typeof colliding).toBe("boolean");
+        expect(typeof colliding.colliding).toBe("boolean");
       }).not.toThrow();
 
       expect(() => {
-        const result = createCollisionResult(a, b);
+        const result = checkCollision(a, b);
         expect(result).toHaveProperty("colliding");
         expect(result).toHaveProperty("overlap");
         expect(result).toHaveProperty("overlapArea");
@@ -282,14 +305,14 @@ describe("Issue #2: AABB Validation Missing", () => {
 
     it("should handle empty arrays", () => {
       expect(() => {
-        const collisions = executeNaiveCollisionDetection([]);
+        const collisions = detectCollisions([]);
         expect(collisions).toEqual([]);
       }).not.toThrow();
     });
 
     it("should handle single AABB arrays", () => {
       expect(() => {
-        const collisions = executeNaiveCollisionDetection([{ x: 0, y: 0, width: 10, height: 10 }]);
+        const collisions = detectCollisions([{ x: 0, y: 0, width: 10, height: 10 }]);
         expect(collisions).toEqual([]);
       }).not.toThrow();
     });

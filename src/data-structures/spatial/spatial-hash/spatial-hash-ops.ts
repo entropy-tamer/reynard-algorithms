@@ -96,6 +96,50 @@ export function queryRectImpl<T extends SpatialDataType>(
 }
 
 /**
+ * Collect every object registered in a cell overlapping the given rect, without
+ * the containment filter that {@link queryRectImpl} applies.
+ *
+ * `insertImpl` registers each object in EVERY cell its bounds span, so any two
+ * overlapping rects share at least one cell. Querying the cells a rect touches
+ * therefore returns a superset of everything that actually overlaps it.
+ *
+ * Use this for broad-phase culling, where the caller intends to run an exact
+ * overlap test on each candidate. `queryRect` is the wrong tool there: it keeps
+ * only objects fully CONTAINED in the rect, so a candidate that merely overlaps
+ * the query rect by a few pixels is dropped before the exact test ever sees it.
+ *
+ * @param state
+ * @param x
+ * @param y
+ * @param width
+ * @param height
+ * @example
+ */
+export function queryCellsImpl<T extends SpatialDataType>(
+	state: SpatialHashState<T>,
+	x: number,
+	y: number,
+	width: number,
+	height: number
+): Array<SpatialObject & { data: T }> {
+	const cellKeys = getRectCells(state.config.cellSize, x, y, width, height);
+	const results = new Map<string | number, SpatialObject & { data: T }>();
+
+	for (const cellKey of Array.from(cellKeys)) {
+		const cell = state.cells.get(cellKey);
+		if (!cell) continue;
+		for (const obj of cell) {
+			if (obj.data !== undefined) {
+				results.set(obj.id, obj as SpatialObject & { data: T });
+			}
+		}
+	}
+
+	state.stats.queryCount++;
+	return Array.from(results.values());
+}
+
+/**
  *
  * @param state
  * @param centerX

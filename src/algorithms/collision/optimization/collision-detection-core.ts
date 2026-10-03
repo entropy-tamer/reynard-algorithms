@@ -128,20 +128,40 @@ export function spatialCollisionDetection(
     });
   });
 
-  // Check collisions using spatial queries
-  const processed = new Set<number>();
-
+  // Check collisions using spatial queries.
+  //
+  // Broad-phase culling only needs a SUPERSET of the candidates, so this uses
+  // `queryCells` rather than `queryRect`. `insertImpl` registers every object in
+  // every cell its AABB spans, so two overlapping AABBs necessarily share at
+  // least one grid cell; querying the cells this AABB touches therefore cannot
+  // miss an overlapping partner. `queryRect` would be wrong here because it
+  // keeps only candidates fully CONTAINED in the rect, discarding partners that
+  // overlap it by a few pixels -- and it would discard this AABB's own
+  // candidates in every direction.
+  //
+  // `checkCollision` below is the exact test that turns this superset into the
+  // true collision set.
+  //
+  // The previous query rect was anchored at the top-left corner and expanded
+  // backwards by the AABB's own size -- `queryRect(x - w, y - h, w * 3, h * 3)`,
+  // covering [x-w, x+2w]. That is not a superset of the AABB's own span: an
+  // overlapping AABB whose body reaches into this one from further left or
+  // above than this AABB's own width/height is never returned. The spatial
+  // branch silently dropped 96.9% of true collision pairs at n=500 (4 found
+  // where naive found 208 at n=100), with no error raised. The naive branch
+  // was always correct; only the threshold switch at n >= hybridThreshold
+  // exposed the loss.
   for (let i = 0; i < aabbs.length; i++) {
-    if (processed.has(i)) continue;
-
     const aabb = aabbs[i];
     if (!aabb) continue;
 
-    const nearby = spatialHash.queryRect(aabb.x - aabb.width, aabb.y - aabb.height, aabb.width * 3, aabb.height * 3);
+    const nearby = spatialHash.queryCells(aabb.x, aabb.y, aabb.width, aabb.height);
 
     for (const obj of nearby) {
       const j = obj.data.index;
-      if (j <= i || processed.has(j)) continue;
+      // Pairs are only reported from the lower index, so each pair is tested
+      // exactly once. Any overlapping j < i was already handled at index j.
+      if (j <= i) continue;
 
       const otherAabb = obj.data.aabb;
       if (!otherAabb) continue;
@@ -151,8 +171,6 @@ export function spatialCollisionDetection(
         collisions.push({ a: i, b: j, result });
       }
     }
-
-    processed.add(i);
   }
 
   return collisions;

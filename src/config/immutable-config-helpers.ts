@@ -17,7 +17,7 @@ export const DEFAULT_OPTIMIZATION_CONFIG: OptimizedCollisionConfig = {
   maxObjectsPerCell: 50,
   hybridThreshold: 100,
   maxWorkers: 4,
-  enableCaching: true,
+  enableCaching: false,
   cacheSize: 1000,
   enableProfiling: false,
   profilingThreshold: 1000,

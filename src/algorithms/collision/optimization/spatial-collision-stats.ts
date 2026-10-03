@@ -45,7 +45,15 @@ export function createDefaultConfig(overrides: Partial<SpatialCollisionConfig> =
   return {
     cellSize: 100,
     maxObjectsPerCell: 50,
-    enableCaching: true,
+    // Measured at n=1000 AABBs: the cache is a net LOSS even when it works.
+    // The candidate working set is ~7.5k distinct pairs but the default
+    // cacheSize is 1k, so it thrashes to a 0% hit rate (0 hits across repeated
+    // identical queries). Raising cacheSize so it fits gives ~100% hits and is
+    // STILL slower: 26.4ms cached vs 15.5ms uncached at n=1000. Building the
+    // string key per candidate costs more than the checkCollision call it
+    // saves. Off by default; opt in only for a workload that re-checks the same
+    // pairs with a cache large enough for the working set.
+    enableCaching: false,
     cacheSize: 1000,
     hybridThreshold: 100,
     ...defined,
