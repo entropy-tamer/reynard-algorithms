@@ -1,0 +1,43 @@
+{
+  "$schema": "https://unpkg.com/@biomejs/biome/configuration_schema.json",
+  "files": {
+    "includes": ["src/**", "!**/node_modules/**"]
+  },
+  "vcs": {
+    "enabled": true,
+    "useIgnoreFile": true,
+    "clientKind": "git"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noThenProperty": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "noParameterAssign": "off"
+      },
+      "complexity": {
+        "noForEach": "off",
+        "noBannedTypes": "off",
+        "useLiteralKeys": "off",
+        "noStaticOnlyClass": "warn"
+      },
+      "correctness": {
+        "noUnusedImports": "error",
+        "noUnusedFunctionParameters": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "enabled": false
+    }
+  },
+  "assist": {
+    "enabled": false
+  }
+}
