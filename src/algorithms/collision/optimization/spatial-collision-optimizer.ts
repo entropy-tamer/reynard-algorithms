@@ -9,13 +9,12 @@
  */
 
 import { SpatialHash } from "../../../data-structures/spatial/spatial-hash/spatial-hash-core";
-import type { AABB, CollisionResult } from "../narrow-phase/aabb/aabb-types";
+import type { AABB } from "../narrow-phase/aabb/aabb-types";
 import type { CollisionObjectData } from "../../../core/types/spatial-types";
 import {
   naiveCollisionDetection,
   spatialCollisionDetection,
   type CollisionPair,
-  type CollisionCache,
 } from "./collision-detection-core";
 import {
   type SpatialCollisionConfig,
@@ -35,7 +34,6 @@ export type { SpatialCollisionConfig, SpatialCollisionStats } from "./spatial-co
 export class SpatialCollisionOptimizer {
   private spatialHash: SpatialHash<CollisionObjectData>;
   private config: SpatialCollisionConfig;
-  private collisionCache: CollisionCache;
   private stats: SpatialCollisionStats;
 
   /**
@@ -50,15 +48,6 @@ export class SpatialCollisionOptimizer {
       cellSize: this.config.cellSize,
       maxObjectsPerCell: this.config.maxObjectsPerCell,
     });
-
-    this.collisionCache = {
-      cache: new Map<string, CollisionResult>(),
-      stats: { cacheHits: 0 },
-      config: {
-        enableCaching: this.config.enableCaching,
-        cacheSize: this.config.cacheSize,
-      },
-    };
 
     this.stats = createInitialStats();
   }
@@ -92,7 +81,7 @@ export class SpatialCollisionOptimizer {
    */
   private naiveCollisionDetection(aabbs: AABB[]): CollisionPair[] {
     this.stats.naiveQueries++;
-    return naiveCollisionDetection(aabbs, this.collisionCache);
+    return naiveCollisionDetection(aabbs);
   }
 
   /**
@@ -102,7 +91,7 @@ export class SpatialCollisionOptimizer {
    */
   private spatialCollisionDetection(aabbs: AABB[]): CollisionPair[] {
     this.stats.spatialQueries++;
-    return spatialCollisionDetection(aabbs, this.spatialHash, this.collisionCache);
+    return spatialCollisionDetection(aabbs, this.spatialHash);
   }
 
   /**
@@ -110,19 +99,7 @@ export class SpatialCollisionOptimizer {
    * @example
    */
   getStats(): SpatialCollisionStats {
-    return {
-      ...this.stats,
-      cacheHits: this.collisionCache.stats.cacheHits,
-    };
-  }
-
-  /**
-   * Clear collision cache
-   * @example
-   */
-  clearCache(): void {
-    this.collisionCache.cache.clear();
-    this.collisionCache.stats.cacheHits = 0;
+    return { ...this.stats };
   }
 
   /**
@@ -132,12 +109,6 @@ export class SpatialCollisionOptimizer {
    */
   updateConfig(newConfig: Partial<SpatialCollisionConfig>): void {
     this.config = { ...this.config, ...newConfig };
-
-    // Update collision cache config
-    this.collisionCache.config = {
-      enableCaching: this.config.enableCaching,
-      cacheSize: this.config.cacheSize,
-    };
 
     if (newConfig.cellSize || newConfig.maxObjectsPerCell) {
       this.spatialHash = new SpatialHash({

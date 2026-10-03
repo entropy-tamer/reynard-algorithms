@@ -211,7 +211,7 @@ export class ImmutableConfigManager {
    * @param updates - Partial optimization configuration updates
    * @returns Array of changed key paths
    * @example
-   * const changedKeys = this.updateOptimizationConfigInternal({ enableCaching: false });
+   * const changedKeys = this.updateOptimizationConfigInternal({ hybridThreshold: 0 });
    */
   private updateOptimizationConfigInternal(updates: Partial<OptimizedCollisionConfig>): string[] {
     const current = this.currentSnapshot.optimizationConfig;

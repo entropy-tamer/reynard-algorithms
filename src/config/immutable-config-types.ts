@@ -39,8 +39,6 @@ export interface OptimizedCollisionConfig {
    */
   hybridThreshold: number;
   maxWorkers: number;
-  enableCaching: boolean;
-  cacheSize: number;
   enableProfiling: boolean;
   profilingThreshold: number;
 }

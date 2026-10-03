@@ -18,62 +18,36 @@ export interface CollisionPair {
   result: CollisionResult;
 }
 
-export interface CollisionCache {
-  cache: Map<string, CollisionResult>;
-  stats: { cacheHits: number };
-  config: { enableCaching: boolean; cacheSize: number };
-}
-
-/**
- * Check collision with caching support
- * @param a
- * @param b
- * @param cache
- * @example
- */
-export function checkCollisionWithCache(a: AABB, b: AABB, cache: CollisionCache): CollisionResult {
-  if (!cache.config.enableCaching) {
-    return checkCollision(a, b);
-  }
-
-  const cacheKey = generateCacheKey(a, b);
-
-  if (cache.cache.has(cacheKey)) {
-    cache.stats.cacheHits++;
-    return cache.cache.get(cacheKey)!;
-  }
-
-  const result = checkCollision(a, b);
-  cache.cache.set(cacheKey, result);
-
-  // Limit cache size
-  if (cache.cache.size > cache.config.cacheSize) {
-    const firstKey = cache.cache.keys().next().value;
-    if (firstKey !== undefined) {
-      cache.cache.delete(firstKey);
-    }
-  }
-
-  return result;
-}
-
-/**
- * Generate cache key for AABB pair
- * @param a
- * @param b
- * @example
- */
-export function generateCacheKey(a: AABB, b: AABB): string {
-  return `${a.x},${a.y},${a.width},${a.height}|${b.x},${b.y},${b.width},${b.height}`;
-}
-
 /**
  * Naive O(n²) collision detection for small datasets
+ *
+ * There is deliberately no per-pair result cache here. Both broad phases test
+ * every unordered pair EXACTLY ONCE per call -- the naive loop runs `j > i`, and
+ * the spatial loop skips `j <= i` because those pairs were already handled at
+ * index j. A value-keyed cache therefore cannot produce a single hit inside a
+ * call; it can only "hit" when a caller re-runs detection over an identical,
+ * unmoved array, which is an artifact of benchmark loops rather than a real
+ * workload.
+ *
+ * The cache that used to live here also measured as a net LOSS even in that
+ * favourable case. At n=1000 AABBs the candidate working set is ~7.5k distinct
+ * pairs against a default capacity of 1k, so it thrashed to a 0% hit rate.
+ * Sizing the cache so it actually fit produced a 99.9% hit rate (149260 hits)
+ * and was STILL slower -- 26.4ms cached vs 15.5ms uncached -- because building
+ * the eight-field string key per candidate cost more than the `checkCollision`
+ * call it existed to avoid. `checkCollision` is a pure function of its
+ * arguments and the values are all available inline, so there is nothing to
+ * look up.
+ *
+ * If whole-result memoization is ever wanted for callers that re-query a static
+ * scene, that is the right shape: one memo of the returned pairs, invalidated by
+ * the caller. It is a different feature from a per-pair cache, which could never
+ * pay for itself.
+ *
  * @param aabbs
- * @param cache
  * @example
  */
-export function naiveCollisionDetection(aabbs: AABB[], cache: CollisionCache): CollisionPair[] {
+export function naiveCollisionDetection(aabbs: AABB[]): CollisionPair[] {
   const collisions: CollisionPair[] = [];
 
   for (let i = 0; i < aabbs.length; i++) {
@@ -84,7 +58,7 @@ export function naiveCollisionDetection(aabbs: AABB[], cache: CollisionCache): C
       const aabbB = aabbs[j];
       if (!aabbB) continue;
 
-      const result = checkCollisionWithCache(aabbA, aabbB, cache);
+      const result = checkCollision(aabbA, aabbB);
       if (result.colliding) {
         collisions.push({ a: i, b: j, result });
       }
@@ -98,13 +72,11 @@ export function naiveCollisionDetection(aabbs: AABB[], cache: CollisionCache): C
  * Spatial hash optimized collision detection
  * @param aabbs
  * @param spatialHash
- * @param cache
  * @example
  */
 export function spatialCollisionDetection(
   aabbs: AABB[],
-  spatialHash: SpatialHash<CollisionObjectData>,
-  cache: CollisionCache
+  spatialHash: SpatialHash<CollisionObjectData>
 ): CollisionPair[] {
   const collisions: CollisionPair[] = [];
 
@@ -166,7 +138,7 @@ export function spatialCollisionDetection(
       const otherAabb = obj.data.aabb;
       if (!otherAabb) continue;
 
-      const result = checkCollisionWithCache(aabb, otherAabb, cache);
+      const result = checkCollision(aabb, otherAabb);
       if (result.colliding) {
         collisions.push({ a: i, b: j, result });
       }

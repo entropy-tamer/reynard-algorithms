@@ -30,8 +30,6 @@ addConfigChangeListener(event => {
       globalCollisionOptimizer = new SpatialCollisionOptimizer({
         cellSize: config.spatialHashCellSize,
         maxObjectsPerCell: config.maxObjectsPerCell,
-        enableCaching: config.enableCaching,
-        cacheSize: config.cacheSize,
         hybridThreshold: config.hybridThreshold,
       });
     }
@@ -123,8 +121,6 @@ export async function configureOptimization(config: Partial<OptimizedCollisionCo
     globalCollisionOptimizer = new SpatialCollisionOptimizer({
       cellSize: newConfig.spatialHashCellSize,
       maxObjectsPerCell: newConfig.maxObjectsPerCell,
-      enableCaching: newConfig.enableCaching,
-      cacheSize: newConfig.cacheSize,
       hybridThreshold: newConfig.hybridThreshold,
     });
   }
@@ -144,8 +140,6 @@ function getGlobalCollisionOptimizer(): SpatialCollisionOptimizer {
     globalCollisionOptimizer = new SpatialCollisionOptimizer({
       cellSize: config.spatialHashCellSize,
       maxObjectsPerCell: config.maxObjectsPerCell,
-      enableCaching: config.enableCaching,
-      cacheSize: config.cacheSize,
       hybridThreshold: config.hybridThreshold,
     });
   }

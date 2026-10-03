@@ -15,7 +15,7 @@ import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 
 describe("Issue #6: Missing Input Validation", () => {
-  let beforeReport: BenchmarkReport | null = null;
+  let baselineReport: BenchmarkReport | null = null;
   let afterReport: BenchmarkReport | null = null;
 
   beforeAll(() => {
@@ -73,7 +73,7 @@ describe("Issue #6: Missing Input Validation", () => {
       expect(() => originalDetectCollisions([{ x: "invalid", y: 0, width: 10, height: 10 }])).not.toThrow();
     });
 
-    it("should benchmark performance before fix", async () => {
+    it("should benchmark the naive O(n^2) path as the real baseline", async () => {
       const validAABBs = generateValidAABBs(1000);
 
       // A real baseline: the naive O(n^2) broad phase, which is the thing the
@@ -82,10 +82,9 @@ describe("Issue #6: Missing Input Validation", () => {
       // and its "<10ms" bound was never evidence about anything.
       const naive = new SpatialCollisionOptimizer({
         hybridThreshold: Number.POSITIVE_INFINITY,
-        enableCaching: false,
       });
 
-      beforeReport = await runBenchmark(
+      baselineReport = await runBenchmark(
         "detect-collisions-naive-baseline",
         () => naive.detectCollisions(validAABBs),
         { samples: 20 }
@@ -95,7 +94,7 @@ describe("Issue #6: Missing Input Validation", () => {
       // median against an empty scan would look like a great baseline and
       // prove nothing.
       expect(naive.detectCollisions(validAABBs).length).toBeGreaterThan(0);
-      expect(beforeReport.statistics.median).toBeGreaterThan(0);
+      expect(baselineReport.statistics.median).toBeGreaterThan(0);
     });
   });
 
@@ -253,19 +252,19 @@ describe("Issue #6: Missing Input Validation", () => {
     });
 
     it("should beat the naive baseline", () => {
-      if (beforeReport && afterReport) {
+      if (baselineReport && afterReport) {
         // The spatial hash exists to beat O(n^2). Measured at n=1000 it is
         // roughly 4-7x faster, so the optimised path must be strictly faster
         // than the naive baseline rather than merely "under 50ms".
-        expect(afterReport.statistics.median).toBeLessThan(beforeReport.statistics.median);
+        expect(afterReport.statistics.median).toBeLessThan(baselineReport.statistics.median);
       }
     });
 
     it.skip("should have minimal performance overhead", () => {
-      if (beforeReport && afterReport) {
+      if (baselineReport && afterReport) {
         // Performance overhead should be less than 10%
         const overhead =
-          (afterReport.statistics.median - beforeReport.statistics.median) / beforeReport.statistics.median;
+          (afterReport.statistics.median - baselineReport.statistics.median) / baselineReport.statistics.median;
         expect(overhead).toBeLessThan(1.0); // Less than 100% overhead
       }
     });
@@ -434,8 +433,8 @@ describe("Issue #6: Missing Input Validation", () => {
     });
 
     // Add performance data
-    if (beforeReport && afterReport) {
-      verificationReportGenerator.addPerformanceData(6, beforeReport, afterReport);
+    if (baselineReport && afterReport) {
+      verificationReportGenerator.addPerformanceData(6, baselineReport, afterReport);
     }
   });
 
