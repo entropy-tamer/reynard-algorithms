@@ -1036,7 +1036,8 @@ export {
   PerformanceMonitor,
   performSpatialQuery,
 } from "./optimized";
-export type { OptimizedCollisionConfig, SpatialCollisionConfig, SpatialCollisionStats } from "./algorithms/collision/optimization";
+export type { OptimizedCollisionConfig } from "./config/immutable-config-utils";
+export type { SpatialCollisionConfig, SpatialCollisionStats } from "./algorithms/collision/optimization";
 export { getImmutableOptimizationConfig, updateImmutableConfig, addConfigChangeListener, removeConfigChangeListener } from "./config/immutable-config-utils";
 
 // ============================================================================

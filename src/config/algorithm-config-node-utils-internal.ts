@@ -53,7 +53,8 @@ function safeRequire<T>(id: string): T | null {
   const g = globalThis as unknown as { __require?: unknown };
   if (typeof g.__require !== "undefined") return null;
   try {
-    return ((globalThis as unknown as { require: typeof import("node:fs")["default"] }).require(id) ?? null) as T | null;
+    return (((globalThis as unknown as { require: (id: string) => unknown }).require(id) ??
+      null) as T | null);
   } catch {
     return null;
   }

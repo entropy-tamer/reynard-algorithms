@@ -4,6 +4,7 @@
     "types": ["node"],
     "outDir": "./dist",
     "rootDir": "./src",
+    "allowImportingTsExtensions": true,
     "paths": {
       "@entropy-tamer/reynard-i18n": [
         "../i18n/src"

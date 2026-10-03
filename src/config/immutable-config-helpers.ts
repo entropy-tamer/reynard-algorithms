@@ -14,6 +14,8 @@ export const DEFAULT_OPTIMIZATION_CONFIG: OptimizedCollisionConfig = {
   enableParallelProcessing: true,
   memoryPoolSize: 10000,
   spatialHashCellSize: 100,
+  maxObjectsPerCell: 50,
+  hybridThreshold: 100,
   maxWorkers: 4,
   enableCaching: true,
   cacheSize: 1000,

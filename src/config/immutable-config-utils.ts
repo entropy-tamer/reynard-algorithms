@@ -6,6 +6,10 @@ import { AlgorithmConfig, AlgorithmConfigManager } from "./algorithm-config";
 import { ImmutableConfigManager } from "./immutable-config";
 import type { ImmutableConfigSnapshot, OptimizedCollisionConfig, ConfigChangeListener } from "./immutable-config-types";
 
+// Re-exported so consumers (and `src/optimized.ts`) can name the config type
+// without reaching into the internals module.
+export type { OptimizedCollisionConfig };
+
 /**
  * Global immutable configuration manager instance
  */

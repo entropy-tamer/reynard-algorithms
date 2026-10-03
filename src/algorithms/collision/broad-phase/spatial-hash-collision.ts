@@ -7,7 +7,7 @@
  * @module algorithms/collision/broad-phase/spatial-hash-collision
  */
 
-import type { AABB, CollisionPair } from "../../narrow-phase/aabb/aabb-types";
+import type { AABB, CollisionPair } from "../narrow-phase/aabb/aabb-types";
 import { SpatialHash } from "../../../data-structures/spatial/spatial-hash/spatial-hash-core";
 import type { CollisionObjectData } from "../../../core/types/spatial-types";
 

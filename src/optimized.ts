@@ -28,7 +28,7 @@ addConfigChangeListener(event => {
       // Recreate optimizer with new config
       const config = getImmutableOptimizationConfig();
       globalCollisionOptimizer = new SpatialCollisionOptimizer({
-        cellSize: config.cellSize,
+        cellSize: config.spatialHashCellSize,
         maxObjectsPerCell: config.maxObjectsPerCell,
         enableCaching: config.enableCaching,
         cacheSize: config.cacheSize,
@@ -121,7 +121,7 @@ export async function configureOptimization(config: Partial<OptimizedCollisionCo
   if (globalCollisionOptimizer) {
     const newConfig = getImmutableOptimizationConfig();
     globalCollisionOptimizer = new SpatialCollisionOptimizer({
-      cellSize: newConfig.cellSize,
+      cellSize: newConfig.spatialHashCellSize,
       maxObjectsPerCell: newConfig.maxObjectsPerCell,
       enableCaching: newConfig.enableCaching,
       cacheSize: newConfig.cacheSize,
@@ -142,7 +142,7 @@ function getGlobalCollisionOptimizer(): SpatialCollisionOptimizer {
   if (!globalCollisionOptimizer) {
     const config = getImmutableOptimizationConfig();
     globalCollisionOptimizer = new SpatialCollisionOptimizer({
-      cellSize: config.cellSize,
+      cellSize: config.spatialHashCellSize,
       maxObjectsPerCell: config.maxObjectsPerCell,
       enableCaching: config.enableCaching,
       cacheSize: config.cacheSize,
@@ -269,9 +269,10 @@ export class OptimizationConfig {
   }
 
   set(key: keyof OptimizedCollisionConfig, value: unknown): void {
-    (this.config as Record<string, unknown>)[key] = value;
+    (this.config as unknown as Record<string, unknown>)[key] = value;
   }
 }
 
-export type { OptimizedCollisionConfig, SpatialCollisionConfig, SpatialCollisionStats } from "./algorithms/collision/optimization";
+export type { OptimizedCollisionConfig } from "./config/immutable-config-utils";
+export type { SpatialCollisionConfig, SpatialCollisionStats } from "./algorithms/collision/optimization";
 export { getImmutableOptimizationConfig, updateImmutableConfig, addConfigChangeListener, removeConfigChangeListener } from "./config/immutable-config-utils";

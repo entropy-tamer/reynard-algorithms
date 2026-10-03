@@ -104,7 +104,7 @@ export class AlgorithmConfigManager {
   public getConfig(): AlgorithmConfig {
     this.ensureLoaded();
     if (!this._loaded) return { ...DEFAULT_CONFIG };
-    return { ...this.config };
+    return { ...(this.config ?? DEFAULT_CONFIG) };
   }
 
   /**
@@ -116,7 +116,7 @@ export class AlgorithmConfigManager {
   public updateConfig(updates: Partial<AlgorithmConfig>): void {
     this.ensureLoaded();
     if (!this._loaded) return; // No-op in browser
-    this.config = mergeConfigs(this.config, updates);
+    this.config = mergeConfigs(this.config ?? DEFAULT_CONFIG, updates);
   }
 
   /**
@@ -128,7 +128,7 @@ export class AlgorithmConfigManager {
   public getMachineConfig(): AlgorithmConfig {
     this.ensureLoaded();
     if (!this._loaded) return { ...DEFAULT_CONFIG };
-    return loadMachineConfig(this.config!, this.machineFingerprint);
+    return loadMachineConfig(this.config ?? DEFAULT_CONFIG, this.machineFingerprint);
   }
 
   /**
