@@ -149,13 +149,13 @@
   "dependencies": {},
   "devDependencies": {
     "@types/node": "25.5.2",
-    "@vitest/coverage-v8": "4.1.4",
-    "@vitest/ui": "4.1.4",
+    "@vitest/coverage-v8": "5.0.5",
+    "@vitest/ui": "5.0.5",
     "happy-dom": "20.8.9",
     "@entropy-tamer/reynard-testing": "workspace:*",
     "typescript": "7.0.2",
     "vite": "8.0.7",
-    "vitest": "4.1.4",
+    "vitest": "5.0.5",
     "@biomejs/biome": "2.5.14"
   },
   "publishConfig": {
