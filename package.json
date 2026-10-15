@@ -40,7 +40,6 @@
     "typecheck": "tsc --noEmit --skipLibCheck",
     "typecheck:tests": "tsc --project tsconfig.tests.json",
     "lint": "biome lint src",
-    "lint:file": "eslint",
     "lint:fix": "biome lint src --write",
     "format": "prettier --write src examples",
     "format:check": "prettier --check src examples",
@@ -158,9 +157,6 @@
     "vite": "8.0.7",
     "vitest": "4.1.4",
     "@biomejs/biome": "2.5.14"
-  },
-  "peerDependencies": {
-    "solid-js": "workspace:*"
   },
   "publishConfig": {
     "access": "public"

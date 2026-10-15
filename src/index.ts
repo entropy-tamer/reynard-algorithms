@@ -720,6 +720,39 @@ export type {
   StructureForgeOptions,
 } from "./algorithms/procedural-generation/structure-forge";
 
+// Space Colonization Algorithm
+export {
+  SpaceColonization,
+  DEFAULT_SPACE_COLONIZATION_CONFIG,
+  resolveSpaceColonizationConfig,
+  createSeededRandom,
+  defaultBounds,
+  distributeAttractors,
+  computeBranchRadii,
+  chaikinSubdivide,
+  extractPaths,
+  smoothPaths,
+  createTreeConfig,
+  createShrubConfig,
+  createLeafVenationConfig,
+  createRootSystemConfig,
+} from "./algorithms/procedural-generation/space-colonization";
+export type {
+  ResolvedSpaceColonizationConfig,
+  DistributeAttractorsOptions,
+  AttractorDistribution,
+  BranchRadiusOptions,
+  GrowthMode,
+  SpaceColonizationBounds,
+  SpaceColonizationConfig,
+  SpaceColonizationNode,
+  SpaceColonizationResult,
+  SpaceColonizationSegment,
+  SpaceColonizationStats,
+  SpaceColonizationStep,
+  SpaceColonizationVector,
+} from "./algorithms/procedural-generation/space-colonization";
+
 // ============================================================================
 // Algorithms - Collision Detection
 // ============================================================================
