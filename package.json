@@ -1,7 +1,7 @@
 {
   "name": "@entropy-tamer/reynard-algorithms",
   "version": "0.3.5",
-  "description": "Algorithms, data structures, and computational utilities for spatial computing, collision detection, pathfinding, and procedural generation",
+  "description": "Spatial computing primitives such as collision detection and pathfinding, with the data structures and procedural generation helpers built on them",
   "type": "module",
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
