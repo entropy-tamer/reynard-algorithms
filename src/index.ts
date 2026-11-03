@@ -1116,6 +1116,17 @@ export type {
 } from "./algorithms/machine-learning/decision-trees";
 
 // ============================================================================
+// Algorithms - Machine Learning - ReLU Polytopes
+// ============================================================================
+export { ReLUPolytopePartitioner } from "./algorithms/machine-learning/relu-polytopes/index.ts";
+export type {
+  ReLUPolytopeBoundaryLine,
+  ReLUPolytopeConfig,
+  ReLUPolytopeResult,
+} from "./algorithms/machine-learning/relu-polytopes";
+export { DEFAULT_RELU_POLYTOPE_CONFIG } from "./algorithms/machine-learning/relu-polytopes";
+
+// ============================================================================
 // Algorithms - Machine Learning - Behavior Trees
 // ============================================================================
 // Behavior Trees
