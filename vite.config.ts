@@ -10,9 +10,12 @@ export default defineConfig(({ mode }) => {
       minify: false,
       emptyOutDir: !isCjsBuild,
       lib: {
-        entry: resolve(__dirname, "src/index.ts"),
+        entry: {
+          index: resolve(__dirname, "src/index.ts"),
+          optimized: resolve(__dirname, "src/optimized.ts"),
+        },
         name: "ReynardAlgorithms",
-        fileName: "index",
+        fileName: (_format, entryName) => `${entryName}.${isCjsBuild ? "cjs" : "js"}`,
         formats: isCjsBuild ? ["cjs"] : ["es"],
       },
       target: "node20",
