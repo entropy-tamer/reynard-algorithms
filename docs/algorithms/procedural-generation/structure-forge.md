@@ -1,207 +1,93 @@
 # StructureForge
 
-Efficient layered wave function collapse for man-made structures.
+Source: `src/algorithms/procedural-generation/structure-forge/`
 
-## Overview
+StructureForge generates man-made structures as a stack of 2D layers. Each layer is
+a wave function collapse over a tile set, and the layers are offset and transformed
+so the stack reads as a building, tower, maze, dungeon, fortress or temple.
 
-StructureForge is a procedural generation algorithm designed specifically for creating artificial, man-made structures like buildings, mazes, towers, dungeons, fortresses, and temples. Unlike traditional 3D wave function collapse algorithms that can be computationally expensive, StructureForge uses a layered 2D approach inspired by terrain generation research.
+## Why layers
 
-## Architecture
+A full 3D WFC tracks constraints over a voxel neighborhood. With $T$ tiles and a
+26-cell neighborhood the constraint table is $T^2 \cdot 26$ entries, and the search
+explores combinations across the whole volume. StructureForge collapses each
+$W \times H$ layer independently, then stacks $D$ layers with an offset. The
+constraint table stays $T^2 \cdot 4$ and the search space stays per-layer, so the
+work is
 
-```mermaid
-flowchart TB
-    subgraph "Generation Process"
-        Pattern[Pattern Generation<br/>2D tileable patterns]
-        Stack[Layer Stacking<br/>Vertical with offsets]
-        Process[Structure Processing<br/>Type-specific transforms]
-        Feature[Feature Placement<br/>Doors, windows, stairs]
-        Material[Material Assignment<br/>Structure-based]
-    end
+$$
+O(D \cdot W \cdot H \cdot T)
+$$
 
-    subgraph "Structure Types"
-        Building[Building<br/>Multi-story]
-        Tower[Tower<br/>Circular, tapering]
-        Maze[Maze<br/>Winding corridors]
-        Dungeon[Dungeon<br/>Enclosed]
-        Fortress[Fortress<br/>Defensive]
-        Temple[Temple<br/>Symmetrical]
-    end
+for the propagation pass, which is linear in the volume.
 
-    Pattern --> Stack
-    Stack --> Process
-    Process --> Feature
-    Feature --> Material
+## Layer collapse
 
-    Building --> Process
-    Tower --> Process
-    Temple --> Process
+A layer is a grid of cells with a set of allowed tiles and weights $w_i$. The
+entropy of a cell is
 
-    style Building fill:#e1f5ff,color:#000
-    style Tower fill:#ffe1e1,color:#000
-    style Temple fill:#e1ffe1,color:#000
-```
+$$
+H = -\sum_i p_i \ln p_i, \qquad p_i = \frac{w_i}{\sum_j w_j},
+$$
 
-## Key Features
+and the generator collapses the lowest-entropy cell first. Adjacency constraints
+then propagate to the neighbors, removing tiles until either the layer is
+complete or a cell has no tile left.
 
-- **Efficient Generation**: Layered 2D patterns instead of expensive 3D WFC
-- **Structure-Specific Optimization**: Specialized algorithms for different building types
-- **Emergent Complexity**: Overlapping pattern layers create natural-looking structures
-- **Real-time Performance**: Suitable for games and interactive applications
-- **Configurable Materials**: Support for stone, brick, wood, metal, and crystal
-- **Feature-Rich**: Doors, windows, stairs, ladders, and bridges
-- **Seeded Generation**: Reproducible results with seed control
+The `backtrackLimit` and `maxIterations` options bound the repair work. A
+contradiction is normal for a tight pattern set; the run either backtracks or
+restarts the layer with a different random order.
 
-## Structure Types
+## Stacking and structure types
 
-### Building
+Layers are stacked with a per-layer offset controlled by the seed and the
+symmetry parameter. `symmetry` in $[0,1]$ interpolates between an irregular stack
+and a mirrored one: at $1$ the layer is reflected about its center line, which is
+what the temple type wants. `complexity` in $[0,1]$ scales the number of open
+cells, so it acts on the density of rooms and corridors.
 
-Multi-story buildings with rooms, corridors, and architectural features. Good for cities and settlements.
+The structure type selects the post-transform:
 
-### Tower
+| Type | Transform |
+| --- | --- |
+| building | rectangular stack, room and corridor patterns |
+| tower | circular mask with a taper over depth |
+| maze | corridor-dominant pattern with a single connected component |
+| dungeon | enclosed layers with sparse connections |
+| fortress | building layers with a thicker outer wall |
+| temple | mirrored layers with a symmetric feature axis |
 
-Tall, narrow structures like wizard towers or guard towers. Circular design with tapering height.
+## Features
 
-### Maze
+Doors, windows, stairs, ladders and bridges are placed after the layers are
+collapsed. A door needs a wall on both sides and open cells on both faces; a
+stair needs a matching opening in the layer above. `enableBridges` and
+`enableSkylights` allow connections between adjacent structures and vertical
+openings through several layers.
 
-Complex labyrinth structures with winding corridors. Minimal open spaces, maximum navigation challenge.
+## Cost
 
-### Dungeon
+| Quantity | Bound |
+| --- | --- |
+| generation | $O(D \cdot W \cdot H \cdot T)$ per collapse pass |
+| memory | $O(W \cdot H \cdot D)$ cells |
+| pattern storage | $O(T \cdot k)$ for pattern size $k$ |
 
-Dark, enclosed underground complexes. More walls than open space, perfect for dungeon crawling.
+Memory follows the output instead of the search: the generator keeps one layer
+of tile sets at a time and writes each collapsed layer into the output buffer.
 
-### Fortress
+## Pitfalls
 
-Defensive structures with thick walls and strategic layouts. Combines building and tower elements.
+A material palette that omits `void` fills every cell with a solid material and
+the structure has no interior. Keep `void` in the palette for the air cells.
 
-### Temple
+`width` and `height` are the footprint; `depth` is the number of layers. A tower
+created with `createTowerConfig(radius, height)` uses the radius for both
+footprint axes, so a large radius with a small depth produces a slab.
 
-Symmetrical, ornate religious structures. Features complex architectural details and special materials.
+Symmetry at $1$ with an odd width has a center column that is its own mirror. The
+pattern must allow that column, or the mirror produces a contradiction at the axis.
 
-## Algorithm Details
-
-### Layered Generation Process
-
-1. **Pattern Generation**: Creates tileable 2D patterns for corridors, rooms, structure, and features
-2. **Layer Stacking**: Applies patterns vertically with controlled offsets for variation
-3. **Structure Processing**: Applies type-specific transformations (circular for towers, symmetrical for temples)
-4. **Feature Placement**: Adds doors, windows, stairs, and connections between layers
-5. **Material Assignment**: Applies appropriate materials based on structure type and configuration
-
-### Performance Characteristics
-
-- **Time Complexity**: O(width × height × depth) - linear with structure size
-- **Space Complexity**: O(width × height × depth) - stores complete structure
-- **Memory Efficient**: Reuses pattern data, no per-cell state tracking
-- **Real-time Capable**: Can generate structures in < 100ms on modern hardware
-
-## API Reference
-
-### StructureForge Class
-
-```typescript
-class StructureForge {
-  constructor(config: StructureConfig, options?: StructureForgeOptions);
-  generate(): GenerationResult;
-}
-```
-
-### Configuration Types
-
-```typescript
-type StructureType = 'building' | 'tower' | 'maze' | 'dungeon' | 'fortress' | 'temple';
-
-interface StructureConfig {
-  type: StructureType;
-  width: number;
-  height: number;
-  depth: number;
-  seed?: number;
-  complexity: number;
-  symmetry: number;
-  materialPalette: MaterialType[];
-}
-
-type MaterialType = 'stone' | 'brick' | 'wood' | 'metal' | 'crystal' | 'void';
-type CellType = 'air' | 'solid' | 'door' | 'window' | 'stair_up' | 'stair_down' | 'ladder' | 'bridge';
-```
-
-### Utility Functions
-
-```typescript
-createBuildingConfig(width: number, height: number, depth: number, seed?: number): StructureConfig
-createTowerConfig(radius: number, height: number, seed?: number): StructureConfig
-createMazeConfig(width: number, height: number, depth: number, seed?: number): StructureConfig
-createDungeonConfig(width: number, height: number, depth: number, seed?: number): StructureConfig
-```
-
-## Usage
-
-### Quick Start
-
-```typescript
-import { StructureForge, createBuildingConfig } from '@entropy-tamer/reynard-algorithms';
-
-const config = createBuildingConfig(16, 16, 8, 12345);
-const forge = new StructureForge(config);
-const result = forge.generate();
-
-console.log(`Generated ${result.metadata.type} with ${result.layers.length} floors`);
-console.log(`Generation took ${result.metadata.generationTime.toFixed(2)}ms`);
-```
-
-### Basic Building Generation
-
-```typescript
-const config = {
-  type: 'building' as const,
-  width: 20,
-  height: 20,
-  depth: 6,
-  seed: 42,
-  complexity: 0.7,
-  symmetry: 0.5,
-  materialPalette: ['stone', 'brick', 'wood']
-};
-
-const forge = new StructureForge(config);
-const structure = forge.generate();
-
-structure.layers.forEach((layer, index) => {
-  console.log(`Floor ${index + 1}:`, layer.length, '×', layer[0].length);
-});
-```
-
-### Tower with Custom Materials
-
-```typescript
-const config = createTowerConfig(12, 8, 999);
-config.materialPalette = ['stone', 'crystal', 'metal'];
-
-const forge = new StructureForge(config, {
-  enableBridges: true,
-  enableSkylights: true,
-  heightVariation: true
-});
-
-const tower = forge.generate();
-```
-
-## Technical Insights
-
-### Why Layered 2D Over 3D WFC?
-
-Traditional 3D wave function collapse requires tracking constraints in three dimensions, leading to exponential complexity. StructureForge's layered approach:
-
-- **Reduces Complexity**: 2D pattern generation is computationally cheaper
-- **Maintains Emergence**: Overlapping layers create natural 3D structures
-- **Enables Control**: Easy to apply structure-specific transformations
-- **Improves Performance**: Suitable for real-time generation in games
-
-### Emergent Properties
-
-The algorithm creates realistic architectural features through pattern interaction:
-
-- **Skylights**: Air pockets spanning multiple floors
-- **Bridges**: Connections between adjacent structures
-- **Natural Variation**: Height differences and irregular spacing
-- **Architectural Details**: Emergent arches, buttresses, and structural elements
+The seed determines the layer offsets and the collapse order. Two runs with
+different seeds produce different structures from the same configuration, and a
+test that pins the output has to pin the seed.
