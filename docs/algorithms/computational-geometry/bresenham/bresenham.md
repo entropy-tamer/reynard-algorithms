@@ -1,16 +1,15 @@
-# Line Rasterization
+# Bresenham Line Rasterization
 
-Source: `src/algorithms/computational-geometry/bresenham/`,
-`src/algorithms/computational-geometry/dda/`,
-`src/algorithms/computational-geometry/supercover/`
+Source: `src/algorithms/computational-geometry/bresenham/`
 
-Three line rasterizers share one job: turn a segment between integer endpoints
-into the set of grid cells the segment touches. They differ in which cells they
-include and in whether they use integer arithmetic.
+Bresenham's algorithm turns a segment between integer endpoints into one grid
+cell per column (or per row, whichever axis is longer), using only integer
+arithmetic. The companion guides cover [DDA](../dda/dda.md) and the
+[supercover](../supercover/supercover.md).
 
-## Bresenham
+## Decision variable
 
-For a segment with $\Delta x > \Delta y \ge 0$ the integer error term starts at
+For a segment with $\Delta x > \Delta y \ge 0$, the error term starts at
 
 $$
 D = 2\Delta y - \Delta x .
@@ -22,58 +21,36 @@ $$
 D \leftarrow D + 2\Delta y - 2\Delta x\,[D > 0],
 $$
 
-which keeps every quantity integral. The output is one cell per column, $O(\Delta x)$
-steps and no division.
+which keeps every quantity integral. The factor of two removes the division that
+the naive midpoint test would need, so the inner loop is an add and a compare.
 
-## DDA
+## Octants
 
-The digital differential analyzer walks the longer axis in unit steps and
-accumulates a floating-point increment on the other:
-
-$$
-x_{k+1} = x_k + \frac{\Delta x}{n}, \qquad
-y_{k+1} = y_k + \frac{\Delta y}{n}, \qquad n = \max(\Delta x, \Delta y).
-$$
-
-It is the same cell sequence as Bresenham when rounding is done the same way, but
-it pays one float add and one round per step. `DDALine` exposes the unrounded
-samples as well, which is useful for effects that need sub-cell positions.
-
-## Supercover
-
-A segment crossing a grid corner touches cells that neither of the other two
-includes. The supercover is the set of all cells the segment intersects:
-
-$$
-\text{supercover} = \{\, c \in \mathbb{Z}^2 : c \cap [p_0, p_1] \neq \varnothing \,\}.
-$$
-
-The implementation walks the cells and, at an exact corner crossing, emits both
-neighboring cells. That is the right choice for collision rasters and line of
-sight; it is the wrong choice for drawing, because the extra cells thicken the
-line.
+The update above covers the first octant, where $0 \le \Delta y \le \Delta x$.
+The other seven follow by reflection: swap the axes for the steep octants, and
+negate the step for the negative directions. `BresenhamLine` takes the full
+segment and does the reflection internally, so the output is always ordered from
+the start point to the end point.
 
 ## Cost
 
-| Algorithm | Steps | Arithmetic |
-| --- | --- | --- |
-| Bresenham | $\max(\Delta x, \Delta y)$ | integer |
-| DDA | $\max(\Delta x, \Delta y)$ | float |
-| supercover | $\Delta x + \Delta y$ | integer |
+The loop runs $\max(\Delta x, \Delta y)$ times, each iteration a constant number
+of integer operations. Memory is $O(\max(\Delta x,\Delta y))$ for the emitted
+points, or $O(1)$ when the caller consumes them one at a time.
 
 ## Pitfalls
 
-Octant reduction is where implementations break. Reflect the segment into the
-first octant, rasterize, then reflect back; handling only the shallow case leaves
-the steep and negative directions wrong.
+Endpoint convention is a decision. The implementation includes both endpoints;
+a caller that joins consecutive segments gets a duplicated cell at each joint.
 
-Endpoints are inclusive by convention here. A caller that treats the last cell as
-exclusive gets a line one pixel short at every join.
-
-The error term needs a signed type with room for $2\Delta$. In JS the number is a
+The error term needs a signed type with room for $2\Delta$. In JS the value is a
 double, so the bound is safe; in a fixed-width port it overflows on very long
 segments.
 
-Supercover at a corner is a policy call. Emitting both cells is correct for
-coverage and produces a visible double pixel in a render; emit one and the
-coverage test misses the diagonal touch.
+A vertical or horizontal segment has $\Delta$ zero on one axis. The loop still
+runs, and the reflection is the identity; a special case for it is a source of
+off-by-one bugs rather than a speedup.
+
+The algorithm produces a thin line. A brush with width needs a second pass or a
+different rasterizer; widening by sampling offsets changes the coverage in ways a
+renderer cares about.
