@@ -41,8 +41,8 @@ export class ReLUPolytopePartitioner {
         throw new Error(`weights[${malformed}] must have exactly 2 components`);
       }
 
-      // The supplied layer defines the neuron count; `numNeurons` is derived
-      // rather than trusted, so the two can never drift apart.
+      // The supplied layer defines the neuron count; `numNeurons` is derived,
+      // so the two can never drift apart.
       this.config.numNeurons = explicitWeights.length;
       this.weights = explicitWeights.map(w => [...w]);
       this.biases = [...explicitBiases];
