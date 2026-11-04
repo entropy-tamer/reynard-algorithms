@@ -241,7 +241,7 @@ describe("Flow Field Validation Logic", () => {
         expect(run).toEqual(first);
       }
 
-      // The verdict, measured rather than assumed. Two thirds of the cells are
+      // The verdict, measured. Two thirds of the cells are
       // invalid, so the flow field must be rejected; every integration cell is
       // `processed: true` with an in-range cost, so it must be accepted.
       expect(first.hasValidFlowField).toBe(false);
