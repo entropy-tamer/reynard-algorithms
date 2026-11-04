@@ -8,8 +8,6 @@
 
 import { detectCollisions, SpatialHash, PointOps, checkCollision } from "../src/index.js";
 import type { Point, MutablePoint } from "../src/index.js";
-import { OptimizedCollisionAdapter } from "../src/optimization/adapters/optimized-collision-adapter.js";
-import { WorkloadAnalyzer } from "../src/optimization/core/workload-analyzer.js";
 
 // ============================================================================
 // Game Object Types
@@ -35,8 +33,6 @@ interface GameObject {
 interface GameState {
   objects: Map<string, GameObject>;
   spatialHash: SpatialHash<GameObject>;
-  collisionAdapter: OptimizedCollisionAdapter;
-  workloadAnalyzer: WorkloadAnalyzer;
   performance: {
     frameTime: number;
     collisionTime: number;
@@ -82,18 +78,6 @@ export class GameEngine {
         resizeThreshold: 0.8,
         cleanupInterval: 60000,
       }),
-      collisionAdapter: new OptimizedCollisionAdapter({
-        enableMemoryPooling: true,
-        enableAlgorithmSelection: true,
-        enablePerformanceMonitoring: true,
-        algorithmSelectionStrategy: "adaptive",
-        performanceThresholds: {
-          maxExecutionTime: 16,
-          maxMemoryUsage: 100 * 1024 * 1024,
-          minHitRate: 0.95,
-        },
-      }),
-      workloadAnalyzer: new WorkloadAnalyzer(),
       performance: {
         frameTime: 0,
         collisionTime: 0,

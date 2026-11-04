@@ -1,29 +1,29 @@
 {
-  "timestamp": "2026-04-05T16:32:03.007Z",
+  "timestamp": "2026-11-04T10:41:08.657Z",
   "environment": {
-    "nodeVersion": "v25.2.1",
+    "nodeVersion": "v27.0.0-pre",
     "platform": "linux",
     "arch": "x64",
     "memory": {
-      "rss": 90370048,
-      "heapTotal": 19935232,
-      "heapUsed": 13301472,
-      "external": 8411798,
-      "arrayBuffers": 10519
+      "rss": 85876736,
+      "heapTotal": 19070976,
+      "heapUsed": 9674800,
+      "external": 3957089,
+      "arrayBuffers": 1258623
     }
   },
   "summary": {
     "totalBenchmarks": 11,
     "suites": 4,
     "fastest": "Fixed Clustering - Medium Grid",
-    "slowest": "Adaptive Clustering - Large Grid",
-    "average": 0.46073967818181777,
+    "slowest": "Grid Classification - No Cache",
+    "average": 1.6377864036363574,
     "improvements": [
-      30.66966333110092,
-      -640.820252421395,
-      -1598.9649183352344,
-      -2004.7243309137286,
-      71.87204598949518
+      49.23018557536902,
+      -128.97099001210023,
+      -1701.5650381214352,
+      -1089.606770625305,
+      73.88148103496376
     ]
   },
   "results": [
@@ -35,22 +35,22 @@
           "name": "Standard Array Allocation",
           "category": "memory-pool",
           "iterations": 10,
-          "totalTime": 7.5902169999999956,
-          "averageTime": 0.7590216999999996,
-          "memoryBefore": 8515488,
-          "memoryAfter": 10007376,
-          "memoryDelta": 1491888
+          "totalTime": 18.314284000000043,
+          "averageTime": 1.8314284000000043,
+          "memoryBefore": 8408256,
+          "memoryAfter": 9520320,
+          "memoryDelta": 1112064
         },
         {
           "name": "Optimized Memory Pool",
           "category": "memory-pool",
           "iterations": 10,
-          "totalTime": 5.262323000000009,
-          "averageTime": 0.5262323000000009,
-          "memoryBefore": 10013272,
-          "memoryAfter": 10917624,
-          "memoryDelta": 904352,
-          "improvement": 30.66966333110092
+          "totalTime": 9.298127999999906,
+          "averageTime": 0.9298127999999906,
+          "memoryBefore": 9526992,
+          "memoryAfter": 10582048,
+          "memoryDelta": 1055056,
+          "improvement": 49.23018557536902
         }
       ]
     },
@@ -62,64 +62,64 @@
           "name": "Fixed Clustering - Small Grid",
           "category": "clustering",
           "iterations": 50,
-          "totalTime": 1.2808739999999972,
-          "averageTime": 0.025617479999999943,
-          "memoryBefore": 11464472,
-          "memoryAfter": 11125952,
-          "memoryDelta": -338520
+          "totalTime": 11.659604999999829,
+          "averageTime": 0.23319209999999657,
+          "memoryBefore": 10654480,
+          "memoryAfter": 10796184,
+          "memoryDelta": 141704
         },
         {
           "name": "Adaptive Clustering - Small Grid",
           "category": "clustering",
           "iterations": 50,
-          "totalTime": 9.488973999999999,
-          "averageTime": 0.18977947999999997,
-          "memoryBefore": 11127232,
-          "memoryAfter": 12779000,
-          "memoryDelta": 1651768,
-          "improvement": -640.820252421395
+          "totalTime": 26.697112999999945,
+          "averageTime": 0.5339422599999989,
+          "memoryBefore": 10797216,
+          "memoryAfter": 12403568,
+          "memoryDelta": 1606352,
+          "improvement": -128.97099001210023
         },
         {
           "name": "Fixed Clustering - Medium Grid",
           "category": "clustering",
           "iterations": 50,
-          "totalTime": 1.2401919999999933,
-          "averageTime": 0.024803839999999865,
-          "memoryBefore": 13020832,
-          "memoryAfter": 9260600,
-          "memoryDelta": -3760232
+          "totalTime": 3.7533910000001924,
+          "averageTime": 0.07506782000000385,
+          "memoryBefore": 12645664,
+          "memoryAfter": 8914928,
+          "memoryDelta": -3730736
         },
         {
           "name": "Adaptive Clustering - Medium Grid",
           "category": "clustering",
           "iterations": 50,
-          "totalTime": 21.070426999999995,
-          "averageTime": 0.4214085399999999,
-          "memoryBefore": 9261584,
-          "memoryAfter": 9613040,
-          "memoryDelta": 351456,
-          "improvement": -1598.9649183352344
+          "totalTime": 67.61977999999999,
+          "averageTime": 1.3523956,
+          "memoryBefore": 8915800,
+          "memoryAfter": 9271400,
+          "memoryDelta": 355600,
+          "improvement": -1701.5650381214352
         },
         {
           "name": "Fixed Clustering - Large Grid",
           "category": "clustering",
           "iterations": 50,
-          "totalTime": 3.6093999999999937,
-          "averageTime": 0.07218799999999988,
-          "memoryBefore": 10574456,
-          "memoryAfter": 11809320,
-          "memoryDelta": 1234864
+          "totalTime": 15.460315000000037,
+          "averageTime": 0.3092063000000007,
+          "memoryBefore": 10232696,
+          "memoryAfter": 11469016,
+          "memoryDelta": 1236320
         },
         {
           "name": "Adaptive Clustering - Large Grid",
           "category": "clustering",
           "iterations": 50,
-          "totalTime": 75.96791999999999,
-          "averageTime": 1.5193583999999998,
-          "memoryBefore": 11810400,
-          "memoryAfter": 12412352,
-          "memoryDelta": 601952,
-          "improvement": -2004.7243309137286
+          "totalTime": 183.91695400000003,
+          "averageTime": 3.6783390800000006,
+          "memoryBefore": 11469968,
+          "memoryAfter": 12137000,
+          "memoryDelta": 667032,
+          "improvement": -1089.606770625305
         }
       ]
     },
@@ -131,22 +131,22 @@
           "name": "Grid Classification - No Cache",
           "category": "caching",
           "iterations": 5,
-          "totalTime": 3.870796999999982,
-          "averageTime": 0.7741593999999964,
-          "memoryBefore": 12418328,
-          "memoryAfter": 12428768,
-          "memoryDelta": 10440
+          "totalTime": 31.55277299999989,
+          "averageTime": 6.3105545999999775,
+          "memoryBefore": 12149880,
+          "memoryAfter": 13319704,
+          "memoryDelta": 1169824
         },
         {
           "name": "Grid Classification - With Cache",
           "category": "caching",
           "iterations": 5,
-          "totalTime": 1.0887759999999957,
-          "averageTime": 0.21775519999999915,
-          "memoryBefore": 12430016,
-          "memoryAfter": 13295968,
-          "memoryDelta": 865952,
-          "improvement": 71.87204598949518
+          "totalTime": 8.241116999999804,
+          "averageTime": 1.6482233999999607,
+          "memoryBefore": 13320672,
+          "memoryAfter": 9609168,
+          "memoryDelta": -3711504,
+          "improvement": 73.88148103496376
         }
       ]
     },
@@ -158,11 +158,11 @@
           "name": "Optimized PAW Workflow",
           "category": "integration",
           "iterations": 25,
-          "totalTime": 13.445302999999996,
-          "averageTime": 0.5378121199999998,
-          "memoryBefore": 13301192,
-          "memoryAfter": 12915176,
-          "memoryDelta": -386016
+          "totalTime": 27.837201999999934,
+          "averageTime": 1.1134880799999973,
+          "memoryBefore": 9613008,
+          "memoryAfter": 13323560,
+          "memoryDelta": 3710552
         }
       ]
     }
@@ -172,116 +172,116 @@
       "name": "Standard Array Allocation",
       "category": "memory-pool",
       "iterations": 10,
-      "totalTime": 7.5902169999999956,
-      "averageTime": 0.7590216999999996,
-      "memoryBefore": 8515488,
-      "memoryAfter": 10007376,
-      "memoryDelta": 1491888
+      "totalTime": 18.314284000000043,
+      "averageTime": 1.8314284000000043,
+      "memoryBefore": 8408256,
+      "memoryAfter": 9520320,
+      "memoryDelta": 1112064
     },
     {
       "name": "Optimized Memory Pool",
       "category": "memory-pool",
       "iterations": 10,
-      "totalTime": 5.262323000000009,
-      "averageTime": 0.5262323000000009,
-      "memoryBefore": 10013272,
-      "memoryAfter": 10917624,
-      "memoryDelta": 904352,
-      "improvement": 30.66966333110092
+      "totalTime": 9.298127999999906,
+      "averageTime": 0.9298127999999906,
+      "memoryBefore": 9526992,
+      "memoryAfter": 10582048,
+      "memoryDelta": 1055056,
+      "improvement": 49.23018557536902
     },
     {
       "name": "Fixed Clustering - Small Grid",
       "category": "clustering",
       "iterations": 50,
-      "totalTime": 1.2808739999999972,
-      "averageTime": 0.025617479999999943,
-      "memoryBefore": 11464472,
-      "memoryAfter": 11125952,
-      "memoryDelta": -338520
+      "totalTime": 11.659604999999829,
+      "averageTime": 0.23319209999999657,
+      "memoryBefore": 10654480,
+      "memoryAfter": 10796184,
+      "memoryDelta": 141704
     },
     {
       "name": "Adaptive Clustering - Small Grid",
       "category": "clustering",
       "iterations": 50,
-      "totalTime": 9.488973999999999,
-      "averageTime": 0.18977947999999997,
-      "memoryBefore": 11127232,
-      "memoryAfter": 12779000,
-      "memoryDelta": 1651768,
-      "improvement": -640.820252421395
+      "totalTime": 26.697112999999945,
+      "averageTime": 0.5339422599999989,
+      "memoryBefore": 10797216,
+      "memoryAfter": 12403568,
+      "memoryDelta": 1606352,
+      "improvement": -128.97099001210023
     },
     {
       "name": "Fixed Clustering - Medium Grid",
       "category": "clustering",
       "iterations": 50,
-      "totalTime": 1.2401919999999933,
-      "averageTime": 0.024803839999999865,
-      "memoryBefore": 13020832,
-      "memoryAfter": 9260600,
-      "memoryDelta": -3760232
+      "totalTime": 3.7533910000001924,
+      "averageTime": 0.07506782000000385,
+      "memoryBefore": 12645664,
+      "memoryAfter": 8914928,
+      "memoryDelta": -3730736
     },
     {
       "name": "Adaptive Clustering - Medium Grid",
       "category": "clustering",
       "iterations": 50,
-      "totalTime": 21.070426999999995,
-      "averageTime": 0.4214085399999999,
-      "memoryBefore": 9261584,
-      "memoryAfter": 9613040,
-      "memoryDelta": 351456,
-      "improvement": -1598.9649183352344
+      "totalTime": 67.61977999999999,
+      "averageTime": 1.3523956,
+      "memoryBefore": 8915800,
+      "memoryAfter": 9271400,
+      "memoryDelta": 355600,
+      "improvement": -1701.5650381214352
     },
     {
       "name": "Fixed Clustering - Large Grid",
       "category": "clustering",
       "iterations": 50,
-      "totalTime": 3.6093999999999937,
-      "averageTime": 0.07218799999999988,
-      "memoryBefore": 10574456,
-      "memoryAfter": 11809320,
-      "memoryDelta": 1234864
+      "totalTime": 15.460315000000037,
+      "averageTime": 0.3092063000000007,
+      "memoryBefore": 10232696,
+      "memoryAfter": 11469016,
+      "memoryDelta": 1236320
     },
     {
       "name": "Adaptive Clustering - Large Grid",
       "category": "clustering",
       "iterations": 50,
-      "totalTime": 75.96791999999999,
-      "averageTime": 1.5193583999999998,
-      "memoryBefore": 11810400,
-      "memoryAfter": 12412352,
-      "memoryDelta": 601952,
-      "improvement": -2004.7243309137286
+      "totalTime": 183.91695400000003,
+      "averageTime": 3.6783390800000006,
+      "memoryBefore": 11469968,
+      "memoryAfter": 12137000,
+      "memoryDelta": 667032,
+      "improvement": -1089.606770625305
     },
     {
       "name": "Grid Classification - No Cache",
       "category": "caching",
       "iterations": 5,
-      "totalTime": 3.870796999999982,
-      "averageTime": 0.7741593999999964,
-      "memoryBefore": 12418328,
-      "memoryAfter": 12428768,
-      "memoryDelta": 10440
+      "totalTime": 31.55277299999989,
+      "averageTime": 6.3105545999999775,
+      "memoryBefore": 12149880,
+      "memoryAfter": 13319704,
+      "memoryDelta": 1169824
     },
     {
       "name": "Grid Classification - With Cache",
       "category": "caching",
       "iterations": 5,
-      "totalTime": 1.0887759999999957,
-      "averageTime": 0.21775519999999915,
-      "memoryBefore": 12430016,
-      "memoryAfter": 13295968,
-      "memoryDelta": 865952,
-      "improvement": 71.87204598949518
+      "totalTime": 8.241116999999804,
+      "averageTime": 1.6482233999999607,
+      "memoryBefore": 13320672,
+      "memoryAfter": 9609168,
+      "memoryDelta": -3711504,
+      "improvement": 73.88148103496376
     },
     {
       "name": "Optimized PAW Workflow",
       "category": "integration",
       "iterations": 25,
-      "totalTime": 13.445302999999996,
-      "averageTime": 0.5378121199999998,
-      "memoryBefore": 13301192,
-      "memoryAfter": 12915176,
-      "memoryDelta": -386016
+      "totalTime": 27.837201999999934,
+      "averageTime": 1.1134880799999973,
+      "memoryBefore": 9613008,
+      "memoryAfter": 13323560,
+      "memoryDelta": 3710552
     }
   ]
 }

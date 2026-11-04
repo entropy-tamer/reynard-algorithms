@@ -25,11 +25,8 @@ import {
 
   // Performance utilities
   PerformanceBenchmark,
+  performSpatialQuery,
 } from "../src/index.js";
-
-// PAW optimization (imported from optimization module)
-import { AlgorithmSelector } from "../src/optimization/index.js";
-import { WorkloadAnalyzer } from "../src/optimization/core/workload-analyzer.js";
 
 // ============================================================================
 // Example 1: Union-Find for Connected Components
@@ -220,43 +217,29 @@ export async function performanceBenchmarking() {
 }
 
 // ============================================================================
-// Example 5: PAW Optimization Framework
+// Example 5: Optimized Spatial Query
 // ============================================================================
 
 /**
- * Demonstrate PAW (Performance-Aware Workload) optimization framework
+ * Demonstrate the optimized spatial query path
  *
  * @example
- * pawOptimizationExample();
- * // Output: Shows algorithm recommendations for different workloads
+ * spatialQueryExample();
+ * // Output: The objects whose bounds overlap the query
  */
-export function pawOptimizationExample() {
-  console.log("🔧 PAW Optimization: Adaptive Algorithm Selection");
+export function spatialQueryExample() {
+  console.log("Optimized spatial query");
 
-  // Create a workload analyzer and algorithm selector
-  const analyzer = new WorkloadAnalyzer();
-  const selector = new AlgorithmSelector();
-
-  // Simulate different workloads
-  const workloads = [
-    { objectCount: 20, spatialDensity: 0.1, overlapRatio: 0.05, updateFrequency: 60, queryPattern: "random" as const },
-    { objectCount: 200, spatialDensity: 0.5, overlapRatio: 0.1, updateFrequency: 60, queryPattern: "random" as const },
-    { objectCount: 1000, spatialDensity: 1.0, overlapRatio: 0.2, updateFrequency: 60, queryPattern: "random" as const },
+  const query: AABB = { x: 0, y: 0, width: 100, height: 100 };
+  const objects: Array<{ aabb: AABB; data: { id: string; type: string; category: "entity" } }> = [
+    { aabb: { x: 10, y: 10, width: 20, height: 20 }, data: { id: "inside", type: "entity", category: "entity" } },
+    { aabb: { x: 200, y: 200, width: 20, height: 20 }, data: { id: "outside", type: "entity", category: "entity" } },
   ];
 
-  workloads.forEach((workload, index) => {
-    console.log(`\nWorkload ${index + 1}:`, workload);
-
-    // Analyze workload
-    const analysis = analyzer.analyzeWorkload(workload);
-    console.log("Analysis:", analysis);
-
-    // Get algorithm recommendation
-    const recommendation = selector.selectCollisionAlgorithm(workload);
-    console.log("Recommended algorithm:", recommendation.algorithm);
-    console.log("Confidence:", recommendation.confidence);
-    console.log("Expected performance:", recommendation.expectedPerformance);
-  });
+  // The optimizer picks a broad phase from the workload, then narrows the results.
+  const nearby = performSpatialQuery(query, objects);
+  console.log("Objects in query:", nearby.map(item => item.data.id));
+  // Output: ["inside"]
 }
 
 // ============================================================================
@@ -327,7 +310,7 @@ export async function runAllExamples() {
     await performanceBenchmarking();
     console.log();
 
-    pawOptimizationExample();
+    spatialQueryExample();
     console.log();
 
     geometryOperationsExample();
