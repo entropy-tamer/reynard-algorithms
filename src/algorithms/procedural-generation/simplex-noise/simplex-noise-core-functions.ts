@@ -1,130 +1,24 @@
 /**
  * Simplex Noise Core Functions
  *
- * Handles core simplex noise calculation functions
- * for 2D, 3D, and 4D noise generation.
+ * Fractal composition, plus the per-dimension generators re-exported from
+ * their own files.
  *
  * @module algorithms/geometry/algorithms/simplex-noise
  */
 
 import type { SimplexNoiseConfig, FractalNoiseOptions } from "./simplex-noise-types";
-import { simplex2D } from "./simplex-noise-simplex-2d";
-import { simplex3D } from "./simplex-noise-simplex-3d";
-import { simplex4D } from "./simplex-noise-simplex-4d";
+import { generateNoise2D } from "./simplex-noise-generate-2d";
+import { generateNoise3D } from "./simplex-noise-generate-3d";
+import { generateNoise4D } from "./simplex-noise-generate-4d";
 
 /**
- * Generate 2D noise
- *
- * @param x X coordinate
- * @param y Y coordinate
- * @param config Simplex noise configuration
- * @param grad3 Gradient table
- * @param perm Permutation table
- * @param permMod12 Permutation mod 12 table
- * @returns Noise value
- * @example
- * const noise = generateNoise2D(0.5, 0.3, config, grad3, perm, permMod12);
- * console.log(noise); // Output: noise value based on configuration
+ * The per-dimension generators live in their own files. Re-exported here so
+ * every existing import path keeps working.
  */
-export function generateNoise2D(
-  x: number,
-  y: number,
-  config: SimplexNoiseConfig,
-  grad3: number[][],
-  perm: number[],
-  permMod12: number[]
-): number {
-  const scaledX = (x + config.offset!.x) * config.frequency! * config.scale!;
-  const scaledY = (y + config.offset!.y) * config.frequency! * config.scale!;
-
-  let value = simplex2D(scaledX, scaledY, grad3, perm, permMod12);
-  value *= config.amplitude!;
-
-  if (config.normalize) {
-    value = (value + 1) / 2;
-  }
-
-  return value;
-}
-
-/**
- * Generate 3D noise
- *
- * @param x X coordinate
- * @param y Y coordinate
- * @param z Z coordinate
- * @param config Simplex noise configuration
- * @param grad3 Gradient table
- * @param perm Permutation table
- * @param permMod12 Permutation mod 12 table
- * @returns Noise value
- * @example
- * const noise = generateNoise3D(0.5, 0.3, 0.7, config, grad3, perm, permMod12);
- * console.log(noise); // Output: noise value based on configuration
- */
-export function generateNoise3D(
-  x: number,
-  y: number,
-  z: number,
-  config: SimplexNoiseConfig,
-  grad3: number[][],
-  perm: number[],
-  permMod12: number[]
-): number {
-  const scaledX = (x + config.offset!.x) * config.frequency! * config.scale!;
-  const scaledY = (y + config.offset!.y) * config.frequency! * config.scale!;
-  const scaledZ = (z + config.offset!.z) * config.frequency! * config.scale!;
-
-  let value = simplex3D(scaledX, scaledY, scaledZ, grad3, perm, permMod12);
-  value *= config.amplitude!;
-
-  if (config.normalize) {
-    value = (value + 1) / 2;
-  }
-
-  return value;
-}
-
-/**
- * Generate 4D noise
- *
- * @param x X coordinate
- * @param y Y coordinate
- * @param z Z coordinate
- * @param w W coordinate
- * @param config Simplex noise configuration
- * @param grad4 Gradient table
- * @param perm Permutation table
- * @param permMod12 Permutation mod 12 table
- * @returns Noise value
- * @example
- * const noise = generateNoise4D(0.5, 0.3, 0.7, 0.2, config, grad4, perm, permMod12);
- * console.log(noise); // Output: noise value based on configuration
- */
-export function generateNoise4D(
-  x: number,
-  y: number,
-  z: number,
-  w: number,
-  config: SimplexNoiseConfig,
-  grad4: number[][],
-  perm: number[],
-  permMod12: number[]
-): number {
-  const scaledX = (x + config.offset!.x) * config.frequency! * config.scale!;
-  const scaledY = (y + config.offset!.y) * config.frequency! * config.scale!;
-  const scaledZ = (z + config.offset!.z) * config.frequency! * config.scale!;
-  const scaledW = (w + config.offset!.w) * config.frequency! * config.scale!;
-
-  let value = simplex4D(scaledX, scaledY, scaledZ, scaledW, grad4, perm, permMod12);
-  value *= config.amplitude!;
-
-  if (config.normalize) {
-    value = (value + 1) / 2;
-  }
-
-  return value;
-}
+export { generateNoise2D } from "./simplex-noise-generate-2d";
+export { generateNoise3D } from "./simplex-noise-generate-3d";
+export { generateNoise4D } from "./simplex-noise-generate-4d";
 
 /**
  * Generate fractal noise

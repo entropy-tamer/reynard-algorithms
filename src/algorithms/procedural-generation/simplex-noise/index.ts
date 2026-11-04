@@ -4,6 +4,7 @@
  */
 
 export { SimplexNoise } from "./simplex-noise-core";
+export { createNoise2D, type CreateNoise2DOptions, type Noise2D } from "./simplex-noise-2d-factory";
 export * from "./simplex-noise-multiscale";
 export type {
   Point2D,

@@ -604,6 +604,13 @@ export type {
 
 // Simplex Noise Algorithm
 export { SimplexNoise } from "./algorithms/procedural-generation/simplex-noise/simplex-noise-core.ts";
+// The one-function form. Also on its own subpath (`./noise2d`), which is how a
+// consumer avoids linking the class's 3D, 4D, multiscale and analysis code.
+export {
+  createNoise2D,
+  type CreateNoise2DOptions,
+  type Noise2D,
+} from "./algorithms/procedural-generation/simplex-noise/simplex-noise-2d-factory";
 export {
   generateMultiscaleNoise2D as generateMultiscaleSimplexNoise2D,
   generateMultiscaleNoise3D as generateMultiscaleSimplexNoise3D,
