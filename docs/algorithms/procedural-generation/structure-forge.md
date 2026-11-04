@@ -9,7 +9,7 @@ StructureForge is a procedural generation algorithm designed specifically for cr
 ## Architecture
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Generation Process"
         Pattern[Pattern Generation<br/>2D tileable patterns]
         Stack[Layer Stacking<br/>Vertical with offsets]
@@ -36,9 +36,9 @@ graph TB
     Tower --> Process
     Temple --> Process
 
-    style Building fill:#e1f5ff
-    style Tower fill:#ffe1e1
-    style Temple fill:#e1ffe1
+    style Building fill:#e1f5ff,color:#000
+    style Tower fill:#ffe1e1,color:#000
+    style Temple fill:#e1ffe1,color:#000
 ```
 
 ## Key Features

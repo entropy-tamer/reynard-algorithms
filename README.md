@@ -141,7 +141,7 @@ pnpm add @entropy-tamer/reynard-algorithms
 ## Architecture Overview
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Data Structures"
         DS_Basic[Basic Structures<br/>Union-Find, Bloom Filter, Priority Queue, LRU Cache, Trie]
         DS_Trees[Tree Structures<br/>Fenwick Tree, Interval Tree, Segment Tree]
@@ -229,13 +229,13 @@ graph TB
     PAW_Monitor --> PAW_Analyzer
     PAW_Analyzer --> PAW_Selectors
 
-    style DS_Spatial fill:#e1f5ff
-    style CG_Triangulation fill:#e1ffe1
-    style CD_Narrow fill:#fff4e1
-    style PF_AStar fill:#ffe1f5
-    style PG_Noise fill:#f5ffe1
-    style SP_FFT fill:#ffe1e1
-    style PAW_Selectors fill:#e1e1ff
+    style DS_Spatial fill:#e1f5ff,color:#000
+    style CG_Triangulation fill:#e1ffe1,color:#000
+    style CD_Narrow fill:#fff4e1,color:#000
+    style PF_AStar fill:#ffe1f5,color:#000
+    style PG_Noise fill:#f5ffe1,color:#000
+    style SP_FFT fill:#ffe1e1,color:#000
+    style PAW_Selectors fill:#e1e1ff,color:#000
 ```
 
 ## Core Concepts
@@ -247,7 +247,7 @@ graph TB
 Union-Find is a data structure that tracks a partition of elements into disjoint sets. It supports two operations: finding which set an element belongs to, and merging two sets. The implementation uses path compression and union by rank to achieve near-constant amortized time complexity.
 
 ```mermaid
-graph LR
+flowchart LR
     A[Element 0] -->|find| B[Set Root]
     C[Element 1] -->|find| B
     D[Element 2] -->|find| E[Set Root]
@@ -256,9 +256,9 @@ graph LR
     B -->|union| G[New Root]
     E -->|union| G
 
-    style B fill:#e1f5ff
-    style E fill:#ffe1e1
-    style G fill:#e1ffe1
+    style B fill:#e1f5ff,color:#000
+    style E fill:#ffe1e1,color:#000
+    style G fill:#e1ffe1,color:#000
 ```
 
 The key operations are:
@@ -274,7 +274,7 @@ Path compression flattens the tree structure during find operations, making futu
 A Bloom filter is a probabilistic data structure that tests whether an element is a member of a set. It can return false positives (claiming an element is in the set when it's not) but never false negatives. It uses multiple hash functions and a bit array to achieve space-efficient membership testing.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Bloom Filter Structure"
         Input[Input Element]
         Hash1[Hash Function 1]
@@ -291,7 +291,7 @@ graph TB
     Hash2 --> BitArray
     Hash3 --> BitArray
 
-    style BitArray fill:#e1f5ff
+    style BitArray fill:#e1f5ff,color:#000
 ```
 
 The probability of a false positive depends on the number of hash functions k, the size of the bit array m, and the number of inserted elements n:
@@ -310,7 +310,7 @@ Bloom filters are useful when you need fast membership testing with limited memo
 A priority queue is a data structure that supports inserting elements and extracting the element with the highest (or lowest) priority. This implementation uses a binary heap, which provides O(log n) time for insertion and extraction operations.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Binary Heap Structure"
         Root[Root<br/>Max Element]
         L1[Level 1<br/>Left Child]
@@ -324,7 +324,7 @@ graph TB
     L1 --> L2
     L1 --> R2
 
-    style Root fill:#e1f5ff
+    style Root fill:#e1f5ff,color:#000
 ```
 
 The heap property ensures that each parent node is greater than or equal to its children (for a max-heap). When inserting, the element is added at the end and bubbled up to restore the heap property. When extracting, the root is removed and the last element is moved to the root, then bubbled down.
@@ -343,7 +343,7 @@ Priority queues are used in Dijkstra's algorithm, A* pathfinding, Huffman coding
 A Least Recently Used (LRU) cache evicts the least recently used item when the cache reaches capacity. This implementation uses a hash map combined with a doubly-linked list to achieve O(1) time for both get and set operations.
 
 ```mermaid
-graph LR
+flowchart LR
     subgraph "LRU Cache Structure"
         Map[Hash Map<br/>Key → Node]
         Head[Head Node]
@@ -359,8 +359,8 @@ graph LR
     Node2 --> Node3
     Node3 --> Tail
 
-    style Node3 fill:#ffe1e1
-    style Node1 fill:#e1ffe1
+    style Node3 fill:#ffe1e1,color:#000
+    style Node1 fill:#e1ffe1,color:#000
 ```
 
 When an item is accessed, it's moved to the front of the list (most recently used). When a new item is added and the cache is full, the item at the back of the list (least recently used) is evicted. The hash map provides O(1) access to nodes in the linked list.
@@ -372,7 +372,7 @@ LRU caches are used for caching database queries, API responses, web pages, and 
 A Fenwick tree is a data structure that efficiently computes prefix sums and allows point updates. It achieves O(log n) time for both operations while using O(n) space.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Fenwick Tree Structure"
         Array[Original Array<br/>A 0 to n-1]
         BIT[Binary Indexed Tree<br/>BIT 0 to n]
@@ -380,7 +380,7 @@ graph TB
 
     Array --> BIT
 
-    style BIT fill:#e1f5ff
+    style BIT fill:#e1f5ff,color:#000
 ```
 
 The key insight is that each index i in the BIT stores the sum of a range of elements in the original array. Specifically, index i stores the sum of elements from (i - LSB(i) + 1) to i, where LSB(i) is the least significant bit of i.
@@ -394,7 +394,7 @@ Fenwick trees are used for frequency counting, range sum queries, and inversion 
 An interval tree stores intervals and supports efficient queries for all intervals that overlap a given point or interval. This implementation uses a balanced binary search tree where each node stores the maximum endpoint of intervals in its subtree.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Interval Tree Structure"
         Root[Root<br/>Interval + Max Endpoint]
         Left[Left Subtree]
@@ -404,7 +404,7 @@ graph TB
     Root --> Left
     Root --> Right
 
-    style Root fill:#e1f5ff
+    style Root fill:#e1f5ff,color:#000
 ```
 
 To find all intervals overlapping a query point, you start at the root and recursively traverse the tree. If the query point is less than the node's interval start, you search the left subtree. If it's greater, you search the right subtree. You also check the node's interval and the subtree with the maximum endpoint that could overlap the query.
@@ -422,7 +422,7 @@ Interval trees are used in scheduling, computational geometry, and database quer
 A segment tree is a binary tree data structure used for storing information about intervals or segments. It allows efficient range queries and point updates in O(log n) time.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Segment Tree Structure"
         Root[Root<br/>Range 0 to n-1]
         Left[Left Child<br/>Range 0 to mid]
@@ -436,7 +436,7 @@ graph TB
     Left --> Leaf1
     Right --> Leaf2
 
-    style Root fill:#e1f5ff
+    style Root fill:#e1f5ff,color:#000
 ```
 
 Each node in the segment tree represents an interval of the array. The root represents the entire array, and each leaf represents a single element. Internal nodes store aggregated information about their interval (sum, minimum, maximum, etc.).
@@ -450,7 +450,7 @@ Segment trees are used for range minimum queries, range sum queries, lazy propag
 A trie is a tree-like data structure used to store strings where each node represents a character. All descendants of a node share a common prefix, making tries efficient for prefix-based searches.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Trie Structure"
         Root[Root]
         A[Node 'a']
@@ -466,7 +466,7 @@ graph TB
     P2 --> L
     L --> E
 
-    style E fill:#e1ffe1
+    style E fill:#e1ffe1,color:#000
 ```
 
 To insert a word, you traverse the trie, creating nodes for characters that don't exist. To search for a word, you traverse following the characters, returning true if you reach a node marked as the end of a word. To search for a prefix, you traverse following the characters, returning true if the path exists regardless of whether it ends at a word boundary.
@@ -486,7 +486,7 @@ Tries are used for autocomplete systems, spell checkers, IP routing tables, and 
 Spatial hashing divides space into a uniform grid of cells. Each cell stores references to objects that intersect that cell. This provides O(1) average-case lookup for nearby objects when objects are evenly distributed.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Spatial Hash Grid"
         C11[Cell 1,1]
         C12[Cell 1,2]
@@ -501,7 +501,7 @@ graph TB
     Obj3[Object C] --> C22
     Obj4[Object D] --> C23
 
-    style C22 fill:#e1f5ff
+    style C22 fill:#e1f5ff,color:#000
 ```
 
 The cell size should be chosen based on the typical object size. If cells are too small, objects span many cells and queries check many cells. If cells are too large, each cell contains many objects and queries are slow.
@@ -519,7 +519,7 @@ Spatial hashing is simple to implement and works well for uniformly distributed 
 A quadtree recursively subdivides 2D space into four quadrants. Each node represents a rectangular region and stores objects that intersect that region. When a node contains too many objects, it splits into four children.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Quadtree Structure"
         Root[Root<br/>Level 0]
         NW[Northwest<br/>Level 1]
@@ -535,8 +535,8 @@ graph TB
     Root --> SE
     NW --> NW_NW
 
-    style Root fill:#e1f5ff
-    style NW_NW fill:#ffe1e1
+    style Root fill:#e1f5ff,color:#000
+    style NW_NW fill:#ffe1e1,color:#000
 ```
 
 The subdivision continues until a maximum depth is reached or a node contains fewer than a threshold number of objects. This adapts to non-uniform object distributions, creating finer subdivisions in dense areas and coarser subdivisions in sparse areas.
@@ -554,7 +554,7 @@ Quadtrees are used for spatial indexing in games, image compression, and geograp
 A K-d tree is a binary tree that partitions k-dimensional space. At each level, the tree splits along one dimension, cycling through dimensions at each level. For 2D, it alternates between splitting on x and y coordinates.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "K-d Tree Structure"
         Root[Root<br/>Split on X]
         Left[Left<br/>Split on Y]
@@ -568,7 +568,7 @@ graph TB
     Left --> LL
     Left --> LR
 
-    style Root fill:#e1f5ff
+    style Root fill:#e1f5ff,color:#000
 ```
 
 The splitting point is typically chosen as the median of the points in that dimension along the current axis, which creates a balanced tree. This makes K-d trees effective for nearest neighbor searches and range queries.
@@ -586,7 +586,7 @@ K-d trees are used for nearest neighbor searches, ray tracing acceleration, and 
 An octree extends the quadtree concept to 3D space, recursively subdividing into eight octants. Each node represents a cubic region and stores objects that intersect that region.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Octree Structure"
         Root[Root<br/>Level 0]
         FTL[Front-Top-Left<br/>Level 1]
@@ -608,7 +608,7 @@ graph TB
     Root --> BBL
     Root --> BBR
 
-    style Root fill:#e1f5ff
+    style Root fill:#e1f5ff,color:#000
 ```
 
 Octrees are used in 3D graphics for visibility culling, collision detection, and level of detail management. They're also used in voxel-based games and 3D spatial indexing.
@@ -624,7 +624,7 @@ Time complexity:
 A BVH organizes geometric primitives in a tree where each node stores a bounding volume that encloses all primitives in its subtree. This accelerates ray tracing and collision detection by allowing early rejection of entire subtrees.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "BVH Structure"
         Root[Root BV<br/>Encloses All]
         Left[Left BV<br/>Encloses Subset]
@@ -642,8 +642,8 @@ graph TB
     Right --> R1
     Right --> R2
 
-    style Root fill:#e1f5ff
-    style L1 fill:#e1ffe1
+    style Root fill:#e1f5ff,color:#000
+    style L1 fill:#e1ffe1,color:#000
 ```
 
 The tree is typically built using surface area heuristic (SAH), which chooses splits that minimize the expected cost of ray traversal. A good BVH is balanced and has small, tight bounding volumes at each level.
@@ -661,7 +661,7 @@ BVHs are essential for real-time ray tracing, collision detection in physics eng
 An R-tree is a tree data structure designed for spatial access methods, similar to B-trees but for multi-dimensional data. Each node stores minimum bounding rectangles that enclose its children.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "R-Tree Structure"
         Root[Root<br/>MBR enclosing all]
         Node1[Node 1<br/>MBR]
@@ -677,7 +677,7 @@ graph TB
     Node1 --> Data2
     Node2 --> Data3
 
-    style Root fill:#e1f5ff
+    style Root fill:#e1f5ff,color:#000
 ```
 
 R-trees are optimized for disk storage and I/O, making them suitable for databases. The R*-tree variant uses more sophisticated insertion and deletion algorithms to maintain better tree quality.
@@ -697,7 +697,7 @@ R-trees are used in spatial databases, geographic information systems, and index
 Bresenham's line algorithm draws lines on a raster grid using only integer arithmetic. It chooses which pixels to illuminate to approximate a straight line between two points, minimizing error accumulation.
 
 ```mermaid
-graph LR
+flowchart LR
     A[Start Point] --> B[Calculate Error]
     B --> C{Error > 0?}
     C -->|Yes| D[Increment X<br/>Increment Y<br/>Adjust Error]
@@ -707,8 +707,8 @@ graph LR
     F -->|No| B
     F -->|Yes| G[End]
 
-    style D fill:#e1f5ff
-    style E fill:#ffe1e1
+    style D fill:#e1f5ff,color:#000
+    style E fill:#ffe1e1,color:#000
 ```
 
 The algorithm maintains an error term that tracks how far the current pixel is from the ideal line. At each step, it decides whether to move in the x-direction only, or in both x and y directions, based on whether the error exceeds half a pixel.
@@ -726,7 +726,7 @@ Bresenham's algorithm is used in computer graphics for line drawing, rasterizati
 The Digital Differential Analyzer (DDA) algorithm is a line drawing algorithm that uses floating-point arithmetic to calculate pixel positions. It's simpler to implement than Bresenham but slower due to floating-point operations.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "DDA Line Algorithm"
         Start[Start Point]
         End[End Point]
@@ -748,7 +748,7 @@ graph TB
     Done -->|No| Plot
     Done -->|Yes| End
 
-    style End fill:#e1ffe1
+    style End fill:#e1ffe1,color:#000
 ```
 
 The algorithm calculates the number of steps as the maximum of the absolute differences in x and y. It then calculates the increment for each coordinate:
@@ -766,7 +766,7 @@ DDA is used in simple line drawing implementations and educational contexts due 
 Supercover line drawing ensures that every grid cell intersected by the line is marked, not just the pixels whose centers are closest to the line. This is important for grid-based algorithms and voxel traversal.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Supercover Line"
         Start[Start Point]
         End[End Point]
@@ -784,7 +784,7 @@ graph TB
     Mark --> Traverse
     Traverse --> Done
 
-    style Done fill:#e1ffe1
+    style Done fill:#e1ffe1,color:#000
 ```
 
 The algorithm uses a modified Bresenham approach that considers when the line exactly crosses grid boundaries. It ensures that all cells the line passes through are included, which is critical for:
@@ -800,13 +800,13 @@ Supercover is used in game engines for voxel traversal, ray marching, and grid-b
 Delaunay triangulation creates a triangulation of a set of points such that no point lies inside the circumcircle of any triangle. This property maximizes the minimum angle of all triangles, avoiding thin, sliver triangles.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Delaunay Triangulation Process"
         Points[Input Points]
         Super[Create Super Triangle]
         Triang[Initial Triangulation]
         Add[Add Points Incrementally]
-        Bad[Find Bad Triangles<br/>(Point in Circumcircle)]
+        Bad["Find Bad Triangles<br/>(Point in Circumcircle)"]
         Hole[Find Polygon Hole]
         New[Create New Triangles]
         Remove[Remove Super Triangle]
@@ -822,7 +822,7 @@ graph TB
     New --> Remove
     Remove --> Result
 
-    style Result fill:#e1ffe1
+    style Result fill:#e1ffe1,color:#000
 ```
 
 The Bowyer-Watson algorithm incrementally adds points to the triangulation. For each point, it finds all triangles whose circumcircles contain the point (bad triangles), removes them, and creates new triangles connecting the point to the boundary of the resulting polygonal hole.
@@ -838,7 +838,7 @@ Delaunay triangulations are used in mesh generation, terrain modeling, and finit
 The convex hull of a set of points is the smallest convex polygon that contains all points. Multiple algorithms are implemented, each with different performance characteristics.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Convex Hull Algorithms"
         Graham[Graham Scan<br/>O n log n]
         Jarvis[Jarvis March<br/>O n*h]
@@ -846,9 +846,9 @@ graph TB
         Mono[Monotone Chain<br/>O n log n]
     end
 
-    style Graham fill:#e1ffe1
-    style Quick fill:#e1ffe1
-    style Mono fill:#e1ffe1
+    style Graham fill:#e1ffe1,color:#000
+    style Quick fill:#e1ffe1,color:#000
+    style Mono fill:#e1ffe1,color:#000
 ```
 
 Graham Scan sorts points by polar angle from the bottom-most point, then builds the hull by iteratively adding points and removing the last point if it creates a clockwise turn. This is detected using the cross product:
@@ -865,7 +865,7 @@ Convex hulls are used in collision detection, shape analysis, and computational 
 Marching squares extracts contour lines from a scalar field on a grid. For each cell, it examines the values at the four corners and determines which edges the contour crosses based on a lookup table.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Marching Squares Cell"
         TL[Top Left]
         TR[Top Right]
@@ -879,7 +879,7 @@ graph TB
     BL --> Center
     BR --> Center
 
-    style Center fill:#e1f5ff
+    style Center fill:#e1f5ff,color:#000
 ```
 
 Each cell has 2⁴ = 16 possible configurations based on which corners are above or below the threshold. The algorithm uses a lookup table to determine how to draw the contour lines through each cell.
@@ -891,7 +891,7 @@ Marching squares is used for terrain contour generation, medical imaging (MRI/CT
 Simplex noise is a gradient noise algorithm that improves upon Perlin noise by using a simplex grid instead of a hypercube grid. This reduces computational complexity and avoids directional artifacts.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Simplex Noise Lattice"
         P1[Point 1]
         P2[Point 2]
@@ -912,7 +912,7 @@ graph TB
     P4 --> Grad
     Grad --> Noise
 
-    style Noise fill:#e1ffe1
+    style Noise fill:#e1ffe1,color:#000
 ```
 
 The algorithm first determines which simplex the query point falls in, then computes contribution from each corner of that simplex based on the distance to the corner and the gradient vector at that corner. The contributions are smoothed using a fade function to ensure continuity.
@@ -927,7 +927,7 @@ Simplex noise is used for procedural terrain generation, texture synthesis, and 
 Poisson disk sampling generates points that are randomly distributed but maintain a minimum distance from each other, creating a "blue noise" pattern without clustering.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Poisson Disk Sampling"
         Grid[Background Grid]
         Active[Active List]
@@ -944,8 +944,8 @@ graph TB
     P2 --> Rejected
     P3 --> Rejected
 
-    style Active fill:#e1f5ff
-    style Rejected fill:#ffe1e1
+    style Active fill:#e1f5ff,color:#000
+    style Rejected fill:#ffe1e1,color:#000
 ```
 
 The algorithm maintains a grid to accelerate distance queries and a list of active points from which new candidates are generated. For each active point, it generates k random candidates in an annulus around the point. A candidate is accepted only if it's at least distance r from all existing points.
@@ -960,7 +960,7 @@ Poisson disk sampling is used for antialiasing, object placement in games, and c
 Wave Function Collapse is a constraint-based procedural generation algorithm inspired by quantum mechanics. It maintains a set of possible states for each cell and collapses cells one by one based on constraints.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Wave Function Collapse"
         Grid[Grid of Cells]
         Entropy[Cell with Minimum Entropy]
@@ -982,8 +982,8 @@ graph TB
     Contradiction -->|Yes| Backtrack
     Backtrack --> Entropy
 
-    style Result fill:#e1ffe1
-    style Contradiction fill:#ffe1e1
+    style Result fill:#e1ffe1,color:#000
+    style Contradiction fill:#ffe1e1,color:#000
 ```
 
 Each cell starts with a set of possible tiles/states. The algorithm chooses the cell with the fewest possibilities (minimum entropy), randomly selects one of its states, and propagates constraints to neighboring cells, removing incompatible states. If a contradiction occurs (a cell has no possible states), it backtracks.
@@ -999,7 +999,7 @@ Wave Function Collapse is used for procedural map generation, texture synthesis,
 StructureForge generates procedural buildings, dungeons, and other structures using constraint-based rules and pattern matching. It creates coherent architectural layouts by combining predefined building blocks with spatial constraints.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "StructureForge"
         Config[Structure Config]
         Pattern[Pattern Library]
@@ -1018,7 +1018,7 @@ graph TB
     Validate -->|Fail| Generate
     Refine --> Output
 
-    style Output fill:#e1ffe1
+    style Output fill:#e1ffe1,color:#000
 ```
 
 The algorithm uses a constraint satisfaction approach:
@@ -1038,7 +1038,7 @@ StructureForge is used in roguelike games, level generation, and procedural city
 A Voronoi diagram partitions space into regions based on distance to a set of seed points. Each region contains all points closer to its seed than to any other seed.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Voronoi Diagram"
         S1[Seed 1]
         S2[Seed 2]
@@ -1056,7 +1056,7 @@ graph TB
     R2 --> Edge
     R3 --> Edge
 
-    style Edge fill:#e1f5ff
+    style Edge fill:#e1f5ff,color:#000
 ```
 
 Voronoi diagrams are the dual of Delaunay triangulations: each Voronoi edge is perpendicular to a Delaunay edge, and each Voronoi vertex is the circumcenter of a Delaunay triangle.
@@ -1071,7 +1071,7 @@ Voronoi diagrams are used in nearest neighbor queries, facility location problem
 Polygon clipping computes the intersection, union, or difference of two polygons. The Sutherland-Hodgman algorithm clips a polygon against a convex clipping polygon, while Weiler-Atherton handles arbitrary (possibly concave) polygons.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Polygon Clipping"
         Subject[Subject Polygon]
         Clip[Clip Polygon]
@@ -1091,7 +1091,7 @@ graph TB
     Union --> Result
     Diff --> Result
 
-    style Result fill:#e1ffe1
+    style Result fill:#e1ffe1,color:#000
 ```
 
 Sutherland-Hodgman clips the subject polygon against each edge of the clipping polygon in sequence, maintaining a list of vertices that are inside the clipping region. For each edge, it determines which vertices are inside/outside and computes intersection points where edges cross.
@@ -1105,7 +1105,7 @@ Polygon clipping is used in computer graphics for window clipping, GIS for overl
 Polygon simplification reduces the number of vertices in a polygon while preserving its essential shape. This is useful for reducing computational complexity, improving rendering performance, and creating level-of-detail representations.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Polygon Simplification"
         Input[Input Polygon]
         Error[Compute Error]
@@ -1122,7 +1122,7 @@ graph TB
     Check -->|No| Error
     Check -->|Yes| Done
 
-    style Done fill:#e1ffe1
+    style Done fill:#e1ffe1,color:#000
 ```
 
 The Douglas-Peucker algorithm works by:
@@ -1143,7 +1143,7 @@ Polygon simplification is used in map generalization, mesh reduction, and level-
 Polygon boolean operations compute unions, intersections, and differences between polygons. These operations are fundamental for computational geometry, CAD, and GIS applications.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Polygon Boolean Operations"
         PolyA[Polygon A]
         PolyB[Polygon B]
@@ -1161,7 +1161,7 @@ graph TB
     Compute --> Reconstruct
     Reconstruct --> Result
 
-    style Result fill:#e1ffe1
+    style Result fill:#e1ffe1,color:#000
 ```
 
 The Weiler-Atherton algorithm handles boolean operations on polygons by:
@@ -1181,7 +1181,7 @@ Boolean operations are used in CAD for combining shapes, GIS for overlay analysi
 Circular positioning algorithms calculate positions of objects arranged in circular patterns, useful for radial layouts, UI design, and game mechanics.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Circular Positioning"
         Center[Center Point]
         Radius[Radius]
@@ -1197,7 +1197,7 @@ graph TB
     Angle --> Position
     Position --> Layout
 
-    style Layout fill:#e1ffe1
+    style Layout fill:#e1ffe1,color:#000
 ```
 
 The position of the i-th object in a circle is:
@@ -1215,7 +1215,7 @@ Circular positioning is used in radial menus, orbital mechanics simulations, and
 The Bentley-Ottmann algorithm finds all intersection points among a set of line segments efficiently using a sweep line approach. It achieves O((n + k) log n) time where n is the number of segments and k is the number of intersections.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Bentley-Ottmann Sweep Line"
         Events[Event Queue<br/>Sorted by X]
         Status[Status Structure<br/>Ordered by Y]
@@ -1237,7 +1237,7 @@ graph TB
     Intersect --> Output
     Output --> Events
 
-    style Output fill:#e1ffe1
+    style Output fill:#e1ffe1,color:#000
 ```
 
 The algorithm maintains an event queue of segment endpoints and potential intersection points, sorted by x-coordinate. A sweep line moves from left to right, and a status structure maintains the segments currently intersecting the sweep line, ordered by their y-coordinate at the sweep line position.
@@ -1253,7 +1253,7 @@ Bentley-Ottmann is used in computational geometry, GIS, and computer graphics fo
 The minimum bounding box is the smallest-area rectangle that encloses a set of points, with no restriction on orientation. The rotating calipers algorithm finds it in O(n) time after computing the convex hull.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Minimum Bounding Box"
         Points[Input Points]
         Convex[Compute Convex Hull]
@@ -1278,7 +1278,7 @@ graph TB
     Done -->|No| Edge
     Done -->|Yes| Result
 
-    style Result fill:#e1ffe1
+    style Result fill:#e1ffe1,color:#000
 ```
 
 The algorithm first computes the convex hull of the point set. It then iterates through each edge of the convex hull, using rotating calipers to find the supporting calipers (lines perpendicular to the current edge that touch the hull). The bounding box aligned with the current edge is computed, and the one with minimum area is tracked.
@@ -1295,7 +1295,7 @@ Minimum bounding boxes are used in object recognition, image processing, and col
 Bezier curves are parametric curves used in computer graphics and CAD. A cubic Bezier curve is defined by four control points: P0 (start), P1, P2, and P3 (end).
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Bezier Curve Construction"
         P0[P0 Start]
         P1[P1 Control 1]
@@ -1322,7 +1322,7 @@ graph TB
     Q1 --> Curve
     Q2 --> Curve
 
-    style Curve fill:#e1ffe1
+    style Curve fill:#e1ffe1,color:#000
 ```
 
 A cubic Bezier curve is defined by:
@@ -1338,7 +1338,7 @@ Bezier curves are used in font rendering, vector graphics, animation paths, and 
 Catmull-Rom splines are a type of cubic Hermite spline that passes through all control points, making them ideal for smooth interpolation through a set of points.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Catmull-Rom Spline"
         P0[P0]
         P1[P1]
@@ -1358,7 +1358,7 @@ graph TB
     Hermite --> Segment
     Segment --> Chain
 
-    style Chain fill:#e1ffe1
+    style Chain fill:#e1ffe1,color:#000
 ```
 
 The tangent at each point is computed from the neighboring points:
@@ -1373,7 +1373,7 @@ Catmull-Rom splines are used for smooth camera paths, animation interpolation, a
 B-splines (Basis Splines) are a generalization of Bezier curves that use a set of basis functions defined over knot vectors. They provide local control - moving one control point only affects a local portion of the curve.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "B-Spline Construction"
         Control[Control Points]
         Knots[Knot Vector]
@@ -1387,7 +1387,7 @@ graph TB
     Basis --> Blend
     Blend --> Curve
 
-    style Curve fill:#e1ffe1
+    style Curve fill:#e1ffe1,color:#000
 ```
 
 A B-spline curve of degree p is defined as:
@@ -1405,7 +1405,7 @@ B-splines are used in CAD/CAM systems, font design, and smooth curve fitting whe
 NURBS (Non-Uniform Rational B-Splines) extend B-splines by using rational functions, allowing exact representation of conic sections (circles, ellipses) and providing more control over curve shape through weights.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "NURBS Construction"
         Control[Control Points]
         Weights[Weights]
@@ -1419,7 +1419,7 @@ graph TB
     Basis --> Rational
     Rational --> Curve
 
-    style Curve fill:#e1ffe1
+    style Curve fill:#e1ffe1,color:#000
 ```
 
 A NURBS curve is defined as:
@@ -1435,7 +1435,7 @@ NURBS are used in industrial design, automotive modeling, and CAD systems where 
 Hermite splines are defined by points and tangent vectors at each point, giving explicit control over the direction and speed of the curve at each control point.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Hermite Spline"
         P0[Point P0]
         P1[Point P1]
@@ -1451,7 +1451,7 @@ graph TB
     T1 --> Interp
     Interp --> Curve
 
-    style Curve fill:#e1ffe1
+    style Curve fill:#e1ffe1,color:#000
 ```
 
 A cubic Hermite spline segment between two points P0 and P1 with tangents T0 and T1 is:
@@ -1471,7 +1471,7 @@ Hermite splines are used in animation keyframing, path interpolation with veloci
 Ear clipping triangulates a simple polygon by iteratively removing "ears" - triangles formed by three consecutive vertices where the triangle lies entirely inside the polygon.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Ear Clipping Process"
         Polygon[Input Polygon]
         Ear[Find Ear<br/>Valid Triangle]
@@ -1491,7 +1491,7 @@ graph TB
     Clip --> Triangles
     Done --> Triangles
 
-    style Done fill:#e1ffe1
+    style Done fill:#e1ffe1,color:#000
 ```
 
 An ear is a triangle formed by three consecutive vertices (v(i-1), v(i), v(i+1)) where:
@@ -1513,7 +1513,7 @@ Ear clipping is used for triangulating simple polygons in computer graphics, fin
 An OBB is a bounding box that can be rotated to better fit an object's shape. Unlike AABBs, OBBs are not aligned with the coordinate axes and can provide tighter bounds for rotated objects.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "OBB Collision Detection"
         OBB1[OBB 1]
         OBB2[OBB 2]
@@ -1531,8 +1531,8 @@ graph TB
     Gap -->|Yes| Separate
     Gap -->|No| Collide
 
-    style Collide fill:#e1ffe1
-    style Separate fill:#ffe1e1
+    style Collide fill:#e1ffe1,color:#000
+    style Separate fill:#ffe1e1,color:#000
 ```
 
 OBB collision detection uses the Separating Axis Theorem (SAT). For 2D, it tests 4 axes (2 from each OBB's face normals) plus 2 axes from the cross products of the OBBs' axes. For 3D, it tests 15 axes.
@@ -1548,7 +1548,7 @@ OBBs are used for collision detection in physics engines, especially for objects
 An AABB is a rectangle whose sides are aligned with the coordinate axes. Two AABBs intersect if and only if they overlap in both the x and y dimensions.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "AABB Collision"
         Box1[Box 1]
         Box2[Box 2]
@@ -1560,8 +1560,8 @@ graph TB
     Box2 --> Overlap
     Box1 -.->|Separated| NoOverlap
 
-    style Overlap fill:#e1ffe1
-    style NoOverlap fill:#ffe1e1
+    style Overlap fill:#e1ffe1,color:#000
+    style NoOverlap fill:#ffe1e1,color:#000
 ```
 
 The intersection test is simple:
@@ -1574,7 +1574,7 @@ AABB collision detection is O(1) per pair and is used as a broad-phase filter to
 The Separating Axis Theorem states that two convex shapes are disjoint if and only if there exists a line (axis) on which their projections are disjoint. For collision detection, we test the projections onto the normals of each shape's edges.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "SAT Collision Detection"
         Shape1[Shape 1]
         Shape2[Shape 2]
@@ -1592,8 +1592,8 @@ graph TB
     Gap -->|Yes| Separate
     Gap -->|No| Collide
 
-    style Collide fill:#e1ffe1
-    style Separate fill:#ffe1e1
+    style Collide fill:#e1ffe1,color:#000
+    style Separate fill:#ffe1e1,color:#000
 ```
 
 For each axis, we project both shapes onto the axis and check if the projections overlap. If we find any axis where the projections don't overlap (a gap), the shapes are not colliding. If no gap is found on any axis, the shapes are colliding.
@@ -1607,7 +1607,7 @@ SAT is used for collision detection between convex polygons in 2D and convex pol
 Sweep and prune is a broad-phase collision detection algorithm that sorts objects along one or more axes and only checks for collisions between objects that overlap in all sorted dimensions.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Sweep and Prune"
         Objects[Objects]
         SortX[Sort by X]
@@ -1626,7 +1626,7 @@ graph TB
     OverlapY --> Candidates
     Candidates --> Test
 
-    style Candidates fill:#e1f5ff
+    style Candidates fill:#e1f5ff,color:#000
 ```
 
 The algorithm maintains sorted lists of object endpoints along each axis. As objects move, the lists are updated incrementally. Only objects that overlap in all dimensions are passed to narrow-phase collision detection.
@@ -1643,7 +1643,7 @@ Sweep and prune is used in physics engines for broad-phase collision detection, 
 The spatial collision optimizer automatically selects and applies the most efficient collision detection algorithm based on the characteristics of the objects being tested. It analyzes object distribution, count, and movement patterns to choose between spatial hash, quadtree, BVH, or brute force.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Spatial Collision Optimizer"
         Objects[Collision Objects]
         Analyze[Analyze Workload<br/>Count, Distribution, Movement]
@@ -1662,7 +1662,7 @@ graph TB
     Optimize --> Adapt
     Adapt --> Select
 
-    style Select fill:#e1ffe1
+    style Select fill:#e1ffe1,color:#000
 ```
 
 The optimizer maintains performance metrics for each algorithm type and switches algorithms when workload characteristics change. It considers:
@@ -1684,7 +1684,7 @@ Spatial collision optimization is used in physics engines, game collision system
 A* is a graph traversal algorithm that finds the shortest path from a start node to a goal node. It uses a heuristic function to estimate the cost from any node to the goal, guiding the search toward the goal.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "A* Algorithm"
         Start[Start Node]
         Open[Open Set<br/>Priority Queue]
@@ -1704,7 +1704,7 @@ graph TB
     Expand --> Open
     Current --> Closed
 
-    style Path fill:#e1ffe1
+    style Path fill:#e1ffe1,color:#000
 ```
 
 A* maintains two sets: the open set (nodes to be evaluated) and the closed set (nodes already evaluated). Each node has a cost f(n) = g(n) + h(n), where g(n) is the cost from the start to node n, and h(n) is the heuristic estimate from node n to the goal.
@@ -1720,7 +1720,7 @@ A* is used in game AI for pathfinding, route planning, and puzzle solving.
 Jump Point Search is an optimization of A* for grid-based pathfinding that skips symmetric paths. Instead of expanding all neighbors, it jumps over straight-line segments and only considers nodes at direction changes.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "JPS Algorithm"
         Start[Start Node]
         Jump[Jump in Direction]
@@ -1741,7 +1741,7 @@ graph TB
     Goal -->|No| Jump
     Successor --> Jump
 
-    style Path fill:#e1ffe1
+    style Path fill:#e1ffe1,color:#000
 ```
 
 JPS identifies "jump points" - nodes where the path might change direction. It jumps in a straight line until it reaches an obstacle, the goal, or a forced neighbor (a neighbor that can only be reached through the current node).
@@ -1757,7 +1757,7 @@ JPS is used in real-time strategy games and grid-based pathfinding where perform
 Theta*is an any-angle pathfinding algorithm that allows paths to cut corners, not just move in grid directions. It can find shorter paths than A* on grid-based maps by allowing line-of-sight shortcuts.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Theta* Algorithm"
         Parent[Parent Node]
         Current[Current Node]
@@ -1776,7 +1776,7 @@ graph TB
     Direct --> Path
     Regular --> Path
 
-    style Path fill:#e1ffe1
+    style Path fill:#e1ffe1,color:#000
 ```
 
 When expanding a node, Theta* checks if there's a direct line-of-sight from the node's grandparent to the current node. If so, it sets the grandparent as the current node's parent, creating a shortcut that bypasses intermediate nodes.
@@ -1790,7 +1790,7 @@ Theta*paths are shorter than A* paths (which are constrained to grid directions)
 Flow field pathfinding generates a vector field that points toward the goal. Each cell in the grid stores a direction vector indicating which way to move to reach the goal. Multiple agents can follow the same flow field simultaneously.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Flow Field Generation"
         Goal[Goal Position]
         Integration[Integration Field<br/>Distance to Goal]
@@ -1804,7 +1804,7 @@ graph TB
     Gradient --> Flow
     Flow --> Agent
 
-    style Flow fill:#e1f5ff
+    style Flow fill:#e1f5ff,color:#000
 ```
 
 The algorithm first builds an integration field (using Dijkstra or a wavefront propagation) that stores the distance from each cell to the goal. Then it computes the gradient at each cell by looking at neighboring cells and choosing the direction of steepest descent (toward the goal).
@@ -1820,7 +1820,7 @@ Flow fields are used in real-time strategy games for unit movement and crowd sim
 HPA* decomposes the map into clusters and builds a high-level abstract graph. It finds a path in the abstract graph, then refines it with local pathfinding within each cluster.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "HPA* Algorithm"
         Map[Original Map]
         Cluster[Cluster into Regions]
@@ -1836,7 +1836,7 @@ graph TB
     HighLevel --> Refine
     Refine --> Path
 
-    style Path fill:#e1ffe1
+    style Path fill:#e1ffe1,color:#000
 ```
 
 The map is divided into rectangular clusters. Each cluster's entrance points (positions where paths can enter/exit) become nodes in the abstract graph. Edges connect entrance points within the same cluster or in adjacent clusters.
@@ -1854,7 +1854,7 @@ HPA*is used in large-scale games and simulations where the map is too large for 
 Steering behaviors are a set of algorithms that simulate autonomous movement for characters in games and simulations. Each behavior produces a steering force that modifies the character's velocity.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Steering Behaviors"
         Character[Character<br/>Position + Velocity]
         Target[Target<br/>Position]
@@ -1881,7 +1881,7 @@ graph TB
     Accumulate --> Apply
     Apply --> Character
 
-    style Apply fill:#e1ffe1
+    style Apply fill:#e1ffe1,color:#000
 ```
 
 The seek behavior produces a steering force toward a target:
@@ -1900,7 +1900,7 @@ Steering behaviors are used in game AI for realistic character movement, crowd s
 Inverse kinematics (IK) computes the joint angles required to position an end effector at a desired location. It's used in robotics for arm control and in animation for character posing.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Inverse Kinematics"
         Target[Target Position]
         Chain[Joint Chain]
@@ -1919,7 +1919,7 @@ graph TB
     Check -->|Yes| Done
     Adjust --> Done
 
-    style Done fill:#e1ffe1
+    style Done fill:#e1ffe1,color:#000
 ```
 
 The Jacobian method computes joint velocities from end-effector velocity:
@@ -1936,7 +1936,7 @@ IK is used in robotics arm control, character animation, and procedural animatio
 Constraint solvers enforce physical constraints on objects, such as maintaining fixed distances, angles, or preventing penetration. They're essential for physics engines and rigid body simulation.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Constraint Solving"
         Bodies[Rigid Bodies]
         Constraints[Constraints<br/>Distance/Angle/Joint]
@@ -1955,7 +1955,7 @@ graph TB
     Iterate -->|Not Converged| Solve
     Iterate -->|Converged| Done
 
-    style Done fill:#e1ffe1
+    style Done fill:#e1ffe1,color:#000
 ```
 
 For a distance constraint between two bodies, the impulse is:
@@ -1971,7 +1971,7 @@ Constraint solvers are used in physics engines, ragdoll physics, and mechanical 
 A navigation mesh (navmesh) is a data structure that represents the walkable surfaces of a game environment as a convex polygon mesh. It enables efficient pathfinding for characters by abstracting the environment into traversable regions.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Navmesh"
         Environment[Game Environment]
         Extract[Extract Walkable Surfaces]
@@ -1992,7 +1992,7 @@ graph TB
     Path --> Funnel
     Funnel --> Final
 
-    style Final fill:#e1ffe1
+    style Final fill:#e1ffe1,color:#000
 ```
 
 The navmesh partitions walkable space into convex polygons. Pathfinding uses A* on the polygon graph, then the funnel algorithm smooths the path through the portals.
@@ -2010,7 +2010,7 @@ Navmeshes are used in game AI for character navigation, crowd simulation, and re
 K-means clustering partitions data into k clusters by minimizing the within-cluster sum of squares. It iteratively assigns points to the nearest centroid and updates centroids based on assigned points.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "K-Means Clustering"
         Data[Data Points]
         Init[Initialize k Centroids]
@@ -2027,7 +2027,7 @@ graph TB
     Converged -->|No| Assign
     Converged -->|Yes| Done
 
-    style Done fill:#e1ffe1
+    style Done fill:#e1ffe1,color:#000
 ```
 
 The algorithm minimizes the objective function:
@@ -2048,7 +2048,7 @@ K-means is used for image segmentation, customer segmentation, and data compress
 Decision trees are supervised learning models that predict a target by learning simple decision rules from data features. They partition the feature space into regions and assign a prediction to each region.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Decision Tree"
         Root[Root Node<br/>Feature X1]
         L1[Left Child<br/>Feature X2]
@@ -2068,7 +2068,7 @@ graph TB
     R2 --> Predict
     R1 --> Predict
 
-    style Predict fill:#e1ffe1
+    style Predict fill:#e1ffe1,color:#000
 ```
 
 The tree is built by recursively selecting the feature and split point that maximizes information gain (or minimizes impurity). Common impurity measures include Gini impurity and entropy:
@@ -2089,7 +2089,7 @@ Decision trees are used for classification and regression tasks, feature importa
 A Markov chain is a stochastic model describing a sequence of possible events where the probability of each event depends only on the state attained in the previous event.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Markov Chain"
         S1[State 1]
         S2[State 2]
@@ -2109,9 +2109,9 @@ graph TB
     S1 -->|P13| S3
     S3 -->|P31| S1
 
-    style S1 fill:#e1f5ff
-    style S2 fill:#e1f5ff
-    style S3 fill:#e1f5ff
+    style S1 fill:#e1f5ff,color:#000
+    style S2 fill:#e1f5ff,color:#000
+    style S3 fill:#e1f5ff,color:#000
 ```
 
 The Markov property states that:
@@ -2131,7 +2131,7 @@ Markov chains are used for modeling random processes, text generation, weather p
 Behavior trees are a hierarchical model for AI decision-making in games. They organize behaviors in a tree structure where nodes represent tasks or conditions, and the tree is traversed to determine the current behavior.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Behavior Tree"
         Root[Root Selector]
         Seq1[Sequence 1]
@@ -2151,10 +2151,10 @@ graph TB
     Seq2 --> Act2
     Seq2 --> Act3
 
-    style Root fill:#e1f5ff
-    style Act1 fill:#e1ffe1
-    style Act2 fill:#e1ffe1
-    style Act3 fill:#e1ffe1
+    style Root fill:#e1f5ff,color:#000
+    style Act1 fill:#e1ffe1,color:#000
+    style Act2 fill:#e1ffe1,color:#000
+    style Act3 fill:#e1ffe1,color:#000
 ```
 
 Common node types include:
@@ -2173,7 +2173,7 @@ Behavior trees are used in game AI for character decision-making, robotics for t
 NEAT is a genetic algorithm that evolves neural networks with evolving topologies. It starts with minimal networks and incrementally complexifies them by adding nodes and connections, allowing evolution to discover optimal network structures.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "NEAT Evolution"
         Pop[Initial Population<br/>Minimal Networks]
         Evaluate[Evaluate Fitness]
@@ -2196,7 +2196,7 @@ graph TB
     Done -->|No| Next
     Done -->|Yes| End
 
-    style End fill:#e1ffe1
+    style End fill:#e1ffe1,color:#000
 ```
 
 NEAT uses historical markings to track gene lineage during crossover, ensuring that structural innovations are preserved. The fitness sharing mechanism promotes diversity by adjusting fitness based on species size.
@@ -2212,7 +2212,7 @@ NEAT is used in evolving neural network topologies, game AI evolution, and autom
 Reinforcement learning trains agents to make decisions by rewarding desired behaviors and penalizing undesired ones. Q-Learning and Deep Q-Networks (DQN) are common algorithms for this paradigm.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Q-Learning"
         State[Current State]
         Action[Choose Action]
@@ -2232,7 +2232,7 @@ graph TB
     Update --> QTable
     QTable --> Action
 
-    style QTable fill:#e1ffe1
+    style QTable fill:#e1ffe1,color:#000
 ```
 
 Q-Learning updates the Q-value using the Bellman equation:
@@ -2250,7 +2250,7 @@ Reinforcement learning is used in game playing AI, robotics control, and autonom
 Cellular automata are discrete dynamical systems that evolve in discrete time steps according to simple local rules. Each cell in a grid has a state, and the next state depends on the current states of neighboring cells.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Cellular Automata"
         Grid[Initial Grid]
         Rules[Apply Rules<br/>to Each Cell]
@@ -2269,7 +2269,7 @@ graph TB
     Stable -->|No| Rules
     Stable -->|Yes| Done
 
-    style Done fill:#e1ffe1
+    style Done fill:#e1ffe1,color:#000
 ```
 
 Conway's Game of Life is a famous cellular automaton where each cell is either alive or dead. The rules are:
@@ -2289,7 +2289,7 @@ Cellular automata are used for procedural terrain generation, cave generation, a
 Force directed graph layout algorithms position nodes in a graph by simulating physical forces. Nodes repel each other like charged particles, while edges act like springs pulling connected nodes together.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Force Directed Layout"
         Nodes[Graph Nodes]
         Edges[Graph Edges]
@@ -2310,7 +2310,7 @@ graph TB
     Converged -->|No| Repulsion
     Converged -->|Yes| Done
 
-    style Done fill:#e1ffe1
+    style Done fill:#e1ffe1,color:#000
 ```
 
 The repulsive force between two nodes is typically:
@@ -2333,7 +2333,7 @@ Force directed layouts are used for visualizing graphs, social networks, and dep
 The visibility graph method finds shortest paths in polygonal environments by constructing a graph of visible vertices and then applying a shortest path algorithm like Dijkstra or A*.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Visibility Graph"
         Obstacles[Obstacles]
         Vertices[Extract Vertices]
@@ -2353,7 +2353,7 @@ graph TB
     Graph --> Path
     Path --> Result
 
-    style Result fill:#e1ffe1
+    style Result fill:#e1ffe1,color:#000
 ```
 
 Two vertices are visible to each other if the line segment connecting them doesn't intersect any obstacle edges. The visibility graph includes all obstacle vertices plus the start and goal points, with edges connecting all visible pairs.
@@ -2369,7 +2369,7 @@ Visibility graphs are used in robotics path planning, motion planning, and navig
 Shadowcasting is a field-of-view algorithm that determines which cells are visible from a point in a grid, typically used in roguelike games for line-of-sight calculations. It casts rays in all directions and marks cells as visible until blocked by walls.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Shadowcasting FOV"
         Observer[Observer Position]
         Octants[8 Octants]
@@ -2391,7 +2391,7 @@ graph TB
     Ray --> Done
     Stop --> Done
 
-    style Done fill:#e1ffe1
+    style Done fill:#e1ffe1,color:#000
 ```
 
 The algorithm processes the grid in 8 octants, scanning rows from the observer outward. For each row, it calculates which columns are visible based on slopes that define the visible angle range.
@@ -2410,7 +2410,7 @@ Shadowcasting is used in roguelike games for line-of-sight, tactical games for f
 PCA is a dimensionality reduction technique that finds the principal components of data - the directions of maximum variance. It projects high-dimensional data onto a lower-dimensional subspace while preserving as much variance as possible.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "PCA Process"
         Data[High-Dimensional Data]
         Center[Center Data]
@@ -2428,7 +2428,7 @@ graph TB
     Select --> Project
     Project --> Reduced
 
-    style Reduced fill:#e1ffe1
+    style Reduced fill:#e1ffe1,color:#000
 ```
 
 PCA computes the covariance matrix of the centered data, then finds its eigenvectors and eigenvalues. The eigenvectors with the largest eigenvalues (principal components) capture the most variance. The data is projected onto these components.
@@ -2444,7 +2444,7 @@ PCA is used for feature extraction, visualization, and noise reduction in machin
 Isomap is a non-linear dimensionality reduction technique that preserves geodesic distances (distances along the manifold) rather than Euclidean distances. It's particularly effective for data lying on a curved manifold.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Isomap Process"
         Data[High-Dimensional Data]
         Graph[Build kNN Graph]
@@ -2458,7 +2458,7 @@ graph TB
     Shortest --> MDS
     MDS --> Embed
 
-    style Embed fill:#e1ffe1
+    style Embed fill:#e1ffe1,color:#000
 ```
 
 Isomap first builds a k-nearest neighbor graph, then computes the shortest path distances between all pairs of points (geodesic distances). It then applies multidimensional scaling (MDS) to find a low-dimensional embedding that preserves these distances.
@@ -2470,7 +2470,7 @@ Isomap is used for manifold learning, face recognition, and visualizing complex 
 MDS finds a low-dimensional representation of data that preserves pairwise distances as much as possible. Given a distance matrix, it finds points in lower-dimensional space whose distances approximate the original distances.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "MDS Process"
         Dist[Distance Matrix]
         Init[Random Initialization]
@@ -2490,7 +2490,7 @@ graph TB
     Converge -->|No| Gradient
     Converge -->|Yes| Result
 
-    style Result fill:#e1ffe1
+    style Result fill:#e1ffe1,color:#000
 ```
 
 The stress function measures how well the low-dimensional distances match the original distances:
@@ -2506,7 +2506,7 @@ MDS is used for visualization, data analysis, and psychological scaling.
 The FFT is an efficient algorithm for computing the Discrete Fourier Transform (DFT), which decomposes a signal into its frequency components. It reduces the complexity from O(n²) to O(n log n).
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "FFT Butterfly Diagram"
         Input[Input Signal]
         Stage1[Stage 1]
@@ -2520,7 +2520,7 @@ graph TB
     Stage2 --> Stage3
     Stage3 --> Output
 
-    style Output fill:#e1ffe1
+    style Output fill:#e1ffe1,color:#000
 ```
 
 The Cooley-Tukey FFT recursively divides the DFT into smaller DFTs, exploiting the symmetry and periodicity of the complex exponential. The "butterfly" operations combine results from smaller transforms.
@@ -2537,7 +2537,7 @@ FFT is used in audio processing, image compression (JPEG), and spectral analysis
 The DCT is similar to the FFT but uses only cosine functions, making it particularly effective for compressing signals with high energy in low frequencies. It's the basis for JPEG compression.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "DCT Process"
         Input[Input Signal]
         Window[Apply Window]
@@ -2553,7 +2553,7 @@ graph TB
     Quant --> Encode
     Encode --> Output
 
-    style Output fill:#e1ffe1
+    style Output fill:#e1ffe1,color:#000
 ```
 
 The DCT of a signal x[n] is:
@@ -2568,7 +2568,7 @@ DCT is used in image compression (JPEG), audio compression (MP3), and feature ex
 The Discrete Sine Transform (DST) is similar to DCT but uses sine functions as basis functions. It's particularly useful for signals with specific boundary conditions where the signal is zero at the boundaries.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "DST Types"
         DST1[DST Type I]
         DST2[DST Type II]
@@ -2576,10 +2576,10 @@ graph TB
         DST4[DST Type IV]
     end
 
-    style DST1 fill:#e1f5ff
-    style DST2 fill:#e1f5ff
-    style DST3 fill:#e1f5ff
-    style DST4 fill:#e1f5ff
+    style DST1 fill:#e1f5ff,color:#000
+    style DST2 fill:#e1f5ff,color:#000
+    style DST3 fill:#e1f5ff,color:#000
+    style DST4 fill:#e1f5ff,color:#000
 ```
 
 The DST of type II (most commonly used) is defined as:
@@ -2598,7 +2598,7 @@ DST is used in image compression, solving partial differential equations, and si
 Frustum culling determines which objects are visible within the camera's view frustum - the pyramid-shaped volume of space that the camera can see. Objects outside the frustum are skipped during rendering to improve performance.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Frustum Culling"
         Objects[Scene Objects]
         Frustum[Camera Frustum<br/>6 Planes]
@@ -2614,8 +2614,8 @@ graph TB
     Inside -->|Yes| Render
     Inside -->|No| Cull
 
-    style Render fill:#e1ffe1
-    style Cull fill:#ffe1e1
+    style Render fill:#e1ffe1,color:#000
+    style Cull fill:#ffe1e1,color:#000
 ```
 
 The view frustum is defined by 6 planes: near, far, left, right, top, and bottom. Each plane is defined by a normal vector n and distance d from the origin. A point P is inside if:
@@ -2636,7 +2636,7 @@ Frustum culling is used in 3D game engines, CAD viewers, and virtual reality app
 The sorting module provides various sorting algorithms optimized for different scenarios. Each algorithm has different time and space complexity trade-offs.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Sorting Algorithms"
         Input[Unsorted Array]
         Quick[Quick Sort<br/>O n log n avg]
@@ -2660,7 +2660,7 @@ graph TB
     Radix --> Select
     Select --> Output
 
-    style Output fill:#e1ffe1
+    style Output fill:#e1ffe1,color:#000
 ```
 
 Quick sort uses divide-and-conquer with a pivot:
@@ -2683,7 +2683,7 @@ Sorting algorithms are used in data processing, database operations, and any app
 The PAW (Performance, Algorithm selection, Workload analysis) framework automatically selects optimal algorithms based on workload characteristics and performance metrics. It monitors execution time, memory usage, and cache efficiency to make informed decisions.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "PAW Framework"
         Workload[Workload Analysis]
         Metrics[Performance Metrics]
@@ -2700,7 +2700,7 @@ graph TB
     Cache --> Algorithm
     Pool --> Algorithm
 
-    style Selector fill:#e1f5ff
+    style Selector fill:#e1f5ff,color:#000
 ```
 
 The framework analyzes workloads by measuring:
@@ -2717,7 +2717,7 @@ Based on this analysis, it selects from available algorithms using heuristics th
 Algorithm selectors choose the optimal algorithm for a given problem based on workload analysis. For example, the collision detection selector chooses between naive O(n²) checking, spatial hash O(n), and optimized algorithms based on object count and distribution.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Algorithm Selection Process"
         Input[Workload Input]
         Analyze[Analyze Characteristics]
@@ -2736,7 +2736,7 @@ graph TB
     Monitor --> Update
     Update --> Threshold
 
-    style Select fill:#e1ffe1
+    style Select fill:#e1ffe1,color:#000
 ```
 
 Selectors use configurable thresholds that can be auto-tuned based on machine-specific performance characteristics. This allows the framework to adapt to different hardware and workloads.
@@ -2746,7 +2746,7 @@ Selectors use configurable thresholds that can be auto-tuned based on machine-sp
 Memory pooling reuses allocated objects to reduce garbage collection overhead and improve performance. The framework maintains pools of frequently-used objects and recycles them instead of allocating new ones.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Memory Pool"
         Pool[Object Pool]
         Acquire[Acquire Object]
@@ -2763,7 +2763,7 @@ graph TB
     Reset --> Return
     Return --> Pool
 
-    style Pool fill:#e1f5ff
+    style Pool fill:#e1f5ff,color:#000
 ```
 
 Memory pooling is particularly effective for algorithms that create many short-lived objects, such as pathfinding nodes or collision detection results. It can reduce allocation overhead by 50-90% in performance-critical code.
@@ -2773,7 +2773,7 @@ Memory pooling is particularly effective for algorithms that create many short-l
 The framework caches results of expensive operations to avoid redundant computation. Cache entries include the input parameters, result, and access statistics for cache eviction decisions.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Performance Cache"
         Request[Cache Request]
         Hit[Cache Hit?]
@@ -2790,8 +2790,8 @@ graph TB
     Compute --> Store
     Store --> Return
 
-    style Retrieve fill:#e1ffe1
-    style Compute fill:#ffe1e1
+    style Retrieve fill:#e1ffe1,color:#000
+    style Compute fill:#ffe1e1,color:#000
 ```
 
 Cache eviction policies include LRU (least recently used) and LFU (least frequently used). The cache size and eviction policy can be configured based on memory constraints and access patterns.
@@ -2801,7 +2801,7 @@ Cache eviction policies include LRU (least recently used) and LFU (least frequen
 Workload analysis examines the characteristics of input data to predict which algorithm will perform best. This includes measuring input size, distribution, sparsity, and other relevant properties.
 
 ```mermaid
-graph TB
+flowchart TB
     subgraph "Workload Analysis"
         Input[Input Data]
         Size[Measure Size]
@@ -2819,7 +2819,7 @@ graph TB
     Pattern --> Predict
     Predict --> Select
 
-    style Select fill:#e1ffe1
+    style Select fill:#e1ffe1,color:#000
 ```
 
 The analysis can be performed offline (pre-computed for known workloads) or online (adaptive for unknown workloads). Online analysis adds overhead but can adapt to changing workload characteristics.
