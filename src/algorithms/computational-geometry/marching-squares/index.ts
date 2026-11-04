@@ -1,4 +1,6 @@
 /**
+ * Marching Squares Contours
+ *
  * @file index.ts
  * @module algorithms/geometry/algorithms/marching-squares
  * @description Provides Marching Squares algorithm for generating contours from 2D scalar fields.

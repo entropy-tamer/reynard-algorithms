@@ -1,4 +1,6 @@
 /**
+ * Convex Hull
+ *
  * @module algorithms/geometry/algorithms/convex-hull
  * @description Provides multiple Convex Hull algorithms including Graham Scan, Jarvis March, and QuickHull.
  */

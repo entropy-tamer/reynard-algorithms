@@ -1,4 +1,6 @@
 /**
+ * Volumetric Rendering
+ *
  * @module algorithms/rendering/volumetric
  * @description Volumetric rendering algorithms for clouds, fog, and atmospheric effects.
  */

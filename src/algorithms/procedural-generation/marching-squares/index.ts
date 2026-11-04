@@ -1,4 +1,6 @@
 /**
+ * Marching Squares for Terrain
+ *
  * @module algorithms/procedural-generation/marching-squares
  * @description Provides the Marching Squares algorithm for contour generation from scalar fields.
  */

@@ -1,4 +1,6 @@
 /**
+ * R-Tree
+ *
  * @module algorithms/spatial-structures/rtree
  * @description Provides the R-Tree spatial data structure for efficient spatial queries.
  */

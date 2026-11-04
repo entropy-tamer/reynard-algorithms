@@ -1,4 +1,6 @@
 /**
+ * Hierarchical Pathfinding A* (HPA*)
+ *
  * @module algorithms/pathfinding/hpa-star
  * @description HPA* hierarchical pathfinding algorithm implementation.
  */

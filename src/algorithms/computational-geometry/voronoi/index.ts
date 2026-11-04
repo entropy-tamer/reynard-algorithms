@@ -1,4 +1,6 @@
 /**
+ * Voronoi Diagram
+ *
  * @module algorithms/geometry/algorithms/voronoi
  * @description Voronoi diagram implementation using Delaunay triangulation dual.
  */

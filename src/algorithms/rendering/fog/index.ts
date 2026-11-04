@@ -1,4 +1,6 @@
 /**
+ * Fog
+ *
  * @module algorithms/rendering/fog
  * @description Fog rendering algorithms for atmospheric effects.
  */

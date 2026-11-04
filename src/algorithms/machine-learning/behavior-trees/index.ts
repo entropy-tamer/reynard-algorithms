@@ -1,4 +1,6 @@
 /**
+ * Behavior Trees
+ *
  * @module algorithms/machine-learning/behavior-trees
  * @description Behavior Trees algorithm exports.
  */

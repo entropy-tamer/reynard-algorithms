@@ -1,4 +1,6 @@
 /**
+ * Line Segment Intersection
+ *
  * @module algorithms/geometry/algorithms/line-intersection
  * @description Bentley-Ottmann line segment intersection algorithm implementation.
  */

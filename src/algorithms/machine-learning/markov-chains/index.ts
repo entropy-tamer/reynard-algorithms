@@ -1,4 +1,6 @@
 /**
+ * Markov Chains
+ *
  * @file index.ts
  * @module algorithms/machine-learning/markov-chains
  * @description Markov Chains and HMM algorithm exports.

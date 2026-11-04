@@ -1,4 +1,6 @@
 /**
+ * Ear Clipping Triangulation
+ *
  * @file Ear Clipping triangulation algorithm exports.
  * @module algorithms/computational-geometry/triangulation/ear-clipping
  */

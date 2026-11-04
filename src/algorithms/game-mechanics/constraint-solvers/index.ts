@@ -1,4 +1,6 @@
 /**
+ * Constraint Solvers
+ *
  * @module algorithms/game-mechanics/constraint-solvers
  * @description Constraint Solvers algorithm exports.
  */

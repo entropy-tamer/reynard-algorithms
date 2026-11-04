@@ -1,4 +1,6 @@
 /**
+ * Minimum Bounding Box
+ *
  * @module algorithms/geometry/algorithms/minimum-bounding-box
  * @description Minimum Bounding Box with rotating calipers algorithm.
  */

@@ -1,4 +1,6 @@
 /**
+ * Oriented Bounding Box (OBB)
+ *
  * @module algorithms/geometry/shapes/obb
  * @description Oriented Bounding Box (OBB) with SAT collision detection.
  */

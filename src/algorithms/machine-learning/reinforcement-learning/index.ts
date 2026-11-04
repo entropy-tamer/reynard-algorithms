@@ -1,4 +1,6 @@
 /**
+ * Reinforcement Learning
+ *
  * @file index.ts
  * @module algorithms/machine-learning/reinforcement-learning
  * @description Reinforcement Learning algorithm exports.

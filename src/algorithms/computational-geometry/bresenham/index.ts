@@ -1,4 +1,6 @@
 /**
+ * Bresenham Line Rasterization
+ *
  * @module algorithms/geometry/algorithms/bresenham
  * @description Provides Bresenham's Line Algorithm for efficient line drawing.
  */

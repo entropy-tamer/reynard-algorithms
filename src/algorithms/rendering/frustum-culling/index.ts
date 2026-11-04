@@ -1,4 +1,6 @@
 /**
+ * Frustum Culling
+ *
  * @module algorithms/rendering/frustum-culling
  * @description Frustum Culling algorithm exports.
  */

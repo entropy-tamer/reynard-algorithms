@@ -1,4 +1,6 @@
 /**
+ * Inverse Kinematics
+ *
  * @module algorithms/game-mechanics/inverse-kinematics
  * @description Inverse Kinematics algorithm exports.
  */

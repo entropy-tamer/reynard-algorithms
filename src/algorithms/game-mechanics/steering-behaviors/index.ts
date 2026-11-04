@@ -1,4 +1,6 @@
 /**
+ * Steering Behaviors
+ *
  * @module algorithms/game-mechanics/steering-behaviors
  * @description Steering Behaviors algorithm exports.
  */

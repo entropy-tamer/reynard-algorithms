@@ -1,4 +1,6 @@
 /**
+ * Cloud Noise
+ *
  * @module algorithms/procedural-generation/cloud-noise
  * @description Cloud noise generation algorithms for volumetric cloud rendering.
  */

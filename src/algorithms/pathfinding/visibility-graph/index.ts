@@ -1,4 +1,6 @@
 /**
+ * Visibility Graph
+ *
  * @module algorithms/pathfinding/visibility-graph
  * @description Visibility Graph algorithm exports.
  */

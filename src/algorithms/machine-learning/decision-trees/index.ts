@@ -1,4 +1,6 @@
 /**
+ * Decision Trees
+ *
  * @module algorithms/machine-learning/decision-trees
  * @description Decision Trees algorithm exports.
  */

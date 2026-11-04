@@ -1,4 +1,6 @@
 /**
+ * NEAT Neuroevolution
+ *
  * @file index.ts
  * @module algorithms/machine-learning/neat
  * @description NEAT algorithm exports.

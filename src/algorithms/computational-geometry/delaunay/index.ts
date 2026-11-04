@@ -1,4 +1,6 @@
 /**
+ * Delaunay Triangulation
+ *
  * @module algorithms/geometry/algorithms/delaunay
  * @description Provides Delaunay Triangulation using the Bowyer-Watson algorithm.
  */

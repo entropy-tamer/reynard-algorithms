@@ -1,4 +1,6 @@
 /**
+ * Poisson Disk Sampling
+ *
  * @module algorithms/geometry/algorithms/poisson-disk
  * @description Provides the Poisson Disk Sampling algorithm for high-quality point distribution.
  */

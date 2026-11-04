@@ -1,4 +1,6 @@
 /**
+ * Jump Point Search (JPS)
+ *
  * @module algorithms/pathfinding/jps
  * @description Jump Point Search (JPS) pathfinding algorithm.
  */

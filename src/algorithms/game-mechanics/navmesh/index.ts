@@ -1,4 +1,6 @@
 /**
+ * Navmesh Pathfinding
+ *
  * @module algorithms/game-mechanics/navmesh
  * @description Navmesh algorithm exports.
  */

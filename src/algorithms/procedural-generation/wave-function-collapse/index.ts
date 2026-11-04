@@ -1,4 +1,6 @@
 /**
+ * Wave Function Collapse
+ *
  * @file Wave Function Collapse Algorithm Index
  *
  * @module algorithms/geometry/algorithms/wave-function-collapse

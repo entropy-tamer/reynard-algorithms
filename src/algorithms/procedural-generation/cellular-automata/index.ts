@@ -1,4 +1,6 @@
 /**
+ * Cellular Automata
+ *
  * @module algorithms/procedural-generation/cellular-automata
  * @description Cellular Automata algorithm exports.
  */

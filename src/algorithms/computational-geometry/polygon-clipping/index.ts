@@ -1,4 +1,6 @@
 /**
+ * Polygon Clipping
+ *
  * @module algorithms/geometry/algorithms/polygon-clipping
  * @description Polygon clipping algorithms including Sutherland-Hodgman and Weiler-Atherton.
  */
