@@ -1273,6 +1273,31 @@ export type {
 } from "./algorithms/procedural-generation/cellular-automata";
 
 // ============================================================================
+// Algorithms - Procedural Generation - Wang Tiles
+// ============================================================================
+// Wang Tiles
+export {
+  WANG_ATLAS_SIDE,
+  WANG_TILE_COUNT,
+  colorEdges,
+  edgeColor,
+  fitsHorizontally,
+  fitsVertically,
+  generateWangMap,
+  wangAtlasCell,
+  wangIndex,
+  wangTileAt,
+  wangTileEdges,
+} from "./algorithms/procedural-generation/wang-tiles";
+export type {
+  WangAtlasCell,
+  WangColor,
+  WangEdgeGrid,
+  WangEdgeGridOptions,
+  WangTileEdges,
+} from "./algorithms/procedural-generation/wang-tiles";
+
+// ============================================================================
 // Algorithms - Rendering - Frustum Culling
 // ============================================================================
 // Frustum Culling
