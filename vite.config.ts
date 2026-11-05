@@ -11,9 +11,9 @@ export default defineConfig(({ mode }) => {
       emptyOutDir: !isCjsBuild,
       lib: {
         entry: {
-          index: resolve(__dirname, "src/index.ts"),
-          optimized: resolve(__dirname, "src/optimized.ts"),
-          noise2d: resolve(__dirname, "src/noise2d.ts"),
+          index: resolve(import.meta.dirname, "src/index.ts"),
+          optimized: resolve(import.meta.dirname, "src/optimized.ts"),
+          noise2d: resolve(import.meta.dirname, "src/noise2d.ts"),
         },
         name: "ReynardAlgorithms",
         fileName: (_format, entryName) => `${entryName}.${isCjsBuild ? "cjs" : "js"}`,
@@ -50,7 +50,7 @@ export default defineConfig(({ mode }) => {
            */
           ...(isCjsBuild
             ? {}
-            : { preserveModules: true, preserveModulesRoot: resolve(__dirname, "src") }),
+            : { preserveModules: true, preserveModulesRoot: resolve(import.meta.dirname, "src") }),
         },
       },
     },

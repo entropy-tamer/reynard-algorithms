@@ -30,8 +30,8 @@
     "examples"
   ],
   "scripts": {
-    "dev": "vite build --watch",
-    "build": "vite build && vite build --mode cjs && rm -f tsconfig.tsbuildinfo && tsc -p tsconfig.json --declaration --emitDeclarationOnly --skipLibCheck",
+    "dev": "vite build --watch --configLoader native",
+    "build": "vite build --configLoader native && vite build --mode cjs --configLoader native && rm -f tsconfig.tsbuildinfo && tsc -p tsconfig.json --declaration --emitDeclarationOnly --skipLibCheck",
     "build:types": "tsc -p tsconfig.json --emitDeclarationOnly --skipLibCheck",
     "test": "NODE_OPTIONS='--max-old-space-size=4096' vitest run --exclude src/**/data-structures/*performance*.test.ts",
     "test:unit": "vitest run --exclude src/**/data-structures/*performance*.test.ts",
