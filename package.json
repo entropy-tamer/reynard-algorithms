@@ -155,7 +155,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@types/node": "25.5.2",
+    "@types/node": "workspace:*",
     "@vitest/coverage-v8": "5.1.0",
     "@vitest/ui": "5.1.0",
     "happy-dom": "20.8.9",
