@@ -230,15 +230,15 @@ export const FOX_FIRE_PALETTE = {
     /** The coolest fire. */
     fireShadow: { r: 122, g: 34, b: 12 },
     /** The warmest fire. */
-    fireLight: { r: 255, g: 186, b: 84 },
+    fireLight: { r: 255, g: 122, b: 47 },
     /** The heart of the flame. */
-    ember: { r: 255, g: 221, b: 138 },
+    ember: { r: 255, g: 196, b: 107 },
     /** The lit rim of the stroke. */
-    markRim: { r: 246, g: 235, b: 214 },
+    markRim: { r: 255, g: 176, b: 102 },
     /** The body of the stroke. */
-    markBody: { r: 214, g: 196, b: 168 },
+    markBody: { r: 226, g: 84, b: 42 },
     /** The deepest cell of the stroke. */
-    markDeep: { r: 168, g: 148, b: 124 },
+    markDeep: { r: 160, g: 60, b: 26 },
 } as const satisfies Record<string, FoxFireRgb>;
 
 /** Mix two colours; `t` is clamped. */
