@@ -1,7 +1,7 @@
 /**
  * Types for the density-of-gas terminal fire simulation.
  *
- * @module algorithms/algorithms/rendering/terminal-fire/terminal-fire-types
+ * @module algorithms/algorithms/rendering/fox-fire/fire-types
  */
 
 /** How many sub-cells per terminal cell (density-of-gas resolution) */

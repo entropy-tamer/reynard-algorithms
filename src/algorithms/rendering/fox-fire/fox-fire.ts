@@ -21,8 +21,8 @@
  * @module algorithms/algorithms/rendering/fox-fire
  */
 
-import { FOX_ART_ALPHABET, type FoxArtTier } from "../fox-art";
-import { SUB_CELLS_PER_CELL } from "../terminal-fire";
+import { FOX_ART_ALPHABET, type FoxArtTier } from "./fox-art";
+import { SUB_CELLS_PER_CELL } from "./fire-types";
 
 /** A colour, in the 0-255 range every surface can print. */
 export interface FoxFireRgb {
@@ -86,7 +86,7 @@ export function foxMarkGlyph(depth: number): string {
 export interface FoxFireFrameOptions {
     /** The tier to draw. */
     readonly tier: FoxArtTier;
-    /** The fire's sub-cell buffer (see `../terminal-fire`). */
+    /** The fire's sub-cell buffer (see `./fire`). */
     readonly fire: Uint8Array;
     /** The fire's own width, in cells. */
     readonly fireCols: number;

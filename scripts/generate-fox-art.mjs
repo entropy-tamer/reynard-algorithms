@@ -9,7 +9,7 @@
  * regenerate itself, and that line has to be true where the file is.
  *
  * The runtime never rasterises anything: this script is an offline build step
- * whose output (`fox-art.ts`) is committed. That keeps an SVG rasteriser and
+ * whose output (`fox-fire/fox-art.ts`) is committed. That keeps an SVG rasteriser and
  * two external binaries out of the shipped agent, and makes the art
  * hand-tunable -- which matters, because the shading knobs below were chosen by
  * looking at rendered frames, not by reasoning about them.
@@ -96,7 +96,7 @@ const CHAMFER = [
 function parseArgs(argv) {
     const opts = {
         svg: process.env.HOME ? `${process.env.HOME}/favicon.svg` : "favicon.svg",
-        out: resolve(import.meta.dirname, "../src/algorithms/rendering/fox-art/fox-art.ts"),
+        out: resolve(import.meta.dirname, "../src/algorithms/rendering/fox-fire/fox-art.ts"),
         force: false,
     };
     for (let i = 0; i < argv.length; i++) {

@@ -1,3 +1,30 @@
+/**
+ * The fox head, the fire, and the frame that puts them together.
+ *
+ * One directory, because they are one picture: the art is the data the frame
+ * draws, the fire is what the frame draws it over, and the frame is what both
+ * surfaces -- a terminal and a browser -- paint.
+ *
+ * - `./fox-art` is the generated art (`scripts/generate-fox-art.mjs`).
+ * - `./fire` is the density-of-gas simulation and the braille packing.
+ * - `./fox-fire` is the frame: the cells, their colours, and the palette.
+ *
+ * @module algorithms/algorithms/rendering/fox-fire
+ */
+
+export { FOX_ART_ALPHABET } from "./fox-art";
+export type { FoxArtTier } from "./fox-art";
+export { FOX_ART_TIERS } from "./fox-art";
+export { FOX_ART_LARGE } from "./fox-art";
+export { FOX_ART_MEDIUM } from "./fox-art";
+export { FOX_ART_SMALL } from "./fox-art";
+export { FOX_ART_TINY } from "./fox-art";
+export { FOX_ART_MICRO } from "./fox-art";
+
+export { SUB_CELLS_PER_CELL } from "./fire-types";
+export type { FireBuffer } from "./fire-types";
+export { createHeatBuffer, stepFire, rowToBraille, brailleGlyph } from "./fire";
+
 export {
     decodeFoxTier,
     foxFireColor,

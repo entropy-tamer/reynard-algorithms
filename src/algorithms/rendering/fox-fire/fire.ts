@@ -7,11 +7,11 @@
  * The algorithm lives in algorithms re-export (via @entropy-tamer/reynard-algorithms)
  * so that splash and coding-agent share the same deterministic engine.
  *
- * @module algorithms/algorithms/rendering/terminal-fire/terminal-fire-core
+ * @module algorithms/algorithms/rendering/fox-fire/fire
  */
 
 import { mulberry32 } from "../../../utils/prng/mulberry32";
-import type { FireBuffer } from "./terminal-fire-types";
+import type { FireBuffer } from "./fire-types";
 
 
 /** How many sub-cells per cell (used for internal resolution & array indices) */
@@ -26,6 +26,17 @@ const SUB_CELLS_PER_CELL = 8;
  * burn eight rows.
  */
 const COOLING = 4;
+
+/**
+ * How much of a cell's heat comes from its sideways neighbours.
+ *
+ * A fire that only rises settles into a still picture: the rise is a linear
+ * map with a fixed input, so the flame stops moving. A quarter of the
+ * difference to each neighbour is enough to keep the noise travelling
+ * sideways and upward, and small enough that the flame still reads as a
+ * column rather than as a cloud.
+ */
+const LATERAL = 0.25;
 
 /** Create a heat buffer with randomised interior and dark edges. Runs 4
  * warm-up steps so that cell colours propagate before the buffer is handed
@@ -106,6 +117,22 @@ export function stepFire(buf: Uint8Array, cols: number, rows: number): void {
             // the knob the lock screen's advective model has.
             const belowBase = (cell + cols) * SUB_CELLS_PER_CELL;
             let heat = buf[belowBase + 1] - COOLING;
+
+            // Lateral mixing, and the reason the fire is a fire rather than a
+            // still picture. A pure rise is a linear map with a fixed input,
+            // so it settles: the flame stops moving a second after it starts.
+            // Each cell leans on its neighbours, and the noise that was
+            // seeded in the buffer keeps travelling sideways and upward
+            // instead of freezing into a shape.
+            const column = cell % cols;
+            if (column > 0) {
+                const left = buf[base - SUB_CELLS_PER_CELL + 1];
+                heat += (left - heat) * LATERAL;
+            }
+            if (column < cols - 1) {
+                const right = buf[base + SUB_CELLS_PER_CELL + 1];
+                heat += (right - heat) * LATERAL;
+            }
 
             // Turbulence: ~2% of cells get nudged up or down one level.
             if (h % 50 === 0) heat += (h & 0x100) !== 0 ? 1 : -1;
