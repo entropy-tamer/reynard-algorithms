@@ -6,7 +6,7 @@
  * surfaces -- a terminal and a browser -- paint.
  *
  * - `./fox-art` is the generated art (`scripts/generate-fox-art.mjs`).
- * - `./fire` is the density-of-gas simulation and the braille packing.
+ * - `./fire-dog` is the density-of-gas simulation and the braille packing.
  * - `./fox-fire` is the frame: the cells, their colours, and the palette.
  *
  * @module algorithms/algorithms/rendering/fox-fire
@@ -21,9 +21,8 @@ export { FOX_ART_SMALL } from "./fox-art";
 export { FOX_ART_TINY } from "./fox-art";
 export { FOX_ART_MICRO } from "./fox-art";
 
-export { SUB_CELLS_PER_CELL } from "./fire-types";
-export type { FireBuffer } from "./fire-types";
-export { createHeatBuffer, stepFire, rowToBraille, brailleGlyph } from "./fire";
+export { FireBuffer, glyphDotBit, rampIndex, RAMP_STEPS, MAX_INTENSITY, SUB_ROWS } from "./fire-dog";
+export type { FireCell, FireOptions } from "./fire-dog";
 
 export {
     decodeFoxTier,

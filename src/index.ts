@@ -1311,8 +1311,8 @@ export type {
   FrustumCullingResult,
   FrustumCullingStats,
 } from "./algorithms/rendering/frustum-culling";
-export { SUB_CELLS_PER_CELL, createHeatBuffer, stepFire, rowToBraille, brailleGlyph } from "./algorithms/rendering/fox-fire/index.ts";
-export type { FireBuffer } from "./algorithms/rendering/fox-fire/index.ts";
+export { FireBuffer, glyphDotBit, rampIndex, RAMP_STEPS, MAX_INTENSITY, SUB_ROWS } from "./algorithms/rendering/fox-fire/index.ts";
+export type { FireCell, FireOptions } from "./algorithms/rendering/fox-fire/index.ts";
 
 // ============================================================================
 // Algorithms - Sorting

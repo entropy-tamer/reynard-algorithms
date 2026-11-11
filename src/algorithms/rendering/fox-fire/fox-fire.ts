@@ -22,7 +22,7 @@
  */
 
 import { FOX_ART_ALPHABET, FOX_ART_TIERS, type FoxArtTier } from "./fox-art";
-import { SUB_CELLS_PER_CELL } from "./fire-types";
+import { RAMP_STEPS, type FireBuffer } from "./fire-dog";
 
 /** A colour, in the 0-255 range every surface can print. */
 export interface FoxFireRgb {
@@ -134,10 +134,8 @@ export function foxMarkGlyph(depth: number): string {
 export interface FoxFireFrameOptions {
     /** The tier to draw. */
     readonly tier: FoxArtTier;
-    /** The fire's sub-cell buffer (see `./fire`). */
-    readonly fire: Uint8Array;
-    /** The fire's own width, in cells. */
-    readonly fireCols: number;
+    /** The fire (see `./fire-dog`): the simulation and the glyph packing. */
+    readonly fire: FireBuffer;
     /** The frame's width, in cells. */
     readonly cols: number;
     /** The frame's height, in cells. */
@@ -156,7 +154,7 @@ export interface FoxFireFrameOptions {
  * as an outline drawn in flame rather than as the mark with a fire behind it.
  */
 export function renderFoxFireFrame(options: FoxFireFrameOptions): FoxFireCell[][] {
-    const { tier, fire, fireCols, cols, rows } = options;
+    const { tier, fire, cols, rows } = options;
     const codes = decodeFoxTier(tier);
     const offsetX = options.offsetX ?? 0;
     const offsetY = options.offsetY ?? 0;
@@ -164,7 +162,6 @@ export function renderFoxFireFrame(options: FoxFireFrameOptions): FoxFireCell[][
 
     for (let y = 0; y < rows; y += 1) {
         const cells: FoxFireCell[] = [];
-        const rowBase = y * fireCols * SUB_CELLS_PER_CELL;
         for (let x = 0; x < cols; x += 1) {
             const markX = x - offsetX;
             const markY = y - offsetY;
@@ -185,37 +182,17 @@ export function renderFoxFireFrame(options: FoxFireFrameOptions): FoxFireCell[][
                 continue;
             }
 
-            const base = rowBase + x * SUB_CELLS_PER_CELL;
-            let heat = 0;
-            for (let sub = 1; sub < SUB_CELLS_PER_CELL; sub += 1) {
-                const value = fire[base + sub] ?? 0;
-                if (value > heat) heat = value;
-            }
+            // The fire's own cell: the glyph it packs and the ramp it is on.
+            const cell = fire.cell(x, y);
             cells.push({
-                glyph: heat >= 32 ? fireGlyph(fire, base) : " ",
+                glyph: cell.ramp < 0 ? " " : fire.glyphFor(cell.packed),
                 kind: "fire",
-                level: heat / 63,
+                level: cell.ramp < 0 ? 0 : cell.ramp / (RAMP_STEPS - 1),
             });
         }
         frame.push(cells);
     }
     return frame;
-}
-
-/**
- * The braille glyph for one cell of the fire.
- *
- * The fire's buffer holds eight sub-cells per cell; the glyph packs the six
- * that the braille pattern can carry. A sub-cell counts as lit at half
- * brightness, which is the threshold `rowToBraille` uses, so the two agree on
- * where a cell stops being empty.
- */
-function fireGlyph(fire: Uint8Array, base: number): string {
-    let pattern = 0;
-    for (let sub = 0; sub < 6; sub += 1) {
-        if ((fire[base + 1 + sub] ?? 0) >= 32) pattern |= 1 << sub;
-    }
-    return String.fromCodePoint(0x2800 + pattern);
 }
 
 /**
