@@ -28,6 +28,7 @@ export {
     decodeFoxTier,
     foxFireColor,
     foxFireCss,
+    foxFireFlatColor,
     foxMarkGlyph,
     foxTierFor,
     foxFireLayout,
@@ -35,4 +36,11 @@ export {
     renderFoxFireFrame,
     FOX_FIRE_PALETTE,
 } from "./fox-fire";
-export type { FoxFireCell, FoxFireFrameOptions, FoxFireKind, FoxFireLayout, FoxFireRgb } from "./fox-fire";
+export type {
+    FoxFireCell,
+    FoxFireFrameOptions,
+    FoxFireKind,
+    FoxFireLayout,
+    FoxFirePalette,
+    FoxFireRgb,
+} from "./fox-fire";
