@@ -30,8 +30,10 @@ export {
     foxFireColor,
     foxFireCss,
     foxMarkGlyph,
+    foxTierFor,
+    foxFireLayout,
     foxMix,
     renderFoxFireFrame,
     FOX_FIRE_PALETTE,
 } from "./fox-fire";
-export type { FoxFireCell, FoxFireFrameOptions, FoxFireKind, FoxFireRgb } from "./fox-fire";
+export type { FoxFireCell, FoxFireFrameOptions, FoxFireKind, FoxFireLayout, FoxFireRgb } from "./fox-fire";

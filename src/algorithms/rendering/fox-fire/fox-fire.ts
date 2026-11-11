@@ -21,7 +21,7 @@
  * @module algorithms/algorithms/rendering/fox-fire
  */
 
-import { FOX_ART_ALPHABET, type FoxArtTier } from "./fox-art";
+import { FOX_ART_ALPHABET, FOX_ART_TIERS, type FoxArtTier } from "./fox-art";
 import { SUB_CELLS_PER_CELL } from "./fire-types";
 
 /** A colour, in the 0-255 range every surface can print. */
@@ -47,10 +47,58 @@ export interface FoxFireCell {
     readonly level: number;
 }
 
+/**
+ * Where the head sits in a frame, and which head it is.
+ *
+ * The layout is the same on every surface: the tier that fits, and the head
+ * centred in the frame. A page at 80x24 and a terminal at 80x24 therefore
+ * draw the same picture, which is the only way "the same effect" means
+ * anything.
+ */
+export interface FoxFireLayout {
+    /** The tier to draw. */
+    readonly tier: FoxArtTier;
+    /** Where the mark's left edge sits. */
+    readonly offsetX: number;
+    /** Where the mark's top edge sits. */
+    readonly offsetY: number;
+}
+
+/**
+ * The layout of a frame of `cols` by `rows` cells.
+ *
+ * The head is centred: the fire is the ground it stands on, and a head pinned
+ * to the edge reads as a watermark rather than as the subject.
+ */
+export function foxFireLayout(cols: number, rows: number): FoxFireLayout {
+    const tier = foxTierFor(cols, rows);
+    return {
+        tier,
+        offsetX: Math.max(0, Math.floor((cols - tier.cols) / 2)),
+        offsetY: Math.max(0, Math.floor((rows - tier.rows) / 2)),
+    };
+}
+
 /** The glyphs the mark is drawn with, by stroke depth. */
 const GLYPH_RIM = "█";
 const GLYPH_BODY = "▓";
 const GLYPH_DEEP = "▒";
+
+/**
+ * The tier that fits a frame.
+ *
+ * The tiers are widest first, and a head that does not fit is worse than a
+ * smaller head: the large tier is 100x50, which no terminal that can show a
+ * splash screen has. The first tier that fits both ways wins, and the
+ * smallest is the fallback for a frame narrower than the tiny tier.
+ *
+ * The rule lives here so the two surfaces pick the same head for the same
+ * size: a page at 80x24 and a terminal at 80x24 draw the same picture.
+ */
+export function foxTierFor(cols: number, rows: number): FoxArtTier {
+    const fits = FOX_ART_TIERS.find((tier) => tier.cols <= cols && tier.rows <= rows);
+    return fits ?? FOX_ART_TIERS[FOX_ART_TIERS.length - 1];
+}
 
 /** The stroke depth of a cell touching empty space. */
 const RIM = 1;

@@ -1321,5 +1321,5 @@ export type { FireBuffer } from "./algorithms/rendering/fox-fire/index.ts";
 export * from "./algorithms/sorting";
 export { FOX_ART_ALPHABET, FOX_ART_TIERS, FOX_ART_LARGE, FOX_ART_MEDIUM, FOX_ART_SMALL, FOX_ART_TINY, FOX_ART_MICRO } from "./algorithms/rendering/fox-fire/index.ts";
 export type { FoxArtTier } from "./algorithms/rendering/fox-fire/index.ts";
-export { decodeFoxTier, foxFireColor, foxFireCss, foxMarkGlyph, foxMix, renderFoxFireFrame, FOX_FIRE_PALETTE } from "./algorithms/rendering/fox-fire";
-export type { FoxFireCell, FoxFireFrameOptions, FoxFireKind, FoxFireRgb } from "./algorithms/rendering/fox-fire";
+export { decodeFoxTier, foxFireColor, foxFireCss, foxFireLayout, foxMarkGlyph, foxMix, foxTierFor, renderFoxFireFrame, FOX_FIRE_PALETTE } from "./algorithms/rendering/fox-fire";
+export type { FoxFireCell, FoxFireFrameOptions, FoxFireKind, FoxFireLayout, FoxFireRgb } from "./algorithms/rendering/fox-fire";
