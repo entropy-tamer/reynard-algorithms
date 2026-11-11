@@ -10,11 +10,38 @@ describe("FireClock", () => {
     it("steps on a fixed timestep, not per frame", () => {
         const clock = new FireClock();
         expect(clock.advance(0)).toBe(0);
-        // 100 ms is six 16 ms steps.
-        expect(clock.advance(100)).toBe(6);
-        // A frame that arrives early is owed nothing.
-        expect(clock.advance(110)).toBe(0);
-        expect(clock.advance(126)).toBe(1);
+        // The step time is the terminal's frame time: 62.5 ms, one step per
+        // frame at the rate the terminal renders at.
+        expect(FIRE_STEP_MS).toBe(1000 / 16);
+        // 62.5 ms of elapsed time is exactly one step.
+        expect(clock.advance(62.5)).toBe(1);
+        // Another 62.5 ms is another step, not a partial one.
+        expect(clock.advance(125)).toBe(1);
+    });
+
+    it("gives sixteen steps a second, on any display", () => {
+        const stepsInSecond = (fps: number): number => {
+            const clock = new FireClock();
+            clock.advance(0);
+            let steps = 0;
+            for (let i = 1; i <= fps; i++) steps += clock.advance((1000 / fps) * i);
+            return steps;
+        };
+        // The rate is a property of the clock, not of how often it is asked:
+        // a 60 Hz display and a 144 Hz display owe the same sixteen steps.
+        expect(stepsInSecond(60)).toBe(16);
+        expect(stepsInSecond(144)).toBe(16);
+        expect(stepsInSecond(30)).toBe(16);
+    });
+
+    it("keeps the fractional step, so a fine display does not lose time", () => {
+        const clock = new FireClock();
+        clock.advance(0);
+        // Frames arrive every 6.9 ms (144 Hz); none of them is a full step,
+        // but the clock carries them until a step is owed.
+        let steps = 0;
+        for (let i = 1; i <= 144; i++) steps += clock.advance((1000 / 144) * i);
+        expect(steps).toBe(16);
     });
 
     it("bounds the catch-up, so a stall does not burn a second of simulation", () => {
@@ -36,23 +63,6 @@ describe("FireClock", () => {
         clock.advance(0);
         expect(clock.phase(0)).toBe(0);
         expect(clock.phase(SWEEP_CYCLE_MS / 2)).toBeCloseTo(0.5, 5);
-        // The crest comes back around.
         expect(clock.phase(SWEEP_CYCLE_MS)).toBeCloseTo(0, 5);
-    });
-
-    it("runs the same speed whatever the display does", () => {
-        // A 60 Hz display and a 144 Hz one: the same elapsed time owes the
-        // same number of fire steps, because the clock is the clock.
-        const sixty = new FireClock();
-        const hundredFortyFour = new FireClock();
-        sixty.advance(0);
-        hundredFortyFour.advance(0);
-        const due = (clock: FireClock, steps: number): number => {
-            let total = 0;
-            for (let i = 1; i <= steps; i++) total += clock.advance((1000 / 60) * i);
-            return total;
-        };
-        expect(due(sixty, 60)).toBe(due(hundredFortyFour, 60));
-        expect(FIRE_STEP_MS).toBe(16);
     });
 });

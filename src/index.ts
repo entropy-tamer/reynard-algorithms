@@ -1315,6 +1315,7 @@ export {
     FireBuffer,
     FireClock,
     FIRE_STEP_MS,
+    FIRE_WARMUP,
     FIRE_MAX_CATCH_UP,
     SWEEP_CYCLE_MS,
     glyphDotBit,
