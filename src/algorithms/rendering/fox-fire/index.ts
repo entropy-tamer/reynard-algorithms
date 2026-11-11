@@ -22,6 +22,8 @@ export { FOX_ART_TINY } from "./fox-art";
 export { FOX_ART_MICRO } from "./fox-art";
 
 export { FireBuffer, glyphDotBit, rampIndex, RAMP_STEPS, MAX_INTENSITY, SUB_ROWS } from "./fire-dog";
+export { FireClock, FIRE_STEP_MS, FIRE_MAX_CATCH_UP, SWEEP_CYCLE_MS } from "./clock";
+export type { FireClockOptions } from "./clock";
 export type { FireCell, FireOptions } from "./fire-dog";
 
 export {
