@@ -177,7 +177,7 @@ function traverseRecursive(
       }
       break;
 
-    case TraversalOrder.LEVEL_ORDER:
+    case TraversalOrder.LEVEL_ORDER: {
       const queue: Array<{ node: IntervalTreeNode; depth: number }> = [{ node, depth }];
 
       while (queue.length > 0) {
@@ -201,5 +201,6 @@ function traverseRecursive(
         }
       }
       break;
+    }
   }
 }

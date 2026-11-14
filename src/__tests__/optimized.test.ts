@@ -566,7 +566,7 @@ describe("Optimized Algorithms API", () => {
 
       const results = await Promise.all(promises);
       expect(results).toHaveLength(10);
-      results.forEach(result => expect(result).toBeInstanceOf(Array));
+      results.forEach(result => { expect(result).toBeInstanceOf(Array); });
     });
 
     it("should test configuration edge cases", () => {

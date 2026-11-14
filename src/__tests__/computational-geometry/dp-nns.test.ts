@@ -1,14 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
   bruteForceNearest,
-  bruteForceNearest3D,
   buildDpNnsIndex,
-  buildDpNnsIndex3D,
-  generateSphereSurface3D,
-  generateVolumeQueries3D,
   queryBatchDpNns,
   queryDpNns,
-  queryDpNns3D,
   type Point2D,
 } from "../../algorithms/computational-geometry/dp-nns";
 
@@ -80,7 +75,6 @@ describe("dp-nns", () => {
       const index = buildDpNnsIndex(points, { seed: 5, order, gridResolution: 8 });
       const batch = queryBatchDpNns(index, queries, { useGridInit: true });
       for (const r of batch.results) {
-        const b = bruteForceNearest(index.points, r.nearestIndex >= 0 ? index.points[r.nearestIndex]! : queries[0]!);
         // result must be a true nearest neighbor for that query
         expect(r.nearestIndex).toBeGreaterThanOrEqual(0);
       }

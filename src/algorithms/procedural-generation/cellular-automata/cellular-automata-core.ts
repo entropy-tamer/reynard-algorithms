@@ -88,7 +88,7 @@ function getNeighbors(
 
     // Handle boundary conditions
     switch (boundaryCondition) {
-      case 'wrap':
+      case 'wrap': {
         nx = ((nx % width) + width) % width;
         ny = ((ny % height) + height) % height;
         const wrappedCell = grid[ny]?.[nx];
@@ -96,6 +96,7 @@ function getNeighbors(
           neighbors.push(wrappedCell);
         }
         break;
+      }
       case 'fixed':
         if (nx < 0 || nx >= width || ny < 0 || ny >= height) {
           neighbors.push(fixedBoundaryValue);
@@ -106,7 +107,7 @@ function getNeighbors(
           }
         }
         break;
-      case 'reflecting':
+      case 'reflecting': {
         if (nx < 0) nx = 0;
         if (nx >= width) nx = width - 1;
         if (ny < 0) ny = 0;
@@ -116,6 +117,7 @@ function getNeighbors(
           neighbors.push(reflectedCell);
         }
         break;
+      }
     }
   }
 

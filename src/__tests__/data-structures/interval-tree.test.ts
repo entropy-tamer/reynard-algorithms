@@ -561,27 +561,27 @@ describe("Interval Tree Data Structure", () => {
     };
 
     runBenchmark("insertion", 100, (tree, intervals) => {
-      intervals.forEach(interval => tree.insert({ start: interval.start + 1000, end: interval.end + 1000 }));
+      intervals.forEach(interval => { tree.insert({ start: interval.start + 1000, end: interval.end + 1000 }); });
     });
 
     runBenchmark("overlap search", 100, (tree, intervals) => {
-      intervals.forEach(interval => tree.searchOverlapping({ start: interval.start - 1, end: interval.end + 1 }));
+      intervals.forEach(interval => { tree.searchOverlapping({ start: interval.start - 1, end: interval.end + 1 }); });
     });
 
     runBenchmark("point search", 100, (tree, intervals) => {
-      intervals.forEach(interval => tree.searchContaining(interval.start + 0.5));
+      intervals.forEach(interval => { tree.searchContaining(interval.start + 0.5); });
     });
 
     runBenchmark("contained search", 100, (tree, intervals) => {
-      intervals.forEach(interval => tree.searchContainedIn({ start: interval.start - 1, end: interval.end + 1 }));
+      intervals.forEach(interval => { tree.searchContainedIn({ start: interval.start - 1, end: interval.end + 1 }); });
     });
 
     runBenchmark("large dataset insertion", 1000, (tree, intervals) => {
-      intervals.forEach(interval => tree.insert({ start: interval.start + 2000, end: interval.end + 2000 }));
+      intervals.forEach(interval => { tree.insert({ start: interval.start + 2000, end: interval.end + 2000 }); });
     });
 
     runBenchmark("large dataset overlap search", 1000, (tree, intervals) => {
-      intervals.forEach(interval => tree.searchOverlapping({ start: interval.start - 1, end: interval.end + 1 }));
+      intervals.forEach(interval => { tree.searchOverlapping({ start: interval.start - 1, end: interval.end + 1 }); });
     });
   });
 });

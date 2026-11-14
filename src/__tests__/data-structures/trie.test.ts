@@ -565,28 +565,28 @@ describe("Trie (Prefix Tree) Data Structure", () => {
     };
 
     runBenchmark("insertion", 100, 5, (trie, words) => {
-      words.forEach(word => trie.insert(word + "_new"));
+      words.forEach(word => { trie.insert(word + "_new"); });
     });
 
     runBenchmark("search", 100, 5, (trie, words) => {
-      words.forEach(word => trie.search(word));
+      words.forEach(word => { trie.search(word); });
     });
 
     runBenchmark("prefix search", 100, 5, (trie, words) => {
-      words.forEach(word => trie.findWordsWithPrefix(word.substring(0, 2)));
+      words.forEach(word => { trie.findWordsWithPrefix(word.substring(0, 2)); });
     });
 
     runBenchmark("autocomplete", 100, 5, (trie, words) => {
-      words.forEach(word => trie.autocomplete(word.substring(0, 2), 5));
+      words.forEach(word => { trie.autocomplete(word.substring(0, 2), 5); });
     });
 
     // Reduced dataset size to prevent memory issues
     runBenchmark("medium dataset insertion", 200, 8, (trie, words) => {
-      words.forEach(word => trie.insert(word + "_medium"));
+      words.forEach(word => { trie.insert(word + "_medium"); });
     });
 
     runBenchmark("medium dataset search", 200, 8, (trie, words) => {
-      words.forEach(word => trie.search(word));
+      words.forEach(word => { trie.search(word); });
     });
   });
 });

@@ -140,7 +140,7 @@ function analyzeMemoization() {
 
         if (recommendations.length > 0) {
           console.log(`\n${name}:`);
-          recommendations.forEach(rec => console.log(`  - ${rec}`));
+          recommendations.forEach(rec => { console.log(`  - ${rec}`); });
         }
       }
     }

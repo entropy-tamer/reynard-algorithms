@@ -516,14 +516,14 @@ describe("Bloom Filter Data Structure", () => {
     };
 
     runBenchmark("insertion", 100, (filter, elements) => {
-      elements.forEach(element => filter.insert(element));
+      elements.forEach(element => { filter.insert(element); });
     });
 
     runBenchmark("membership testing", 100, (filter, elements) => {
       // First insert some elements
-      elements.slice(0, 50).forEach(element => filter.insert(element));
+      elements.slice(0, 50).forEach(element => { filter.insert(element); });
       // Then test all elements
-      elements.forEach(element => filter.test(element));
+      elements.forEach(element => { filter.test(element); });
     });
 
     runBenchmark("batch insertion", 100, (filter, elements) => {
@@ -532,20 +532,20 @@ describe("Bloom Filter Data Structure", () => {
 
     runBenchmark("batch testing", 100, (filter, elements) => {
       // First insert some elements
-      elements.slice(0, 50).forEach(element => filter.insert(element));
+      elements.slice(0, 50).forEach(element => { filter.insert(element); });
       // Then test all elements in batch
       filter.testBatch(elements);
     });
 
     runBenchmark("large dataset insertion", 200, (filter, elements) => {
-      elements.forEach(element => filter.insert(element));
+      elements.forEach(element => { filter.insert(element); });
     });
 
     runBenchmark("large dataset testing", 200, (filter, elements) => {
       // First insert some elements
-      elements.slice(0, 100).forEach(element => filter.insert(element));
+      elements.slice(0, 100).forEach(element => { filter.insert(element); });
       // Then test all elements
-      elements.forEach(element => filter.test(element));
+      elements.forEach(element => { filter.test(element); });
     });
   });
 });

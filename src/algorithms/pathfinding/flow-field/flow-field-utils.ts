@@ -705,7 +705,7 @@ export class FlowFieldUtils {
           agents.push({ x: 0, y });
         }
         break;
-      case "circle":
+      case "circle": {
         // Circle around the center
         const centerX = width / 2;
         const centerY = height / 2;
@@ -717,7 +717,8 @@ export class FlowFieldUtils {
           agents.push({ x, y });
         }
         break;
-      case "grid":
+      }
+      case "grid": {
         // Grid pattern
         const cols = Math.ceil(Math.sqrt(count));
         const rows = Math.ceil(count / cols);
@@ -731,6 +732,7 @@ export class FlowFieldUtils {
           agents.push({ x, y });
         }
         break;
+      }
       case "random":
         return this.generateRandomAgents(count, width, height, grid, seed);
     }

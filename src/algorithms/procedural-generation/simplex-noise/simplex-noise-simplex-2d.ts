@@ -31,7 +31,7 @@ export function simplex2D(x: number, y: number, grad3: number[][], perm: number[
   const x0 = x - (i - t);
   const y0 = y - (j - t);
 
-  let i1, j1;
+  let i1: number, j1: number;
   if (x0 > y0) {
     i1 = 1;
     j1 = 0;
