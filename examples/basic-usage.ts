@@ -4,8 +4,6 @@
  * This file demonstrates practical usage of the algorithms package
  * with real-world scenarios and performance considerations.
  */
-/* eslint-disable max-lines */
-
 import {
   // Union-Find algorithms
   UnionFind,

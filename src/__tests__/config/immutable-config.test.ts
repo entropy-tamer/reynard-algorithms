@@ -6,8 +6,6 @@
  *
  * @module algorithmsImmutableConfigTests
  */
-/* eslint-disable max-lines, max-lines-per-function */
-
 import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
 import { AlgorithmConfigManager } from "../../config/algorithm-config";
 import {

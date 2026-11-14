@@ -6,8 +6,6 @@
  *
  * @module algorithms/issue5PerformanceTestsTests
  */
-/* eslint-disable max-lines, max-lines-per-function, jsdoc/require-description, jsdoc/require-returns, jsdoc/require-param-description, jsdoc/require-example */
-
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { MinimumBoundingBox } from "../../algorithms/computational-geometry/minimum-bounding-box/minimum-bounding-box-core";
 import { runBenchmark, assertPerformance, BenchmarkReport } from "../utils/benchmark-utils";

@@ -1,8 +1,6 @@
 /**
  * @file Benchmark comparison between ThetaStar and OptimizedThetaStar algorithms
  */
-/* eslint-disable max-lines-per-function */
-
 import { performance } from "node:perf_hooks";
 import { ThetaStar } from "../src/algorithms/pathfinding/theta-star/theta-star-core";
 import { OptimizedThetaStar } from "../src/algorithms/pathfinding/theta-star/theta-star-optimized";

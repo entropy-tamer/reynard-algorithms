@@ -1,7 +1,6 @@
 /**
  * @file Trie tests
  */
-/* eslint-disable max-lines, max-lines-per-function */
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { Trie } from "../../data-structures/basic/trie/trie-core";
 

@@ -5,8 +5,6 @@
  *
  * @module algorithmsIssue8RaceConditionsTests
  */
-/* eslint-disable max-lines, max-lines-per-function */
-
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { ImmutableConfigManager, ConfigChangeEvent } from "../../config/immutable-config";
 import { AlgorithmConfigManager } from "../../config/algorithm-config";

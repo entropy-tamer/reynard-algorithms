@@ -1,7 +1,6 @@
 /**
  * @file Priority Queue tests
  */
-/* eslint-disable max-lines, max-lines-per-function */
 import { describe, it, expect, beforeEach } from "vitest";
 import { PriorityQueue, PriorityQueueComparator, PriorityQueueEvent } from "../../data-structures/basic/priority-queue";
 

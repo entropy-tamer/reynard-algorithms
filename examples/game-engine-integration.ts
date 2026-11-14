@@ -4,8 +4,6 @@
  * This example shows how to integrate reynard-algorithms into a game engine
  * with real-time collision detection, spatial optimization, and performance monitoring.
  */
-/* eslint-disable max-lines */
-
 import { detectCollisions, SpatialHash, PointOps, checkCollision } from "../src/index.js";
 import type { Point, MutablePoint } from "../src/index.js";
 

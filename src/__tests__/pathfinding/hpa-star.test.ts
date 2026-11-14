@@ -1,8 +1,6 @@
 /**
  * @file Unit tests for HPA* hierarchical pathfinding algorithm
  */
-/* eslint-disable max-lines, max-lines-per-function */
-
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { HPAStar, HPAStarUtils } from "../../algorithms/pathfinding/hpa-star";
 import { CellType } from "../../algorithms/pathfinding/hpa-star/hpa-star-types";

@@ -6,8 +6,6 @@
  *
  * @module algorithms/flowFieldValidationTests
  */
-/* eslint-disable max-lines, max-lines-per-function */
-
 import { describe, it, expect, beforeEach } from "vitest";
 import { FlowField } from "../../algorithms/pathfinding/flow-field/flow-field-core";
 import { FlowFieldGenerator } from "../../algorithms/pathfinding/flow-field/flow-field-generator";

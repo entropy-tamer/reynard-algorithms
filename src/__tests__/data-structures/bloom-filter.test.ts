@@ -1,7 +1,6 @@
 /**
  * @file Bloom Filter tests
  */
-/* eslint-disable max-lines, max-lines-per-function */
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { BloomFilter } from "../../data-structures/basic/bloom-filter/bloom-filter-core";
 

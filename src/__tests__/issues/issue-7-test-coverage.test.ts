@@ -5,8 +5,6 @@
  *
  * @module algorithmsIssue7TestCoverageTests
  */
-/* eslint-disable max-lines, max-lines-per-function, jsdoc/require-description, jsdoc/require-returns, jsdoc/require-param-description, jsdoc/require-example */
-
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { JPS } from "../../algorithms/pathfinding/jps/jps-core";
 import { ThetaStar } from "../../algorithms/pathfinding/theta-star/theta-star-core";

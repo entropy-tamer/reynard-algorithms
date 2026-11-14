@@ -1,7 +1,6 @@
 /**
  * @file Interval Tree tests
  */
-/* eslint-disable max-lines, max-lines-per-function */
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { IntervalTree } from "../../data-structures/trees/interval-tree/interval-tree-core";
 import { TraversalOrder } from "../../data-structures/trees/interval-tree/interval-tree-types";

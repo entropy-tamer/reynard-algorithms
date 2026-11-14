@@ -1,7 +1,6 @@
 /**
  * @file Issue #2 - AABB validation tests
  */
-/* eslint-disable max-lines, max-lines-per-function, jsdoc/require-description, jsdoc/require-returns, jsdoc/require-param-description, jsdoc/require-example */
 /**
  * Issue #2: AABB Validation Missing - Micro-Benchmark
  *

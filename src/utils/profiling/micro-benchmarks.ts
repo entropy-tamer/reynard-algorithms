@@ -7,8 +7,6 @@
  * NOTE: This file contains intentional unused expressions to simulate
  * computational overhead in benchmark scenarios.
  */
-/* eslint-disable @typescript-eslint/no-unused-expressions */
-
 /**
  * Micro-Benchmarks for PAW Components
  * 

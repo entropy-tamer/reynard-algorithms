@@ -6,8 +6,6 @@
  *
  * @module algorithms/issue6InputValidationTests
  */
-/* eslint-disable max-lines, max-lines-per-function, jsdoc/require-description, jsdoc/require-returns, jsdoc/require-param-description, jsdoc/require-example */
-
 import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
 import { detectCollisions } from "../../optimized";
 import { SpatialCollisionOptimizer } from "../../algorithms/collision/optimization/spatial-collision-optimizer";

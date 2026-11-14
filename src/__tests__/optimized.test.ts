@@ -1,8 +1,6 @@
 /**
  * @file Optimized algorithms integration tests
  */
-/* eslint-disable max-lines, max-lines-per-function, jsdoc/require-description, jsdoc/require-returns, jsdoc/require-param-description, jsdoc/require-example */
-
 import { describe, expect, it, beforeEach, afterEach } from "vitest";
 import {
   configureOptimization,

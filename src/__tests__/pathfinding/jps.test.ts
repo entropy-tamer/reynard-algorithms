@@ -1,8 +1,6 @@
 /**
  * @file Unit tests for Jump Point Search (JPS) pathfinding algorithm
  */
-/* eslint-disable max-lines, max-lines-per-function */
-
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { JPS, JPSUtils } from "../../algorithms/pathfinding/jps/index";
 import type { Point, CellType } from "../../algorithms/pathfinding/jps/jps-types";

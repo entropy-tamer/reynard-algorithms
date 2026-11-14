@@ -3,10 +3,6 @@
  *
  * Comprehensive test suite for the Radix-2 Cooley-Tukey FFT implementation.
  */
-
-/* eslint-disable max-lines */
-/* eslint-disable max-lines-per-function */
-
 import { describe, it, expect, beforeEach } from "vitest";
 import { Radix2FFT } from "../../../algorithms/signal-processing/fft/radix2-fft";
 import { TestSignalGenerator, FFTValidator, PerformanceTester, TestDataSets } from "./test-utils";

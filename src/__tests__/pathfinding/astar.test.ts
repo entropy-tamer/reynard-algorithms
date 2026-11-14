@@ -4,8 +4,6 @@
  * Comprehensive test suite for the A* pathfinding algorithm implementation.
  * Tests mathematical correctness, performance, edge cases, and integration.
  */
-/* eslint-disable max-lines, max-lines-per-function */
-
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import {
   AStar,
