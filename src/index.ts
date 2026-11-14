@@ -333,6 +333,26 @@ export type {
   VoronoiVertex,
 } from "./algorithms/computational-geometry/voronoi/voronoi-types";
 
+// DP-NNS (Delaunay-history successor DAG nearest-neighbor search)
+export { bruteForceNearest, bruteForceNearest3D, buildDpNnsIndex, buildDpNnsIndex3D, computeGridStarts, computeGridStarts3D, generateClusteredManifold3D, generateGaussianHillSurface3D, generateRingManifold3D, generateSaddleSurface3D, generateSphereSurface3D, generateTorusSurface3D, generateVolumeQueries3D, projectPointsXY, queryBatchDpNns, queryDpNns, queryDpNns3D } from "./algorithms/computational-geometry/dp-nns";
+export type {
+  Bounds2D as DpNnsBounds2D,
+  Bounds3D as DpNnsBounds3D,
+  DpNnsBatchQueryStats,
+  DpNnsBuildOptions,
+  DpNnsBuildOptions3D,
+  DpNnsBuildStats,
+  DpNnsIndex,
+  DpNnsIndex3D,
+  DpNnsQueryOptions,
+  DpNnsQueryResult,
+  DpNnsQueryResult3D,
+  DpNnsQueryTraceStep,
+  InsertionOrderMode as DpNnsInsertionOrderMode,
+  Point2D as DpNnsPoint2D,
+  Point3D as DpNnsPoint3D,
+} from "./algorithms/computational-geometry/dp-nns";
+
 // Polygon Clipping
 export { PolygonClipping } from "./algorithms/computational-geometry/polygon-clipping/polygon-clipping-core.ts";
 export type {

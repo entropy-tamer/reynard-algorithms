@@ -308,3 +308,23 @@ export type {
   MarchingSquaresQueryResult,
   Contour,
 } from "./marching-squares/marching-squares-types";
+
+// DP-NNS (Delaunay-history successor DAG nearest-neighbor search)
+export { bruteForceNearest, bruteForceNearest3D, buildDpNnsIndex, buildDpNnsIndex3D, computeGridStarts, computeGridStarts3D, generateClusteredManifold3D, generateGaussianHillSurface3D, generateRingManifold3D, generateSaddleSurface3D, generateSphereSurface3D, generateTorusSurface3D, generateVolumeQueries3D, projectPointsXY, queryBatchDpNns, queryDpNns, queryDpNns3D } from "./dp-nns";
+export type {
+  Bounds2D,
+  Bounds3D as DpNnsBounds3D,
+  DpNnsBatchQueryStats,
+  DpNnsBuildOptions,
+  DpNnsBuildOptions3D,
+  DpNnsBuildStats,
+  DpNnsIndex,
+  DpNnsIndex3D,
+  DpNnsQueryOptions,
+  DpNnsQueryResult,
+  DpNnsQueryResult3D,
+  DpNnsQueryTraceStep,
+  InsertionOrderMode,
+  Point2D as DpNnsPoint2D,
+  Point3D as DpNnsPoint3D,
+} from "./dp-nns";
