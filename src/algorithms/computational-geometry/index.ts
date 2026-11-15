@@ -309,6 +309,15 @@ export type {
   Contour,
 } from "./marching-squares/marching-squares-types";
 
+// Marching Cubes Algorithm
+export { marchingCubesMesh } from "./marching-cubes";
+export type {
+  MarchingCubesBounds,
+  MarchingCubesMesh,
+  MarchingCubesOptions,
+  ScalarField3D,
+} from "./marching-cubes";
+
 // DP-NNS (Delaunay-history successor DAG nearest-neighbor search)
 export { bruteForceNearest, bruteForceNearest3D, buildDpNnsIndex, buildDpNnsIndex3D, computeGridStarts, computeGridStarts3D, generateClusteredManifold3D, generateGaussianHillSurface3D, generateRingManifold3D, generateSaddleSurface3D, generateSphereSurface3D, generateTorusSurface3D, generateVolumeQueries3D, projectPointsXY, queryBatchDpNns, queryDpNns, queryDpNns3D } from "./dp-nns";
 export type {

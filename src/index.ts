@@ -333,6 +333,15 @@ export type {
   VoronoiVertex,
 } from "./algorithms/computational-geometry/voronoi/voronoi-types";
 
+// Marching Cubes Algorithm
+export { marchingCubesMesh } from "./algorithms/computational-geometry/marching-cubes";
+export type {
+  MarchingCubesBounds,
+  MarchingCubesMesh,
+  MarchingCubesOptions,
+  ScalarField3D,
+} from "./algorithms/computational-geometry/marching-cubes";
+
 // DP-NNS (Delaunay-history successor DAG nearest-neighbor search)
 export { bruteForceNearest, bruteForceNearest3D, buildDpNnsIndex, buildDpNnsIndex3D, computeGridStarts, computeGridStarts3D, generateClusteredManifold3D, generateGaussianHillSurface3D, generateRingManifold3D, generateSaddleSurface3D, generateSphereSurface3D, generateTorusSurface3D, generateVolumeQueries3D, projectPointsXY, queryBatchDpNns, queryDpNns, queryDpNns3D } from "./algorithms/computational-geometry/dp-nns";
 export type {
