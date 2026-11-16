@@ -1382,3 +1382,32 @@ export type {
     FoxFirePalette,
     FoxFireRgb,
 } from "./algorithms/rendering/fox-fire";
+
+// Layout / UI rect primitives (DOMRect-like {x,y,width,height})
+export {
+  aabbMinMaxToRect,
+  insetRect,
+  intersectionArea,
+  intersectionArea as rectIntersectionArea,
+  intersectionRect,
+  isValidLayoutRect,
+  normalizeLayoutRect,
+  rectArea,
+  rectBottom,
+  rectContains,
+  rectGap,
+  rectRelation,
+  rectRight,
+  rectToAabbMinMax,
+  rectsIntersect,
+  rectsTouch,
+  toLayoutRect,
+} from "./algorithms/collision/layout-rect";
+
+export type {
+  LayoutRect,
+  LayoutRectLike,
+  RectGap,
+  RectPolicy,
+  RectRelation,
+} from "./algorithms/collision/layout-rect";
