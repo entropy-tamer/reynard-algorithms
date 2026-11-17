@@ -14,8 +14,10 @@ pnpm add @entropy-tamer/reynard-algorithms
 | --- | --- |
 | Data structures | Union-Find, Bloom filter, priority queue, LRU cache, trie, Fenwick tree, interval tree, segment tree |
 | Spatial indexes | spatial hash, quadtree, k-d tree, octree, BVH, R-tree |
-| Collision | sweep and prune, AABB, OBB, SAT, spatial collision optimizer |
+| Collision | sweep and prune, AABB, OBB, SAT, spatial collision optimizer, layout rects |
 | Geometry | line rasterization, convex hull, Delaunay, Voronoi, clipping, splines, triangulation |
+| Imaging | sRGB luminance, WCAG contrast, minimum veil alpha |
+| Text layout | saliency-guided cover text placement with a soft corner prior |
 | Pathfinding | A*, JPS, Theta*, flow field, HPA*, visibility graph, shadowcasting |
 | Procedural generation | simplex and Perlin noise, cellular automata, Poisson disk, WFC, space colonization, StructureForge |
 | Machine learning | PCA, MDS, Isomap, k-means, decision trees, Markov chains, NEAT, Q-learning |

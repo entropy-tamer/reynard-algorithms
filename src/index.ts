@@ -1459,3 +1459,41 @@ export type {
   RectPolicy,
   RectRelation,
 } from "./algorithms/collision/layout-rect";
+
+// Perceptual color arithmetic and saliency-guided cover text placement.
+export {
+  channelsOf,
+  compositeChannels,
+  contrastRatio,
+  mixChannels,
+  pixelsOf,
+  relativeLuminance,
+  requiredAlpha,
+  srgbChannel,
+} from "./algorithms/imaging/luminance";
+
+export type { Channels } from "./algorithms/imaging/luminance";
+
+export {
+  integralImage,
+  lumaSaliency,
+  makeLumaGrid,
+  oppositeQuadrant,
+  placeCoverText,
+  regionMax,
+  regionMean,
+  regionSum,
+  saliencyCenter,
+} from "./algorithms/layout/cover-placement";
+
+export type {
+  CoverPlacement,
+  LumaGrid,
+  PlacementDiagnostics,
+  PlacementOptions,
+  PlacementWeights,
+  PlacedBlock,
+  Quadrant,
+  TextBlock,
+  TonePreference,
+} from "./algorithms/layout/cover-placement";
