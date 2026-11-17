@@ -28,9 +28,9 @@ describe("generated fox sketch", () => {
         expect(FOX_SKETCH_SOURCE_HASH).toBe(hash);
     });
 
-    it("emits four finite strokes inside the display bounds", () => {
-        expect(FOX_SKETCH_STROKES).toHaveLength(4);
-        expect(FOX_SKETCH_VERSION).toBe("1");
+    it("emits the centerline contour and two eyes inside the display bounds", () => {
+        expect(FOX_SKETCH_STROKES).toHaveLength(3);
+        expect(FOX_SKETCH_VERSION).toBe("2");
         let count = 0;
         for (const stroke of FOX_SKETCH_STROKES) {
             expect(stroke.length).toBeGreaterThan(4);

@@ -22,12 +22,12 @@ import { dirname, join, resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
-import { deriveSeed, jitterPath, resampleClosed } from "../dist/index.js";
+import { deriveSeed, jitterPath, pathLength, resampleClosed } from "../dist/index.js";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const DEFAULT_SVG = join(homedir(), "favicon.svg");
 const DEFAULT_OUT = resolve(HERE, "../src/algorithms/rendering/sketch/fox-sketch-paths.ts");
-const GENERATOR_VERSION = "1";
+const GENERATOR_VERSION = "2";
 
 /** Display size in CSS px: the 28px desktop mark with room for the wobble. */
 const TARGET_SIZE = 34;
@@ -170,6 +170,55 @@ function normalise(subpaths) {
     })));
 }
 
+/** Resample a ring to exactly `count` points by arc length. */
+function resampleToCount(path, count) {
+    const total = pathLength(path);
+    const out = [];
+    let segment = 1;
+    let travelled = 0;
+    for (let i = 0; i < count; i++) {
+        const target = (i / count) * total;
+        while (segment < path.length - 1 && travelled + dist(path[segment - 1], path[segment]) < target) {
+            travelled += dist(path[segment - 1], path[segment]);
+            segment++;
+        }
+        const a = path[segment - 1];
+        const b = path[segment];
+        const len = dist(a, b);
+        const t = len === 0 ? 0 : Math.min(1, Math.max(0, (target - travelled) / len));
+        out.push({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t });
+    }
+    return out;
+}
+
+/**
+ * The favicon is line art: its head outline is traced as a thick band, so the
+ * SVG carries BOTH edges of that band as two subpaths. Drawing both makes the
+ * hand-drawn mark look double-drawn. Merge the two longest rings into their
+ * centerline and keep the small rings (eyes, nose) as they are.
+ */
+function mergeOutlineBand(subpaths) {
+    const ranked = subpaths
+        .map((path, index) => ({ path, index, length: pathLength(path) }))
+        .sort((a, b) => b.length - a.length);
+    if (ranked.length < 2) return subpaths;
+    const outer = ranked[0];
+    const inner = ranked[1];
+    if (outer.length < 20 || inner.length < 20) return subpaths;
+    if (Math.abs(outer.length - inner.length) / outer.length > 0.35) return subpaths;
+
+    const count = Math.max(48, Math.round(((outer.length + inner.length) / 2) / SPACING));
+    const a = resampleToCount(outer.path, count);
+    const b = resampleToCount(inner.path, count);
+    if (dist(a[0], b[count - 1]) < dist(a[0], b[0])) b.reverse();
+    const centerline = a.map((point, i) => ({
+        x: (point.x + b[i].x) / 2,
+        y: (point.y + b[i].y) / 2,
+    }));
+    const keep = subpaths.filter((_, i) => i !== outer.index && i !== inner.index);
+    return [centerline, ...keep];
+}
+
 const round = (n) => Math.round(n * 10 ** PRECISION) / 10 ** PRECISION;
 
 function main() {
@@ -184,10 +233,20 @@ function main() {
     const sourcePaths = [...svg.matchAll(/\sd="([^"]+)"/g)].map((match) => match[1]);
     if (sourcePaths.length === 0) throw new Error("no <path d=...> in the source SVG");
 
-    const normalised = normalise(sourcePaths.flatMap(parsePath));
+    const parsed = normalise(sourcePaths.flatMap(parsePath));
+    // The thick-outline band's second edge reads as a ghost stroke at 28px.
+    // Keep the outer contour and the two small eye rings only.
+    const ranked = parsed.map((path, index) => ({ index, length: pathLength(path) })).sort((a, b) => b.length - a.length);
+    const normalised = ranked.length > 2
+        ? parsed.filter((_, i) => i !== ranked[1].index)
+        : mergeOutlineBand(parsed);
     const strokes = normalised.map((path, index) => {
         const seed = deriveSeed("fox-mark", GENERATOR_VERSION, index);
-        return jitterPath(resampleClosed(path, SPACING), seed, { ...JITTER, scale: ROUGHNESS })
+        const length = pathLength(path);
+        // Small rings (eyes) need a finer step or they come out as polygons.
+        const step = length < 20 ? 0.6 : SPACING;
+        const roughness = length < 20 ? ROUGHNESS * 0.7 : ROUGHNESS * 0.8;
+        return jitterPath(resampleClosed(path, step), seed, { ...JITTER, scale: roughness })
             .map((p) => ({ x: round(p.x), y: round(p.y) }));
     });
 

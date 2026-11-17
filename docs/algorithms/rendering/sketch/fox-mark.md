@@ -19,9 +19,9 @@ import { FOX_SKETCH_STROKES, FOX_SKETCH_BOUNDS } from "@entropy-tamer/reynard-al
 |---|---|
 | Source | `~/favicon.svg` |
 | Source SHA-256 | `1037cd524f20e9ce1fd0e04453290ec756848f31c612c242c54d968c667785d6` |
-| Generator version | 1 (folded into the per-stroke seed) |
+| Generator version | 2 (folded into the per-stroke seed) |
 | Display box | 34 x 34 px |
-| Strokes | 4 (outline, nose detail, two eyes) |
+| Strokes | 3 (outer contour, two eyes) |
 
 The generated file carries the source hash. A unit test recomputes the hash
 from the favicon and fails if the art changed without a regeneration, so the
