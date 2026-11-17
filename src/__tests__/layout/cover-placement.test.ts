@@ -6,6 +6,7 @@ import {
     oppositeQuadrant,
     placeCoverText,
     rectsIntersect,
+    stackCoverText,
     regionMean,
     regionSum,
     saliencyCenter,
@@ -94,6 +95,43 @@ describe("layout/cover-placement", () => {
         const result = placeCoverText(flatGrid(0.01), BLOCKS, { reserved });
         const kicker = result.blocks.kicker;
         expect(rectsIntersect(kicker, reserved[0])).toBe(false);
+    });
+
+    it("stacks the three roles in a top-anchored column on the quiet side", () => {
+        const blocks: TextBlock[] = [
+            { id: "kicker", weight: 0.7, width: 0.18, height: 0.05 },
+            { id: "headline", weight: 1, width: 0.4, height: 0.22 },
+            { id: "deck", weight: 0.5, width: 0.4, height: 0.12 },
+        ];
+        const result = stackCoverText(gridWithBlob(0.8, 0.4), blocks, {
+            reserved: [{ x: 0, y: 0, width: 1, height: 0.12 }],
+        });
+        expect(result.diagnostics.quadrant).toBe("tl");
+        expect(result.blocks.kicker.y).toBeGreaterThanOrEqual(0.12);
+        expect(result.blocks.headline.y).toBeGreaterThan(result.blocks.kicker.y);
+        expect(result.blocks.deck.y).toBeGreaterThan(result.blocks.headline.y);
+        expect(result.blocks.kicker.x).toBe(result.blocks.headline.x);
+        expect(result.blocks.deck.x).toBe(result.blocks.headline.x);
+        expect(result.blocks.kicker.x).toBeLessThan(0.5);
+        expect(rectsIntersect(result.blocks.headline, result.blocks.deck)).toBe(false);
+    });
+
+    it("moves the column when a hard no-zone blocks the preferred side", () => {
+        const blocks: TextBlock[] = [
+            { id: "kicker", weight: 0.7, width: 0.18, height: 0.05 },
+            { id: "headline", weight: 1, width: 0.4, height: 0.22 },
+            { id: "deck", weight: 0.5, width: 0.4, height: 0.12 },
+        ];
+        // Subject sits right (so left is preferred), but the left half is a
+        // hard no-zone; the solver must take the clear right column.
+        const result = stackCoverText(gridWithBlob(0.8, 0.5), blocks, {
+            noZones: [{ x: 0, y: 0, width: 0.48, height: 1 }],
+        });
+        expect(result.diagnostics.quadrant).toBe("tr");
+        for (const block of Object.values(result.blocks)) {
+            expect(block.x).toBeGreaterThan(0.5);
+            expect(Number.isFinite(block.score)).toBe(true);
+        }
     });
 
     it("is deterministic", () => {

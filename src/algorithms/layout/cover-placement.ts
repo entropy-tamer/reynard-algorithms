@@ -70,6 +70,8 @@ export interface PlacementOptions {
     readonly preferredTone?: TonePreference;
     /** Areas the type must not cover (the breadcrumb pill, a logo). */
     readonly reserved?: readonly LayoutRect[];
+    /** Hard subject exclusions measured from the cover pixels. Never drawn over. */
+    readonly noZones?: readonly LayoutRect[];
     /** Box radius for local contrast, in grid cells. Default 3. */
     readonly radius?: number;
     /** Width of the frame-center bias, in normalized units. Default 0.34. */
@@ -467,5 +469,113 @@ export function placeCoverText(
     return {
         blocks: placements,
         diagnostics: { saliencyCenter: center, quadrant, targetTone: resolved.preferredTone, scores },
+    };
+}
+
+/** Options for {@link stackCoverText}. */
+export interface StackOptions extends PlacementOptions {
+    /** Lower edge the stack must stay above, as a band fraction. Default 0.82. */
+    readonly maxBottom?: number;
+    /** Width of the editorial column, as a band fraction. Default 0.42. */
+    readonly columnWidth?: number;
+}
+
+/**
+ * Place cover type as a top-anchored editorial column on the side opposite the
+ * focal subject.
+ *
+ * Free scatter optimizes each block in isolation, which can strand the kicker
+ * mid-band or let a long deck drift over the face. A masthead composition keeps
+ * all three voices in one column: kicker, headline, deck, in that order, with a
+ * shared left edge. The saliency center still chooses the side, so the column
+ * lands in the quiet half of the picture. Callers pass content-aware heights;
+ * if the stack is too tall, heights are scaled to fit above `maxBottom` and the
+ * host shrinks its type to match.
+ */
+export function stackCoverText(
+    grid: LumaGrid,
+    blocks: readonly TextBlock[],
+    options: StackOptions = {},
+): CoverPlacement {
+    if (grid.width < 1 || grid.height < 1 || grid.luma.length < grid.width * grid.height) {
+        throw new RangeError("stackCoverText: grid is smaller than its declared dimensions");
+    }
+    const margin = options.margin ?? DEFAULT_OPTIONS.margin;
+    const gutter = options.gutter ?? DEFAULT_OPTIONS.gutter;
+    const maxBottom = options.maxBottom ?? 0.82;
+    const columnWidth = options.columnWidth ?? 0.42;
+    const saliency = lumaSaliency(grid, options);
+    const saliencySum = integralImage(saliency, grid.width, grid.height);
+    const center = saliencyCenter(saliency, grid.width, grid.height);
+    const zones = options.noZones ?? [];
+    const reservedBottom = (options.reserved ?? []).reduce((max, area) => Math.max(max, area.y + area.height), 0);
+    const top = Math.min(maxBottom - 0.1, Math.max(margin, reservedBottom + gutter));
+    const width = Math.min(columnWidth, 1 - 2 * margin);
+    const heights = blocks.map((block) => Math.max(block.height, 0.02));
+    const total = heights.reduce((sum, height) => sum + height, 0) + gutter * Math.max(0, blocks.length - 1);
+    const available = Math.max(0.1, maxBottom - top);
+    const scale = total > available ? available / total : 1;
+
+    const blocked = (rect: LayoutRect) =>
+        zones.some((zone) => rectsIntersect(expand(rect, gutter), expand(zone, gutter), { includeTouch: true }));
+    const columnX = (onLeft: boolean) => (onLeft ? margin : 1 - margin - width);
+    const conflicts = (onLeft: boolean) => {
+        let y = top;
+        let count = 0;
+        for (const height of heights) {
+            if (blocked({ x: columnX(onLeft), y, width, height: height * scale })) count += 1;
+            y += height * scale + gutter;
+        }
+        return count;
+    };
+
+    // The saliency center still expresses the editorial preference, but a hard
+    // no-zone can overrule it. On /rutt the face is left of center; the right
+    // column is clear even though a pure center-of-mass rule might pick left.
+    const preferredLeft = center.x >= 0.5;
+    const left = conflicts(preferredLeft) <= conflicts(!preferredLeft) ? preferredLeft : !preferredLeft;
+    const quadrant: Quadrant = left ? "tl" : "tr";
+
+    const placements: Record<string, PlacedBlock> = {};
+    const scores: Record<string, number> = {};
+    let cursor = top;
+    blocks.forEach((block, index) => {
+        const height = heights[index] * scale;
+        // If a zone still blocks this slot, slide down past it rather than
+        // painting over the subject.
+        let y = cursor;
+        let guard = 0;
+        while (blocked({ x: columnX(left), y, width, height }) && y + height < maxBottom && guard < zones.length + 1) {
+            const hit = zones.find((zone) => rectsIntersect(expand({ x: columnX(left), y, width, height }, gutter), zone, { includeTouch: true }));
+            y = hit ? Math.max(y + gutter, hit.y + hit.height + gutter) : y + gutter;
+            guard += 1;
+        }
+        const rect: LayoutRect = { x: columnX(left), y, width, height };
+        const intrusion = regionMean(
+            saliencySum,
+            grid.width,
+            grid.height,
+            rect.x * grid.width,
+            rect.y * grid.height,
+            rect.width * grid.width,
+            rect.height * grid.height,
+        );
+        placements[block.id] = {
+            ...rect,
+            score: blocked(rect) ? Number.POSITIVE_INFINITY : intrusion,
+            candidates: zones.length + 1,
+        };
+        scores[block.id] = placements[block.id].score;
+        cursor = y + height + gutter;
+    });
+
+    return {
+        blocks: placements,
+        diagnostics: {
+            saliencyCenter: center,
+            quadrant,
+            targetTone: options.preferredTone ?? DEFAULT_OPTIONS.preferredTone,
+            scores,
+        },
     };
 }

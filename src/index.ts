@@ -1480,6 +1480,7 @@ export {
   makeLumaGrid,
   oppositeQuadrant,
   placeCoverText,
+  stackCoverText,
   regionMax,
   regionMean,
   regionSum,
@@ -1494,6 +1495,16 @@ export type {
   PlacementWeights,
   PlacedBlock,
   Quadrant,
+  StackOptions,
   TextBlock,
   TonePreference,
 } from "./algorithms/layout/cover-placement";
+
+// Content-aware table column sizing.
+export { contentFloorPct, fitColumnsToContent } from "./algorithms/layout/column-sizing";
+
+export type {
+  FitColumnsOptions,
+  FitColumnsResult,
+  SizedColumn,
+} from "./algorithms/layout/column-sizing";

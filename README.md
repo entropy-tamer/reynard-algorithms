@@ -17,7 +17,8 @@ pnpm add @entropy-tamer/reynard-algorithms
 | Collision | sweep and prune, AABB, OBB, SAT, spatial collision optimizer, layout rects |
 | Geometry | line rasterization, convex hull, Delaunay, Voronoi, clipping, splines, triangulation |
 | Imaging | sRGB luminance, WCAG contrast, minimum veil alpha |
-| Text layout | saliency-guided cover text placement with a soft corner prior |
+| Text layout | saliency-guided cover text placement with a soft corner prior, and a top-anchored editorial stack with hard no-zone constraints |
+| Table layout | content-floor apportionment: raise a column to its measured content width and borrow from columns with slack |
 | Pathfinding | A*, JPS, Theta*, flow field, HPA*, visibility graph, shadowcasting |
 | Procedural generation | simplex and Perlin noise, cellular automata, Poisson disk, WFC, space colonization, StructureForge |
 | Machine learning | PCA, MDS, Isomap, k-means, decision trees, Markov chains, NEAT, Q-learning |
@@ -125,6 +126,31 @@ const pairs = detectCollisions(boxes);
 Each guide states the model, the equations, the asymptotic cost and the failure
 modes that the implementation guards against. Start with the guide for the area,
 then read the source; the source names the guide in its module header.
+
+## Column sizing
+
+`contentFloorPct` converts a measured content width into a percentage, and
+`fitColumnsToContent` raises any column below that floor, borrowing the space
+from columns with the most slack. Integer 1/100-percent units keep the visible
+set summing to exactly 100. When the floors cannot fit, the widths stay floored
+and `overflowPx` reports the shortfall so the caller's horizontal scroller can
+take over; a column is never silently shrunk below its content.
+
+```typescript
+import { fitColumnsToContent } from "@entropy-tamer/reynard-algorithms";
+
+const { widths, overflowPx, raised } = fitColumnsToContent(
+    [
+        { key: "status", width: 9, minWidthPx: 88 },
+        { key: "title", width: 91 },
+    ],
+    { containerPx: 720, gutterPx: 22.4 },
+);
+```
+
+The function is pure and deterministic. `reynard-tables` calls it with widths
+measured from a bounded sample of real cells; a caller with async content can
+pass its own floors.
 
 ## Development
 
