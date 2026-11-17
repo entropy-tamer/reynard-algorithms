@@ -1356,6 +1356,50 @@ export {
 export type { FireCell, FireClockOptions, FireOptions } from "./algorithms/rendering/fox-fire/index.ts";
 
 // ============================================================================
+// Algorithms - Rendering - Sketch (hand-drawn chart primitives)
+// ============================================================================
+export {
+    deriveSeed,
+    createSketchRandom,
+    passSeed,
+    resampleSegment,
+    resamplePolyline,
+    resampleClosed,
+    pathLength,
+    jitterPath,
+    jitterBound,
+    drawPass,
+    sketchStroke,
+    SKETCH_JITTER,
+    sketchLine,
+    sketchPolyline,
+    sketchRect,
+    sketchBar,
+    sketchEllipse,
+    sketchHatchFill,
+    sketchArrow,
+    textGuide,
+    sketchTextUnderline,
+    serializePoints,
+    serializeSketch,
+    hashSketch,
+    DEFAULT_SKETCH_OPTIONS,
+    DEFAULT_JITTER,
+} from "./algorithms/rendering/sketch/index.ts";
+export type {
+    SeedPart,
+    Point as SketchPoint,
+    SketchSink,
+    CanvasGradientLike,
+    JitterOptions,
+    SketchOptions,
+    SketchResult,
+    ArrowOptions,
+    HatchOptions,
+    TextGuide,
+} from "./algorithms/rendering/sketch/index.ts";
+
+// ============================================================================
 // Algorithms - Sorting
 // ============================================================================
 // Sorting Algorithms
