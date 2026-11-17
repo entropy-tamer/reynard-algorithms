@@ -331,6 +331,19 @@ function candidateRects(
         { x: (maxX + margin) / 2, y: margin, width: block.width, height: block.height },
     ];
 
+    // A reserved strip (the sticky header, a pill) removes the obvious top
+    // corners. Without slots just below it, a small block would fall all the
+    // way to the bottom edge instead of sitting in the free top-right gutter.
+    const belowReserved = (options.reserved ?? []).map((area) => area.y + area.height);
+    if (belowReserved.length > 0) {
+        const y = Math.min(maxY, Math.max(...belowReserved) + gutter);
+        candidates.push(
+            { x: margin, y, width: block.width, height: block.height },
+            { x: maxX, y, width: block.width, height: block.height },
+            { x: (maxX + margin) / 2, y, width: block.width, height: block.height },
+        );
+    }
+
     // Slide a window over the favored quadrant. Three steps per axis is enough
     // on a 96-cell grid and keeps the search constant-time per block.
     const favorLeft = quadrant === "tl" || quadrant === "bl";
