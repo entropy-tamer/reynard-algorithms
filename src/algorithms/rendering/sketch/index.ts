@@ -26,6 +26,12 @@ export {
 export { textGuide, sketchTextUnderline } from "./text.ts";
 export { serializePoints, serializeSketch, hashSketch } from "./serialize.ts";
 export { DEFAULT_SKETCH_OPTIONS, DEFAULT_JITTER } from "./types.ts";
+export {
+    FOX_SKETCH_STROKES,
+    FOX_SKETCH_BOUNDS,
+    FOX_SKETCH_SOURCE_HASH,
+    FOX_SKETCH_VERSION,
+} from "./fox-sketch-paths.ts";
 export type {
     Point,
     SketchSink,

@@ -1385,6 +1385,10 @@ export {
     hashSketch,
     DEFAULT_SKETCH_OPTIONS,
     DEFAULT_JITTER,
+    FOX_SKETCH_STROKES,
+    FOX_SKETCH_BOUNDS,
+    FOX_SKETCH_SOURCE_HASH,
+    FOX_SKETCH_VERSION,
 } from "./algorithms/rendering/sketch/index.ts";
 export type {
     SeedPart,

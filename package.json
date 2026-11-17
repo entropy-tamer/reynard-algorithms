@@ -45,6 +45,7 @@
     "test:ui": "vitest --ui --exclude src/**/data-structures/*performance*.test.ts",
     "typecheck": "tsc --noEmit --skipLibCheck",
     "check:docs": "node scripts/check-docs-links.mjs",
+    "generate:fox-sketch": "node scripts/generate-fox-sketch.mjs",
     "typecheck:tests": "tsc --project tsconfig.tests.json",
     "lint": "biome lint src",
     "lint:fix": "biome lint src --write",
