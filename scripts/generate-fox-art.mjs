@@ -94,24 +94,22 @@ const CHAMFER = [
 ];
 
 /**
- * Single-cell rasterisation retouches, applied after the distance transform.
+ * One rasterisation retouch per tier, applied after the distance transform.
  *
- * Downsampling the 1024px line-art logo to the 32-column micro grid clips the
- * nose bridge: one cell of the four-cell muzzle run reads as rim (depth 1,
- * `█`) even though it sits inside the solid nose, while the three cells to its
- * right read as body (depth 2, `▓`). Filling the source SVG to move that cell
- * grows a visible blob into the cheek and perturbs all five tiers, so the
- * source is left intact and the cell is corrected here, by tier and grid
- * coordinates. Depth 2 with dIn 0 packs to code 40 (`E`), which makes the run
- * a uniform `▓▓▓▓`.
- *
- * The guard below makes regeneration fail loudly if the source artwork ever
- * changes enough that this cell or its three-cell muzzle run no longer exist;
- * remove the retouch deliberately in that case rather than letting it silently
- * paint the wrong cell.
+ * The four-cell muzzle run reads rim, body, body, body at every resolution:
+ * downsampling the line-art logo clips its first cell from the source ink.
+ * Promotion to body depth makes each run a uniform `▓▓▓▓`. Coordinates were
+ * picked from the rendered frames, like the other shading knobs here; the
+ * source SVG is left intact. The guard below fails regeneration loudly if a
+ * run ever changes, so a future artwork edit cannot silently paint the wrong
+ * cell.
  */
-const RETOUCH_DEPTH = [
-    { tier: "micro", row: 12, col: 13, depth: 2, runRight: 2 },
+const MUZZLE_RUN = [
+    { tier: "large", row: 41, col: 55 },
+    { tier: "medium", row: 32, col: 48 },
+    { tier: "small", row: 24, col: 28 },
+    { tier: "tiny", row: 18, col: 21 },
+    { tier: "micro", row: 12, col: 13 },
 ];
 
 function parseArgs(argv) {
@@ -361,24 +359,22 @@ function buildTier(alpha, cols, name) {
     // single-cell aura; 2+ is open field, which is where sparkles live.
     const dIn = chamferDistance(ink, rows, cols, true);
 
-    for (const r of RETOUCH_DEPTH) {
-        if (r.tier !== name) continue;
-        const idx = r.row * cols + r.col;
-        const inGrid = (x, y) => x >= 0 && y >= 0 && x < cols && y < rows;
-        const isBody = (x, y) =>
-            inGrid(x, y) && ink[y * cols + x] === 1 && Math.floor(dOut[y * cols + x]) === 2;
-        if (!inGrid(r.col, r.row) || ink[idx] !== 1) {
-            throw new Error(`retouch (${r.col},${r.row}) in ${name} is no longer an ink cell`);
+    for (const run of MUZZLE_RUN) {
+        if (run.tier !== name) continue;
+        const idx = run.row * cols + run.col;
+        const intact =
+            idx + 3 < ink.length &&
+            [0, 1, 2, 3].every(
+                (step) =>
+                    ink[idx + step] === 1 &&
+                    (step === 0 || Math.floor(dOut[idx + step]) === 2),
+            );
+        if (!intact) {
+            throw new Error(
+                `muzzle run (${run.col},${run.row}) in ${name} changed; review the source artwork`,
+            );
         }
-        for (let step = 1; step <= r.runRight; step += 1) {
-            if (!isBody(r.col + step, r.row)) {
-                throw new Error(
-                    `retouch (${r.col},${r.row}) in ${name}: cell (${r.col + step},${r.row}) ` +
-                        `is no longer a body-depth neighbour; review the source artwork`,
-                );
-            }
-        }
-        dOut[idx] = r.depth;
+        dOut[idx] = 2;
         dIn[idx] = 0;
     }
 
