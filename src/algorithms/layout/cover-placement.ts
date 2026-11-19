@@ -547,9 +547,16 @@ export function stackCoverText(
         let guard = 0;
         while (blocked({ x: columnX(left), y, width, height }) && y + height < maxBottom && guard < zones.length + 1) {
             const hit = zones.find((zone) => rectsIntersect(expand({ x: columnX(left), y, width, height }, gutter), zone, { includeTouch: true }));
-            y = hit ? Math.max(y + gutter, hit.y + hit.height + gutter) : y + gutter;
+            const nextY = hit ? Math.max(y + gutter, hit.y + hit.height + gutter) : y + gutter;
+            // A zone that reaches the band floor must not push the block past
+            // it: jumping to hit.y + hit.height produced y > 1 on a blog post
+            // and put the headline below the painting. Stop here and let the
+            // blocked score record the compromise instead.
+            if (nextY + height > maxBottom) break;
+            y = nextY;
             guard += 1;
         }
+        y = Math.min(y, Math.max(top, maxBottom - height));
         const rect: LayoutRect = { x: columnX(left), y, width, height };
         const intrusion = regionMean(
             saliencySum,

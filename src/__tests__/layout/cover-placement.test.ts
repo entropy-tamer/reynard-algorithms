@@ -134,6 +134,25 @@ describe("layout/cover-placement", () => {
         }
     });
 
+    it("never places a block below the band because a no-zone reaches the floor", () => {
+        const blocks: TextBlock[] = [
+            { id: "kicker", weight: 0.7, width: 0.18, height: 0.045 },
+            { id: "headline", weight: 1, width: 0.34, height: 0.15 },
+        ];
+        // The zone spans a full-width band from y=1/3 to the band floor; the
+        // old slide jumped to hit.y + hit.height and emitted y > 1.
+        const zones = [{ x: 0, y: 1 / 3, width: 0.8125, height: 2 / 3 }];
+        const result = stackCoverText(flatGrid(0.02), blocks, {
+            reserved: [{ x: 0, y: 0, width: 1, height: 0.17 }],
+            noZones: zones,
+            maxBottom: 0.45,
+        });
+        for (const block of Object.values(result.blocks)) {
+            expect(block.y).toBeLessThanOrEqual(0.45);
+            expect(block.y + block.height).toBeLessThanOrEqual(0.4501);
+        }
+    });
+
     it("is deterministic", () => {
         const grid = gridWithBlob(0.35, 0.7);
         const first = placeCoverText(grid, BLOCKS, { cornerBias: 0.5 });
