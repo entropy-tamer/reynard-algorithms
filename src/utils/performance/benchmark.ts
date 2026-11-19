@@ -18,11 +18,14 @@ export class PerformanceBenchmark {
   private memoryMonitor = new MemoryMonitor();
 
   /**
+   * Runs `fn` repeatedly, timing each call and sampling heap usage before and after the batch.
    *
-   * @param fn
-   * @param iterations
-   * @param budget
-   * @example
+   * A per-call budget warning is emitted when any single call exceeds `budget.maxDuration`.
+   *
+   * @param fn Synchronous or asynchronous function to benchmark.
+   * @param iterations Number of times to invoke `fn`.
+   * @param budget Optional per-call duration limit used only for warnings.
+   * @returns Aggregate duration, memory delta, and timing statistics.
    */
   async run<T>(
     fn: () => T | Promise<T>,

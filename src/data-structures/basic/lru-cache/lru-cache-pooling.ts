@@ -18,10 +18,10 @@ export class LRUCacheNodePool<K, V> {
   private readonly enabled: boolean;
 
   /**
+   * Creates a node pool that recycles cache nodes when enabled, retaining at most `maxPoolSize` idle nodes.
    *
-   * @param enabled
-   * @param maxPoolSize
-   * @example
+   * @param enabled Whether node recycling is active.
+   * @param maxPoolSize Upper bound on idle nodes kept for reuse.
    */
   constructor(enabled: boolean, maxPoolSize: number) {
     this.enabled = enabled;

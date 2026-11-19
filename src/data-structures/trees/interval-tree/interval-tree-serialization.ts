@@ -1,10 +1,12 @@
 import type { IntervalTreeNode, IntervalTreeStats, IntervalTreeSerialization } from "./interval-tree-types";
 
 /**
+ * Produces a versioned snapshot of the tree: serialized root, statistics, limits, and metadata.
  *
- * @param root
- * @param stats
- * @example
+ * @param root Root node to serialize; `null` produces an empty root.
+ * @param stats Current tree statistics to embed in the snapshot.
+ * @returns A serializable representation of the tree.
+ * Complexity: see `catalog-data-structures-trees-interval-tree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function serializeTree(root: IntervalTreeNode | null, stats: IntervalTreeStats): IntervalTreeSerialization {
   return {
@@ -26,9 +28,11 @@ export function serializeTree(root: IntervalTreeNode | null, stats: IntervalTree
 }
 
 /**
+ * Rebuilds a tree root from a serialized snapshot, returning `null` when the snapshot is empty.
  *
- * @param serialized
- * @example
+ * @param serialized Snapshot previously produced by `serializeTree`.
+ * @returns The reconstructed root, or `null` for an empty tree.
+ * Complexity: see `catalog-data-structures-trees-interval-tree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function deserializeTree(serialized: IntervalTreeSerialization): IntervalTreeNode | null {
   if (!serialized.root) {
@@ -39,9 +43,11 @@ export function deserializeTree(serialized: IntervalTreeSerialization): Interval
 }
 
 /**
+ * Recursively converts a node, its interval, and its children into a plain serializable object.
  *
- * @param node
- * @example
+ * @param node Node to serialize.
+ * @returns Plain-object form of the node subtree.
+ * Complexity: see `catalog-data-structures-trees-interval-tree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 function serializeNode(node: IntervalTreeNode): any {
   return {
@@ -54,9 +60,13 @@ function serializeNode(node: IntervalTreeNode): any {
 }
 
 /**
+ * Recursively rebuilds a node from serialized data, restoring its interval and max-end augmentation.
  *
- * @param data
- * @example
+ * Missing data yields `null`; the `max` alias is populated from `maxEnd`.
+ *
+ * @param data Plain-object node data from `serializeNode`.
+ * @returns The reconstructed node, or `null`.
+ * Complexity: see `catalog-data-structures-trees-interval-tree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 function deserializeNode(data: any): IntervalTreeNode | null {
   if (!data) return null;

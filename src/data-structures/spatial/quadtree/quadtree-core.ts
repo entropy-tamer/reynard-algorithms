@@ -104,7 +104,9 @@ export class Quadtree<T> {
   }
 
   /**
-   * Inserts an object into the quadtree
+   * Inserts an object into the quadtree at its position, subdividing any leaf
+   * that exceeds `maxObjects` and redistributing its contents among children.
+   * Objects outside the tree bounds are rejected and reported as a failed insert.
    *
    * Mathematical Process:
    * 1. Find appropriate leaf node for the object: O(log n)
@@ -113,10 +115,14 @@ export class Quadtree<T> {
    * 4. Redistribute objects to child nodes: O(k)
    *
    * @param data - The data object to insert
-   * @param position - The position of the object
-   * @param bounds - Optional bounding box for the object
-   * @returns True if insertion was successful
+   * @param position - The position of the object, used to select the containing leaf
+   * @param bounds - Optional bounding box for an object that spans multiple cells
+   * @returns True if insertion was successful, false if the object is out of bounds or insertion threw
+   * Complexity: see `ds-spatial-quadtree` in ~/src/foxtools/registry/algorithms/ (verified: best/average O(log n + k), worst O(n))
    * @example
+   * ```typescript
+   * const ok = tree.insert({ id: 1 }, { x: 10, y: 20 });
+   * ```
    */
   insert(data: T, position: Point, bounds?: Rectangle): boolean {
     const startTime = performance.now();
@@ -157,17 +163,23 @@ export class Quadtree<T> {
   }
 
   /**
-   * Removes an object from the quadtree
+   * Removes an object from the quadtree by identity and position, falling back
+   * to a subtree-wide identity search when the stored position is approximate.
+   * Statistics and node object counts are updated after a successful removal.
    *
    * Mathematical Process:
    * 1. Find the node containing the object: O(log n)
    * 2. Remove object from node's object list: O(k) where k is objects in node
    * 3. If node becomes empty and has siblings, merge: O(1)
    *
-   * @param data - The data object to remove
-   * @param position - The position of the object
-   * @returns True if removal was successful
+   * @param data - The data object to remove, matched by reference identity
+   * @param position - The position of the object, used to select the starting node
+   * @returns True if removal was successful, false when no matching object was found
+   * Complexity: see `ds-spatial-quadtree` in ~/src/foxtools/registry/algorithms/ (verified: best/average O(log n + k), worst O(n))
    * @example
+   * ```typescript
+   * const ok = tree.remove(payload, { x: 10, y: 20 });
+   * ```
    */
   remove(data: T, position: Point): boolean {
     const startTime = performance.now();
@@ -228,7 +240,9 @@ export class Quadtree<T> {
   }
 
   /**
-   * Queries objects within a rectangular area
+   * Queries objects within a rectangular area, visiting only nodes whose bounds
+   * intersect the query rectangle. Objects with bounds are included when their
+   * bounds overlap the query even if their stored position lies outside it.
    *
    * Mathematical Process:
    * 1. Start from root node: O(1)
@@ -236,9 +250,13 @@ export class Quadtree<T> {
    * 3. Collect objects from intersecting leaf nodes: O(k) where k is results
    * 4. Total complexity: O(log n + k)
    *
-   * @param query - Rectangle query parameters
-   * @returns Query result with found objects and statistics
+   * @param query - Rectangle query parameters with x, y, width, and height
+   * @returns Query result with found objects, nodes searched, and timing statistics
+   * Complexity: see `ds-spatial-quadtree` in ~/src/foxtools/registry/algorithms/ (verified: best/average O(log n + k), worst O(n))
    * @example
+   * ```typescript
+   * const result = tree.queryRect({ x: 0, y: 0, width: 100, height: 100 });
+   * ```
    */
   queryRect(query: RectangleQuery): QuadtreeQueryResult<T> {
     const startTime = performance.now();

@@ -20,9 +20,9 @@ export class ThetaStarCache {
   private missCount: number = 0;
 
   /**
+   * Creates empty path and line-of-sight caches with a bounded entry count and zeroed hit counters.
    *
-   * @param maxSize
-   * @example
+   * @param maxSize Maximum number of entries retained in each cache before eviction.
    */
   constructor(maxSize: number = 100) {
     this.maxSize = maxSize;

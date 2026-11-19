@@ -18,11 +18,14 @@ export class LRUCacheTTLManager<K, V> {
   private cleanupTimer: ReturnType<typeof setTimeout> | undefined;
 
   /**
+   * Creates a TTL manager controlling expiry checks and periodic cleanup of stale entries.
    *
-   * @param ttl
-   * @param enableCleanup
-   * @param cleanupInterval
-   * @example
+   * A non-positive `ttl` disables expiry entirely; the cleanup interval only runs when cleanup is
+   * enabled and a positive TTL is set.
+   *
+   * @param ttl Entry lifetime in milliseconds; non-positive disables expiry.
+   * @param enableCleanup Whether a periodic cleanup timer may be started.
+   * @param cleanupInterval Milliseconds between cleanup ticks.
    */
   constructor(ttl: number, enableCleanup: boolean, cleanupInterval: number) {
     this.ttl = ttl;

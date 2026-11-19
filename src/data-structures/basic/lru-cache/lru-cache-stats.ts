@@ -16,9 +16,9 @@ export class LRUCacheStatsManager<K> {
   private performanceMetrics: LRUCachePerformanceMetrics;
 
   /**
+   * Creates a statistics manager with zeroed counters and the configured capacity recorded.
    *
-   * @param maxSize
-   * @example
+   * @param maxSize Maximum entry count reported in the statistics snapshot.
    */
   constructor(maxSize: number) {
     this.stats = {

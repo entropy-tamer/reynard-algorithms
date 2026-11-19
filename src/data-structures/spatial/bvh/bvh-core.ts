@@ -46,9 +46,13 @@ export class BVH {
   private primitives: Map<string | number, Primitive>;
 
   /**
+   * Creates an empty bounding volume hierarchy with default SAH build settings.
    *
-   * @param options
-   * @example
+   * Merges `options` with the defaults, starts with no root and no primitives, and inserts any
+   * initial primitives supplied in the options.
+   *
+   * @param options Partial build configuration, event handlers, and initial primitives.
+   * Complexity: see `catalog-data-structures-spatial-bvh` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
    */
   constructor(options: Partial<BVHOptions> = {}) {
     const opts = { ...DEFAULT_BVH_OPTIONS, ...options };

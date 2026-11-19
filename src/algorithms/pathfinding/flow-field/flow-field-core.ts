@@ -93,13 +93,23 @@ export class FlowField {
   }
 
   /**
-   * Generates a flow field for the given grid and goals.
-   * @param grid
-   * @param width
-   * @param height
-   * @param goals
-   * @param options
+   * Generates a flow field for the given grid and goals by propagating an
+   * integration field outward from the goal cells and normalizing the resulting
+   * vectors. Input is validated and a cached result is reused when the cache key
+   * matches unless generation options override it.
+   *
+   * @param grid Flat array of cell types with `width * height` entries
+   * @param width Grid width in cells
+   * @param height Grid height in cells
+   * @param goals Goal cells, each with x and y coordinates
+   * @param options Generation options such as normalization, early termination, and multi-goal handling
+   * @returns Flow field result with integration and direction fields plus generation statistics
+   * Complexity: see `flow-field` in ~/src/foxtools/registry/algorithms/ (verified O(1) lookup; generation is a separate O(n) cost over n grid cells and is not covered by that bound)
    * @example
+   * ```typescript
+   * const field = new FlowField().generateFlowField(grid, 32, 32, [{ x: 31, y: 31 }]);
+   * console.log(field.success);
+   * ```
    */
   generateFlowField(
     grid: CellType[],

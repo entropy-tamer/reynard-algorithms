@@ -17,9 +17,12 @@ export class Radix2FFT extends FFTBase {
   private bitReversalPermutation!: Uint32Array;
 
   /**
+   * Creates a radix-2 Cooley-Tukey transform that requires a power-of-two length.
+   * The size is validated and the bit-reversal permutation is precomputed for the in-place butterflies.
    *
-   * @param config
-   * @example
+   * @param config Transform size and optional normalization settings.
+   * @throws If the configured size is not a power of two.
+   * Complexity: see `fft-radix2` in ~/src/foxtools/registry/algorithms/ (verified: O(N log N) time for transform length N, O(N) space).
    */
   constructor(config: FFTConfig) {
     super(config);
@@ -46,9 +49,19 @@ export class Radix2FFT extends FFTBase {
   }
 
   /**
-   * Forward FFT (real input to complex output)
-   * @param input
+   * Computes the forward radix-2 FFT of a real-valued signal, producing the
+   * complex frequency spectrum in bit-reversed input order followed by
+   * in-place butterfly stages. The transform length must be a power of two;
+   * otherwise construction already rejects the configuration.
+   *
+   * @param input Real-valued time-domain samples, length equal to the configured FFT size.
+   * @returns FFT result with real and imaginary spectrum arrays and run metadata.
+   * Complexity: see `fft-radix2` in ~/src/foxtools/registry/algorithms/ (verified: O(N log N) time for transform length N, O(N) space)
    * @example
+   * ```typescript
+   * const spectrum = new Radix2FFT({ size: 1024 }).forward(new Float32Array(1024));
+   * console.log(spectrum.real.length);
+   * ```
    */
   forward(input: Float32Array): FFTResult {
     this.validateInput(input);

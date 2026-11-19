@@ -21,10 +21,12 @@ import { adaptiveMemo } from "../../../../utils";
 let _projectMemo: ((axX: number, axY: number, verts: Point2D[]) => { min: number; max: number }) | undefined;
 
 /**
+ * Projects a convex polygon onto an axis, returning the min/max interval of its vertex dot products.
+ * The scalar interval is memoized by the axis direction and vertex count for repeated queries.
  *
- * @param polygon
- * @param axis
- * @example
+ * @param polygon Convex polygon whose vertices are projected.
+ * @param axis Axis carrying the normal used for the projection.
+ * @returns The projected interval together with the axis it was taken on.
  */
 export function projectPolygon(polygon: ConvexPolygon, axis: ProjectionAxis): Projection {
   if (!_projectMemo) {

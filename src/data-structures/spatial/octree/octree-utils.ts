@@ -59,10 +59,11 @@ export function calculateStats(root: OctreeNode | null, stats: OctreeStats): voi
   let maxDepth = 0;
 
   /**
+   * Visits every node in the subtree, tallying counts and accumulated depths into `stats`.
    *
-   * @param node
-   * @param depth
-   * @example
+   * @param node Root of the subtree to visit.
+   * @param depth Depth of `node` below the tree root.
+   * Complexity: see `catalog-data-structures-spatial-octree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
    */
   function traverse(node: OctreeNode, depth: number): void {
     nodeCount++;
@@ -140,9 +141,10 @@ export function getTotalPoints(root: OctreeNode | null): number {
 
   let total = 0;
   /**
+   * Adds the point count of a leaf, or recurses into populated children, into the running total.
    *
-   * @param node
-   * @example
+   * @param node Node whose subtree points should be counted.
+   * Complexity: see `catalog-data-structures-spatial-octree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
    */
   function countPoints(node: OctreeNode): void {
     if (node.isLeaf) {
@@ -170,9 +172,10 @@ export function clearOctree(root: OctreeNode | null): void {
   if (!root) return;
 
   /**
+   * Empties a node's points and recursively drops all children, restoring it to a leaf.
    *
-   * @param node
-   * @example
+   * @param node Node to clear in place.
+   * Complexity: see `catalog-data-structures-spatial-octree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
    */
   function clearNode(node: OctreeNode): void {
     node.points = [];

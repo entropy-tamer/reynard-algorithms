@@ -60,11 +60,15 @@ export class MarchingSquares {
 
   /**
    * Generates contours from a 2D scalar field using the marching squares algorithm.
+   * Each cell is classified against the configured threshold, ambiguous saddle
+   * cases are resolved, and the resulting line segments are joined into contours
+   * when contour connection is enabled.
    *
-   * @param scalarField - 2D array of scalar values
-   * @param cellWidth - Width of each cell in world units
-   * @param cellHeight - Height of each cell in world units
+   * @param scalarField - 2D array of scalar values, indexed as [row][column]
+   * @param cellWidth - Width of each cell in world units, used to scale output coordinates
+   * @param cellHeight - Height of each cell in world units, used to scale output coordinates
    * @returns Result containing contours and statistics
+   * Complexity: see `catalog-algorithms-computational-geometry-marching-squares` in ~/src/foxtools/registry/algorithms/ (unknown: no machine-readable bound recorded; the guide is authoritative)
    * @example
    * ```typescript
    * const result = marchingSquares.generateContours(scalarField, 1.0, 1.0);
@@ -128,11 +132,15 @@ export class MarchingSquares {
   }
 
   /**
-   * Queries contours based on specified criteria.
+   * Queries contours based on specified criteria, filtering the contours from a
+   * previous `generateContours` result by length, closedness, and intersection
+   * with an optional bounding box. The result reports how many contours were
+   * discarded as well as the retained set.
    *
-   * @param result - Result from generateContours
-   * @param options - Query options
+   * @param result - Result from generateContours whose contours are filtered
+   * @param options - Query options: minLength, maxLength, closedOnly, and bounds
    * @returns Filtered contours and statistics
+   * Complexity: see `catalog-algorithms-computational-geometry-marching-squares` in ~/src/foxtools/registry/algorithms/ (unknown: no machine-readable bound recorded; the guide is authoritative)
    * @example
    * ```typescript
    * const filtered = marchingSquares.queryContours(result, {

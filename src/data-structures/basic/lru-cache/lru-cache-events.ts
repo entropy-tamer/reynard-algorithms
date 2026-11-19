@@ -19,13 +19,16 @@ export class LRUCacheEventManager<K, V> {
   private onDelete: ((key: K, value: V) => void) | undefined;
 
   /**
+   * Creates an event manager that fans cache events out to a general handler and per-operation callbacks.
    *
-   * @param eventHandler
-   * @param onEvict
-   * @param onAccess
-   * @param onSet
-   * @param onDelete
-   * @example
+   * The specific callbacks fire only when both a key and a value are present; the general handler
+   * receives every event.
+   *
+   * @param eventHandler Called for every emitted event.
+   * @param onEvict Called with the key and value when an entry is evicted.
+   * @param onAccess Called with the key and value on a cache hit.
+   * @param onSet Called with the key and value on insert or update.
+   * @param onDelete Called with the key and value on explicit deletion.
    */
   constructor(
     eventHandler?: LRUCacheEventHandler<K, V>,

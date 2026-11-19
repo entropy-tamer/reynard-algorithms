@@ -20,8 +20,9 @@ export class FrameRateMonitor {
   private animationFrameId: number | null = null;
 
   /**
+   * Resets counters and begins sampling frames on the animation-frame loop.
    *
-   * @example
+   * Calling this while monitoring is active is a no-op.
    */
   start(): void {
     if (this.isMonitoring) return;
@@ -36,8 +37,7 @@ export class FrameRateMonitor {
   }
 
   /**
-   *
-   * @example
+   * Stops monitoring and cancels the pending animation-frame callback.
    */
   stop(): void {
     this.isMonitoring = false;
@@ -48,8 +48,9 @@ export class FrameRateMonitor {
   }
 
   /**
+   * Samples one frame interval, counts drops against a 60fps baseline, and schedules the next sample.
    *
-   * @example
+   * Only the last 60 frame times are retained for the rolling average.
    */
   private monitorFrame(): void {
     if (!this.isMonitoring) return;
@@ -75,8 +76,9 @@ export class FrameRateMonitor {
   }
 
   /**
+   * Computes current fps, average frame time, and dropped frames from the rolling sample window.
    *
-   * @example
+   * @returns Frame-rate metrics with a capture timestamp.
    */
   getMetrics(): FrameRateMetrics {
     const averageFrameTime =

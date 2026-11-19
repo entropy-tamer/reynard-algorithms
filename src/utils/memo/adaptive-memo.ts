@@ -40,7 +40,10 @@ const DEFAULT_POLICY: MemoTuningPolicy = {
 };
 
 /**
+ * Memoization controller that tunes itself from sliding-window hit rate and overhead.
  *
+ * When caching shows no benefit after enough samples, it switches to pass-through until
+ * re-enabled externally.
  */
 export class AdaptiveMemoController<TArgs extends any[], TResult> {
   private cache: LRUCache<string, TResult>;
@@ -56,10 +59,13 @@ export class AdaptiveMemoController<TArgs extends any[], TResult> {
   private winOverheadMs = 0;
 
   /**
+   * Creates a controller with the merged tuning policy, a key generator, and a backing LRU cache.
    *
-   * @param policy
-   * @param keygen
-   * @example
+   * `ALG_MEMO_ON=0` forces pass-through mode regardless of the policy's `enabled` flag. The
+   * default key generator is `JSON.stringify` over the argument list.
+   *
+   * @param policy Partial tuning overrides.
+   * @param keygen Function producing a cache key from call arguments.
    */
   constructor(policy?: Partial<MemoTuningPolicy>, keygen?: (...args: TArgs) => string) {
     this.policy = { ...DEFAULT_POLICY, ...policy };
@@ -75,9 +81,12 @@ export class AdaptiveMemoController<TArgs extends any[], TResult> {
   }
 
   /**
+   * Returns a memoized wrapper that caches results by generated key and records each call.
    *
-   * @param fn
-   * @example
+   * In pass-through mode the wrapped function runs uncached but telemetry is still recorded.
+   *
+   * @param fn Function to memoize.
+   * @returns A function with the same signature that consults the cache.
    */
   wrap(fn: (...a: TArgs) => TResult): (...a: TArgs) => TResult {
     return (...a: TArgs) => {
@@ -107,11 +116,12 @@ export class AdaptiveMemoController<TArgs extends any[], TResult> {
   }
 
   /**
+   * Accumulates one call's telemetry and, at each window boundary, disables caching when the
+   * hit rate or average overhead misses the policy targets.
    *
-   * @param hit
-   * @param execMs
-   * @param overheadMs
-   * @example
+   * @param hit Whether the call was served from the cache.
+   * @param execMs Time spent executing the wrapped function, zero on a hit.
+   * @param overheadMs Time spent on memoization machinery.
    */
   private record(hit: boolean, execMs: number, overheadMs: number) {
     this.winCalls++;
@@ -134,17 +144,21 @@ export class AdaptiveMemoController<TArgs extends any[], TResult> {
   }
 
   /**
+   * Merges new tuning values into the active policy.
    *
-   * @param policy
-   * @example
+   * Cache sizing and TTL from the original policy are not rebuilt; re-enable explicitly if the
+   * controller has already switched to pass-through.
+   *
+   * @param policy Partial policy values to update.
    */
   setPolicy(policy: Partial<MemoTuningPolicy>) {
     this.policy = { ...this.policy, ...policy };
   }
 
   /**
+   * Returns telemetry for the current sliding window plus the enabled state.
    *
-   * @example
+   * @returns Call counts, hit rate, and mean function and overhead times.
    */
   getStats(): AdaptiveStats {
     const calls = this.winCalls;
@@ -158,11 +172,15 @@ export class AdaptiveMemoController<TArgs extends any[], TResult> {
 }
 
 /**
+ * Creates an adaptive memoization controller for `fn` and returns its memoized wrapper.
  *
- * @param fn
- * @param policy
- * @param keygen
- * @example
+ * When a policy name is supplied, the controller is registered with the memo registry outside
+ * the browser on a best-effort basis.
+ *
+ * @param fn Function to memoize.
+ * @param policy Partial tuning overrides, including an optional registry name.
+ * @param keygen Function producing a cache key from call arguments.
+ * @returns A function with the same signature that consults the cache.
  */
 export function adaptiveMemo<TArgs extends any[], TResult>(
   fn: (...a: TArgs) => TResult,

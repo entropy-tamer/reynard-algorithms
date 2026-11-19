@@ -15,8 +15,9 @@ export class MemoryMonitor {
   private measurements: Array<{ timestamp: number; usage: number }> = [];
 
   /**
+   * Records the current JS heap usage and returns it, or 0 when `performance.memory` is unavailable.
    *
-   * @example
+   * @returns Used heap size in bytes, or 0 on platforms without the memory API.
    */
   measure(): number {
     const perf = performance as ExtendedPerformance;
@@ -29,8 +30,9 @@ export class MemoryMonitor {
   }
 
   /**
+   * Returns the heap-usage change between the last two measurements.
    *
-   * @example
+   * @returns Signed byte difference, or 0 when fewer than two measurements exist.
    */
   getDelta(): number {
     if (this.measurements.length < 2) return 0;
@@ -41,8 +43,9 @@ export class MemoryMonitor {
   }
 
   /**
+   * Averages all recorded heap measurements.
    *
-   * @example
+   * @returns Mean usage in bytes, or 0 when nothing has been measured.
    */
   getAverageUsage(): number {
     if (this.measurements.length === 0) return 0;
@@ -51,8 +54,7 @@ export class MemoryMonitor {
   }
 
   /**
-   *
-   * @example
+   * Discards all recorded measurements.
    */
   clear(): void {
     this.measurements = [];
@@ -72,8 +74,7 @@ export class MemoryLeakDetector {
   // private lastSnapshot = 0;
 
   /**
-   *
-   * @example
+   * Records a timestamped heap-usage and object-count snapshot, keeping only the last ten.
    */
   takeSnapshot(): void {
     const now = Date.now();
@@ -94,8 +95,12 @@ export class MemoryLeakDetector {
   }
 
   /**
+   * Detects leakage from the three most recent snapshots using heap growth over time.
    *
-   * @example
+   * Growth above 1 KB per second is treated as a leak; confidence reflects how consistent the
+   * growth rates are. Fewer than three snapshots yields a neutral result.
+   *
+   * @returns Leak flag, average growth rate in bytes per second, and confidence in [0, 1].
    */
   detectLeak(): { isLeaking: boolean; growthRate: number; confidence: number } {
     if (this.snapshots.length < 3) {
@@ -131,8 +136,9 @@ export class MemoryLeakDetector {
   }
 
   /**
+   * Reads the current used JS heap size from `performance.memory`, or 0 when unavailable.
    *
-   * @example
+   * @returns Used heap size in bytes, or 0.
    */
   private getMemoryUsage(): number {
     const perf = performance as ExtendedPerformance;
@@ -143,8 +149,7 @@ export class MemoryLeakDetector {
   }
 
   /**
-   *
-   * @example
+   * Discards all recorded snapshots.
    */
   clear(): void {
     this.snapshots = [];

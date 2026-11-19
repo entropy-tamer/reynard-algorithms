@@ -27,37 +27,41 @@ export class TransformOps {
   private static readonly memoizedSin = memoizeMath((x: number) => Math.sin(x));
 
   /**
+   * Returns the identity transform: no translation, unit scale, and zero rotation.
    *
-   * @example
+   * @returns A transform that leaves points and rectangles unchanged.
    */
   static identity(): Transform {
     return { translateX: 0, translateY: 0, scaleX: 1, scaleY: 1, rotation: 0 };
   }
 
   /**
+   * Returns a pure translation transform by `x` and `y`.
    *
-   * @param x
-   * @param y
-   * @example
+   * @param x Horizontal shift.
+   * @param y Vertical shift.
+   * @returns A transform with unit scale and zero rotation.
    */
   static translate(x: number, y: number): Transform {
     return { translateX: x, translateY: y, scaleX: 1, scaleY: 1, rotation: 0 };
   }
 
   /**
+   * Returns a pure scaling transform; omitting `y` gives uniform scaling.
    *
-   * @param x
-   * @param y
-   * @example
+   * @param x Horizontal scale factor.
+   * @param y Vertical scale factor, defaulting to `x`.
+   * @returns A transform with no translation or rotation.
    */
   static scale(x: number, y: number = x): Transform {
     return { translateX: 0, translateY: 0, scaleX: x, scaleY: y, rotation: 0 };
   }
 
   /**
+   * Returns a pure rotation transform about the origin.
    *
-   * @param angle
-   * @example
+   * @param angle Rotation in radians.
+   * @returns A transform with no translation and unit scale.
    */
   static rotate(angle: number): Transform {
     return {
@@ -70,10 +74,13 @@ export class TransformOps {
   }
 
   /**
+   * Composes transform `b` onto `a`, with `a` applied first to a point.
    *
-   * @param a
-   * @param b
-   * @example
+   * `b`'s translation is rotated and scaled by `a`; scales multiply and rotations add.
+   *
+   * @param a Outer transform applied after `b`'s basis is mapped.
+   * @param b Inner transform being composed into `a`.
+   * @returns The combined transform.
    */
   static combine(a: Transform, b: Transform): Transform {
     const cos = TransformOps.memoizedCos(a.rotation);
@@ -89,10 +96,11 @@ export class TransformOps {
   }
 
   /**
+   * Applies a transform to a point: scale about the origin, rotate, then translate.
    *
-   * @param transform
-   * @param point
-   * @example
+   * @param transform Transform to apply.
+   * @param point Point to transform.
+   * @returns The transformed point.
    */
   static applyToPoint(transform: Transform, point: Point): Point {
     const cos = TransformOps.memoizedCos(transform.rotation);
@@ -105,10 +113,13 @@ export class TransformOps {
   }
 
   /**
+   * Transforms a rectangle's four corners and returns the axis-aligned bounds enclosing them.
    *
-   * @param transform
-   * @param rect
-   * @example
+   * Rotation can enlarge the result beyond the original width and height.
+   *
+   * @param transform Transform to apply.
+   * @param rect Rectangle whose corners are transformed.
+   * @returns Bounding rectangle of the transformed corners.
    */
   static applyToRectangle(transform: Transform, rect: Rectangle): Rectangle {
     // Calculate rectangle corners
@@ -141,9 +152,13 @@ export class TransformOps {
   }
 
   /**
+   * Returns the transform that undoes `transform`: negated rotation, reciprocal scales, and
+   * translation transformed back through those values.
    *
-   * @param transform
-   * @example
+   * A zero scale factor yields non-finite translation components.
+   *
+   * @param transform Transform to invert.
+   * @returns The inverse transform.
    */
   static inverse(transform: Transform): Transform {
     const cos = TransformOps.memoizedCos(-transform.rotation);

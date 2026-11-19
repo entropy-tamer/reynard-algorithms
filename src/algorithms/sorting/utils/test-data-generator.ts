@@ -12,17 +12,18 @@ class SeededRandom {
   private seed: number;
 
   /**
+   * Creates a seeded random generator for reproducible test-data patterns.
    *
-   * @param seed
-   * @example
+   * @param seed Initial state of the generator.
    */
   constructor(seed: number) {
     this.seed = seed;
   }
 
   /**
+   * Advances the linear congruential generator and returns the next value in [0, 1).
    *
-   * @example
+   * @returns Next pseudo-random fraction.
    */
   next(): number {
     this.seed = (this.seed * 9301 + 49297) % 233280;

@@ -11,10 +11,19 @@ import type { AABB, CollisionResult } from "./aabb-types";
 import { pointInAABB, areAABBsTouching } from "./aabb-operations";
 
 /**
- * Check if two AABBs overlap
- * @param a
- * @param b
+ * Checks whether two axis-aligned bounding boxes overlap and reports the
+ * overlap area and penetration data when they do. Touching edges with zero
+ * overlap are treated as non-colliding.
+ *
+ * @param a First axis-aligned bounding box (x, y, width, height).
+ * @param b Second axis-aligned bounding box (x, y, width, height).
+ * @returns Collision result with the overlap flag and intersection extent.
+ * Complexity: see `catalog-algorithms-collision-narrow-phase-aabb` in ~/src/foxtools/registry/algorithms/ (unknown: no machine-readable bound recorded; the guide is authoritative)
  * @example
+ * ```typescript
+ * const result = checkCollision({ x: 0, y: 0, width: 10, height: 10 }, { x: 5, y: 5, width: 10, height: 10 });
+ * console.log(result.colliding);
+ * ```
  */
 export function checkCollision(a: AABB, b: AABB): CollisionResult {
   const overlapX = Math.max(0, Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x));

@@ -18,9 +18,9 @@ export class SATCache {
   private maxCacheSize: number;
 
   /**
+   * Creates empty result and axis caches with an upper bound on stored entries.
    *
-   * @param maxCacheSize
-   * @example
+   * @param maxCacheSize Maximum number of entries kept before least-recently-used eviction.
    */
   constructor(maxCacheSize: number = 1024) {
     this.resultCache = new Map();

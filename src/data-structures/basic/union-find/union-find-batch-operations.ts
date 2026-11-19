@@ -22,7 +22,9 @@ export interface BatchResult {
 }
 
 /**
+ * Union-find subclass that groups union, find, and connected calls into batches.
  *
+ * Adds light batch-level statistics while delegating each element operation to the parent class.
  */
 export class BatchUnionFind extends UnionFind {
   private operationCache = new Map<string, number>();
@@ -33,9 +35,10 @@ export class BatchUnionFind extends UnionFind {
   };
 
   /**
+   * Creates a batch-oriented union-find over `size` elements.
    *
-   * @param size
-   * @example
+   * @param size Number of elements to allocate in the parent structure.
+   * Complexity: see `ds-basic-union-find` in ~/src/foxtools/registry/algorithms/ (verified: O(α(n)) amortized per element operation).
    */
   constructor(size: number) {
     super(size);

@@ -17,18 +17,22 @@ export class SpatialHash {
   private cellSize: number;
 
   /**
+   * Creates an empty spatial hash with square cells of the given side length.
+   * Larger cells hold more objects per bucket; smaller cells spread objects across more buckets.
    *
-   * @param cellSize
-   * @example
+   * @param cellSize Side length of one grid cell in world units.
    */
   constructor(cellSize: number) {
     this.cellSize = cellSize;
   }
 
   /**
+   * Maps an AABB to the string keys of every grid cell it overlaps.
+   * Cell coordinates are floor-divided by the cell size on both axes, so a box
+   * spanning a boundary contributes to each cell it touches.
    *
-   * @param aabb
-   * @example
+   * @param aabb Box whose overlapping cell keys are computed.
+   * @returns Keys of all cells covered by the box.
    */
   private getAABBCells(aabb: AABB): string[] {
     const minCellX = Math.floor(aabb.x / this.cellSize);
@@ -46,10 +50,10 @@ export class SpatialHash {
   }
 
   /**
+   * Registers an object index in every cell that its AABB overlaps.
    *
-   * @param index
-   * @param aabb
-   * @example
+   * @param index Object identifier to store in the affected cells.
+   * @param aabb Box whose cells receive the index.
    */
   insert(index: number, aabb: AABB): void {
     const cells = this.getAABBCells(aabb);
@@ -62,9 +66,13 @@ export class SpatialHash {
   }
 
   /**
+   * Collects the distinct object indices sharing at least one cell with the query AABB.
+   * These are broad-phase candidates, not confirmed collisions; an index appearing in
+   * several overlapping cells is returned once.
    *
-   * @param aabb
-   * @example
+   * @param aabb Query box whose cells are scanned.
+   * @returns Deduplicated candidate object indices.
+   * Complexity: see `catalog-algorithms-collision-narrow-phase-aabb` in ~/src/foxtools/registry/algorithms/ (unknown: no machine-readable bound recorded; the guide is authoritative).
    */
   query(aabb: AABB): number[] {
     const cells = this.getAABBCells(aabb);
@@ -83,8 +91,7 @@ export class SpatialHash {
   }
 
   /**
-   *
-   * @example
+   * Removes every cell bucket, leaving the spatial hash empty.
    */
   clear(): void {
     this.cells.clear();

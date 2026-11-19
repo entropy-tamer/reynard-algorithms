@@ -51,9 +51,13 @@ export class FenwickTree {
   private array: number[];
 
   /**
+   * Creates a Fenwick tree from an optional initial array and builds the internal sums.
    *
-   * @param options
-   * @example
+   * Merges `options` with defaults; an empty initial array leaves the tree unbuilt until `build`
+   * or an update is called.
+   *
+   * @param options Partial configuration, event handlers, and initial array values.
+   * Complexity: see `ds-trees-fenwick-tree` in ~/src/foxtools/registry/algorithms/ (verified: O(n log n) build, O(log n) query and point update).
    */
   constructor(options: Partial<FenwickTreeOptions> = {}) {
     const opts = { ...DEFAULT_FENWICK_TREE_OPTIONS, ...options };

@@ -154,12 +154,20 @@ export class OBB {
   }
 
   /**
-   * Tests collision between two OBBs using SAT.
-   * @param obb1 - First OBB.
-   * @param obb2 - Second OBB.
-   * @param options - SAT options.
-   * @returns Collision test result.
+   * Tests two oriented bounding boxes for overlap by projecting them onto the
+   * axes of both boxes (SAT) under the supplied options. The result includes
+   * collision status plus the separating axis and penetration information.
+   *
+   * @param obb1 - First oriented bounding box.
+   * @param obb2 - Second oriented bounding box.
+   * @param options - SAT options such as tolerance and contact-point detail.
+   * @returns Collision test result with overlap status and contact information.
+   * Complexity: see `catalog-algorithms-collision-narrow-phase-obb` in ~/src/foxtools/registry/algorithms/ (unknown: no machine-readable bound recorded; the guide is authoritative)
    * @example
+   * ```typescript
+   * const result = new OBB().testCollision(boxA, boxB, { tolerance: 1e-6 });
+   * console.log(result.colliding);
+   * ```
    */
   testCollision(obb1: OBBData, obb2: OBBData, options: Partial<SATOptions> = {}): OBBCollisionResult {
     const startTime = performance.now();

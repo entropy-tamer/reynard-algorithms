@@ -45,6 +45,7 @@ import {
  */
 export class PriorityQueue<T> {
   private heap: PriorityQueueNode<T>[] = [];
+  private capacity: number;
   private config: Required<PriorityQueueConfig>;
   private stats: PriorityQueueStats;
   private comparator?: PriorityQueueComparator<T>;
@@ -81,8 +82,11 @@ export class PriorityQueue<T> {
       averageExtractTime: 0,
     };
 
-    // Initialize heap with empty array
+    // The heap stays dense: capacity is a growth threshold, not an array
+    // length. Allocating a sparse array here made every insert double its own
+    // length because resize() read heap.length instead of an element count.
     this.heap = [];
+    this.capacity = Math.max(1, this.config.initialCapacity);
   }
 
   /**
@@ -108,9 +112,12 @@ export class PriorityQueue<T> {
         return false;
       }
 
-      // Resize heap if necessary
-      if (this.heap.length >= this.heap.length) {
-        this.resize();
+      // Grow the capacity threshold when the dense heap outgrows it. No array
+      // allocation: JS arrays grow on push, and heap.length is the element
+      // count used by bubbleUp/extract below.
+      if (this.heap.length >= this.capacity) {
+        this.capacity = Math.min(this.capacity * this.config.growthFactor, this.config.maxCapacity);
+        this.emitEvent("resize", undefined, undefined, { newCapacity: this.capacity });
       }
 
       // Create new node
@@ -421,23 +428,6 @@ export class PriorityQueue<T> {
     if (node1 && node2) {
       this.heap[index1] = node2;
       this.heap[index2] = node1;
-    }
-  }
-
-  /**
-   * Resizes the heap array when capacity is exceeded
-   * @example
-   */
-  private resize(): void {
-    const newCapacity = Math.min(this.heap.length * this.config.growthFactor, this.config.maxCapacity);
-
-    if (newCapacity > this.heap.length) {
-      const newHeap = new Array(newCapacity);
-      for (let i = 0; i < this.heap.length; i++) {
-        newHeap[i] = this.heap[i];
-      }
-      this.heap = newHeap;
-      this.emitEvent("resize", undefined, undefined, { newCapacity });
     }
   }
 

@@ -24,10 +24,14 @@ export interface DetectionManager {
 }
 
 /**
+ * Runs broad-phase collision detection over a set of AABBs and reports the candidate pairs.
+ * A cache hit short-circuits the sweep; otherwise the sweep runs, its result is cached when
+ * enabled, statistics are updated, and start/completion events are emitted.
  *
- * @param aabbs
- * @param manager
- * @example
+ * @param aabbs Boxes to test, or undefined to use every box registered with the manager.
+ * @param manager Detection state holding cache, stats, box map, and event emitter.
+ * @returns Sweep-prune result with collision pairs and run statistics.
+ * Complexity: see `sweep-prune` in ~/src/foxtools/registry/algorithms/ (verified: O(n log n + k) time for n objects and k collision pairs, O(n) space).
  */
 export function detectCollisions(aabbs: AABB[] | undefined, manager: DetectionManager): SweepPruneResult {
   const startTime = performance.now();
@@ -64,11 +68,14 @@ export function detectCollisions(aabbs: AABB[] | undefined, manager: DetectionMa
 }
 
 /**
+ * Looks up a previously cached result for the given box set.
+ * On a hit the entry's access count is incremented, stats are refreshed, a completion
+ * event is emitted, and a result with zeroed timing is returned; a miss returns null.
  *
- * @param testAABBs
- * @param _startTime
- * @param manager
- * @example
+ * @param testAABBs Boxes whose cache key is looked up.
+ * @param _startTime Reserved for timing symmetry with the caller.
+ * @param manager Detection state holding the cache and event emitter.
+ * @returns A cached result on a hit, or null when caching is disabled or the key is absent.
  */
 function checkCache(testAABBs: AABB[], _startTime: number, manager: DetectionManager): SweepPruneResult | null {
   const cacheKey = getCacheKey(testAABBs);
@@ -101,10 +108,13 @@ function checkCache(testAABBs: AABB[], _startTime: number, manager: DetectionMan
 }
 
 /**
+ * Produces an empty result for a failed detection run and records the failure.
+ * Statistics are updated with zero boxes, a completion event is emitted, and elapsed
+ * time is reported from the supplied start timestamp.
  *
- * @param startTime
- * @param manager
- * @example
+ * @param startTime Timestamp at which detection began.
+ * @param manager Detection state whose stats and events are updated.
+ * @returns An empty SweepPruneResult marked by zero counts.
  */
 function handleDetectionError(startTime: number, manager: DetectionManager): SweepPruneResult {
   const result: SweepPruneResult = {

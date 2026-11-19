@@ -30,11 +30,13 @@ import { validateGrid, validatePathfindingParams } from "./theta-star-validation
 
 // Helper function to check if point is within bounds
 /**
+ * Tests whether a grid point lies inside the given rectangular bounds.
+ * The lower edges are inclusive and the upper edges exclusive on both axes.
  *
- * @param point
- * @param width
- * @param height
- * @example
+ * @param point Point whose coordinates are checked.
+ * @param width Grid width, giving the exclusive x bound.
+ * @param height Grid height, giving the exclusive y bound.
+ * @returns True when both coordinates are inside the grid.
  */
 function isWithinBounds(point: Point, width: number, height: number): boolean {
   return point.x >= 0 && point.x < width && point.y >= 0 && point.y < height;
@@ -53,9 +55,11 @@ export class ThetaStar {
   private lineOfSightCache: Map<string, boolean> = new Map();
 
   /**
+   * Creates a Theta* pathfinder with default movement, caching, and validation settings.
+   * Supplied options override the defaults, and the statistics counters and result cache
+   * start empty.
    *
-   * @param config
-   * @example
+   * @param config Overrides for diagonal movement, tie-breaking, caching, and tolerances.
    */
   constructor(config: Partial<ThetaStarConfig> = {}) {
     this.config = {
@@ -305,11 +309,14 @@ export class ThetaStar {
   }
 
   /**
+   * Compares two paths by node count, total cost, and smoothness, collecting warnings when
+   * they differ beyond the configured tolerance. Exploration, timing, and line-of-sight
+   * comparisons are disabled by the defaults and left at zero in the result.
    *
-   * @param path1
-   * @param path2
-   * @param options
-   * @example
+   * @param path1 First path to compare.
+   * @param path2 Second path to compare.
+   * @param options Overrides for tolerance and which properties are compared.
+   * @returns Differences, warnings, and a similarity score for the two paths.
    */
   compare(path1: Point[], path2: Point[], options: Partial<PathComparisonOptions> = {}): PathComparisonResult {
     const comparisonOptions: PathComparisonOptions = {

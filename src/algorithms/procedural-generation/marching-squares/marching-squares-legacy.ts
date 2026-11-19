@@ -301,9 +301,12 @@ export class MarchingSquaresLegacy {
   // Private helper methods
 
   /**
+   * Validates a scalar field before contour generation.
+   * Ensures the grid is a non-empty rectangular array of finite numbers whose rows all have the same length,
+   * throwing at the first violation.
    *
-   * @param grid
-   * @example
+   * @param grid Scalar field to validate.
+   * @throws If the grid is not a 2D array, is empty, has ragged rows, or contains non-finite values.
    */
   private validateGrid(grid: number[][]): void {
     if (!Array.isArray(grid)) {
@@ -345,10 +348,14 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Marches every cell of the scalar field and merges the resulting segments into contours.
+   * Each cell is classified against the threshold and emits its segments, which are then joined
+   * into longer contours by matching endpoints.
    *
-   * @param grid
-   * @param threshold
-   * @example
+   * @param grid Scalar field sampled at grid vertices.
+   * @param threshold Iso-level used to classify corners and interpolate edge crossings.
+   * @returns The merged contours extracted from the field.
+   * Complexity: see `catalog-algorithms-procedural-generation-marching-squares` in ~/src/foxtools/registry/algorithms/ (unknown: no machine-readable bound recorded; the guide is authoritative).
    */
   private generateContours(grid: number[][], threshold: number): Contour[] {
     const contours: Contour[] = [];
@@ -372,12 +379,15 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Classifies one grid cell and wraps each of its contour segments in an open contour.
+   * The four corner values are compared against the threshold to form the 4-bit case index,
+   * which selects the cell's edge crossings.
    *
-   * @param grid
-   * @param x
-   * @param y
-   * @param threshold
-   * @example
+   * @param grid Scalar field sampled at grid vertices.
+   * @param x Column index of the cell's top-left corner.
+   * @param y Row index of the cell's top-left corner.
+   * @param threshold Iso-level used to classify corners.
+   * @returns One open contour per emitted segment, each tagged with the threshold level.
    */
   private processCell(grid: number[][], x: number, y: number, threshold: number): Contour[] {
     // Grid dimensions available if needed
@@ -427,13 +437,16 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Maps a marching-squares case to its edge crossings and emits one segment per connected edge pair.
+   * The 16-entry lookup table gives pairs of cell edges; each edge is resolved to a point and the
+   * pairs are connected into line segments.
    *
-   * @param caseIndex
-   * @param x
-   * @param y
-   * @param grid
-   * @param threshold
-   * @example
+   * @param caseIndex 4-bit index encoding which of the four corners are above the threshold.
+   * @param x Column index of the cell's top-left corner.
+   * @param y Row index of the cell's top-left corner.
+   * @param grid Scalar field sampled at grid vertices.
+   * @param threshold Iso-level used to interpolate edge crossings.
+   * @returns Line segments connecting the crossing points selected by the case.
    */
   private generateSegmentsForCase(
     caseIndex: number,
@@ -488,13 +501,17 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Computes where the iso-level crosses one edge of a cell.
+   * Edge indices are 0 = top, 1 = right, 2 = bottom, 3 = left; crossings are linearly
+   * interpolated between the two corner values unless interpolation is disabled, in which
+   * case the edge midpoint is used.
    *
-   * @param edgeIndex
-   * @param x
-   * @param y
-   * @param grid
-   * @param threshold
-   * @example
+   * @param edgeIndex Which cell edge to cross (0 top, 1 right, 2 bottom, 3 left).
+   * @param x Column index of the cell's top-left corner.
+   * @param y Row index of the cell's top-left corner.
+   * @param grid Scalar field sampled at grid vertices.
+   * @param threshold Iso-level used for interpolation.
+   * @returns The crossing point, or null when the edge's corner values are missing.
    */
   private getEdgePoint(edgeIndex: number, x: number, y: number, grid: number[][], threshold: number): Point | null {
     // Grid dimensions available if needed
@@ -563,11 +580,14 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Returns the linear interpolation fraction of the iso-level between two corner values.
+   * The fraction is t = (threshold - value1) / (value2 - value1); a flat pair within the
+   * configured tolerance yields 0.5 to avoid division by zero.
    *
-   * @param threshold
-   * @param value1
-   * @param value2
-   * @example
+   * @param threshold Iso-level to locate between the two values.
+   * @param value1 Scalar value at the start of the edge.
+   * @param value2 Scalar value at the end of the edge.
+   * @returns Fraction in [0, 1] giving the crossing position along the edge.
    */
   private interpolate(threshold: number, value1: number, value2: number): number {
     if (Math.abs(value1 - value2) < this.config.tolerance!) {
@@ -577,9 +597,12 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Greedily joins contours at the same level whose endpoints touch into longer contours.
+   * Each contour is tried against the others repeatedly, comparing levels and endpoints with
+   * the configured tolerance until no further merge is possible.
    *
-   * @param contours
-   * @example
+   * @param contours Per-cell contours to merge.
+   * @returns The merged contours, with consumed inputs removed.
    */
   private mergeContours(contours: Contour[]): Contour[] {
     if (contours.length === 0) return contours;
@@ -631,10 +654,13 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Attempts to concatenate two contours by matching their endpoints.
+   * Handles both orientations by reversing one contour's segments as needed, and marks the
+   * result closed when the remaining endpoints also coincide.
    *
-   * @param contour1
-   * @param contour2
-   * @example
+   * @param contour1 First contour, whose level is kept by the result.
+   * @param contour2 Second contour to attach.
+   * @returns The merged contour, or null when no pair of endpoints matches.
    */
   private tryMergeContours(contour1: Contour, contour2: Contour): Contour | null {
     if (contour1.segments.length === 0 || contour2.segments.length === 0) {
@@ -702,19 +728,22 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Tests whether two points coincide within the configured tolerance.
+   * Both coordinates must differ by less than the tolerance for the points to be considered equal.
    *
-   * @param p1
-   * @param p2
-   * @example
+   * @param p1 First point.
+   * @param p2 Second point.
+   * @returns True when both coordinates are within tolerance.
    */
   private pointsEqual(p1: Point, p2: Point): boolean {
     return Math.abs(p1.x - p2.x) < this.config.tolerance! && Math.abs(p1.y - p2.y) < this.config.tolerance!;
   }
 
   /**
+   * Sums the Euclidean lengths of a contour's segments.
    *
-   * @param contour
-   * @example
+   * @param contour Contour whose segments are measured.
+   * @returns Total polyline length.
    */
   private computeContourLength(contour: Contour): number {
     let length = 0;
@@ -727,9 +756,11 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Computes the enclosed area of a closed contour with the shoelace formula.
+   * Open contours or those with fewer than three segments have zero area.
    *
-   * @param contour
-   * @example
+   * @param contour Closed contour to measure.
+   * @returns Absolute enclosed area, or 0 when the contour is open or too short.
    */
   private computeContourArea(contour: Contour): number {
     if (!contour.isClosed || contour.segments.length < 3) {
@@ -746,9 +777,11 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Computes the length-weighted centroid of a contour's segments.
+   * Segment midpoints are averaged by their lengths; an empty contour yields the origin.
    *
-   * @param contour
-   * @example
+   * @param contour Contour to measure.
+   * @returns Length-weighted centroid of the segment midpoints.
    */
   private computeContourCentroid(contour: Contour): Point {
     if (contour.segments.length === 0) {
@@ -773,9 +806,10 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Computes the axis-aligned bounding box enclosing every segment endpoint of a contour.
    *
-   * @param contour
-   * @example
+   * @param contour Contour to measure.
+   * @returns Minimum and maximum x and y coordinates, all zero for an empty contour.
    */
   private computeContourBoundingBox(contour: Contour): { minX: number; minY: number; maxX: number; maxY: number } {
     if (contour.segments.length === 0) {
@@ -798,11 +832,15 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Simplifies a polyline with the Douglas-Peucker algorithm.
+   * The point farthest from the line joining the endpoints is found recursively; when its
+   * distance exceeds the threshold the polyline is split there, otherwise the interior
+   * points are dropped.
    *
-   * @param points
-   * @param maxDistance
-   * @param preserveEndpoints
-   * @example
+   * @param points Ordered points forming the polyline to simplify.
+   * @param maxDistance Maximum perpendicular distance for a point to be discarded.
+   * @param preserveEndpoints Whether to keep both endpoints when the interior is dropped.
+   * @returns The simplified polyline.
    */
   private douglasPeucker(points: Point[], maxDistance: number, preserveEndpoints: boolean): Point[] {
     if (points.length <= 2) return points;
@@ -845,11 +883,13 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Computes the perpendicular distance from a point to the infinite line through two points.
+   * A degenerate line whose endpoints coincide falls back to the distance to that single point.
    *
-   * @param point
-   * @param lineStart
-   * @param lineEnd
-   * @example
+   * @param point Point whose distance is measured.
+   * @param lineStart First point defining the line.
+   * @param lineEnd Second point defining the line.
+   * @returns Euclidean distance from the point to the line.
    */
   private pointToLineDistance(point: Point, lineStart: Point, lineEnd: Point): number {
     const A = point.x - lineStart.x;
@@ -875,12 +915,14 @@ export class MarchingSquaresLegacy {
   }
 
   /**
+   * Builds a failed result with no contours and statistics describing the failure.
+   * The returned stats carry the grid dimensions, elapsed time, success = false, and the error text.
    *
-   * @param width
-   * @param height
-   * @param startTime
-   * @param error
-   * @example
+   * @param width Width of the input grid, or 0 when unavailable.
+   * @param height Height of the input grid.
+   * @param startTime Timestamp used to report elapsed execution time.
+   * @param error Error message to expose in the statistics.
+   * @returns An empty MarchingSquaresResult marked as failed.
    */
   private createEmptyResult(width: number, height: number, startTime: number, error: string): MarchingSquaresResult {
     return {

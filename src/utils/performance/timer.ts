@@ -15,8 +15,7 @@ export class PerformanceTimer {
   private isRunning: boolean = false;
 
   /**
-   *
-   * @example
+   * Starts or restarts timing from the current high-resolution clock value.
    */
   start(): void {
     this.startTime = performance.now();
@@ -24,8 +23,10 @@ export class PerformanceTimer {
   }
 
   /**
+   * Stops the timer and returns the elapsed milliseconds.
    *
-   * @example
+   * @returns Duration from `start` to `stop`.
+   * @throws When the timer was not running.
    */
   stop(): number {
     if (!this.isRunning) {
@@ -37,8 +38,9 @@ export class PerformanceTimer {
   }
 
   /**
+   * Returns elapsed milliseconds: the frozen duration when stopped, or the live interval when running.
    *
-   * @example
+   * @returns Elapsed time in milliseconds.
    */
   getElapsed(): number {
     if (!this.isRunning) {
@@ -48,8 +50,7 @@ export class PerformanceTimer {
   }
 
   /**
-   *
-   * @example
+   * Clears the recorded timestamps and returns the timer to the stopped state.
    */
   reset(): void {
     this.startTime = 0;

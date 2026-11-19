@@ -232,10 +232,12 @@ export class HermiteSpline {
   private segments: HermiteSegment[];
 
   /**
+   * Creates a piecewise Hermite spline from the given segments, copying them into the curve.
+   * Each segment is defined by two endpoints and two tangents; the reserved config argument
+   * is currently unused.
    *
-   * @param segments
-   * @param _config
-   * @example
+   * @param segments Hermite segments to join into the spline.
+   * @param _config Reserved configuration placeholder.
    */
   constructor(segments: HermiteSegment[], _config: Partial<HermiteConfig> = {}) {
     this.segments = [...segments];

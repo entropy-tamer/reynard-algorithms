@@ -31,9 +31,11 @@ export abstract class FFTBase {
   private lastDuration: number = 0;
 
   /**
+   * Initializes shared FFT state from the supplied configuration.
+   * Copies the config, records the transform size, and creates the performance
+   * timer, memory monitor, and zeroed statistics used by every transform.
    *
-   * @param config
-   * @example
+   * @param config Transform size and optional normalization, coefficient, and validation settings.
    */
   constructor(config: FFTConfig) {
     this.config = { ...config };
@@ -187,9 +189,11 @@ export abstract class FFTBase {
   }
 
   /**
+   * Extracts harmonic coefficients from a result spectrum and stores them on the result.
+   * The extraction strategy follows the configured strategy, or ARTICLE for article
+   * normalization and NONE otherwise; nothing is attached when extraction yields no data.
    *
-   * @param result
-   * @example
+   * @param result FFT result whose real and imag arrays are analyzed.
    */
   private attachCoefficients(result: FFTResult): void {
     const normalizationMode = result.normalizationMode ?? this.getNormalizationMode();
@@ -211,9 +215,11 @@ export abstract class FFTBase {
   }
 
   /**
+   * Runs the configured spectrum validations and attaches any warnings to the result.
+   * Integer-cycle and transient checks run only when their sections are enabled; a
+   * result with no warnings is left without a warnings field.
    *
-   * @param result
-   * @example
+   * @param result FFT result to validate and annotate in place.
    */
   private attachValidationWarnings(result: FFTResult): void {
     const validation = this.config.validation;
@@ -257,8 +263,11 @@ export abstract class FFTBase {
   }
 
   /**
+   * Resolves the effective normalization mode from the configuration.
+   * An explicit mode wins, then the legacy normalize flag maps to STANDARD, and
+   * the fallback is NONE.
    *
-   * @example
+   * @returns The normalization mode that should be applied to results.
    */
   private getNormalizationMode(): FFTNormalizationMode {
     if (this.config.normalizationMode) {

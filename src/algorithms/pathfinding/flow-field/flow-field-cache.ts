@@ -19,9 +19,9 @@ export class FlowFieldCache {
   private missCount: number = 0;
 
   /**
+   * Creates an empty flow-field result cache with a bounded entry count and zeroed hit counters.
    *
-   * @param maxSize
-   * @example
+   * @param maxSize Maximum number of results retained before eviction.
    */
   constructor(maxSize: number = 100) {
     this.maxSize = maxSize;

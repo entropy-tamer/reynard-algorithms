@@ -54,9 +54,12 @@ export class KdTree {
   private stats: KdTreeStats;
 
   /**
+   * Creates an empty k-d tree with the configured number of dimensions and optional initial points.
    *
-   * @param options
-   * @example
+   * Merges `options` with the defaults, leaves the root null, and inserts any `initialPoints`.
+   *
+   * @param options Partial configuration, event handlers, and initial points.
+   * Complexity: see `catalog-data-structures-spatial-kdtree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
    */
   constructor(options: Partial<KdTreeOptions> = {}) {
     const opts = { ...DEFAULT_KD_TREE_OPTIONS, ...options };

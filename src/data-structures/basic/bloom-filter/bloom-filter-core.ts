@@ -55,9 +55,14 @@ export class BloomFilter {
   private stats: BloomFilterStats;
 
   /**
+   * Creates a Bloom Filter sized from the expected element count and target false-positive rate.
    *
-   * @param options
-   * @example
+   * Merges `options` with the defaults, derives the bit-array size and hash-function count when
+   * they were not supplied, and inserts any `initialElements`. False positives are possible;
+   * false negatives are not.
+   *
+   * @param options Partial bit-array, hash-function, event, and initial-element options.
+   * Complexity: see `catalog-data-structures-basic-bloom-filter` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
    */
   constructor(options: Partial<BloomFilterOptions> = {}) {
     const opts = { ...DEFAULT_BLOOM_FILTER_OPTIONS, ...options };

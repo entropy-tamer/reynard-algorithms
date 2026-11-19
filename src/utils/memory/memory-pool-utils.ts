@@ -18,7 +18,7 @@ import { MemoryPool, PerformanceMemoryPoolConfig, PooledObject } from "./memory-
  */
 export function createSpatialObjectPool(config: PerformanceMemoryPoolConfig = {}) {
   /**
-   *
+   * Poolable rectangular spatial object with an id, position, size, and data payload.
    */
   class SpatialObject implements PooledObject {
     id: string | number = "";
@@ -29,8 +29,7 @@ export function createSpatialObjectPool(config: PerformanceMemoryPoolConfig = {}
     data: SpatialObjectData | null = null;
 
     /**
-     *
-     * @example
+     * Clears id, position, size, and payload so the object can be reused.
      */
     reset(): void {
       this.id = "";
@@ -52,7 +51,7 @@ export function createSpatialObjectPool(config: PerformanceMemoryPoolConfig = {}
  */
 export function createAABBPool(config: PerformanceMemoryPoolConfig = {}) {
   /**
-   *
+   * Poolable axis-aligned bounding box with position and size.
    */
   class AABBObject implements PooledObject {
     x: number = 0;
@@ -61,8 +60,7 @@ export function createAABBPool(config: PerformanceMemoryPoolConfig = {}) {
     height: number = 0;
 
     /**
-     *
-     * @example
+     * Zeros position and size so the box can be reused.
      */
     reset(): void {
       this.x = 0;
@@ -82,15 +80,14 @@ export function createAABBPool(config: PerformanceMemoryPoolConfig = {}) {
  */
 export function createPointPool(config: PerformanceMemoryPoolConfig = {}) {
   /**
-   *
+   * Poolable 2D point with x and y coordinates.
    */
   class PointObject implements PooledObject {
     x: number = 0;
     y: number = 0;
 
     /**
-     *
-     * @example
+     * Zeros both coordinates so the point can be reused.
      */
     reset(): void {
       this.x = 0;
@@ -108,7 +105,7 @@ export function createPointPool(config: PerformanceMemoryPoolConfig = {}) {
  */
 export function createVectorPool(config: PerformanceMemoryPoolConfig = {}) {
   /**
-   *
+   * Poolable 2D vector with components and a cached magnitude.
    */
   class VectorObject implements PooledObject {
     x: number = 0;
@@ -116,8 +113,7 @@ export function createVectorPool(config: PerformanceMemoryPoolConfig = {}) {
     magnitude: number = 0;
 
     /**
-     *
-     * @example
+     * Zeros components and magnitude so the vector can be reused.
      */
     reset(): void {
       this.x = 0;
@@ -136,11 +132,12 @@ export class MemoryPoolManager {
   private pools = new Map<string, MemoryPool<PooledObject>>();
 
   /**
+   * Creates a memory pool and registers it under `name`, replacing any previous entry.
    *
-   * @param name
-   * @param createFn
-   * @param config
-   * @example
+   * @param name Key used to look up the pool later.
+   * @param createFn Factory for newly allocated objects.
+   * @param config Optional sizing and statistics settings.
+   * @returns The newly created pool.
    */
   createPool<T extends PooledObject>(
     name: string,
@@ -153,26 +150,29 @@ export class MemoryPoolManager {
   }
 
   /**
+   * Looks up a previously registered pool by name.
    *
-   * @param name
-   * @example
+   * @param name Key the pool was registered under.
+   * @returns The pool, or `undefined` when no pool has that name.
    */
   getPool<T extends PooledObject>(name: string): MemoryPool<T> | undefined {
     return this.pools.get(name) as MemoryPool<T> | undefined;
   }
 
   /**
+   * Unregisters the pool stored under `name`.
    *
-   * @param name
-   * @example
+   * @param name Key of the pool to remove.
+   * @returns `true` when a pool existed and was removed.
    */
   removePool(name: string): boolean {
     return this.pools.delete(name);
   }
 
   /**
+   * Returns a snapshot of every registered pool's statistics keyed by pool name.
    *
-   * @example
+   * @returns Name-to-statistics mapping for all current pools.
    */
   getAllStats(): Record<string, PerformanceMemoryPoolStats> {
     const stats: Record<string, PerformanceMemoryPoolStats> = {};
@@ -183,8 +183,7 @@ export class MemoryPoolManager {
   }
 
   /**
-   *
-   * @example
+   * Clears every registered pool, dropping all idle objects while keeping the pools registered.
    */
   clearAllPools(): void {
     this.pools.forEach(pool => {

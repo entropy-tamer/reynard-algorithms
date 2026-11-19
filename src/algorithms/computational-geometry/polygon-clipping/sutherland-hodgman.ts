@@ -22,9 +22,11 @@ export class SutherlandHodgmanClipper {
   private config: SutherlandHodgmanOptions;
 
   /**
+   * Creates a Sutherland-Hodgman clipper with default tolerance, validation, and cleanup settings.
+   * The subject polygon is clipped against each convex clip edge in turn; supplied options
+   * override individual defaults.
    *
-   * @param config
-   * @example
+   * @param config Overrides for tolerance, input validation, duplicate removal, and orientation handling.
    */
   constructor(config: Partial<SutherlandHodgmanOptions> = {}) {
     this.config = {

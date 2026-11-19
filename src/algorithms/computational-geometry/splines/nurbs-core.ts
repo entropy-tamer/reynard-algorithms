@@ -321,11 +321,14 @@ export class NURBSCurve {
   private config: NURBSConfig;
 
   /**
+   * Creates a NURBS curve from control points and their matching weights.
+   * The number of weights must equal the number of control points; default degree and
+   * sampling settings can be overridden through the configuration.
    *
-   * @param controlPoints
-   * @param weights
-   * @param config
-   * @example
+   * @param controlPoints Ordered control points defining the curve.
+   * @param weights Weight for each control point, in the same order.
+   * @param config Overrides for degree, sampling count, and arc-length precision.
+   * @throws If the weight count does not match the control-point count.
    */
   constructor(controlPoints: Point[], weights: number[], config: Partial<NURBSConfig> = {}) {
     this.config = {

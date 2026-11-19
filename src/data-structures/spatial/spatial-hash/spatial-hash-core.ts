@@ -55,10 +55,17 @@ export class SpatialHash<T extends SpatialDataType = SpatialDataType> {
   }
 
   /**
-   * Insert an object into the spatial hash.
+   * Inserts an object into the spatial hash by mapping its bounds to every
+   * overlapping grid cell. The object is tracked in each covered cell so a
+   * later query of any of those cells returns it.
    *
-   * @param object The spatial object to insert
+   * @param object The spatial object to insert, including its bounds and a stable id
+   * @returns Nothing; insertion counts are available through `getStats()`
+   * Complexity: see `catalog-data-structures-spatial-spatial-hash` in ~/src/foxtools/registry/algorithms/ (unknown: no machine-readable bound recorded; the guide is authoritative)
    * @example
+   * ```typescript
+   * hash.insert({ id: 1, x: 0, y: 0, width: 4, height: 4, data: payload });
+   * ```
    */
   insert(object: SpatialObject & { data: T }): void {
     insertImpl<T>(
@@ -101,14 +108,19 @@ export class SpatialHash<T extends SpatialDataType = SpatialDataType> {
   }
 
   /**
-   * Query for objects in a rectangular area.
+   * Queries for objects in a rectangular area by scanning only the grid cells
+   * the rectangle overlaps and de-duplicating objects that span several cells.
    *
    * @param x Rectangle left coordinate
    * @param y Rectangle top coordinate
    * @param width Rectangle width
    * @param height Rectangle height
    * @returns Array of objects intersecting the rectangle
+   * Complexity: see `catalog-data-structures-spatial-spatial-hash` in ~/src/foxtools/registry/algorithms/ (unknown: no machine-readable bound recorded; the guide is authoritative)
    * @example
+   * ```typescript
+   * const hits = hash.queryRect(0, 0, 50, 50);
+   * ```
    */
   queryRect(x: number, y: number, width: number, height: number): Array<SpatialObject & { data: T }> {
     return queryRectImpl<T>(

@@ -18,10 +18,13 @@ export interface SpatialHashState<T extends SpatialDataType> {
 }
 
 /**
+ * Registers an object in every grid cell its bounds overlap and records the cell list by id.
  *
- * @param state
- * @param object
- * @example
+ * Increases the insert counter; objects spanning multiple cells are stored in each one.
+ *
+ * @param state Mutable spatial-hash state (cells, id-to-cells map, counters).
+ * @param object Spatial object to insert, including its typed data payload.
+ * Complexity: see `catalog-data-structures-spatial-spatial-hash` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function insertImpl<T extends SpatialDataType>(
   state: SpatialHashState<T>,
@@ -40,10 +43,12 @@ export function insertImpl<T extends SpatialDataType>(
 }
 
 /**
+ * Removes an object from all cells it occupies and deletes cells that become empty.
  *
- * @param state
- * @param objectId
- * @example
+ * @param state Mutable spatial-hash state.
+ * @param objectId Id of the object to remove.
+ * @returns `true` when the object had a cell mapping and was removed, `false` otherwise.
+ * Complexity: see `catalog-data-structures-spatial-spatial-hash` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function removeImpl<T extends SpatialDataType>(state: SpatialHashState<T>, objectId: string | number): boolean {
   const cellKeys = state.objectToCells.get(objectId);
@@ -63,13 +68,17 @@ export function removeImpl<T extends SpatialDataType>(state: SpatialHashState<T>
 }
 
 /**
+ * Returns the distinct objects fully contained in a rectangle, drawn from the cells it touches.
  *
- * @param state
- * @param x
- * @param y
- * @param width
- * @param height
- * @example
+ * Results are deduplicated by id and the query counter is increased.
+ *
+ * @param state Mutable spatial-hash state.
+ * @param x Left edge of the query rectangle.
+ * @param y Top edge of the query rectangle.
+ * @param width Rectangle width.
+ * @param height Rectangle height.
+ * @returns Unique objects whose bounds lie inside the rectangle.
+ * Complexity: see `catalog-data-structures-spatial-spatial-hash` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function queryRectImpl<T extends SpatialDataType>(
   state: SpatialHashState<T>,
@@ -140,12 +149,16 @@ export function queryCellsImpl<T extends SpatialDataType>(
 }
 
 /**
+ * Finds objects within `radius` of a point, scanning the covered cells and sorting by distance.
  *
- * @param state
- * @param centerX
- * @param centerY
- * @param radius
- * @example
+ * Objects at exactly the radius are included; results carry the object, distance, and cell key.
+ *
+ * @param state Mutable spatial-hash state.
+ * @param centerX X coordinate of the query center.
+ * @param centerY Y coordinate of the query center.
+ * @param radius Search radius.
+ * @returns Candidates within the radius, nearest first.
+ * Complexity: see `catalog-data-structures-spatial-spatial-hash` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function queryRadiusImpl<T extends SpatialDataType>(
   state: SpatialHashState<T>,
@@ -172,12 +185,16 @@ export function queryRadiusImpl<T extends SpatialDataType>(
 }
 
 /**
+ * Returns the closest object to a point, expanding the search radius when the first ring is empty.
  *
- * @param state
- * @param x
- * @param y
- * @param maxDistance
- * @example
+ * Without `maxDistance`, the initial radius is twice the cell size and doubles once on a miss.
+ *
+ * @param state Mutable spatial-hash state.
+ * @param x X coordinate of the query point.
+ * @param y Y coordinate of the query point.
+ * @param maxDistance Optional upper bound on the initial search radius.
+ * @returns The nearest candidate, or `null` when no object is found.
+ * Complexity: see `catalog-data-structures-spatial-spatial-hash` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function findNearestImpl<T extends SpatialDataType>(
   state: SpatialHashState<T>,
@@ -195,9 +212,11 @@ export function findNearestImpl<T extends SpatialDataType>(
 }
 
 /**
+ * Collects every distinct object stored across all cells, keyed by object id.
  *
- * @param state
- * @example
+ * @param state Mutable spatial-hash state.
+ * @returns All registered objects with a defined data payload.
+ * Complexity: see `catalog-data-structures-spatial-spatial-hash` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function getAllObjectsImpl<T extends SpatialDataType>(
   state: SpatialHashState<T>
@@ -214,9 +233,11 @@ export function getAllObjectsImpl<T extends SpatialDataType>(
 }
 
 /**
+ * Computes aggregate cell and object statistics, including a memory estimate and operation counters.
  *
- * @param state
- * @example
+ * @param state Mutable spatial-hash state.
+ * @returns Cell counts, occupancy figures, memory usage, and query/insert/remove totals.
+ * Complexity: see `catalog-data-structures-spatial-spatial-hash` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function getStatsImpl<T extends SpatialDataType>(state: SpatialHashState<T>): SpatialHashStats {
   let totalObjects = 0;
@@ -244,9 +265,10 @@ export function getStatsImpl<T extends SpatialDataType>(state: SpatialHashState<
 }
 
 /**
+ * Deletes any cell whose object array is empty, leaving populated cells untouched.
  *
- * @param state
- * @example
+ * @param state Mutable spatial-hash state.
+ * Complexity: see `catalog-data-structures-spatial-spatial-hash` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function cleanupEmptyCells<T extends SpatialDataType>(state: SpatialHashState<T>): void {
   for (const [cellKey, cell] of Array.from(state.cells.entries())) {

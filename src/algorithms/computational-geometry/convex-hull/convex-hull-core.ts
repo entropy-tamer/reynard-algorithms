@@ -55,11 +55,20 @@ export class ConvexHull {
   }
 
   /**
-   * Computes the convex hull of a set of points.
+   * Computes the convex hull of a point set using the configured algorithm, or
+   * the `algorithm` override when one is supplied. Input is validated and
+   * de-duplicated when the corresponding config options are enabled; fewer
+   * than three distinct points yields an empty result rather than a throw.
+   *
    * @param points - Array of points to compute the convex hull for.
-   * @param algorithm - Optional algorithm override.
+   * @param algorithm - Optional override of the configured hull algorithm (graham-scan, jarvis-march, quickhull, monotone-chain, or gift-wrapping).
    * @returns A ConvexHullResult object with the hull points, edges, and statistics.
+   * Complexity: see `convex-hull` in ~/src/foxtools/registry/algorithms/ (verified: best/average O(n log n), worst O(n²) for QuickHull)
    * @example
+   * ```typescript
+   * const result = new ConvexHull().compute(points, "monotone-chain");
+   * console.log(result.hull.length);
+   * ```
    */
   compute(points: Point[], algorithm?: ConvexHullAlgorithm): ConvexHullResult {
     const startTime = performance.now();

@@ -22,12 +22,10 @@ export class AlgorithmConfigManager {
   private machineFingerprint: MachineFingerprint | null;
 
   /**
-   * @param configPath path to config file (default: ./algorithm-config.json)
-   * @example
-   */
-    /**
-   * @param configPath path to config file (default: ./algorithm-config.json)
-   * @example
+   * Creates a manager for the given config file, deferring file I/O and fingerprint generation
+   * until configuration is first accessed so browser builds stay unblocked.
+   *
+   * @param configPath Path to the JSON config file (default: ./algorithm-config.json).
    */
   constructor(configPath: string = "./algorithm-config.json") {
     this.configPath = configPath;

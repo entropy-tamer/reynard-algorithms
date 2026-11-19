@@ -395,10 +395,11 @@ export class BSplineCurve {
   private config: BSplineConfig;
 
   /**
+   * Creates a B-spline curve from control points with cubic degree and uniform knots by default.
+   * The supplied configuration can override the degree, sampling count, and arc-length precision.
    *
-   * @param controlPoints
-   * @param config
-   * @example
+   * @param controlPoints Ordered control points defining the curve.
+   * @param config Overrides for degree, uniformity, and sampling behavior.
    */
   constructor(controlPoints: Point[], config: Partial<BSplineConfig> = {}) {
     this.config = {

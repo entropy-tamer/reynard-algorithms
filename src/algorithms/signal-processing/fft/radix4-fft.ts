@@ -18,9 +18,13 @@ export class Radix4FFT extends FFTBase {
   private bitReversalPermutation!: Uint32Array;
 
   /**
+   * Creates a radix-4 Cooley-Tukey transform that requires a power-of-four length.
+   * The size is validated and the bit-reversal permutation is precomputed; each stage
+   * processes four elements, halving the stage count versus radix-2.
    *
-   * @param config
-   * @example
+   * @param config Transform size and optional normalization settings.
+   * @throws If the configured size is not a power of four.
+   * Complexity: see `fft-radix4` in ~/src/foxtools/registry/algorithms/ (verified: O(N log N) time for transform length N, O(N) space).
    */
   constructor(config: FFTConfig) {
     super(config);

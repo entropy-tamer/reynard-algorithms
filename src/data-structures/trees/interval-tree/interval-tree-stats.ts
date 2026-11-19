@@ -68,9 +68,10 @@ export function getPerformanceMetrics(stats: IntervalTreeStats): IntervalTreePer
 }
 
 /**
+ * Zeroes every counter and aggregate in `stats`, including timings and memory usage.
  *
- * @param stats
- * @example
+ * @param stats Statistics object to reset in place.
+ * Complexity: see `catalog-data-structures-trees-interval-tree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function resetStats(stats: IntervalTreeStats): void {
   stats.totalIntervals = 0;
@@ -85,11 +86,15 @@ export function resetStats(stats: IntervalTreeStats): void {
 }
 
 /**
+ * Folds a new timing sample into the running mean over `count` samples.
  *
- * @param currentAverage
- * @param newTime
- * @param count
- * @example
+ * Callers pass the total sample count after adding `newTime`, so the divisor is `count`.
+ *
+ * @param currentAverage Mean of the previous samples.
+ * @param newTime Timing sample to include.
+ * @param count Total number of samples including the new one.
+ * @returns The updated average.
+ * Complexity: see `catalog-data-structures-trees-interval-tree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function updateAverageTime(currentAverage: number, newTime: number, count: number): number {
   return (currentAverage * (count - 1) + newTime) / count;

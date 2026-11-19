@@ -114,13 +114,21 @@ export class AStar {
   }
 
   /**
-   * Find path between two points using A* algorithm
+   * Finds a lowest-cost path from `start` to `goal` with A*, expanding the
+   * lowest f-score node from a binary min-heap open set and skipping stale heap
+   * entries through lazy deletion. Successful searches are cached when caching
+   * is enabled, and emitted events report search progress.
    *
-   * @param start Starting point
-   * @param goal Goal point
-   * @param grid Optional grid for obstacle checking
-   * @returns Pathfinding result
+   * @param start Starting point in grid cell coordinates
+   * @param goal Destination point in grid cell coordinates
+   * @param grid Optional grid for obstacle and bounds checks; omit to use the configured grid
+   * @returns Pathfinding result with success flag, ordered path, total cost, nodes explored, and timing
+   * Complexity: see `astar` in ~/src/foxtools/registry/algorithms/ (verified: average/worst O(b^d), heap open-set extraction O(log n))
    * @example
+   * ```typescript
+   * const result = new AStar().findPath({ x: 0, y: 0 }, { x: 9, y: 9 }, grid);
+   * if (result.success) console.log(result.path);
+   * ```
    */
   findPath(start: Point, goal: Point, grid?: AStarGrid): AStarResult {
     const startTime = performance.now();

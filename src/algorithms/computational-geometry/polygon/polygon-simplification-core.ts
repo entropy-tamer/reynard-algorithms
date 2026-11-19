@@ -345,9 +345,10 @@ export class PolygonSimplifier {
   private config: PolygonSimplificationConfig;
 
   /**
+   * Creates a polygon simplifier with default tolerance and Douglas-Peucker as the algorithm.
+   * Supplied options override the defaults for topology and shape preservation.
    *
-   * @param config
-   * @example
+   * @param config Overrides for tolerance, simplification algorithm, and preservation flags.
    */
   constructor(config: Partial<PolygonSimplificationConfig> = {}) {
     this.config = {

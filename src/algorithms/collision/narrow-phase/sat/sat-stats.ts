@@ -26,10 +26,10 @@ export class SATStatsManager {
   private enableDebug: boolean;
 
   /**
+   * Creates a statistics manager with zeroed counters and an empty event-handler list.
    *
-   * @param enableStats
-   * @param enableDebug
-   * @example
+   * @param enableStats Whether collision-test statistics are recorded.
+   * @param enableDebug Whether verbose debug output is enabled.
    */
   constructor(enableStats: boolean = true, enableDebug: boolean = false) {
     this.enableStats = enableStats;

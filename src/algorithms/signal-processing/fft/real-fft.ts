@@ -18,9 +18,13 @@ export class RealFFT extends FFTBase {
   private radix2FFT!: Radix2FFT;
 
   /**
+   * Creates a transform optimized for real-valued input of power-of-two length.
+   * The size is validated and a half-length radix-2 FFT is prepared for the packed
+   * complex step that exploits the spectrum's conjugate symmetry.
    *
-   * @param config
-   * @example
+   * @param config Transform size and optional normalization settings.
+   * @throws If the configured size is not a power of two.
+   * Complexity: see `fft-real` in ~/src/foxtools/registry/algorithms/ (verified: O(N log N) time for transform length N, O(N) space).
    */
   constructor(config: FFTConfig) {
     super(config);

@@ -17,11 +17,15 @@ export class StateTracker<T> {
   private startTime: number;
 
   /**
+   * Create a tracker over a copy of the initial array. Step snapshots and
+   * inversion counts are kept only when the config asks for them; with
+   * recordSteps false the tracker holds a reference and avoids O(n) work per
+   * swap. Complexity: see `sorting-classical-merge-sort` in
+   * ~/src/foxtools/registry/algorithms/.
    *
-   * @param initialArray
-   * @param comparator
-   * @param config
-   * @example
+   * @param initialArray - array whose values are being sorted
+   * @param comparator - ordering used for comparisons and inversion counts
+   * @param config - whether to record steps and calculate metrics
    */
   constructor(initialArray: T[], comparator: Comparator<T>, config: SortingConfig) {
     this.config = config;
@@ -169,6 +173,18 @@ export class StateTracker<T> {
    * @example
    */
   updateArray(newArray: T[]): void {
+    // Without step recording there is no snapshot to preserve: algorithms pass
+    // a fresh working array for every call, so a reference is exact and avoids
+    // an O(n) copy on every swap. With step recording, keep the copy because
+    // earlier states must not mutate as the sort proceeds.
+    if (!this.config.recordSteps) {
+      this.currentState.array = newArray;
+      if (this.config.calculateMetrics) {
+        this.currentState.inversionCount = calculateInversionCount([...newArray], this.comparator);
+      }
+      return;
+    }
+
     this.currentState.array = [...newArray];
     this.currentState.timestamp = performance.now() - this.startTime;
 

@@ -917,9 +917,11 @@ export class SegmentTree<T> {
   }
 
   /**
+   * Recursively counts the nodes in the subtree rooted at `node`.
    *
-   * @param node
-   * @example
+   * @param node Root of the subtree to count; `null` contributes zero.
+   * @returns Number of nodes in the subtree.
+   * Complexity: see `ds-trees-segment-tree` in ~/src/foxtools/registry/algorithms/ (verified: O(n) space; this walk visits every stored node).
    */
   private countNodesFrom(node: SegmentTreeNode<T> | null): number {
     if (!node) return 0;

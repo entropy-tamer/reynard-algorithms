@@ -55,9 +55,13 @@ export class IntervalTree {
   private stats: IntervalTreeStats;
 
   /**
+   * Creates an empty AVL-balanced interval tree with optional initial intervals.
    *
-   * @param options
-   * @example
+   * Merges `options` with defaults, starts with a null root, and inserts any `initialIntervals`
+   * so node heights and max-end values are maintained from the start.
+   *
+   * @param options Partial configuration, event handlers, and initial intervals.
+   * Complexity: see `catalog-data-structures-trees-interval-tree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
    */
   constructor(options: Partial<IntervalTreeOptions> = {}) {
     const opts = { ...DEFAULT_INTERVAL_TREE_OPTIONS, ...options };

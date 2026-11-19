@@ -112,6 +112,7 @@ export class LRUCache<K, V> {
    *
    * @param key The key to look up.
    * @returns The cached value, or `undefined` on miss or expiry.
+   * Complexity: see `ds-basic-lru-cache` in ~/src/foxtools/registry/algorithms/ (verified: best/average O(1), worst O(n); O(1) depends on hash-map behavior)
    */
   get(key: K): V | undefined {
     return getValue(
@@ -135,6 +136,7 @@ export class LRUCache<K, V> {
    * @param key The key to insert or update.
    * @param value The value to associate with the key.
    * @returns `true` if the operation succeeded.
+   * Complexity: see `ds-basic-lru-cache` in ~/src/foxtools/registry/algorithms/ (verified: best/average O(1), worst O(n); O(1) depends on hash-map behavior)
    */
   set(key: K, value: V): boolean {
     return setValue(
@@ -237,24 +239,32 @@ export class LRUCache<K, V> {
     return createCacheSnapshot(this.linkedList, this.ttlManager, this.config, () => this.getStats());
   }
   /**
+   * Inserts or updates several entries in one call, delegating each pair to `set`.
    *
-   * @param entries
-   * @example
+   * Individual failures are collected rather than thrown, and the result reports the success rate.
+   *
+   * @param entries Key/value pairs to insert or update.
+   * @returns Processed and failed entries, the total count, and the success rate.
+   * Complexity: see `ds-basic-lru-cache` in ~/src/foxtools/registry/algorithms/ (verified: O(1) average per set, so O(n) over n entries; O(n) worst case per set).
    */
   batchSet(entries: Array<{ key: K; value: V }>): LRUCacheBatchResult<K, V> {
     return performBatchSet(entries, (key, value) => this.set(key, value));
   }
   /**
+   * Iterates over live entries from most- to least-recently-used, skipping expired entries.
    *
-   * @example
+   * @returns An iterator of `{ key, value }` pairs in LRU order.
    */
   [Symbol.iterator](): Iterator<{ key: K; value: V }> {
     return createCacheIterator(this.linkedList, this.ttlManager);
   }
 
   /**
+   * Removes the least-recently-used entry, recycles its node, and emits an `evict` event.
    *
-   * @example
+   * No-op when the list is empty.
+   *
+   * Complexity: see `ds-basic-lru-cache` in ~/src/foxtools/registry/algorithms/ (verified: O(1) average-case tail removal).
    */
   private evict(): void {
     const evictedNode = this.linkedList.evictTail();
@@ -266,8 +276,11 @@ export class LRUCache<K, V> {
   }
 
   /**
+   * Removes every expired entry via the TTL manager and records cleanup timing and counts.
    *
-   * @example
+   * Emits `expire` and `cleanup` events for the affected keys; scans the whole cache.
+   *
+   * Complexity: see `ds-basic-lru-cache` in ~/src/foxtools/registry/algorithms/ (verified: O(n) over cached items for a full cleanup pass).
    */
   private performCleanup(): void {
     performTTLCleanup(
@@ -280,10 +293,17 @@ export class LRUCache<K, V> {
     );
   }
   /**
+   * Recomputes the estimated memory usage from cache contents when statistics are enabled.
    *
-   * @example
+   * Returns immediately when stats are off, avoiding a full walk of the cache on every write.
+   *
+   * Complexity: see `ds-basic-lru-cache` in ~/src/foxtools/registry/algorithms/ (verified: O(n) when enabled, as the estimate walks every entry).
    */
   private updateMemoryUsage(): void {
+    // calculateMemoryUsage() walks the whole cache and stringifies every key
+    // and value. set() and delete() call this on every operation, which makes
+    // a batch of sets quadratic even when statistics were never requested.
+    if (!this.config.enableStats) return;
     this.statsManager.updateMemoryUsage(() => calculateMemoryUsage(this.cache));
   }
 

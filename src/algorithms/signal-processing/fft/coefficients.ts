@@ -83,10 +83,13 @@ export function extractHarmonicCoefficients(args: CoefficientExtractionArgs): Ha
 }
 
 /**
+ * Returns the DC and harmonic scaling factors used when extracting Fourier coefficients.
+ * ARTICLE normalization leaves both unscaled, STANDARD doubles harmonics, and NONE
+ * divides both by the transform length.
  *
- * @param size
- * @param mode
- * @example
+ * @param size Transform length used by the NONE scaling case.
+ * @param mode Normalization mode already applied to the spectrum.
+ * @returns Scaling factors for the DC term and the harmonic terms.
  */
 function getArticleScalingFactors(size: number, mode: FFTNormalizationMode): { dcScale: number; harmonicScale: number } {
   switch (mode) {

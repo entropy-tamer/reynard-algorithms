@@ -38,17 +38,18 @@ class SeededRandom {
   private seed: number;
 
   /**
+   * Creates a seeded random generator, using a random seed when none is supplied.
    *
-   * @param seed
-   * @example
+   * @param seed Optional seed for reproducible values.
    */
   constructor(seed?: number) {
     this.seed = seed ?? Math.random() * 0x7fffffff;
   }
 
   /**
+   * Advances the linear congruential generator and returns the next value in [0, 1).
    *
-   * @example
+   * @returns Next pseudo-random fraction.
    */
   next(): number {
     this.seed = (this.seed * 9301 + 49297) % 233280;

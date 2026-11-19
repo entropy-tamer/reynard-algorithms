@@ -15,20 +15,23 @@ export class PerformanceBudgetChecker {
   private budgets = new Map<string, PerformanceBudget>();
 
   /**
+   * Registers or replaces the performance budget associated with `name`.
    *
-   * @param name
-   * @param budget
-   * @example
+   * @param name Identifier used by `checkBudget`.
+   * @param budget Limits for duration, memory usage, and iterations.
    */
   setBudget(name: string, budget: PerformanceBudget): void {
     this.budgets.set(name, budget);
   }
 
   /**
+   * Checks metrics against the named budget, warning on each exceeded limit.
    *
-   * @param name
-   * @param metrics
-   * @example
+   * Names with no registered budget pass automatically.
+   *
+   * @param name Budget identifier to check against.
+   * @param metrics Measured duration, memory delta, and iteration count.
+   * @returns `true` when every limit is met or no budget is registered.
    */
   checkBudget(name: string, metrics: PerformanceMetrics): boolean {
     const budget = this.budgets.get(name);
@@ -57,17 +60,16 @@ export class PerformanceBudgetChecker {
   }
 
   /**
+   * Removes the budget registered under `name`.
    *
-   * @param name
-   * @example
+   * @param name Identifier to forget.
    */
   clearBudget(name: string): void {
     this.budgets.delete(name);
   }
 
   /**
-   *
-   * @example
+   * Removes every registered budget.
    */
   clearAllBudgets(): void {
     this.budgets.clear();

@@ -37,9 +37,10 @@ export class SpatialCollisionOptimizer {
   private stats: SpatialCollisionStats;
 
   /**
+   * Creates a collision optimizer backed by a spatial hash sized from the supplied configuration.
+   * Default settings are filled in and the statistics counters start at zero.
    *
-   * @param config
-   * @example
+   * @param config Overrides for cell size, occupancy limits, and the hybrid threshold.
    */
   constructor(config: Partial<SpatialCollisionConfig> = {}) {
     this.config = createDefaultConfig(config);

@@ -9,11 +9,16 @@ import { TraversalOrder, IntervalTreeEventType } from "./interval-tree-types";
 import { emitEvent } from "./interval-tree-events";
 
 /**
+ * Walks the tree in the requested order, collecting intervals and optional per-node metadata.
  *
- * @param root
- * @param options
- * @param eventHandlers
- * @example
+ * Emits a traversal event with the chosen order and timing, and returns a result carrying the
+ * intervals and execution time. Errors are reported in the result rather than thrown.
+ *
+ * @param root Root of the tree to traverse; `null` yields an empty result.
+ * @param options Traversal order and whether to include metadata.
+ * @param eventHandlers Handlers notified when the traversal completes.
+ * @returns Traversal result with intervals, count, timing, and optional metadata.
+ * Complexity: see `catalog-data-structures-trees-interval-tree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function traverseTree(
   root: IntervalTreeNode | null,
@@ -68,9 +73,11 @@ export function traverseTree(
 }
 
 /**
+ * Collects every interval stored in the subtree rooted at `root` into a flat list.
  *
- * @param root
- * @example
+ * @param root Root of the subtree to collect; `null` yields an empty list.
+ * @returns Copies of all intervals in the subtree.
+ * Complexity: see `catalog-data-structures-trees-interval-tree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function getAllIntervals(root: IntervalTreeNode | null): Interval[] {
   const intervals: Interval[] = [];
@@ -79,10 +86,14 @@ export function getAllIntervals(root: IntervalTreeNode | null): Interval[] {
 }
 
 /**
+ * Locates the node whose stored interval matches `interval` by start and end value.
  *
- * @param root
- * @param interval
- * @example
+ * Descends left or right by start, then follows right children when starts tie but ends differ.
+ *
+ * @param root Root of the tree to search.
+ * @param interval Interval to match exactly.
+ * @returns The matching node, or `null` when not present.
+ * Complexity: see `catalog-data-structures-trees-interval-tree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function findInterval(root: IntervalTreeNode | null, interval: Interval): IntervalTreeNode | null {
   if (!root) return null;
@@ -101,20 +112,23 @@ export function findInterval(root: IntervalTreeNode | null, interval: Interval):
 }
 
 /**
+ * Reports whether the tree contains an interval with the same start and end as `interval`.
  *
- * @param root
- * @param interval
- * @example
+ * @param root Root of the tree to search.
+ * @param interval Interval to look for.
+ * @returns `true` when an exact match exists.
+ * Complexity: see `catalog-data-structures-trees-interval-tree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 export function containsInterval(root: IntervalTreeNode | null, interval: Interval): boolean {
   return findInterval(root, interval) !== null;
 }
 
 /**
+ * Recursively appends a copy of every interval in `node`'s subtree to `intervals`.
  *
- * @param node
- * @param intervals
- * @example
+ * @param node Root of the subtree to collect; `null` is a no-op.
+ * @param intervals Output list, mutated in place.
+ * Complexity: see `catalog-data-structures-trees-interval-tree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 function collectIntervals(node: IntervalTreeNode | null, intervals: Interval[]): void {
   if (!node) return;
@@ -125,13 +139,16 @@ function collectIntervals(node: IntervalTreeNode | null, intervals: Interval[]):
 }
 
 /**
+ * Appends intervals (and optionally per-node metadata) in the configured traversal order.
  *
- * @param node
- * @param intervals
- * @param metadata
- * @param options
- * @param depth
- * @example
+ * Pre-, in-, and post-order recurse through both children; level-order uses a queue over the subtree.
+ *
+ * @param node Current node; `null` is a no-op.
+ * @param intervals Output list of visited intervals.
+ * @param metadata Output list of node metadata.
+ * @param options Traversal order and metadata flag.
+ * @param depth Depth of `node` below the tree root.
+ * Complexity: see `catalog-data-structures-trees-interval-tree` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 function traverseRecursive(
   node: IntervalTreeNode | null,

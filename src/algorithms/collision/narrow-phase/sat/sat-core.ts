@@ -38,9 +38,10 @@ export class SAT {
   private statsManager: SATStatsManager;
 
   /**
+   * Configures an SAT detector from optional settings, filling in default options and config.
+   * Creates the result cache and statistics manager and registers any supplied event handlers.
    *
-   * @param options
-   * @example
+   * @param options Overrides for cache size, statistics, debug output, and event handlers.
    */
   constructor(options: Partial<SATOptions> = {}) {
     const opts = { ...DEFAULT_SAT_OPTIONS, ...options };
@@ -57,12 +58,20 @@ export class SAT {
   }
 
   /**
-   * Test collision between two convex polygons using SAT
+   * Tests two convex polygons for overlap with the Separating Axis Theorem,
+   * projecting both onto each edge normal and reporting a collision only when
+   * every axis projection overlaps. Results are cached and collision events
+   * are emitted through the configured stats manager.
    *
-   * @param polygon1 First polygon
-   * @param polygon2 Second polygon
-   * @returns Collision detection result
+   * @param polygon1 First convex polygon, with vertices in consistent order.
+   * @param polygon2 Second convex polygon, with vertices in consistent order.
+   * @returns Collision detection result with the overlap flag, normal, and penetration depth.
+   * Complexity: see `catalog-algorithms-collision-narrow-phase-sat` in ~/src/foxtools/registry/algorithms/ (unknown: no machine-readable bound recorded; the guide is authoritative)
    * @example
+   * ```typescript
+   * const result = new SAT().testCollision(squareA, squareB);
+   * if (result.colliding) console.log(result.penetrationDepth);
+   * ```
    */
   testCollision(polygon1: ConvexPolygon, polygon2: ConvexPolygon): SATCollisionResult {
     const startTime = performance.now();

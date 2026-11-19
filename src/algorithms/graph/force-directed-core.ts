@@ -257,9 +257,11 @@ export class ForceDirectedLayout {
   private config: ForceDirectedConfig;
 
   /**
+   * Creates a force-directed layout wrapper with default physics and sizing settings.
+   * Defaults use the Fruchterman-Reingold model on an 800 by 600 area; supplied options
+   * override individual values.
    *
-   * @param config
-   * @example
+   * @param config Overrides for dimensions, forces, damping, and algorithm choice.
    */
   constructor(config: Partial<ForceDirectedConfig> = {}) {
     this.config = {

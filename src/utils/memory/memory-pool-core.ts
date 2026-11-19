@@ -28,7 +28,10 @@ export interface PerformanceMemoryPoolStats {
 }
 
 /**
+ * Reuses objects implementing `reset()` to reduce allocations in hot paths.
  *
+ * Idle objects are kept in a stack, capped by `maxSize`, and each acquire resets the object
+ * before handing it out.
  */
 export class MemoryPool<T extends PooledObject> {
   private pool: T[] = [];
@@ -37,10 +40,10 @@ export class MemoryPool<T extends PooledObject> {
   private stats: PerformanceMemoryPoolStats;
 
   /**
+   * Creates a pool with a factory and optional sizing settings, pre-allocating `initialSize` objects.
    *
-   * @param createFn
-   * @param config
-   * @example
+   * @param createFn Factory used for every new object.
+   * @param config Overrides for initial size, maximum size, growth factor, and statistics.
    */
   constructor(createFn: () => T, config: PerformanceMemoryPoolConfig = {}) {
     this.createFn = createFn;
@@ -65,8 +68,7 @@ export class MemoryPool<T extends PooledObject> {
   }
 
   /**
-   *
-   * @example
+   * Pre-allocates `initialSize` objects and seeds the created and pool-size counters.
    */
   private initializePool(): void {
     for (let i = 0; i < this.config.initialSize; i++) {
@@ -78,8 +80,9 @@ export class MemoryPool<T extends PooledObject> {
   }
 
   /**
+   * Returns a reset object from the pool, or allocates a new one when no idle objects remain.
    *
-   * @example
+   * @returns A ready-to-use object.
    */
   acquire(): T {
     this.stats.acquired++;
@@ -100,9 +103,9 @@ export class MemoryPool<T extends PooledObject> {
   }
 
   /**
+   * Returns an object to the idle pool, discarding it when `maxSize` objects are already held.
    *
-   * @param obj
-   * @example
+   * @param obj Object being returned; its state is reset on the next acquire.
    */
   release(obj: T): void {
     if (this.pool.length >= this.config.maxSize) {
@@ -117,8 +120,7 @@ export class MemoryPool<T extends PooledObject> {
   }
 
   /**
-   *
-   * @example
+   * Recomputes the fraction of acquisitions that were served from the idle pool.
    */
   private updateHitRate(): void {
     if (this.stats.acquired > 0) {
@@ -127,16 +129,16 @@ export class MemoryPool<T extends PooledObject> {
   }
 
   /**
+   * Returns a copy of the pool's created/acquired/released counters, sizes, and hit rate.
    *
-   * @example
+   * @returns Snapshot of current statistics.
    */
   getStats(): PerformanceMemoryPoolStats {
     return { ...this.stats };
   }
 
   /**
-   *
-   * @example
+   * Drops all idle objects and resets the reported pool size to zero.
    */
   clear(): void {
     this.pool.length = 0;
@@ -144,9 +146,9 @@ export class MemoryPool<T extends PooledObject> {
   }
 
   /**
+   * Adjusts the idle pool to exactly `newSize` objects, creating or discarding as needed.
    *
-   * @param newSize
-   * @example
+   * @param newSize Target number of idle objects.
    */
   resize(newSize: number): void {
     if (newSize < this.pool.length) {

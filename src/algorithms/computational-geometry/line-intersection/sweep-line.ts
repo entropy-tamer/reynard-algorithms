@@ -85,9 +85,9 @@ export class SweepLineStatusStructure implements StatusStructure {
   private tolerance: number;
 
   /**
+   * Creates an initially empty sweep-line status structure backed by a balanced tree.
    *
-   * @param tolerance
-   * @example
+   * @param tolerance Numerical tolerance used when comparing segment orderings.
    */
   constructor(tolerance: number = 1e-10) {
     this.tolerance = tolerance;

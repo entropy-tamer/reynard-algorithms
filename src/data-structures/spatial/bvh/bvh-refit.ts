@@ -280,11 +280,13 @@ function unionAABBsObject(a: AABB, b: AABB): AABB {
 }
 
 /**
+ * Rebuilds a full AABB (corners, center, and size) from tuple-based min/max bounds.
  *
- * @param bounds
- * @param bounds.min
- * @param bounds.max
- * @example
+ * @param bounds Bounds expressed as `[x, y, z]` tuples.
+ * @param bounds.min Minimum corner tuple.
+ * @param bounds.max Maximum corner tuple.
+ * @returns The equivalent AABB object.
+ * Complexity: see `catalog-data-structures-spatial-bvh` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 function convertArrayBoundsToAABB(bounds: { min: [number, number, number]; max: [number, number, number] }): AABB {
   const min = { x: bounds.min[0], y: bounds.min[1], z: bounds.min[2] };

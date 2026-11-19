@@ -242,9 +242,11 @@ export class PerlinNoise {
   private cachedSeed: number | null = null;
 
   /**
+   * Creates a Perlin noise generator with default frequency, amplitude, octaves, and seed.
+   * The gradient and permutation tables are built immediately from the resolved seed and
+   * regenerated only when that seed changes.
    *
-   * @param config
-   * @example
+   * @param config Overrides for seed, frequency, amplitude, octaves, scale, and offset.
    */
   constructor(config: Partial<PerlinNoiseConfig> = {}) {
     this.config = {

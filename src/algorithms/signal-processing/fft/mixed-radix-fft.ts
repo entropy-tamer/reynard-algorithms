@@ -22,9 +22,12 @@ export class MixedRadixFFT extends FFTBase {
   private chirpConjImag!: Float32Array;
 
   /**
+   * Creates a mixed-radix transform that uses Bluestein's algorithm to support arbitrary sizes.
+   * The transform length is validated, padded to the next power of two for convolution, and
+   * the chirp signals used by the algorithm are precomputed.
    *
-   * @param config
-   * @example
+   * @param config Transform size and optional normalization settings.
+   * Complexity: see `fft-mixed-radix` in ~/src/foxtools/registry/algorithms/ (verified: O(N log N) time for transform length N, O(N) space).
    */
   constructor(config: FFTConfig) {
     super(config);

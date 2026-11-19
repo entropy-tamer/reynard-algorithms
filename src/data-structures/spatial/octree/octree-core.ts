@@ -106,11 +106,18 @@ export class Octree {
   }
 
   /**
-   * Insert a point into the octree
+   * Inserts a 3D point into the octree, descending into the child octant that
+   * contains it and subdividing when the configured object limit is exceeded.
+   * The result reports success and the number of nodes visited.
    *
-   * @param point Point to insert
-   * @returns Insertion result
+   * @param point Point to insert, with x, y, and z coordinates
+   * @returns Insertion result with success flag, node count, and event metadata
+   * Complexity: see `catalog-data-structures-spatial-octree` in ~/src/foxtools/registry/algorithms/ (unknown: no machine-readable bound recorded; the guide is authoritative)
    * @example
+   * ```typescript
+   * const result = tree.insert({ x: 1, y: 2, z: 3 });
+   * console.log(result.success);
+   * ```
    */
   insert(point: Point3D): OctreeResult {
     return insertPoint(this.root, point, this.config, this.stats, this.emitEvent.bind(this));
@@ -146,12 +153,18 @@ export class Octree {
   }
 
   /**
-   * Query points within bounds
+   * Queries points within an axis-aligned 3D box, pruning octree branches whose
+   * bounds do not intersect the query box. Options can cap results or filter
+   * matches before they are returned.
    *
-   * @param bounds Query bounds
-   * @param options Query options
-   * @returns Query result
+   * @param bounds Query bounds with minimum and maximum x, y, and z
+   * @param options Query options such as result limits and filters
+   * @returns Query result with matching points, nodes visited, and timing metadata
+   * Complexity: see `catalog-data-structures-spatial-octree` in ~/src/foxtools/registry/algorithms/ (unknown: no machine-readable bound recorded; the guide is authoritative)
    * @example
+   * ```typescript
+   * const result = tree.queryBounds({ min: { x: 0, y: 0, z: 0 }, max: { x: 10, y: 10, z: 10 } });
+   * ```
    */
   queryBounds(bounds: Bounds3D, options: SpatialQueryOptions = {}): SpatialQueryResult {
     return queryBounds(this.root, bounds, options, this.stats, this.emitEvent.bind(this));

@@ -375,9 +375,11 @@ function unionAABBs(
 }
 
 /**
+ * Converts an AABB object with `x`/`y`/`z` corners into tuple-based min/max bounds.
  *
- * @param aabb
- * @example
+ * @param aabb Axis-aligned bounding box to convert.
+ * @returns Bounds expressed as `[x, y, z]` tuples.
+ * Complexity: see `catalog-data-structures-spatial-bvh` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 function convertAABBToArray(aabb: AABB): { min: [number, number, number]; max: [number, number, number] } {
   return {
@@ -387,11 +389,13 @@ function convertAABBToArray(aabb: AABB): { min: [number, number, number]; max: [
 }
 
 /**
+ * Rebuilds a full AABB (corners, center, and size) from tuple-based min/max bounds.
  *
- * @param bounds
- * @param bounds.min
- * @param bounds.max
- * @example
+ * @param bounds Bounds expressed as `[x, y, z]` tuples.
+ * @param bounds.min Minimum corner tuple.
+ * @param bounds.max Maximum corner tuple.
+ * @returns The equivalent AABB object.
+ * Complexity: see `catalog-data-structures-spatial-bvh` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 function convertArrayBoundsToAABB(bounds: { min: [number, number, number]; max: [number, number, number] }): AABB {
   const min = { x: bounds.min[0], y: bounds.min[1], z: bounds.min[2] };
@@ -410,11 +414,15 @@ function convertArrayBoundsToAABB(bounds: { min: [number, number, number]; max: 
 }
 
 /**
+ * Wraps an already-unioned tuple bounds pair into a full AABB object.
  *
- * @param bounds
- * @param bounds.min
- * @param bounds.max
- * @example
+ * The min/max tuples are expected to be the union result; this only derives the center and size.
+ *
+ * @param bounds Unioned bounds expressed as `[x, y, z]` tuples.
+ * @param bounds.min Minimum corner tuple of the union.
+ * @param bounds.max Maximum corner tuple of the union.
+ * @returns The equivalent AABB object.
+ * Complexity: see `catalog-data-structures-spatial-bvh` in ~/src/foxtools/registry/algorithms/ (unknown — no machine-readable bound recorded).
  */
 function convertUnionToAABB(bounds: { min: [number, number, number]; max: [number, number, number] }): AABB {
   const min = { x: bounds.min[0], y: bounds.min[1], z: bounds.min[2] };

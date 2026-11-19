@@ -54,11 +54,18 @@ export class Trie {
   private enableStats: boolean;
   private enableDebug: boolean;
   private stats: TrieStats;
+  // Running sum of distinct word lengths. Keeping it alongside `stats` lets
+  // insert/delete refresh the average in O(1) instead of re-reading every word.
+  private totalWordLength = 0;
 
   /**
+   * Creates a prefix tree with a single root node and optional initial words.
    *
-   * @param options
-   * @example
+   * Merges `options` with defaults; node and word-length totals are tracked incrementally so
+   * later inserts do not rescan the whole tree.
+   *
+   * @param options Partial configuration, event handlers, and initial words.
+   * Complexity: see `ds-basic-trie` in ~/src/foxtools/registry/algorithms/ (verified: O(m) insert and lookup in the word length).
    */
   constructor(options: Partial<TrieOptions> = {}) {
     const opts = { ...DEFAULT_TRIE_OPTIONS, ...options };
@@ -113,6 +120,7 @@ export class Trie {
       }
 
       let currentNode = this.root;
+      let nodesCreated = 0;
 
       for (let i = 0; i < normalizedWord.length; i++) {
         const char = normalizedWord[i]!;
@@ -120,6 +128,7 @@ export class Trie {
         if (!currentNode.children.has(char)) {
           const newNode = this.createNode(char, currentNode);
           currentNode.children.set(char, newNode);
+          nodesCreated++;
           this.emitEvent(TrieEventType.NODE_CREATED, { node: newNode, char });
         }
 
@@ -132,12 +141,16 @@ export class Trie {
       currentNode.data = data;
       currentNode.frequency++;
 
-      // Update statistics (only increment totalWords if it's a new word)
+      // Update statistics in O(1). Recomputing totalNodes and the average by
+      // walking the whole trie on every insert made a batch of inserts O(n^2),
+      // including with the default enableStats: true.
       if (!wasAlreadyWord) {
         this.stats.totalWords++;
+        this.totalWordLength += normalizedWord.length;
       }
-      this.stats.totalNodes = this.countNodes();
-      this.stats.averageWordLength = this.calculateAverageWordLength();
+      this.stats.totalNodes += nodesCreated;
+      this.stats.averageWordLength =
+        this.stats.totalWords > 0 ? this.totalWordLength / this.stats.totalWords : 0;
       this.stats.maxDepth = Math.max(this.stats.maxDepth, normalizedWord.length);
       this.stats.totalInserts++;
 
@@ -254,8 +267,10 @@ export class Trie {
       // If deletion was successful (word was found and deleted)
       if (result.deleted) {
         this.stats.totalWords--;
-        this.stats.totalNodes = this.countNodes();
-        this.stats.averageWordLength = this.calculateAverageWordLength();
+        this.totalWordLength -= normalizedWord.length;
+        this.stats.totalNodes -= result.nodesRemoved;
+        this.stats.averageWordLength =
+          this.stats.totalWords > 0 ? this.totalWordLength / this.stats.totalWords : 0;
         this.stats.totalDeletes++;
 
         this.emitEvent(TrieEventType.WORD_DELETED, { word: normalizedWord });
@@ -483,6 +498,7 @@ export class Trie {
     this.root.isEndOfWord = false;
     this.root.data = null;
     this.root.frequency = 0;
+    this.totalWordLength = 0;
 
     this.stats = {
       totalWords: 0,
@@ -605,9 +621,12 @@ export class Trie {
       this.config = serialized.config;
       this.deserializeNode(this.root, serialized.data);
 
-      // Recalculate statistics
+      // A single traversal after deserialization is fine; insert and delete
+      // maintain these values incrementally instead.
       this.stats.totalWords = serialized.metadata.totalWords;
-      this.stats.totalNodes = serialized.metadata.totalNodes;
+      this.stats.totalNodes = this.countNodes();
+      this.stats.averageWordLength = this.calculateAverageWordLength();
+      this.totalWordLength = this.stats.averageWordLength * this.stats.totalWords;
       this.stats.maxDepth = serialized.metadata.maxDepth;
 
       return true;
@@ -718,10 +737,14 @@ export class Trie {
    * @param index
    * @example
    */
-  private deleteRecursive(node: TrieNode, word: string, index: number): { deleted: boolean; shouldCleanup: boolean } {
+  private deleteRecursive(
+    node: TrieNode,
+    word: string,
+    index: number
+  ): { deleted: boolean; shouldCleanup: boolean; nodesRemoved: number } {
     if (index === word.length) {
       if (!node.isEndOfWord) {
-        return { deleted: false, shouldCleanup: false }; // Word not found
+        return { deleted: false, shouldCleanup: false, nodesRemoved: 0 }; // Word not found
       }
 
       // Mark word as deleted
@@ -729,16 +752,17 @@ export class Trie {
       node.data = null;
       node.frequency = 0;
 
-      // Clean up node if it has no children (and is not root)
+      // Clean up node if it has no children (and is not root). The parent
+      // frame performs the removal, so it accounts for the removed node.
       const shouldDeleteNode = node.children.size === 0 && node !== this.root;
-      return { deleted: true, shouldCleanup: shouldDeleteNode };
+      return { deleted: true, shouldCleanup: shouldDeleteNode, nodesRemoved: 0 };
     }
 
     const char = word[index]!;
     const child = node.children.get(char);
 
     if (!child) {
-      return { deleted: false, shouldCleanup: false }; // Word not found
+      return { deleted: false, shouldCleanup: false, nodesRemoved: 0 }; // Word not found
     }
 
     const result = this.deleteRecursive(child, word, index + 1);
@@ -752,6 +776,7 @@ export class Trie {
       return {
         deleted: true,
         shouldCleanup: !node.isEndOfWord && node.children.size === 0 && node !== this.root,
+        nodesRemoved: result.nodesRemoved + 1,
       };
     }
 

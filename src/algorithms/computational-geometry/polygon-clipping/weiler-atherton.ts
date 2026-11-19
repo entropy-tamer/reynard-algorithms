@@ -23,9 +23,11 @@ export class WeilerAthertonClipper {
   private config: WeilerAthertonOptions;
 
   /**
+   * Creates a Weiler-Atherton clipper with default settings and intersection as the operation.
+   * The clipper walks the subject/clip intersection graph to handle concave polygons and
+   * can produce multiple output rings; supplied options override individual defaults.
    *
-   * @param config
-   * @example
+   * @param config Overrides for tolerance, validation, clip operation, holes, and edge merging.
    */
   constructor(config: Partial<WeilerAthertonOptions> = {}) {
     this.config = {

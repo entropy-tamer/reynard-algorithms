@@ -21,10 +21,11 @@ export class ComplexNumber {
   public imag: number;
 
   /**
+   * Creates a complex number with the given real and imaginary parts.
+   * Both parts default to zero when omitted.
    *
-   * @param real
-   * @param imag
-   * @example
+   * @param real Real component of the number.
+   * @param imag Imaginary component of the number.
    */
   constructor(real: number = 0, imag: number = 0) {
     this.real = real;
@@ -156,24 +157,27 @@ export class ComplexNumber {
   }
 
   /**
+   * Returns the additive identity, 0 + 0i.
    *
-   * @example
+   * @returns A new complex number with both parts zero.
    */
   static zero(): ComplexNumber {
     return new ComplexNumber(0, 0);
   }
 
   /**
+   * Returns the multiplicative identity, 1 + 0i.
    *
-   * @example
+   * @returns A new complex number with real part one and imaginary part zero.
    */
   static one(): ComplexNumber {
     return new ComplexNumber(1, 0);
   }
 
   /**
+   * Returns the imaginary unit, 0 + 1i.
    *
-   * @example
+   * @returns A new complex number with real part zero and imaginary part one.
    */
   static i(): ComplexNumber {
     return new ComplexNumber(0, 1);
@@ -190,30 +194,35 @@ export class ComplexNumber {
   }
 
   /**
+   * Returns a new complex number equal to a minus b, subtracting each component.
    *
-   * @param a
-   * @param b
-   * @example
+   * @param a Minuend.
+   * @param b Subtrahend.
+   * @returns Difference of the two numbers as a new instance.
    */
   static subtract(a: ComplexNumber, b: ComplexNumber): ComplexNumber {
     return new ComplexNumber(a.real - b.real, a.imag - b.imag);
   }
 
   /**
+   * Returns a new complex number holding the product of a and b.
+   * Uses (a.re * b.re - a.im * b.im) + (a.re * b.im + a.im * b.re)i.
    *
-   * @param a
-   * @param b
-   * @example
+   * @param a First factor.
+   * @param b Second factor.
+   * @returns Product of the two numbers as a new instance.
    */
   static multiply(a: ComplexNumber, b: ComplexNumber): ComplexNumber {
     return new ComplexNumber(a.real * b.real - a.imag * b.imag, a.real * b.imag + a.imag * b.real);
   }
 
   /**
+   * Returns a new complex number holding the quotient a / b.
+   * Divides by the squared magnitude of the divisor to normalize the result.
    *
-   * @param a
-   * @param b
-   * @example
+   * @param a Dividend.
+   * @param b Nonzero divisor.
+   * @returns Quotient of the two numbers as a new instance.
    */
   static divide(a: ComplexNumber, b: ComplexNumber): ComplexNumber {
     const denominator = b.real * b.real + b.imag * b.imag;

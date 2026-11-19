@@ -10,16 +10,18 @@
 import { UnionFindNode, UnionFindStats } from "./union-find-types";
 
 /**
+ * Helper that answers set-membership and size queries over a union-find node array.
  *
+ * Shares the node array and counter object with its owner so path compression is reflected in
+ * the accumulated statistics.
  */
 export class UnionFindSetOperations {
   /**
+   * Creates a set-query helper over the supplied nodes and shared counters.
    *
-   * @param nodes
-   * @param stats
-   * @param stats.compressionCount
-   * @param stats.unionCount
-   * @example
+   * @param nodes Backing array of union-find nodes, indexed by element id.
+   * @param stats Shared counters incremented when path compression or unions occur.
+   * Complexity: see `ds-basic-union-find` in ~/src/foxtools/registry/algorithms/ (verified: O(α(n)) amortized find; O(n) for full-set enumeration).
    */
   constructor(
     private nodes: UnionFindNode[],

@@ -128,9 +128,11 @@ export function validateTransients(args: {
 }
 
 /**
+ * Finds the non-DC frequency bin with the largest magnitude in a result spectrum.
+ * Bin zero is skipped, and no frequency is returned when every scanned magnitude is zero.
  *
- * @param result
- * @example
+ * @param result FFT result carrying magnitude and frequency arrays.
+ * @returns Frequency of the strongest bin, or undefined for an all-zero spectrum.
  */
 function findDominantFrequency(result: FFTResult): number | undefined {
   let maxMagnitude = 0;

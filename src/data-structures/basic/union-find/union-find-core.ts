@@ -47,6 +47,8 @@ export class UnionFind {
    * uniquely identifies the connected component.
    *
    * @param x The element whose root representative is to be found.
+   * @returns The canonical root element identifying the connected component.
+   * Complexity: see `ds-basic-union-find` in ~/src/foxtools/registry/algorithms/ (verified: O(α(n)) amortized, where α is the inverse Ackermann function)
    */
   find(x: number): number {
     return this.setOps.find(x);
@@ -61,6 +63,8 @@ export class UnionFind {
    *
    * @param x First element.
    * @param y Second element.
+   * @returns `true` when two distinct components were merged, `false` when `x` and `y` were already connected.
+   * Complexity: see `ds-basic-union-find` in ~/src/foxtools/registry/algorithms/ (verified: O(α(n)) amortized, where α is the inverse Ackermann function)
    */
   union(x: number, y: number): boolean {
     const rootX = this.find(x);

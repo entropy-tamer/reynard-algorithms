@@ -368,9 +368,11 @@ export class PolygonBooleanOps {
   private config: PolygonBooleanConfig;
 
   /**
+   * Creates a convenience wrapper for polygon boolean operations with default settings.
+   * Supplied options override the defaults for tolerance, validation, duplicate removal,
+   * and result simplification.
    *
-   * @param config
-   * @example
+   * @param config Overrides for boolean-operation defaults.
    */
   constructor(config: Partial<PolygonBooleanConfig> = {}) {
     this.config = {
