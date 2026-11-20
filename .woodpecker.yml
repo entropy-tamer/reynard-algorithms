@@ -1,0 +1,59 @@
+# Woodpecker CI for @entropy-tamer/reynard-algorithms.
+#
+# WHY THIS EXISTS. The 2026-08-23 library audit suggested a perf regression
+# guard in CI using scripts/perf-summary.mjs. That script cannot gate anything:
+# it generates grids with Math.random(), prints prose with no machine-readable
+# verdict, and always exits 0. scripts/perf-gate.mjs replaces it for CI and
+# keeps a deterministic LCG, relative growth checks, and a real exit code.
+#
+# IMAGE. localhost/ci-sly:1 is the proven, locally built Arch image carrying
+# node, pnpm and git. `pull: false` is mandatory: podman cannot pull localhost
+# images and a pull attempt fails before the step starts. The clone is the only
+# network dependency in the verify step; `pnpm install --prefer-offline` uses
+# the pnpm store warmed into the image by Ansible. If that store is cold, the
+# install reaches the registry -- provision it before activating this repo in
+# Woodpecker (see the actionable in ~/.todos/reynard/).
+#
+# ONE STEP, ONE COMMAND. Woodpecker pipes commands into one shell on stdin; a
+# child that consumes a byte eats the rest of the step. Each step runs exactly
+# one bash script whose exit status is the verdict.
+#
+# PATHS INCLUDE .WOODPECKER.YML. The arch-pkgs rollout learned that a filter
+# naming only source paths stops the pipeline from ever testing its own config.
+
+when:
+  - event: [push, pull_request, manual]
+    path:
+      - '.woodpecker.yml'
+      - 'ci/**'
+      - 'scripts/**'
+      - 'src/**'
+      - 'docs/**'
+      - 'benchmarks/**'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'biome.json'
+      - 'tsconfig*.json'
+      - 'vite.config.ts'
+      - 'vitest*.config.ts'
+
+steps:
+  verify:
+    image: localhost/ci-sly:1
+    pull: false
+    environment:
+      CI: '1'
+    commands:
+      - bash ci/gates.sh
+
+  perf:
+    image: localhost/ci-sly:1
+    pull: false
+    depends_on: [verify]
+    environment:
+      CI: '1'
+      PERF_MAX_SLOPE: '2.6'
+      PERF_MAX_NODE_RATIO: '3.0'
+      PERF_CATASTROPHIC_FACTOR: '10'
+    commands:
+      - bash ci/perf.sh

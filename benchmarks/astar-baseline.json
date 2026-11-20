@@ -1,0 +1,36 @@
+{
+  "schema": "algorithms-perf.v1",
+  "recorded_at": "2026-11-19T22:30:08.814Z",
+  "node": "v27.0.0-pre",
+  "repeats": 10,
+  "configs": [
+    {
+      "size": 50,
+      "seed": 42,
+      "median_ms": 2.58,
+      "nodes": 299,
+      "per_node_us": 8.63
+    },
+    {
+      "size": 100,
+      "seed": 77,
+      "median_ms": 8.541,
+      "nodes": 1978,
+      "per_node_us": 4.318
+    },
+    {
+      "size": 200,
+      "seed": 131,
+      "median_ms": 15.778,
+      "nodes": 3934,
+      "per_node_us": 4.011
+    },
+    {
+      "size": 300,
+      "seed": 7,
+      "median_ms": 41.86,
+      "nodes": 10000,
+      "per_node_us": 4.186
+    }
+  ]
+}
