@@ -305,11 +305,11 @@ JetBrains Mono as a plug-in for the Reynard frontends: self-hosted woff2 subsets
 - source: 2 files, 236 lines; tests: 0; docs: 0
 - depends on: `typography`
 
-#### `@entropy-tamer/reynard-grid` (0.1.0)
+#### `@entropy-tamer/reynard-lattice` (0.1.0)
 
 Shared layout vocabulary and pure grid math for reynard frontends
 
-- dir: `grid`
+- dir: `lattice`
 - public symbols: 17 (DEFAULT_CONFIG, GRID_TOKENS, GRID_TOKEN_NAMES, GridConfig, GridGeometry, GridGutter, GridTokenName, GridTrack...)
 - source: 4 files, 348 lines; tests: 0; docs: 0
 
