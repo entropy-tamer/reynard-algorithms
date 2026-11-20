@@ -15,4 +15,7 @@ pnpm run typecheck
 pnpm exec biome check src scripts
 pnpm run check:docs
 node scripts/check-jsdoc-quality.mjs
+# The fox-sketch regeneration test imports dist/index.js; a clean clone has no
+# build output, so build once here rather than letting that test fail on setup.
+pnpm run build
 pnpm run test

@@ -1,24 +1,12 @@
 {
-  "extends": "../tsconfig.base.json",
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "outDir": "./dist",
     "rootDir": "./src",
     "allowImportingTsExtensions": true,
-    "paths": {
-      "@entropy-tamer/reynard-i18n": [
-        "../i18n/src"
-      ],
-      "@entropy-tamer/reynard-themes": [
-        "../themes/src"
-      ],
-      "@entropy-tamer/reynard-core": [
-        "../core/src"
-      ],
-      "@entropy-tamer/reynard-primitives": [
-        "../primitives/src"
-      ]
-      },
     "declaration": true,
     "declarationMap": true
   },
