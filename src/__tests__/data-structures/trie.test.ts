@@ -535,7 +535,7 @@ describe("Trie (Prefix Tree) Data Structure", () => {
       description: string,
       wordCount: number,
       wordLength: number,
-      operation: (trie: Trie, words: string[]) => void
+      operation: (trie: Trie, words: string[]) => number
     ) => {
       it(`should perform ${description} with ${wordCount} words of length ${wordLength}`, () => {
         const benchmarkTrie = new Trie({ enableStats: true });
@@ -551,10 +551,11 @@ describe("Trie (Prefix Tree) Data Structure", () => {
         }
 
         const startTime = performance.now();
-        operation(benchmarkTrie, words);
-        const endTime = performance.now();
+        const operationsPerformed = operation(benchmarkTrie, words);        const endTime = performance.now();
 
         const executionTime = endTime - startTime;
+        // A non-negative elapsed time cannot fail; assert that work happened.
+        expect(operationsPerformed).toBeGreaterThan(0);
         expect(executionTime).toBeGreaterThanOrEqual(0);
 
         // Log for manual inspection during benchmark runs
@@ -565,28 +566,34 @@ describe("Trie (Prefix Tree) Data Structure", () => {
     };
 
     runBenchmark("insertion", 100, 5, (trie, words) => {
-      words.forEach(word => { trie.insert(word + "_new"); });
+      words.forEach(word => { trie.insert(`${word}_new`); });
+      return words.length;
     });
 
     runBenchmark("search", 100, 5, (trie, words) => {
       words.forEach(word => { trie.search(word); });
+      return words.length;
     });
 
     runBenchmark("prefix search", 100, 5, (trie, words) => {
       words.forEach(word => { trie.findWordsWithPrefix(word.substring(0, 2)); });
+      return words.length;
     });
 
     runBenchmark("autocomplete", 100, 5, (trie, words) => {
       words.forEach(word => { trie.autocomplete(word.substring(0, 2), 5); });
+      return words.length;
     });
 
     // Reduced dataset size to prevent memory issues
     runBenchmark("medium dataset insertion", 200, 8, (trie, words) => {
-      words.forEach(word => { trie.insert(word + "_medium"); });
+      words.forEach(word => { trie.insert(`${word}_medium`); });
+      return words.length;
     });
 
     runBenchmark("medium dataset search", 200, 8, (trie, words) => {
       words.forEach(word => { trie.search(word); });
+      return words.length;
     });
   });
 });

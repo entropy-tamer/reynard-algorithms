@@ -262,7 +262,7 @@ for (const size of gridSizes) {
   );
 }
 
-console.log("\n" + formatResults(results));
+console.log(`\n${formatResults(results)}`);
 
 // Export results as JSON for programmatic use
 const jsonResults = JSON.stringify(results, null, 2);

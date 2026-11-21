@@ -6,11 +6,11 @@
  * @module algorithms/dataStructures/lruCacheOperations
  */
 
-import { LRUCacheNode } from "./lru-cache-types";
-import { LRUCacheLinkedList } from "./lru-cache-linked-list";
-import { LRUCacheStatsManager } from "./lru-cache-stats";
-import { LRUCacheTTLManager } from "./lru-cache-ttl";
-import { LRUCacheEventManager } from "./lru-cache-events";
+import type { LRUCacheNode } from "./lru-cache-types";
+import type { LRUCacheLinkedList } from "./lru-cache-linked-list";
+import type { LRUCacheStatsManager } from "./lru-cache-stats";
+import type { LRUCacheTTLManager } from "./lru-cache-ttl";
+import type { LRUCacheEventManager } from "./lru-cache-events";
 
 /**
  * Gets a value from the cache

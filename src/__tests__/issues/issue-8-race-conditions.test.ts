@@ -6,9 +6,9 @@
  * @module algorithmsIssue8RaceConditionsTests
  */
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { ImmutableConfigManager, ConfigChangeEvent } from "../../config/immutable-config";
+import { ImmutableConfigManager, type ConfigChangeEvent } from "../../config/immutable-config";
 import { AlgorithmConfigManager } from "../../config/algorithm-config";
-import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
+import { runBenchmark, type BenchmarkReport } from "../utils/benchmark-utils";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 
 describe("Issue #8: Race Conditions in Global Config - Micro-benchmark", () => {

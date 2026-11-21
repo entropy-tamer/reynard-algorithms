@@ -11,6 +11,9 @@ import {
   euclideanDistance,
   chebyshevDistance,
   octileDistance,
+  squaredEuclideanDistance,
+  diagonalDistance,
+  zeroHeuristic,
   createHeuristic,
   type Point,
   type AStarGrid,
@@ -225,6 +228,52 @@ describe("A* Pathfinding Algorithm", () => {
 
       expect(result.success).toBe(true);
       expect(result.totalCost).toBeGreaterThan(0);
+    });
+  });
+
+  describe("Heuristic values", () => {
+    // The suite above only checks that A* still succeeds with each heuristic.
+    // That cannot distinguish a correct distance function from a wrong one, so
+    // assert the numeric contract of every heuristic directly.
+    const from: Point = { x: 0, y: 0 };
+    const to: Point = { x: 3, y: 4 };
+
+    it("manhattan is the sum of absolute deltas", () => {
+      expect(manhattanDistance(from, to)).toBe(7);
+    });
+
+    it("euclidean is the straight-line distance", () => {
+      expect(euclideanDistance(from, to)).toBe(5);
+    });
+
+    it("chebyshev is the largest absolute delta", () => {
+      expect(chebyshevDistance(from, to)).toBe(4);
+    });
+
+    it("octile charges the diagonal term once", () => {
+      const expected = 4 + (Math.SQRT2 - 1) * 3;
+      expect(octileDistance(from, to)).toBeCloseTo(expected, 10);
+    });
+
+    it("squared euclidean omits the square root", () => {
+      expect(squaredEuclideanDistance(from, to)).toBe(25);
+    });
+
+    it("diagonal uses the supplied diagonal cost", () => {
+      const expected = 4 + (Math.SQRT2 - 1) * 3;
+      expect(diagonalDistance(Math.SQRT2)(from, to)).toBeCloseTo(expected, 10);
+      expect(diagonalDistance(2)(from, to)).toBe(4 + 1 * 3);
+    });
+
+    it("zero heuristic is identically zero", () => {
+      expect(zeroHeuristic(from, to)).toBe(0);
+    });
+
+    it("returns zero for identical points", () => {
+      expect(manhattanDistance(from, from)).toBe(0);
+      expect(euclideanDistance(from, from)).toBe(0);
+      expect(chebyshevDistance(from, from)).toBe(0);
+      expect(octileDistance(from, from)).toBe(0);
     });
   });
 

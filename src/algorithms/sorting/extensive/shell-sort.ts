@@ -34,9 +34,9 @@ function sedgewickGaps(n: number): number[] {
   while (gap < n) {
     gaps.push(gap);
     if (i % 2 === 0) {
-      gap = 9 * Math.pow(4, i) - 9 * Math.pow(2, i) + 1;
+      gap = 9 * 4 ** i - 9 * 2 ** i + 1;
     } else {
-      gap = Math.pow(4, i + 1) - 3 * Math.pow(2, i + 1) + 1;
+      gap = 4 ** (i + 1) - 3 * 2 ** (i + 1) + 1;
     }
     i++;
   }

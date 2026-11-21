@@ -12,8 +12,8 @@
 
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { FlowField } from "../../algorithms/pathfinding/flow-field/flow-field-core";
-import { FlowCell, IntegrationCell } from "../../algorithms/pathfinding/flow-field/flow-field-types";
-import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
+import type { FlowCell, IntegrationCell } from "../../algorithms/pathfinding/flow-field/flow-field-types";
+import { runBenchmark, type BenchmarkReport } from "../utils/benchmark-utils";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 
 describe("Issue #1: Flow Field Validation Logic Error", () => {
@@ -157,22 +157,41 @@ describe("Issue #1: Flow Field Validation Logic Error", () => {
       expect(validation.errors.length).toBeGreaterThan(0);
     });
 
-    it("should benchmark performance after fix", async () => {
-      // Skip this test for now due to configuration issues
-      // TODO: Fix FlowField configuration for proper testing
-      expect(true).toBe(true);
+    it("should validate large flow fields correctly", () => {
+      const flowFieldCells = generateTestFlowField(2500);
+      const validation = flowField.validateFlowField(flowFieldCells, 50, 50);
+
+      expect(validation.isValid).toBe(true);
+      expect(validation.errors).toEqual([]);
     });
 
-    it("should have similar performance to before fix", () => {
-      // Skip this test for now due to configuration issues
-      // TODO: Fix FlowField configuration for proper testing
-      expect(true).toBe(true);
+    it("should agree with the reference rule on inconsistent cells", () => {
+      const cells: FlowCell[] = [
+        { x: 0, y: 0, vector: { x: 0, y: 0 }, magnitude: 0, valid: true },
+        { x: 1, y: 0, vector: { x: 1, y: 0 }, magnitude: 1, valid: false },
+      ];
+      const validation = flowField.validateFlowField(cells, 2, 1);
+      const referenceErrors = cells.filter(
+        cell => (cell.valid && cell.magnitude <= 0) || (!cell.valid && cell.magnitude > 0)
+      );
+
+      expect(validation.isValid).toBe(false);
+      expect(validation.errors).toHaveLength(referenceErrors.length);
     });
 
-    it("should handle large flow fields efficiently", async () => {
-      // Skip this test for now due to configuration issues
-      // TODO: Fix FlowField configuration for proper testing
-      expect(true).toBe(true);
+    it("should report a single injected inconsistency in a large field", () => {
+      const flowFieldCells = generateTestFlowField(2500);
+      flowFieldCells[1234] = {
+        x: 1234 % 50,
+        y: Math.floor(1234 / 50),
+        vector: { x: 1, y: 0 },
+        magnitude: 1,
+        valid: false,
+      };
+      const validation = flowField.validateFlowField(flowFieldCells, 50, 50);
+
+      expect(validation.isValid).toBe(false);
+      expect(validation.errors).toHaveLength(1);
     });
 
     it("should handle edge cases correctly", () => {
@@ -209,21 +228,19 @@ describe("Issue #1: Flow Field Validation Logic Error", () => {
 
   describe("Regression Testing", () => {
     it("should not break existing valid flow fields", () => {
-      // Test with a properly constructed flow field (arrays kept for future use)
-      const _flowFieldCells: FlowCell[] = [
+      const flowFieldCells: FlowCell[] = [
         { x: 0, y: 0, vector: { x: 1, y: 0 }, magnitude: 1, valid: true },
         { x: 1, y: 0, vector: { x: 0, y: 0 }, magnitude: 0, valid: false },
       ];
-      const _integrationField: IntegrationCell[] = [
+      const integrationField: IntegrationCell[] = [
         { x: 0, y: 0, cost: 0, processed: true },
         { x: 1, y: 0, cost: 1, processed: true },
       ];
-      void _flowFieldCells;
-      void _integrationField;
 
-      // Skip this test for now due to configuration issues
-      // TODO: Fix FlowField configuration for proper testing
-      expect(true).toBe(true);
+      const validation = flowField.validateFlowField(flowFieldCells, 2, 1);
+
+      expect(validation.isValid).toBe(true);
+      expect(validation.errors).toEqual([]);
     });
 
     it("should maintain backward compatibility", () => {

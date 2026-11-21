@@ -5,16 +5,16 @@
 
 import {
   ClipOperation,
-  ClipResult,
-  ClippingStats,
-  Point,
-  Polygon,
-  PolygonClippingConfig,
-  PolygonSerialization,
-  PolygonSerializationOptions,
-  PolygonSimplificationOptions,
-  PolygonValidationOptions,
-  PolygonValidationResult,
+  type ClipResult,
+  type ClippingStats,
+  type Point,
+  type Polygon,
+  type PolygonClippingConfig,
+  type PolygonSerialization,
+  type PolygonSerializationOptions,
+  type PolygonSimplificationOptions,
+  type PolygonValidationOptions,
+  type PolygonValidationResult,
 } from "./polygon-clipping-types";
 import { SutherlandHodgmanClipper } from "./sutherland-hodgman";
 import { WeilerAthertonClipper } from "./weiler-atherton";
@@ -313,8 +313,8 @@ export class PolygonClipping {
 
     const round = (value: number) => {
       return (
-        Math.round(value * Math.pow(10, serializationOptions.precision!)) /
-        Math.pow(10, serializationOptions.precision!)
+        Math.round(value * 10 ** serializationOptions.precision!) /
+        10 ** serializationOptions.precision!
       );
     };
 

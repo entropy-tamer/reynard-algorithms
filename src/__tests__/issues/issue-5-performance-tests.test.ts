@@ -8,7 +8,7 @@
  */
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { MinimumBoundingBox } from "../../algorithms/computational-geometry/minimum-bounding-box/minimum-bounding-box-core";
-import { runBenchmark, assertPerformance, BenchmarkReport } from "../utils/benchmark-utils";
+import { runBenchmark, assertPerformance, type BenchmarkReport } from "../utils/benchmark-utils";
 import { getAlgorithmConfig } from "../../config/algorithm-config";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 

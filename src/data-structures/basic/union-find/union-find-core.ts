@@ -8,7 +8,7 @@
  * @module algorithms/unionFindCore
  */
 
-import { UnionFindNode, UnionFindStats } from "./union-find-types";
+import type { UnionFindNode, UnionFindStats } from "./union-find-types";
 import { UnionFindSetOperations } from "./union-find-set-operations";
 
 /**

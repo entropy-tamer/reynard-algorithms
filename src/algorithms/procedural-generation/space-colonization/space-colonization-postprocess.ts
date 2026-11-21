@@ -58,9 +58,9 @@ export function computeBranchRadii(
     let sum = 0;
     for (let c = 0; c < node.children.length; c++) {
       const childRadius = nodes[node.children[c]!]!.radius ?? leafRadius;
-      sum += Math.pow(childRadius, exponent);
+      sum += childRadius ** exponent;
     }
-    node.radius = Math.pow(sum, 1 / exponent);
+    node.radius = sum ** (1 / exponent);
   }
   return nodes;
 }

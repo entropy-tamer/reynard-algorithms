@@ -385,26 +385,15 @@ describe("MarchingSquares (Refined LUT)", () => {
         .fill(null)
         .map(() => Array(50).fill(0).map(() => rand()));
 
-      const iterations = 10;
-      const ms = new MarchingSquares();
-      const msLegacy = new MarchingSquaresLegacy();
+      const refined = new MarchingSquares().compute(grid, 0.5).contours;
+      const legacy = new MarchingSquaresLegacy().compute(grid, 0.5).contours;
 
-      const timeOf = (fn: () => unknown): number => {
-        let total = 0;
-        for (let i = 0; i < iterations; i++) {
-          const start = performance.now();
-          fn();
-          total += performance.now() - start;
-        }
-        return total / iterations;
-      };
-
-      const avgRefined = timeOf(() => ms.compute(grid, 0.5));
-      const avgLegacy = timeOf(() => msLegacy.compute(grid, 0.5));
-
-      console.log(
-        `Performance (logged, not asserted): refined=${avgRefined.toFixed(2)}ms, legacy=${avgLegacy.toFixed(2)}ms`
-      );
+      // Same cells are crossed (the sibling test asserts equal segment counts),
+      // but the refined cases 5/10 join them differently, producing more
+      // contours. Assert the claim in the title instead of logging timings.
+      expect(refined.length).toBeGreaterThan(legacy.length);
+      expect(refined.length).toBeGreaterThan(0);
+      expect(legacy.length).toBeGreaterThan(0);
     });
   });
 

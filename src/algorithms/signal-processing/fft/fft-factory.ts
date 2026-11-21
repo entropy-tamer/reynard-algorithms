@@ -7,7 +7,7 @@
 
 import { BitReversal } from "./core/bit-reversal";
 import { FFTAlgorithm, type FFTConfig } from "./fft-types";
-import { FFTBase } from "./fft-base";
+import type { FFTBase } from "./fft-base";
 import { Radix2FFT } from "./radix2-fft";
 import { Radix4FFT } from "./radix4-fft";
 import { MixedRadixFFT } from "./mixed-radix-fft";
@@ -150,7 +150,7 @@ export class FFTFactory {
   private static getPowerOf4Sizes(): number[] {
     const sizes: number[] = [];
     for (let i = 1; i <= 8; i++) {
-      const size = Math.pow(4, i); // 4, 16, 64, 256, 1024, 4096, 16384, 65536
+      const size = 4 ** i; // 4, 16, 64, 256, 1024, 4096, 16384, 65536
       if (size <= 65536) {
         sizes.push(size);
       }

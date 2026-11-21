@@ -491,7 +491,7 @@ describe("Fenwick Tree (Binary Indexed Tree) Data Structure", () => {
     const runBenchmark = (
       description: string,
       arraySize: number,
-      operation: (tree: FenwickTree, size: number) => void
+      operation: (tree: FenwickTree, size: number) => number
     ) => {
       it(`should perform ${description} with array size ${arraySize}`, () => {
         const benchmarkArray = Array.from({ length: arraySize }, (_, i) => i + 1);
@@ -501,10 +501,11 @@ describe("Fenwick Tree (Binary Indexed Tree) Data Structure", () => {
         });
 
         const startTime = performance.now();
-        operation(benchmarkTree, arraySize);
-        const endTime = performance.now();
+        const operationsPerformed = operation(benchmarkTree, arraySize);        const endTime = performance.now();
 
         const executionTime = endTime - startTime;
+        // A non-negative elapsed time cannot fail; assert that work happened.
+        expect(operationsPerformed).toBeGreaterThan(0);
         expect(executionTime).toBeGreaterThanOrEqual(0);
 
         // Log for manual inspection during benchmark runs
@@ -518,24 +519,28 @@ describe("Fenwick Tree (Binary Indexed Tree) Data Structure", () => {
       for (let i = 0; i < size; i++) {
         tree.query(i);
       }
+      return size;
     });
 
     runBenchmark("range sum queries", 100, (tree, size) => {
       for (let i = 0; i < size; i++) {
         tree.queryRange(0, i);
       }
+      return size;
     });
 
     runBenchmark("point updates", 100, (tree, size) => {
       for (let i = 0; i < size; i++) {
         tree.updatePoint(i, i * 2);
       }
+      return size;
     });
 
     runBenchmark("range updates", 100, (tree, size) => {
       for (let i = 0; i < size / 2; i++) {
         tree.updateRange(i, i + 10, 5);
       }
+      return size;
     });
 
     runBenchmark("mixed operations", 100, (tree, size) => {
@@ -546,6 +551,7 @@ describe("Fenwick Tree (Binary Indexed Tree) Data Structure", () => {
           tree.updatePoint(i, i * 2);
         }
       }
+      return size;
     });
 
     runBenchmark("large dataset queries", 1000, (tree, size) => {
@@ -553,6 +559,7 @@ describe("Fenwick Tree (Binary Indexed Tree) Data Structure", () => {
         tree.query(i);
         tree.queryRange(0, i);
       }
+      return size;
     });
 
     runBenchmark("large dataset updates", 1000, (tree, size) => {
@@ -560,6 +567,7 @@ describe("Fenwick Tree (Binary Indexed Tree) Data Structure", () => {
         tree.updatePoint(i, i * 2);
         tree.updateRange(i, Math.min(i + 50, size - 1), 5);
       }
+      return size;
     });
   });
 });

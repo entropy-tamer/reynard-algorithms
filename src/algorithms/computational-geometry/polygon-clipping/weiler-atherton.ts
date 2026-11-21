@@ -4,14 +4,14 @@
  */
 
 import {
-  Point,
-  Polygon,
+  type Point,
+  type Polygon,
   ClipOperation,
-  WeilerAthertonOptions,
-  ClipResult,
-  ClippingStats,
-  WAVertex,
-  WAPolygon,
+  type WeilerAthertonOptions,
+  type ClipResult,
+  type ClippingStats,
+  type WAVertex,
+  type WAPolygon,
 } from "./polygon-clipping-types";
 
 /**

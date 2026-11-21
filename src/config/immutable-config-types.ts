@@ -2,7 +2,7 @@
  * @file Types and interfaces for immutable configuration system
  */
 
-import { AlgorithmConfig } from "./algorithm-config";
+import type { AlgorithmConfig } from "./algorithm-config";
 
 /**
  * Immutable configuration snapshot

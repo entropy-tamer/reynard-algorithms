@@ -2,7 +2,7 @@
  * @file LRU Cache core tests
  */
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { LRUCache, LRUCacheEvent } from "../../data-structures/basic/lru-cache";
+import { LRUCache, type LRUCacheEvent } from "../../data-structures/basic/lru-cache";
 
 describe("LRUCache Core Operations", () => {
   let cache: LRUCache<string, number>;

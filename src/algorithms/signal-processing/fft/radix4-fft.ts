@@ -282,7 +282,7 @@ export class Radix4FFT extends FFTBase {
   getSupportedSizes(): number[] {
     const sizes: number[] = [];
     for (let i = 1; i <= 8; i++) {
-      const size = Math.pow(4, i); // 4, 16, 64, 256, 1024, 4096, 16384, 65536
+      const size = 4 ** i; // 4, 16, 64, 256, 1024, 4096, 16384, 65536
       if (size <= 65536) {
         sizes.push(size);
       }

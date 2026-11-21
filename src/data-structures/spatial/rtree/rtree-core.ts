@@ -3,7 +3,7 @@
  * @description Implements the R-Tree spatial data structure for efficient spatial queries.
  */
 
-import {
+import type {
   Point,
   Rectangle,
   RTreeEntry,

@@ -9,7 +9,7 @@
 
 import type { SpatialObjectData } from "../../core/types/spatial-types";
 import type { PerformanceMemoryPoolStats } from "./memory-pool-core";
-import { MemoryPool, PerformanceMemoryPoolConfig, PooledObject } from "./memory-pool-core";
+import { MemoryPool, type PerformanceMemoryPoolConfig, type PooledObject } from "./memory-pool-core";
 
 /**
  * Create a memory pool for spatial objects

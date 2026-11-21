@@ -3,7 +3,7 @@
  * @description Implements Delaunay Triangulation using the Bowyer-Watson algorithm.
  */
 
-import {
+import type {
   Point,
   Triangle,
   Edge,

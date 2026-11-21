@@ -12,19 +12,19 @@ import { findThetaStarPath } from "./theta-star-pathfinding";
 import { optimizePath } from "./theta-star-smoothing";
 import {
   CellType,
-  GridValidationOptions,
-  GridValidationResult,
-  PathComparisonOptions,
-  PathComparisonResult,
-  PathOptimizationOptions,
-  PathOptimizationResult,
-  Point,
-  ThetaStarConfig,
-  ThetaStarOptions,
-  ThetaStarResult,
-  ThetaStarSerialization,
-  ThetaStarSerializationOptions,
-  ThetaStarStats,
+  type GridValidationOptions,
+  type GridValidationResult,
+  type PathComparisonOptions,
+  type PathComparisonResult,
+  type PathOptimizationOptions,
+  type PathOptimizationResult,
+  type Point,
+  type ThetaStarConfig,
+  type ThetaStarOptions,
+  type ThetaStarResult,
+  type ThetaStarSerialization,
+  type ThetaStarSerializationOptions,
+  type ThetaStarStats,
 } from "./theta-star-types";
 import { validateGrid, validatePathfindingParams } from "./theta-star-validation";
 

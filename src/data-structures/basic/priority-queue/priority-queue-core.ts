@@ -22,7 +22,7 @@
  * @module algorithms/dataStructures/priorityQueueCore
  */
 
-import {
+import type {
   PriorityQueueBatchResult,
   PriorityQueueComparator,
   PriorityQueueConfig,

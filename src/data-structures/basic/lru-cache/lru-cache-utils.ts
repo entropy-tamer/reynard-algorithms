@@ -6,7 +6,7 @@
  * @module algorithms/dataStructures/lruCacheUtils
  */
 
-import {
+import type {
   LRUCacheNode,
   LRUCacheEntry,
   LRUCacheSnapshot,
@@ -14,8 +14,8 @@ import {
   LRUCacheConfig,
   LRUCacheStats,
 } from "./lru-cache-types";
-import { LRUCacheLinkedList } from "./lru-cache-linked-list";
-import { LRUCacheTTLManager } from "./lru-cache-ttl";
+import type { LRUCacheLinkedList } from "./lru-cache-linked-list";
+import type { LRUCacheTTLManager } from "./lru-cache-ttl";
 
 /**
  * Creates a snapshot of the cache state

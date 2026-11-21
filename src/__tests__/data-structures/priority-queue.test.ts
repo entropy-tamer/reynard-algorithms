@@ -2,7 +2,7 @@
  * @file Priority Queue tests
  */
 import { describe, it, expect, beforeEach } from "vitest";
-import { PriorityQueue, PriorityQueueComparator, PriorityQueueEvent } from "../../data-structures/basic/priority-queue";
+import { PriorityQueue, type PriorityQueueComparator, type PriorityQueueEvent } from "../../data-structures/basic/priority-queue";
 
 describe("PriorityQueue", () => {
   let pq: PriorityQueue<number>;

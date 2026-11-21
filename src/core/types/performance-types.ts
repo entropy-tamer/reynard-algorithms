@@ -34,9 +34,7 @@ export interface DebounceOptions {
   readonly maxWait?: number;
 }
 
-export interface FunctionSignature<TArgs extends readonly unknown[] = readonly unknown[], TReturn = unknown> {
-  (...args: TArgs): TReturn;
-}
+export type FunctionSignature<TArgs extends readonly unknown[] = readonly unknown[], TReturn = unknown> = (...args: TArgs) => TReturn
 
 export interface ThrottledFunction<TArgs extends readonly unknown[] = readonly unknown[], TReturn = unknown> {
   (...args: TArgs): TReturn | undefined;

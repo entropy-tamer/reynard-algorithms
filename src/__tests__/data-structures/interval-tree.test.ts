@@ -532,7 +532,7 @@ describe("Interval Tree Data Structure", () => {
     const runBenchmark = (
       description: string,
       intervalCount: number,
-      operation: (tree: IntervalTree, intervals: any[]) => void
+      operation: (tree: IntervalTree, intervals: any[]) => number
     ) => {
       it(`should perform ${description} with ${intervalCount} intervals`, () => {
         const benchmarkTree = new IntervalTree({ enableStats: true });
@@ -547,10 +547,11 @@ describe("Interval Tree Data Structure", () => {
         }
 
         const startTime = performance.now();
-        operation(benchmarkTree, intervals);
-        const endTime = performance.now();
+        const operationsPerformed = operation(benchmarkTree, intervals);        const endTime = performance.now();
 
         const executionTime = endTime - startTime;
+        // A non-negative elapsed time cannot fail; assert that work happened.
+        expect(operationsPerformed).toBeGreaterThan(0);
         expect(executionTime).toBeGreaterThanOrEqual(0);
 
         // Log for manual inspection during benchmark runs
@@ -562,26 +563,32 @@ describe("Interval Tree Data Structure", () => {
 
     runBenchmark("insertion", 100, (tree, intervals) => {
       intervals.forEach(interval => { tree.insert({ start: interval.start + 1000, end: interval.end + 1000 }); });
+      return intervals.length;
     });
 
     runBenchmark("overlap search", 100, (tree, intervals) => {
       intervals.forEach(interval => { tree.searchOverlapping({ start: interval.start - 1, end: interval.end + 1 }); });
+      return intervals.length;
     });
 
     runBenchmark("point search", 100, (tree, intervals) => {
       intervals.forEach(interval => { tree.searchContaining(interval.start + 0.5); });
+      return intervals.length;
     });
 
     runBenchmark("contained search", 100, (tree, intervals) => {
       intervals.forEach(interval => { tree.searchContainedIn({ start: interval.start - 1, end: interval.end + 1 }); });
+      return intervals.length;
     });
 
     runBenchmark("large dataset insertion", 1000, (tree, intervals) => {
       intervals.forEach(interval => { tree.insert({ start: interval.start + 2000, end: interval.end + 2000 }); });
+      return intervals.length;
     });
 
     runBenchmark("large dataset overlap search", 1000, (tree, intervals) => {
       intervals.forEach(interval => { tree.searchOverlapping({ start: interval.start - 1, end: interval.end + 1 }); });
+      return intervals.length;
     });
   });
 });

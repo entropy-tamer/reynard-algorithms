@@ -16,6 +16,15 @@ interface BenchmarkResult {
   numQueries: number;
   medianTimeMs: number;
   totalNodesExplored: number;
+  queriesRun: number;
+}
+
+function seededRandom(seed: number): () => number {
+  let s = seed >>> 0;
+  return () => {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    return s / 4294967296;
+  };
 }
 
 function generateRandomGrid(
@@ -24,14 +33,16 @@ function generateRandomGrid(
   obstacleDensity: number,
   seed?: number
 ): AStarGrid {
-  // Simple seeded random for reproducibility (LCG)
-  let s = seed ?? Math.floor(Math.random() * 1e9);
-  
-  const cells = new Array(height).map(() => new Array(width));
+  // The LCG must actually drive the grid; advancing `s` while calling
+  // Math.random() made every "seeded" benchmark irreproducible.
+  const rand = seededRandom(seed ?? 42);
+
+  // `new Array(n).map()` skips holes and leaves a sparse array; Array.from
+  // actually creates every row.
+  const cells = Array.from({ length: height }, () => new Array(width));
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
-      s = (s * 1664525 + 1013904223) % 4294967296;
-      cells[y][x] = Math.random() > obstacleDensity ? true : false; // true = walkable
+      cells[y][x] = rand() > obstacleDensity; // true = walkable
     }
   }
   
@@ -44,25 +55,21 @@ function generateTestQueries(
   seed?: number
 ): Array<{ start: Point; goal: Point }> {
   const queries = [];
-  let s = seed ?? Math.floor(Math.random() * 1e9);
-  
+  const rand = seededRandom(seed ?? 42);
+
   for (let i = 0; i < numQueries; i++) {
     // Pick random walkable cells
     let attempts = 0;
     while (attempts < 100) {
-      s = (s * 1664525 + 1013904223) % 4294967296;
-      const x1 = Math.floor(Math.random() * grid.width);
-      s = (s * 1664525 + 1013904223) % 4294967296;
-      const y1 = Math.floor(Math.random() * grid.height);
-      
+      const x1 = Math.floor(rand() * grid.width);
+      const y1 = Math.floor(rand() * grid.height);
+
       if (grid.cells[y1][x1]) {
         let x2 = -1, y2 = -1;
         attempts++;
         while (attempts < 200) {
-          s = (s * 1664525 + 1013904223) % 4294967296;
-          x2 = Math.floor(Math.random() * grid.width);
-          s = (s * 1664525 + 1013904223) % 4294967296;
-          y2 = Math.floor(Math.random() * grid.height);
+          x2 = Math.floor(rand() * grid.width);
+          y2 = Math.floor(rand() * grid.height);
           if (grid.cells[y2][x2]) {
             break;
           }
@@ -86,8 +93,9 @@ function runBenchmark(
   numQueries: number,
   seed?: number
 ): BenchmarkResult {
-  const grid = generateRandomGrid(gridWidth, gridHeight, obstacleDensity, seed);
-  const queries = generateTestQueries(grid, numQueries, seed ?? 42);
+  const resolvedSeed = seed ?? 42;
+  const grid = generateRandomGrid(gridWidth, gridHeight, obstacleDensity, resolvedSeed);
+  const queries = generateTestQueries(grid, numQueries, resolvedSeed);
   
   const astar = new AStar({ enableCaching: false, enableStats: true });
   
@@ -120,6 +128,7 @@ function runBenchmark(
     numQueries,
     medianTimeMs,
     totalNodesExplored,
+    queriesRun: queries.length,
   };
 }
 
@@ -133,6 +142,11 @@ describe("A* Performance Benchmarks", () => {
         const result = runBenchmark(size, size, 0.3, 10);
         results.push(result);
         
+        expect(result.gridWidth).toBe(size);
+        expect(result.gridHeight).toBe(size);
+        expect(result.queriesRun).toBeGreaterThan(0);
+        expect(result.totalNodesExplored).toBeGreaterThan(0);
+
         console.log(
           `Grid ${size}x${size}: median=${result.medianTimeMs.toFixed(2)}ms | explored=${result.totalNodesExplored}`
         );
@@ -145,18 +159,12 @@ describe("A* Performance Benchmarks", () => {
       // implementation, we expect quadratic or worse scaling due to the
       // full-scan on every node expansion.
       
-      if (results.length >= 4) {
-        const ratio_100_50 = results[1].medianTimeMs / Math.max(results[0].medianTimeMs, 0.001);
-        const ratio_200_100 = results[2].medianTimeMs / Math.max(results[1].medianTimeMs, 0.001);
-        
-        // With O(n) open set, we expect growth factor > sqrt(N) due to the full scan per expansion
-        console.log(
-          `Growth ratios: 100/50=${ratio_100_50.toFixed(2)}x | 200/100=${ratio_200_100.toFixed(2)}x`
-        );
-        
-        // If growth is significantly more than sqrt, we have evidence of superlinear behavior
-        expect(ratio_100_50).toBeGreaterThan(0.1);  // Just sanity check: time increased
-      }
+      // The old guard required 4 results but the describe above pushes only
+      // three, so its assertion never ran. Assert the harness contract itself:
+      // every size produced queries and explored nodes.
+      expect(results).toHaveLength(3);
+      expect(results.every(result => result.queriesRun > 0)).toBe(true);
+      expect(results.every(result => result.totalNodesExplored > 0)).toBe(true);
     });
   });
   
@@ -168,6 +176,9 @@ describe("A* Performance Benchmarks", () => {
         const result = runBenchmark(100, 100, 0.3, count);
         results.push(result);
         
+        expect(result.numQueries).toBe(count);
+        expect(result.queriesRun).toBeGreaterThan(0);
+
         console.log(
           `Queries ${count}: median=${result.medianTimeMs.toFixed(2)}ms | total=${result.totalNodesExplored}`
         );
@@ -175,12 +186,12 @@ describe("A* Performance Benchmarks", () => {
     }
     
     it("should show linear-ish scaling with query count", () => {
-      // Linear scaling expected if each query is independent
-      const perQueryTimes = results.map(r => r.medianTimeMs);
-      
-      console.log(
-        `Per-query times: ${perQueryTimes.map(t => t.toFixed(2)).join(' | ')}`
-      );
+      // Same seed for every count, so the query lists are prefix-consistent:
+      // more queries must explore at least as many nodes.
+      expect(results.map(r => r.numQueries)).toEqual([5, 10, 20]);
+      expect(results.every(r => r.queriesRun > 0)).toBe(true);
+      expect(results[1].totalNodesExplored).toBeGreaterThanOrEqual(results[0].totalNodesExplored);
+      expect(results[2].totalNodesExplored).toBeGreaterThanOrEqual(results[1].totalNodesExplored);
     });
   });
   
@@ -193,21 +204,25 @@ describe("A* Performance Benchmarks", () => {
         const result = runBenchmark(100, 100, density, 5, Math.floor(density * 1e9));
         results.push(result);
         
+        expect(result.obstacleDensity).toBeCloseTo(density, 10);
+        expect(result.queriesRun).toBeGreaterThan(0);
+
         console.log(
           `Density ${density*100}%: median=${result.medianTimeMs.toFixed(2)}ms | explored=${result.totalNodesExplored}`
         );
       });
     }
     
-    it("should show higher density = fewer nodes to explore (usually)", () => {
-      const exploredCounts = results.map(r => r.totalNodesExplored);
-      
-      console.log(
-        `Total nodes explored: ${exploredCounts.join(' | ')}`
-      );
-      
-      // Dense environments typically lead to more exploration but also faster termination 
-      // when no path exists. This is a qualitative observation, not a hard assertion.
+    it("should produce reproducible results for each density", () => {
+      expect(results.map(r => r.obstacleDensity)).toEqual([0.1, 0.3, 0.5]);
+      expect(results.every(r => r.queriesRun > 0)).toBe(true);
+
+      // The seeded generator must make a repeat run byte-identical. Timing is
+      // deliberately excluded: only deterministic counts are compared.
+      const repeat = runBenchmark(100, 100, 0.3, 5, Math.floor(0.3 * 1e9));
+      const original = results[1];
+      expect(repeat.totalNodesExplored).toBe(original.totalNodesExplored);
+      expect(repeat.queriesRun).toBe(original.queriesRun);
     });
   });
 });

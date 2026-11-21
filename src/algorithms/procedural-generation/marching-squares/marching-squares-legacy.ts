@@ -4,7 +4,7 @@
  * This is the original implementation preserved for backward compatibility.
  */
 
-import {
+import type {
   Contour,
   ContourAnalysis,
   ContourAnalysisOptions,

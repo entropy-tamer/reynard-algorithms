@@ -6,7 +6,7 @@
  * @module algorithms/dataStructures/lruCacheStats
  */
 
-import { LRUCacheStats, LRUCachePerformanceMetrics } from "./lru-cache-types";
+import type { LRUCacheStats, LRUCachePerformanceMetrics } from "./lru-cache-types";
 
 /**
  * Statistics manager for LRU cache

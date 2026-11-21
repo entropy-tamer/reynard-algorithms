@@ -7,10 +7,10 @@ import {
   createDetailedValidationResult,
   createUnifiedValidationResult,
   createValidationMessage,
-  UnifiedValidationResult,
+  type UnifiedValidationResult,
   ValidationSeverity,
 } from "../../../core/types/validation-types";
-import {
+import type {
   BoundingBoxComparisonOptions,
   BoundingBoxComparisonResult,
   MinimumBoundingBoxConfig,
@@ -582,8 +582,8 @@ export class MinimumBoundingBox {
 
     const round = (value: number) => {
       return (
-        Math.round(value * Math.pow(10, serializationOptions.precision!)) /
-        Math.pow(10, serializationOptions.precision!)
+        Math.round(value * 10 ** serializationOptions.precision!) /
+        10 ** serializationOptions.precision!
       );
     };
 

@@ -5,7 +5,7 @@
  * @module algorithms/spatialHashCore
  */
 
-import { QueryResult, SpatialHashConfig, SpatialHashStats, SpatialObject } from "./spatial-hash-types";
+import type { QueryResult, SpatialHashConfig, SpatialHashStats, SpatialObject } from "./spatial-hash-types";
 // utils imported indirectly by ops
 import type { SpatialDataType } from "../../../core/types/spatial-types";
 import { checkAutoResizeImpl, checkCleanupImpl } from "./spatial-hash-maintenance";

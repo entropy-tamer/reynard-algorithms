@@ -6,7 +6,7 @@
  * @module algorithms/dataStructures/lruCachePooling
  */
 
-import { LRUCacheNode } from "./lru-cache-types";
+import type { LRUCacheNode } from "./lru-cache-types";
 
 /**
  * Object pool manager for LRU cache nodes

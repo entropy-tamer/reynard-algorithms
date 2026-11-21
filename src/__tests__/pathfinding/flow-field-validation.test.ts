@@ -9,7 +9,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { FlowField } from "../../algorithms/pathfinding/flow-field/flow-field-core";
 import { FlowFieldGenerator } from "../../algorithms/pathfinding/flow-field/flow-field-generator";
-import { CellType, FlowCell, IntegrationCell } from "../../algorithms/pathfinding/flow-field/flow-field-types";
+import { CellType, type FlowCell, type IntegrationCell } from "../../algorithms/pathfinding/flow-field/flow-field-types";
 import { runBenchmark, assertPerformance } from "../utils/benchmark-utils";
 
 describe("Flow Field Validation Logic", () => {

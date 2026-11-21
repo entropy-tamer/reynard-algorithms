@@ -18,7 +18,7 @@
 import { LRUCache } from "../../../data-structures/basic/lru-cache/index.js";
 import { ThetaStar } from "./theta-star-core";
 import type { Point, ThetaStarConfig, ThetaStarOptions, ThetaStarResult } from "./theta-star-types";
-import { CellType } from "./theta-star-types";
+import type { CellType } from "./theta-star-types";
 
 /**
  * Object pool for frequently allocated objects to reduce GC pressure

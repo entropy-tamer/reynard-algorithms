@@ -4,16 +4,16 @@
  */
 
 import {
-  Point,
+  type Point,
   CellType,
-  Cluster,
-  Entrance,
-  AbstractNode,
-  AbstractEdge,
-  HPAConfig,
-  HPAStats,
-  HPAResult,
-  HPAOptions,
+  type Cluster,
+  type Entrance,
+  type AbstractNode,
+  type AbstractEdge,
+  type HPAConfig,
+  type HPAStats,
+  type HPAResult,
+  type HPAOptions,
 } from "./hpa-star-types";
 import { HPAClustering } from "./hpa-clustering";
 import { HPAAbstractGraph } from "./hpa-abstract-graph";

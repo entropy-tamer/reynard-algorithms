@@ -120,7 +120,7 @@ export function computeDetailedStatistics(values: number[]): any {
       const diff = val - mean;
       return sum + diff * diff * diff;
     }, 0) /
-    (n * Math.pow(standardDeviation, 3));
+    (n * standardDeviation ** 3);
 
   // Kurtosis
   const kurtosis =
@@ -128,7 +128,7 @@ export function computeDetailedStatistics(values: number[]): any {
       const diff = val - mean;
       return sum + diff * diff * diff * diff;
     }, 0) /
-      (n * Math.pow(standardDeviation, 4)) -
+      (n * standardDeviation ** 4) -
     3;
 
   return {

@@ -36,7 +36,7 @@ function distance(p1: Point, p2: Point): number {
 function calculateAlpha(tension: number, p0: Point, p1: Point): number {
   const dist = distance(p0, p1);
   if (dist === 0) return 0;
-  return Math.pow(dist, tension);
+  return dist ** tension;
 }
 
 /**

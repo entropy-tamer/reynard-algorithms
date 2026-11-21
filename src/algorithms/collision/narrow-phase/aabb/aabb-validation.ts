@@ -7,7 +7,7 @@
  * @module algorithms/aabbValidation
  */
 
-import { AABB } from "./aabb-types";
+import type { AABB } from "./aabb-types";
 
 /**
  * Validation error for AABB objects

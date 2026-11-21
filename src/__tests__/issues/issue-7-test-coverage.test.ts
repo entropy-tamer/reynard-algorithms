@@ -11,7 +11,7 @@ import { ThetaStar } from "../../algorithms/pathfinding/theta-star/theta-star-co
 import { HPAStar } from "../../algorithms/pathfinding/hpa-star/hpa-star-core";
 import { AStar } from "../../algorithms/pathfinding/astar/astar-core";
 import { FlowField } from "../../algorithms/pathfinding/flow-field/flow-field-core";
-import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
+import { runBenchmark, type BenchmarkReport } from "../utils/benchmark-utils";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 
 describe("Issue #7: Test Coverage Gaps - Micro-benchmark", () => {

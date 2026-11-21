@@ -57,7 +57,7 @@ export class PerformanceBenchmark {
     const maxTime = sortedTimes[sortedTimes.length - 1] ?? 0;
 
     // Calculate standard deviation
-    const variance = times.reduce((sum, time) => sum + Math.pow(time - averageTime, 2), 0) / times.length;
+    const variance = times.reduce((sum, time) => sum + (time - averageTime) ** 2, 0) / times.length;
     const standardDeviation = Math.sqrt(variance);
 
     return {

@@ -6,7 +6,7 @@
  * @module algorithms/dataStructures/lruCacheTTL
  */
 
-import { LRUCacheNode } from "./lru-cache-types";
+import type { LRUCacheNode } from "./lru-cache-types";
 
 /**
  * TTL and cleanup manager for LRU cache

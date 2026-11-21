@@ -275,10 +275,11 @@ describe("FlowField", () => {
       const goals: Point[] = [{ x: 9, y: 9 }];
 
       flowField.generateFlowField(grid, width, height, goals);
+      expect(flowField.getCacheStats().size).toBeGreaterThan(0);
+
       flowField.clearCache();
 
-      // Cache should be cleared
-      expect(true).toBe(true); // Placeholder assertion
+      expect(flowField.getCacheStats().size).toBe(0);
     });
   });
 

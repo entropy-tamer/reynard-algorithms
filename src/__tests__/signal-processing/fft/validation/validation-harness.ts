@@ -290,9 +290,9 @@ export function runValidationSuite(
  * @example
  */
 export function generateReport(report: ValidationReport): string {
-  let output = "=".repeat(80) + "\n";
+  let output = `${"=".repeat(80)}\n`;
   output += "FFT Validation Report\n";
-  output += "=".repeat(80) + "\n\n";
+  output += `${"=".repeat(80)}\n\n`;
 
   output += `Total Tests: ${report.totalTests}\n`;
   output += `Passed: ${report.passed} (${((report.passed / report.totalTests) * 100).toFixed(1)}%)\n`;
@@ -304,7 +304,7 @@ export function generateReport(report: ValidationReport): string {
   output += `  Worst Case: ${report.summary.worstCase}\n\n`;
 
   output += "Detailed Results:\n";
-  output += "-".repeat(80) + "\n";
+  output += `${"-".repeat(80)}\n`;
 
   for (const result of report.results) {
     output += `\nTest: ${result.testCase} (${result.algorithm})\n`;
@@ -318,7 +318,7 @@ export function generateReport(report: ValidationReport): string {
     output += `Power: ${result.errors.power.toExponential(3)}\n`;
   }
 
-  output += "\n" + "=".repeat(80) + "\n";
+  output += `\n${"=".repeat(80)}\n`;
 
   return output;
 }
@@ -356,7 +356,7 @@ export function validateAgainstReference(
 
   const report = runValidationSuite(testCases, algorithms);
 
-  console.log("\n" + generateReport(report));
+  console.log(`\n${generateReport(report)}`);
 
   return report;
 }

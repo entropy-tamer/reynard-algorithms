@@ -4,24 +4,24 @@
  */
 
 import {
-  Point,
+  type Point,
   MovementType,
   CellType,
-  JumpPoint,
-  JPSConfig,
-  JPSStats,
-  JPSResult,
-  JPSOptions,
-  JumpPointOptions,
-  GridValidationOptions,
-  GridValidationResult,
-  PathOptimizationOptions,
-  PathOptimizationResult,
-  JPSPlusResult,
-  JPSSerializationOptions,
-  JPSSerialization,
-  PathComparisonOptions,
-  PathComparisonResult,
+  type JumpPoint,
+  type JPSConfig,
+  type JPSStats,
+  type JPSResult,
+  type JPSOptions,
+  type JumpPointOptions,
+  type GridValidationOptions,
+  type GridValidationResult,
+  type PathOptimizationOptions,
+  type PathOptimizationResult,
+  type JPSPlusResult,
+  type JPSSerializationOptions,
+  type JPSSerialization,
+  type PathComparisonOptions,
+  type PathComparisonResult,
 } from "./jps-types";
 import { JPSUtils } from "./jps-utils";
 
@@ -593,8 +593,8 @@ export class JPS {
 
     const round = (value: number) => {
       return (
-        Math.round(value * Math.pow(10, serializationOptions.precision!)) /
-        Math.pow(10, serializationOptions.precision!)
+        Math.round(value * 10 ** serializationOptions.precision!) /
+        10 ** serializationOptions.precision!
       );
     };
 

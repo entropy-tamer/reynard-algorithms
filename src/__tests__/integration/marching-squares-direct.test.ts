@@ -167,32 +167,6 @@ describe("Marching Squares Direct Implementation", () => {
       expect(fast.segments).toBeGreaterThan(0);
     });
 
-    it("should not regress the fragment-join cost", () => {
-      // Recorded, not asserted: a wall-clock gate here was a coin flip that
-      // failed by 0.06% on the pre-join-fix code. The deterministic coverage for
-      // this path is the topology agreement above plus the large-grid test.
-      const grid = seededGrid(50, 42);
-      const iterations = 10;
-      const gridSize = Math.sqrt(grid.length * grid[0]!.length);
 
-      const time = (cfg: ReturnType<typeof createMarchingSquaresConfig>): number => {
-        const ms = new MarchingSquares(cfg);
-        let total = 0;
-        for (let i = 0; i < iterations; i++) {
-          const start = performance.now();
-          ms.compute(grid, 0.5);
-          total += performance.now() - start;
-        }
-        return total / iterations;
-      };
-
-      const avgFast = time(createMarchingSquaresConfig(30));
-      const avgMedium = time(createMarchingSquaresConfig(gridSize));
-      const avgOptimized = time(createMarchingSquaresConfig(150));
-
-      console.log(
-        `Performance: fast=${avgFast.toFixed(2)}ms, medium=${avgMedium.toFixed(2)}ms, optimized=${avgOptimized.toFixed(2)}ms`
-      );
-    });
   });
 });

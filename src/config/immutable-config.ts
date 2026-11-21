@@ -7,7 +7,7 @@
  * @module algorithmsImmutableConfig
  */
 
-import { AlgorithmConfig, AlgorithmConfigManager } from "./algorithm-config";
+import type { AlgorithmConfig, AlgorithmConfigManager } from "./algorithm-config";
 import type {
   ImmutableConfigSnapshot,
   OptimizedCollisionConfig,

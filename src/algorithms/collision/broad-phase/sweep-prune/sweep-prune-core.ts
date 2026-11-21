@@ -34,7 +34,7 @@ import type {
   SpatialCell,
   SweepPruneCacheEntry,
 } from "./sweep-prune-types";
-import { SweepPruneEventType, DEFAULT_SWEEP_PRUNE_CONFIG, DEFAULT_SWEEP_PRUNE_OPTIONS } from "./sweep-prune-types";
+import { type SweepPruneEventType, DEFAULT_SWEEP_PRUNE_CONFIG, DEFAULT_SWEEP_PRUNE_OPTIONS } from "./sweep-prune-types";
 import { performSingleAxisSweepPrune } from "./sweep-prune-algorithms";
 import { emitEvent } from "./sweep-prune-events";
 import { resetStats } from "./sweep-prune-stats";

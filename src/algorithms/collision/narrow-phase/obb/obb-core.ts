@@ -3,7 +3,7 @@
  * @description Main implementation of Oriented Bounding Box (OBB) with SAT collision detection.
  */
 
-import {
+import type {
   Point,
   Vector,
   OBBData,
@@ -497,8 +497,8 @@ export class OBB {
 
     const round = (value: number) => {
       return (
-        Math.round(value * Math.pow(10, serializationOptions.precision!)) /
-        Math.pow(10, serializationOptions.precision!)
+        Math.round(value * 10 ** serializationOptions.precision!) /
+        10 ** serializationOptions.precision!
       );
     };
 

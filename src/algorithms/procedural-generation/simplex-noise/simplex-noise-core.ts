@@ -3,7 +3,7 @@
  * @module algorithms/geometry/algorithms/simplex-noise/simplex-noise-core
  */
 
-import {
+import type {
   SimplexNoiseConfig,
   NoiseResult,
   Noise2DOptions,

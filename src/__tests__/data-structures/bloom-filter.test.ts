@@ -484,7 +484,7 @@ describe("Bloom Filter Data Structure", () => {
     const runBenchmark = (
       description: string,
       elementCount: number,
-      operation: (filter: BloomFilter, elements: string[]) => void
+      operation: (filter: BloomFilter, elements: string[]) => number
     ) => {
       it(`should perform ${description} with ${elementCount} elements`, () => {
         const benchmarkFilter = new BloomFilter({
@@ -502,10 +502,11 @@ describe("Bloom Filter Data Structure", () => {
         }
 
         const startTime = performance.now();
-        operation(benchmarkFilter, elements);
-        const endTime = performance.now();
+        const operationsPerformed = operation(benchmarkFilter, elements);        const endTime = performance.now();
 
         const executionTime = endTime - startTime;
+        // A non-negative elapsed time cannot fail; assert that work happened.
+        expect(operationsPerformed).toBeGreaterThan(0);
         expect(executionTime).toBeGreaterThanOrEqual(0);
 
         // Log for manual inspection during benchmark runs
@@ -517,6 +518,7 @@ describe("Bloom Filter Data Structure", () => {
 
     runBenchmark("insertion", 100, (filter, elements) => {
       elements.forEach(element => { filter.insert(element); });
+      return elements.length;
     });
 
     runBenchmark("membership testing", 100, (filter, elements) => {
@@ -524,10 +526,12 @@ describe("Bloom Filter Data Structure", () => {
       elements.slice(0, 50).forEach(element => { filter.insert(element); });
       // Then test all elements
       elements.forEach(element => { filter.test(element); });
+      return elements.length;
     });
 
     runBenchmark("batch insertion", 100, (filter, elements) => {
       filter.insertBatch(elements);
+      return elements.length;
     });
 
     runBenchmark("batch testing", 100, (filter, elements) => {
@@ -535,10 +539,12 @@ describe("Bloom Filter Data Structure", () => {
       elements.slice(0, 50).forEach(element => { filter.insert(element); });
       // Then test all elements in batch
       filter.testBatch(elements);
+      return elements.length;
     });
 
     runBenchmark("large dataset insertion", 200, (filter, elements) => {
       elements.forEach(element => { filter.insert(element); });
+      return elements.length;
     });
 
     runBenchmark("large dataset testing", 200, (filter, elements) => {
@@ -546,6 +552,7 @@ describe("Bloom Filter Data Structure", () => {
       elements.slice(0, 100).forEach(element => { filter.insert(element); });
       // Then test all elements
       elements.forEach(element => { filter.test(element); });
+      return elements.length;
     });
   });
 });

@@ -125,7 +125,7 @@ export class MemoryLeakDetector {
 
     // Calculate confidence based on consistency of growth
     const variance =
-      growthRates.reduce((sum, rate) => sum + Math.pow(rate - averageGrowthRate, 2), 0) / growthRates.length;
+      growthRates.reduce((sum, rate) => sum + (rate - averageGrowthRate) ** 2, 0) / growthRates.length;
     const confidence = Math.max(0, 1 - Math.sqrt(variance) / Math.abs(averageGrowthRate));
 
     return {

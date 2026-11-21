@@ -3,7 +3,7 @@
  * @description Sweep line algorithm components for Bentley-Ottmann line segment intersection.
  */
 
-import { EventQueue, LineSegment, Point, StatusNode, StatusStructure, SweepLineEvent } from "./line-intersection-types";
+import type { EventQueue, LineSegment, Point, StatusNode, StatusStructure, SweepLineEvent } from "./line-intersection-types";
 
 /**
  * Priority queue implementation for sweep line events.

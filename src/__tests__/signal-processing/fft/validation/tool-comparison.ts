@@ -122,9 +122,9 @@ export function generateCombinedReport(
     reports.push(generateToolReport("sox", soxDir));
   }
 
-  let output = "=".repeat(80) + "\n";
+  let output = `${"=".repeat(80)}\n`;
   output += "Linux Tools FFT Comparison Report\n";
-  output += "=".repeat(80) + "\n\n";
+  output += `${"=".repeat(80)}\n\n`;
 
   for (const report of reports) {
     output += `Tool: ${report.tool}\n`;
@@ -146,7 +146,7 @@ export function generateCombinedReport(
     output += "\n";
   }
 
-  output += "=".repeat(80) + "\n";
+  output += `${"=".repeat(80)}\n`;
   output += "\n";
   output += "Next Steps:\n";
   output += "1. Compare visual outputs (spectrograms) with our FFT visualizations\n";

@@ -6,7 +6,7 @@
  * @module algorithms/dataStructures/lruCacheEvents
  */
 
-import { LRUCacheEvent, LRUCacheEventType, LRUCacheEventHandler } from "./lru-cache-types";
+import type { LRUCacheEvent, LRUCacheEventType, LRUCacheEventHandler } from "./lru-cache-types";
 
 /**
  * Event manager for LRU cache

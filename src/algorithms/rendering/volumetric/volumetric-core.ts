@@ -36,7 +36,7 @@ import { DEFAULT_VOLUMETRIC_CONFIG } from "./volumetric-types";
 function henyeyGreenstein(cosTheta: number, g: number): number {
   const g2 = g * g;
   const denom = 1.0 + g2 - 2.0 * g * cosTheta;
-  return (1.0 - g2) / (4.0 * Math.PI * Math.pow(denom, 1.5));
+  return (1.0 - g2) / (4.0 * Math.PI * denom ** 1.5);
 }
 
 /**
@@ -209,7 +209,7 @@ export function calculateAdaptiveStepSize(
   const dz = densityFunction([position[0], position[1], position[2] + epsilon], time);
 
   const gradient = Math.sqrt(
-    Math.pow(dx - density, 2) + Math.pow(dy - density, 2) + Math.pow(dz - density, 2)
+    (dx - density) ** 2 + (dy - density) ** 2 + (dz - density) ** 2
   );
 
   // Larger steps in low-gradient regions

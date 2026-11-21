@@ -12,7 +12,7 @@ import { FlowField } from "../../algorithms/pathfinding/flow-field/flow-field-co
 import { FlowFieldGenerator } from "../../algorithms/pathfinding/flow-field/flow-field-generator";
 import { MinimumBoundingBox } from "../../algorithms/computational-geometry/minimum-bounding-box/minimum-bounding-box-core";
 import { CellType } from "../../algorithms/pathfinding/flow-field/flow-field-types";
-import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
+import { runBenchmark, type BenchmarkReport } from "../utils/benchmark-utils";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 
 describe("Unified Validation Interface", () => {

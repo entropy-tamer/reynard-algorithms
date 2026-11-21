@@ -9,7 +9,7 @@
  * @module algorithms/geometry/algorithms/wave-function-collapse
  */
 
-import {
+import type {
   Tile,
   Constraint,
   WaveFunctionCollapseConfig,

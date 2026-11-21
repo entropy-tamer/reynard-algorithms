@@ -3,7 +3,7 @@
  * @description Defines the types and interfaces for Voronoi Diagrams.
  */
 
-import { Point, Triangle, Edge } from "../delaunay/delaunay-types";
+import type { Point, Triangle, Edge } from "../delaunay/delaunay-types";
 
 /**
  * Represents a Voronoi cell (Voronoi region) for a site.

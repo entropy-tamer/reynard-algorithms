@@ -3,7 +3,7 @@
  * @description Implements the Bentley-Ottmann line segment intersection algorithm.
  */
 
-import {
+import type {
   IntersectionPoint,
   IntersectionQueryOptions,
   IntersectionQueryResult,
@@ -288,8 +288,8 @@ export class LineIntersection {
 
     const round = (value: number) => {
       return (
-        Math.round(value * Math.pow(10, serializationOptions.precision!)) /
-        Math.pow(10, serializationOptions.precision!)
+        Math.round(value * 10 ** serializationOptions.precision!) /
+        10 ** serializationOptions.precision!
       );
     };
 

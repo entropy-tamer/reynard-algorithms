@@ -376,10 +376,10 @@ describe("JPS Performance", () => {
   });
 
   describe("Memory Usage", () => {
-    it("should not leak memory during repeated pathfinding", () => {
+    it("should keep results well formed across repeated pathfinding", () => {
       const grid = generateRandomGrid(100, 100, 0.2);
+      const results = [];
 
-      // Perform many pathfinding operations
       for (let i = 0; i < 100; i++) {
         const start: Point = {
           x: Math.floor(Math.random() * 100),
@@ -390,11 +390,17 @@ describe("JPS Performance", () => {
           y: Math.floor(Math.random() * 100),
         };
 
-        jps.findPath(grid, 100, 100, start, goal);
+        results.push(jps.findPath(grid, 100, 100, start, goal));
       }
 
-      // If we get here without running out of memory, the test passes
-      expect(true).toBe(true);
+      expect(results).toHaveLength(100);
+      for (const result of results) {
+        expect(Array.isArray(result.path)).toBe(true);
+        expect(typeof result.found).toBe("boolean");
+      }
+      const stats = jps.getStats();
+      expect(stats.nodesExplored).toBeGreaterThan(0);
+      expect(stats.iterations).toBeGreaterThan(0);
     });
 
     it("should handle large grids without excessive memory usage", () => {

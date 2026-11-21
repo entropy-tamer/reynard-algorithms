@@ -3,7 +3,7 @@
  * @description Utility functions for Oriented Bounding Box (OBB) operations.
  */
 
-import { OBBData, OBBProjection, Point, Vector } from "./obb-types";
+import type { OBBData, OBBProjection, Point, Vector } from "./obb-types";
 
 /**
  * Utility functions for OBB operations.

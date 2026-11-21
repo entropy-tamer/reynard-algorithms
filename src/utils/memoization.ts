@@ -310,7 +310,7 @@ export const MathMemo = {
   /**
    * Memoized power function
    */
-  pow: memoizeMath((x: number, y: number) => Math.pow(x, y)),
+  pow: memoizeMath((x: number, y: number) => x ** y),
 
   /**
    * Memoized square root function

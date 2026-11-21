@@ -14,7 +14,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { checkCollision } from "../../algorithms/collision/narrow-phase/aabb/aabb-collision";
 import { detectCollisions } from "../../optimized";
 import { validateAABB, validateAABBArray } from "../../algorithms/collision/narrow-phase/aabb/aabb-validation";
-import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
+import { runBenchmark, type BenchmarkReport } from "../utils/benchmark-utils";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 
 describe("Issue #2: AABB Validation Missing", () => {
@@ -255,10 +255,7 @@ describe("Issue #2: AABB Validation Missing", () => {
 
       const startTime = performance.now();
 
-      try {
-        detectCollisions(invalidAABBs);
-      } catch (error) {
-      }
+      expect(() => detectCollisions(invalidAABBs)).toThrow(/invalid width/i);
 
       const endTime = performance.now();
       const duration = endTime - startTime;

@@ -3,7 +3,7 @@
  * @description Implements Bresenham's Line Algorithm for efficient line drawing.
  */
 
-import {
+import type {
   Point,
   BresenhamConfig,
   BresenhamResult,

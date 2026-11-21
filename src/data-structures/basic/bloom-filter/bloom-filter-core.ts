@@ -619,7 +619,7 @@ export class BloomFilter {
 
     // Current false positive rate based on actual bits set
     const bitsSetRatio = this.stats.bitsSet / m;
-    return Math.pow(bitsSetRatio, k);
+    return bitsSetRatio ** k;
   }
 
   /**
@@ -632,7 +632,7 @@ export class BloomFilter {
     const k = this.config.hashFunctions!;
 
     // Theoretical false positive rate
-    return Math.pow(1 - Math.exp((-k * n) / m), k);
+    return (1 - Math.exp((-k * n) / m)) ** k;
   }
 
   /**

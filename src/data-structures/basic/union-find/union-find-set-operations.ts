@@ -7,7 +7,7 @@
  * @module algorithms/unionFindSetOperations
  */
 
-import { UnionFindNode, UnionFindStats } from "./union-find-types";
+import type { UnionFindNode, UnionFindStats } from "./union-find-types";
 
 /**
  * Helper that answers set-membership and size queries over a union-find node array.

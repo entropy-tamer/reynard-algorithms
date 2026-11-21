@@ -6,17 +6,17 @@
  */
 
 import {
-  HPAConfig,
-  Cluster,
-  GridCell,
-  ClusterGenerationOptions,
-  ClusterGenerationResult,
-  EntranceDetectionOptions,
-  EntranceDetectionResult,
-  Point,
+  type HPAConfig,
+  type Cluster,
+  type GridCell,
+  type ClusterGenerationOptions,
+  type ClusterGenerationResult,
+  type EntranceDetectionOptions,
+  type EntranceDetectionResult,
+  type Point,
   CellType,
   ClusterType,
-  Entrance
+  type Entrance
 } from './hpa-star-types';
 
 /**

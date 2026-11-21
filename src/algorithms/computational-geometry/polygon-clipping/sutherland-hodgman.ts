@@ -3,7 +3,7 @@
  * @description Implements the Sutherland-Hodgman polygon clipping algorithm.
  */
 
-import {
+import type {
   ClipResult,
   ClippingPlane,
   ClippingStats,

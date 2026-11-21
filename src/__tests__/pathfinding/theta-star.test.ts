@@ -286,10 +286,12 @@ describe("ThetaStar", () => {
       const goal: Point = { x: 9, y: 9 };
 
       thetaStar.findPath(grid, width, height, start, goal);
+      expect(thetaStar.getCacheStats().pathCacheSize).toBeGreaterThan(0);
+
       thetaStar.clearCache();
 
-      // Cache should be cleared
-      expect(true).toBe(true); // Placeholder assertion
+      expect(thetaStar.getCacheStats().pathCacheSize).toBe(0);
+      expect(thetaStar.getCacheStats().lineOfSightCacheSize).toBe(0);
     });
   });
 

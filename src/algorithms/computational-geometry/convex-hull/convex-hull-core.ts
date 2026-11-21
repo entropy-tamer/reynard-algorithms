@@ -3,7 +3,7 @@
  * @description Implements multiple Convex Hull algorithms including Graham Scan, Jarvis March, and QuickHull.
  */
 
-import {
+import type {
   ConvexHullAlgorithm,
   ConvexHullConfig,
   ConvexHullResult,

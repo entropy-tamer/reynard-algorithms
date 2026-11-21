@@ -4,8 +4,8 @@
  */
 
 import { DelaunayTriangulation } from "../delaunay/delaunay-core";
-import { Point, Triangle, Edge } from "../delaunay/delaunay-types";
-import {
+import type { Point, Triangle, Edge } from "../delaunay/delaunay-types";
+import type {
   VoronoiCell,
   VoronoiEdge,
   VoronoiVertex,
@@ -205,7 +205,7 @@ export class VoronoiDiagram {
 
     const round = (value: number) => {
       return (
-        Math.round(value * Math.pow(10, serializationOptions.precision)) / Math.pow(10, serializationOptions.precision)
+        Math.round(value * 10 ** serializationOptions.precision) / 10 ** serializationOptions.precision
       );
     };
 

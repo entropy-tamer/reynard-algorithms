@@ -4,7 +4,7 @@
  * @module algorithms/spatialHashUtils
  */
 
-import { SpatialObject } from "./spatial-hash-types";
+import type { SpatialObject } from "./spatial-hash-types";
 import { SpatialHash } from "./spatial-hash-core";
 import type { SpatialDataType } from "../../../core/types/spatial-types";
 

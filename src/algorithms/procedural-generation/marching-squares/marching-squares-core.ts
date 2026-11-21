@@ -4,7 +4,7 @@
  * This is the refined LUT implementation with improved ambiguity resolution and performance.
  */
 
-import {
+import type {
   Contour,
   ContourAnalysis,
   ContourAnalysisOptions,

@@ -4,7 +4,7 @@
  * @description Implements Marching Squares algorithm for generating contours from 2D scalar fields.
  */
 
-import {
+import type {
   Contour,
   LineSegment,
   MarchingCell,

@@ -16,7 +16,7 @@ import type {
   KdTreeSerialization,
   KdTreeEventHandler,
 } from "./kdtree-types";
-import { KdTreeEventType } from "./kdtree-types";
+import type { KdTreeEventType } from "./kdtree-types";
 
 /**
  * Calculate tree statistics

@@ -21,7 +21,7 @@
  * @module algorithms/spatialStructures/quadtreeCore
  */
 
-import {
+import type {
   Point,
   Rectangle,
   QuadtreeData,

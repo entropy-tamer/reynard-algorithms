@@ -3,8 +3,8 @@
  * @description Utility functions for Voronoi diagram operations.
  */
 
-import { Point, Triangle } from "../delaunay/delaunay-types";
-import { LloydRelaxationOptions, LloydRelaxationResult, VoronoiCell, VoronoiConfig } from "./voronoi-types";
+import type { Point, Triangle } from "../delaunay/delaunay-types";
+import type { LloydRelaxationOptions, LloydRelaxationResult, VoronoiCell, VoronoiConfig } from "./voronoi-types";
 
 /**
  * Calculates the circumcenter of a triangle.

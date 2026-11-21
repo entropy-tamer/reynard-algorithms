@@ -9,7 +9,7 @@
 import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
 import { AlgorithmConfigManager } from "../../config/algorithm-config";
 import {
-  ConfigChangeEvent,
+  type ConfigChangeEvent,
   ImmutableConfigManager,
   addConfigChangeListener,
   getImmutableAlgorithmConfig,
@@ -17,7 +17,7 @@ import {
   removeConfigChangeListener,
   updateImmutableConfig,
 } from "../../config/immutable-config";
-import { BenchmarkReport, runBenchmark } from "../utils/benchmark-utils";
+import { type BenchmarkReport, runBenchmark } from "../utils/benchmark-utils";
 import { IssueStatus, verificationReportGenerator } from "../utils/verification-report";
 
 describe("Immutable Configuration System", () => {

@@ -21,7 +21,7 @@
  * @module algorithms/dataStructures/lruCacheCore
  */
 
-import {
+import type {
   LRUCacheNode,
   LRUCacheConfig,
   LRUCacheOptions,

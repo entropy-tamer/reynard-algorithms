@@ -5,7 +5,7 @@
  * Provides runtime inspection and policy updates for PAW integration.
  */
 
-import { AdaptiveMemoController, MemoTuningPolicy } from "./memo/adaptive-memo";
+import type { AdaptiveMemoController, MemoTuningPolicy } from "./memo/adaptive-memo";
 
 interface MemoEntry {
   name: string;

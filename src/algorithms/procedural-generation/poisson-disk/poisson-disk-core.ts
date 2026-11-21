@@ -3,7 +3,7 @@
  * @description Implements the Poisson Disk Sampling algorithm for high-quality point distribution.
  */
 
-import {
+import type {
   AdaptivePoissonDiskOptions,
   AdaptivePoissonDiskResult,
   ConstrainedPoissonDiskOptions,
@@ -983,7 +983,7 @@ export class PoissonDisk {
   private calculateCoverage2D(points: Point2D[], config: PoissonDiskConfig): number {
     if (points.length === 0) return 0;
     const totalArea = config.width! * config.height!;
-    const coveredArea = points.length * Math.PI * Math.pow(config.minDistance! / 2, 2);
+    const coveredArea = points.length * Math.PI * (config.minDistance! / 2) ** 2;
     return Math.min(100, (coveredArea / totalArea) * 100);
   }
 
@@ -996,7 +996,7 @@ export class PoissonDisk {
   private calculateCoverage3D(points: Point3D[], config: PoissonDiskConfig): number {
     if (points.length === 0) return 0;
     const totalVolume = config.width! * config.height! * config.depth!;
-    const coveredVolume = points.length * (4 / 3) * Math.PI * Math.pow(config.minDistance! / 2, 3);
+    const coveredVolume = points.length * (4 / 3) * Math.PI * (config.minDistance! / 2) ** 3;
     return Math.min(100, (coveredVolume / totalVolume) * 100);
   }
 
@@ -1123,7 +1123,7 @@ export class PoissonDisk {
 
     distances.sort((a, b) => a - b);
     const mean = distances.reduce((sum, d) => sum + d, 0) / distances.length;
-    const variance = distances.reduce((sum, d) => sum + Math.pow(d - mean, 2), 0) / distances.length;
+    const variance = distances.reduce((sum, d) => sum + (d - mean) ** 2, 0) / distances.length;
 
     return {
       minDistance: distances[0],
@@ -1149,7 +1149,7 @@ export class PoissonDisk {
   ): any {
     const totalArea = bounds.width * bounds.height * (bounds.depth || 1);
     const pointRadius = this.config.minDistance! / 2;
-    const coveredArea = points.length * Math.PI * Math.pow(pointRadius, 2) * (bounds.depth ? 4 / 3 : 1);
+    const coveredArea = points.length * Math.PI * pointRadius ** 2 * (bounds.depth ? 4 / 3 : 1);
 
     return {
       totalArea,
@@ -1224,9 +1224,9 @@ export class PoissonDisk {
 
     const densities = densityMap.flat();
     const mean = densities.reduce((sum, d) => sum + d, 0) / densities.length;
-    const variance = densities.reduce((sum, d) => sum + Math.pow(d - mean, 2), 0) / densities.length;
+    const variance = densities.reduce((sum, d) => sum + (d - mean) ** 2, 0) / densities.length;
     const skewness =
-      densities.reduce((sum, d) => sum + Math.pow((d - mean) / Math.sqrt(variance), 3), 0) / densities.length;
+      densities.reduce((sum, d) => sum + ((d - mean) / Math.sqrt(variance)) ** 3, 0) / densities.length;
 
     return {
       densityMap,

@@ -10,7 +10,7 @@
 import {
   createUnifiedValidationResult,
   createValidationMessage,
-  UnifiedValidationResult,
+  type UnifiedValidationResult,
   ValidationSeverity,
 } from "../../../core/types/validation-types";
 import type { FlowCell, FlowFieldValidationOptions, FlowFieldValidationResult, Point } from "./flow-field-types";

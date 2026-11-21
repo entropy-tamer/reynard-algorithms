@@ -2,7 +2,7 @@
  * @file Global utility functions for immutable configuration management
  */
 
-import { AlgorithmConfig, AlgorithmConfigManager } from "./algorithm-config";
+import { type AlgorithmConfig, AlgorithmConfigManager } from "./algorithm-config";
 import { ImmutableConfigManager } from "./immutable-config";
 import type { ImmutableConfigSnapshot, OptimizedCollisionConfig, ConfigChangeListener } from "./immutable-config-types";
 

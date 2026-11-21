@@ -9,7 +9,7 @@
 import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
 import { detectCollisions } from "../../optimized";
 import { SpatialCollisionOptimizer } from "../../algorithms/collision/optimization/spatial-collision-optimizer";
-import { runBenchmark, BenchmarkReport } from "../utils/benchmark-utils";
+import { runBenchmark, type BenchmarkReport } from "../utils/benchmark-utils";
 import { verificationReportGenerator, IssueStatus } from "../utils/verification-report";
 
 describe("Issue #6: Missing Input Validation", () => {
@@ -362,22 +362,28 @@ describe("Issue #6: Missing Input Validation", () => {
     });
 
     it("should fail fast on invalid inputs", async () => {
+      // Two elements are required: validateAABBs short-circuits arrays shorter
+      // than 2, so a single bad AABB would never reach validation.
       const invalidInputs = [
         null,
         undefined,
         "not an array",
-        [{ x: "invalid", y: 0, width: 10, height: 10 }],
-        [{ x: 0, y: 0, width: -10, height: 10 }],
+        [
+          { x: "invalid", y: 0, width: 10, height: 10 },
+          { x: 0, y: 0, width: 10, height: 10 },
+        ],
+        [
+          { x: 0, y: 0, width: -10, height: 10 },
+          { x: 0, y: 0, width: 10, height: 10 },
+        ],
       ];
 
+      let rejected = 0;
       for (const invalidInput of invalidInputs) {
         const startTime = performance.now();
 
-        try {
-          detectCollisions(invalidInput as any);
-        } catch (error) {
-          // Expected to throw
-        }
+        expect(() => detectCollisions(invalidInput as any)).toThrow();
+        rejected++;
 
         const endTime = performance.now();
         const duration = endTime - startTime;
@@ -385,6 +391,7 @@ describe("Issue #6: Missing Input Validation", () => {
         // Should fail fast (validation only, no heavy work); 10ms allows timer granularity and VM variance
         expect(duration).toBeLessThan(10);
       }
+      expect(rejected).toBe(invalidInputs.length);
     });
   });
 

@@ -6,7 +6,7 @@
  * and other artificial constructs with emergent complexity.
  */
 
-import { CellType, GenerationResult, LayerPattern, MaterialType, PatternConstraint, StructureCell, StructureConfig, StructureForgeOptions } from './structure-forge-types';
+import type { CellType, GenerationResult, LayerPattern, MaterialType, PatternConstraint, StructureCell, StructureConfig, StructureForgeOptions } from './structure-forge-types';
 
 export class StructureForge {
   private config: StructureConfig;
@@ -122,8 +122,8 @@ export class StructureForge {
       for (let x = 0; x < size; x++) {
         // Create room-like spaces with walls
         const distanceFromCenter = Math.sqrt(
-          Math.pow((x - size/2) / (size/2), 2) +
-          Math.pow((y - size/2) / (size/2), 2)
+          ((x - size/2) / (size/2)) ** 2 +
+          ((y - size/2) / (size/2)) ** 2
         );
 
         const isRoom = distanceFromCenter < 0.7 + this.random() * 0.2;
@@ -346,7 +346,7 @@ export class StructureForge {
 
       for (let y = 0; y < this.config.height; y++) {
         for (let x = 0; x < this.config.width; x++) {
-          const distance = Math.sqrt(Math.pow(x - centerX, 2) + Math.pow(y - centerY, 2));
+          const distance = Math.sqrt((x - centerX) ** 2 + (y - centerY) ** 2);
           if (distance > radius) {
             layers[z]![y]![x] = { type: 'air', material: 'void' };
           }

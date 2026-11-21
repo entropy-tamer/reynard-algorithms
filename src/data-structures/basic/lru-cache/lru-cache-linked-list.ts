@@ -7,7 +7,7 @@
  * @module algorithms/dataStructures/lruCacheLinkedList
  */
 
-import { LRUCacheNode } from "./lru-cache-types";
+import type { LRUCacheNode } from "./lru-cache-types";
 
 /**
  * Linked list operations for LRU cache
