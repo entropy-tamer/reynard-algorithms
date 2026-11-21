@@ -22,8 +22,10 @@ afterAll(() => {
 
 describe("generated fox sketch", () => {
     it("guards the source: the embedded hash matches the favicon on disk", () => {
-        const svg = join(root, "..", "..", "favicon.svg");
-        if (!existsSync(svg)) return; // the guard is meaningful where the source exists
+        // The source is vendored so a clean CI clone can regenerate exactly
+        // the same file; $HOME/favicon.svg is not part of this repository.
+        const svg = join(root, "fixtures", "favicon.svg");
+        expect(existsSync(svg), `missing fixture ${svg}`).toBe(true);
         const hash = createHash("sha256").update(readFileSync(svg)).digest("hex");
         expect(FOX_SKETCH_SOURCE_HASH).toBe(hash);
     });
@@ -53,7 +55,11 @@ describe("generated fox sketch", () => {
         const out = join(dir, "fox-sketch-paths.ts");
         const result = spawnSync(
             process.execPath,
-            [join(root, "scripts/generate-fox-sketch.mjs"), "--force", "--out", out],
+            [
+                join(root, "scripts/generate-fox-sketch.mjs"),
+                "--svg", join(root, "fixtures", "favicon.svg"),
+                "--force", "--out", out,
+            ],
             { encoding: "utf8" },
         );
         expect(result.status, result.stderr).toBe(0);

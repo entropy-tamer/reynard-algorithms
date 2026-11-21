@@ -18,7 +18,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
-import { dirname, join, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 
@@ -256,7 +256,7 @@ function main() {
     const out = `// GENERATED FILE -- DO NOT EDIT BY HAND.
 // Regenerate with: node scripts/generate-fox-sketch.mjs
 //
-// Source: ${opts.svg}
+// Source: ${relative(process.cwd(), opts.svg)}
 // Source SHA-256: ${sourceHash}
 // Generator version: ${GENERATOR_VERSION}
 // Sampling: target ${TARGET_SIZE}px, spacing ${SPACING}px, jitter amplitude

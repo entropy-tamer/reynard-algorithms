@@ -1,7 +1,7 @@
 // GENERATED FILE -- DO NOT EDIT BY HAND.
 // Regenerate with: node scripts/generate-fox-sketch.mjs
 //
-// Source: /home/kade/favicon.svg
+// Source: fixtures/favicon.svg
 // Source SHA-256: 1037cd524f20e9ce1fd0e04453290ec756848f31c612c242c54d968c667785d6
 // Generator version: 2
 // Sampling: target 34px, spacing 1.2px, jitter amplitude
