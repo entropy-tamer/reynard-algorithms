@@ -5,7 +5,7 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import { MemoryPool, PooledObject } from "../../utils/memory/memory-pool-core";
+import { MemoryPool, type PooledObject } from "../../utils/memory/memory-pool-core";
 import { createSpatialObjectPool, createAABBPool, globalPoolManager } from "../../utils/memory/memory-pool-utils";
 
 /**

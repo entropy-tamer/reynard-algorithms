@@ -533,7 +533,8 @@ describe("Segment Tree Data Structure", () => {
         });
 
         const startTime = performance.now();
-        const operationsPerformed = operation(benchmarkTree, arraySize);        const endTime = performance.now();
+        const operationsPerformed = operation(benchmarkTree, arraySize);
+        const endTime = performance.now();
 
         const executionTime = endTime - startTime;
         // A non-negative elapsed time cannot fail; assert that work happened.

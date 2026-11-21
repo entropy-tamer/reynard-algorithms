@@ -1,5 +1,10 @@
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach, afterAll } from "vitest";
 import { MemoryMonitor, MemoryLeakDetector } from "../../utils/memory/memory";
+
+// The whole `performance` global is replaced below, so restore the real one
+// when the file finishes. Otherwise a reused worker hands a `performance`
+// object with no `now` to the next suite (see `isolate: false` in vitest.config).
+const originalPerformance = global.performance;
 
 // Mock performance.memory
 const mockMemory = {
@@ -11,6 +16,10 @@ Object.defineProperty(global, "performance", {
     memory: mockMemory,
   },
   writable: true,
+});
+
+afterAll(() => {
+  (global as any).performance = originalPerformance;
 });
 
 describe("Memory Monitoring Extended", () => {

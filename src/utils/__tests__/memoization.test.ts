@@ -113,6 +113,13 @@ describe("Memoization Utilities", () => {
   });
 
   describe("MathMemo", () => {
+    // MathMemo holds module-level caches shared by every suite in a reused
+    // worker (isolate: false). Other suites warm those caches, so reset them
+    // here before asserting exact hit counts.
+    beforeEach(() => {
+      clearMathMemo();
+    });
+
     it("should provide predefined memoized mathematical functions", () => {
       expect(MathMemo.square(5)).toBe(25);
       expect(MathMemo.square(5)).toBe(25);
@@ -232,6 +239,8 @@ describe("Memoization Utilities", () => {
 
       // Cache should only have 2 entries
       expect(memoizedFn.stats.cacheSize).toBeLessThanOrEqual(2);
+      // All three distinct inputs must still reach the wrapped function.
+      expect(callCount).toBe(3);
     });
 
     it("should respect custom keyGenerator", () => {

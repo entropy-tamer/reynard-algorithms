@@ -442,11 +442,11 @@ export function profile(
   operation: string,
   options: { trackMemory?: boolean } = {}
 ): any {
-  return function(
+  return (
     _target: any,
     _propertyKey: string | symbol,
     descriptor: PropertyDescriptor
-  ): PropertyDescriptor | void {
+  ): PropertyDescriptor => {
     const originalMethod = descriptor.value;
     
     if (!originalMethod) {

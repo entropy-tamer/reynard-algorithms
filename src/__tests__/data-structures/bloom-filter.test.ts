@@ -502,7 +502,8 @@ describe("Bloom Filter Data Structure", () => {
         }
 
         const startTime = performance.now();
-        const operationsPerformed = operation(benchmarkFilter, elements);        const endTime = performance.now();
+        const operationsPerformed = operation(benchmarkFilter, elements);
+        const endTime = performance.now();
 
         const executionTime = endTime - startTime;
         // A non-negative elapsed time cannot fail; assert that work happened.

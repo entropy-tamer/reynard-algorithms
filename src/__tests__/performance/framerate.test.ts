@@ -1,5 +1,14 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach, afterAll } from "vitest";
 import { FrameRateMonitor } from "../../utils/performance/framerate";
+
+// These globals are replaced for the whole file. When workers are reused
+// (`isolate: false`) a file that leaves a partial `performance`/`Date` behind
+// poisons every later suite — `performance.now is not a function` and frozen
+// `Date.now()` are the visible symptoms. Save and restore the originals.
+const originalPerformance = global.performance;
+const originalRequestAnimationFrame = global.requestAnimationFrame;
+const originalCancelAnimationFrame = global.cancelAnimationFrame;
+const originalDate = global.Date;
 
 // Mock performance.now and requestAnimationFrame
 const mockPerformanceNow = vi.fn();
@@ -29,6 +38,13 @@ Object.defineProperty(global, "Date", {
     now: vi.fn(() => 1234567890),
   },
   writable: true,
+});
+
+afterAll(() => {
+  (global as any).performance = originalPerformance;
+  (global as any).requestAnimationFrame = originalRequestAnimationFrame;
+  (global as any).cancelAnimationFrame = originalCancelAnimationFrame;
+  (global as any).Date = originalDate;
 });
 
 describe("FrameRateMonitor", () => {

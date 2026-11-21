@@ -106,8 +106,8 @@ describe('PerformanceProfiler', () => {
         // Wait at least 5ms
       }
 
-      const duration1 = endTiming1();
-      const duration2 = endTiming2();
+      endTiming1();
+      endTiming2();
 
       const report = profiler.getPerformanceReport();
       const operation = report.operations.find((op: any) => op.name === 'test-operation');

@@ -8,14 +8,12 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { profiler } from '../hooks';
 import { MicroBenchmarkRunner } from '../micro-benchmarks';
 
-// Mock performance.now for consistent testing
-const mockPerformanceNow = vi.fn();
-Object.defineProperty(global, 'performance', {
-  value: {
-    now: mockPerformanceNow
-  },
-  writable: true
-});
+// Mock only `performance.now` for consistent timing. Replacing the whole
+// `performance` global (as this suite used to do) leaks a partial object into
+// every other suite that shares a worker when `isolate: false` is enabled, and
+// breaks vitest's own internal timing calls. Spy on the method and restore it
+// after each test instead.
+let mockPerformanceNow: ReturnType<typeof vi.spyOn>;
 
 // Mock process.env for environment testing
 const originalEnv = process.env;
@@ -23,7 +21,8 @@ const originalEnv = process.env;
 describe('Performance Profiling - Basic Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockPerformanceNow.mockClear();
+    mockPerformanceNow = vi.spyOn(performance, "now");
+    mockPerformanceNow.mockReset();
     let time = 0;
     mockPerformanceNow.mockImplementation(() => {
       time += 10; // Increment by 10ms each call
@@ -33,6 +32,7 @@ describe('Performance Profiling - Basic Tests', () => {
   });
 
   afterEach(() => {
+    mockPerformanceNow.mockRestore();
     process.env = originalEnv;
   });
 
