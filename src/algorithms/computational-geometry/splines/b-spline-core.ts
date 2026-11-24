@@ -315,7 +315,7 @@ export function evaluateBSplineFull(spline: BSpline, t: number): BSplineEvaluati
     point,
     tangent: normalizedTangent,
     normal,
-    curvature: isNaN(curvature) ? 0 : curvature,
+    curvature: Number.isNaN(curvature) ? 0 : curvature,
     basisValues,
   };
 }

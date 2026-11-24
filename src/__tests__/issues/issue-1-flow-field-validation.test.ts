@@ -237,6 +237,7 @@ describe("Issue #1: Flow Field Validation Logic Error", () => {
         { x: 1, y: 0, cost: 1, processed: true },
       ];
 
+      expect(integrationField).toHaveLength(flowFieldCells.length);
       const validation = flowField.validateFlowField(flowFieldCells, 2, 1);
 
       expect(validation.isValid).toBe(true);

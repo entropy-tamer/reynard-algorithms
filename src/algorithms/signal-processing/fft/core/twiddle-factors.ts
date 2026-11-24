@@ -147,7 +147,7 @@ export class TwiddleFactors {
    * @example
    */
   static getComplex(N: number, k: number): ComplexNumber {
-    const twiddle = this.get(N, k);
+    const twiddle = TwiddleFactors.get(N, k);
     return new ComplexNumber(twiddle.real, twiddle.imag);
   }
 
@@ -158,7 +158,7 @@ export class TwiddleFactors {
    * @example
    */
   static getArray(N: number, k: number): [number, number] {
-    const twiddle = this.get(N, k);
+    const twiddle = TwiddleFactors.get(N, k);
     return [twiddle.real, twiddle.imag];
   }
 
@@ -174,7 +174,7 @@ export class TwiddleFactors {
     const step = N / (1 << stage);
 
     for (let k = 0; k < step; k++) {
-      factors.push(this.get(N, k * (1 << stage)));
+      factors.push(TwiddleFactors.get(N, k * (1 << stage)));
     }
 
     return factors;

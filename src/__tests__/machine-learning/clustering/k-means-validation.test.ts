@@ -304,8 +304,8 @@ describe("K-Means Algorithm Validation", () => {
       result.centroids.forEach((centroid) => {
         expect(typeof centroid.x).toBe("number");
         expect(typeof centroid.y).toBe("number");
-        expect(isFinite(centroid.x)).toBe(true);
-        expect(isFinite(centroid.y)).toBe(true);
+        expect(Number.isFinite(centroid.x)).toBe(true);
+        expect(Number.isFinite(centroid.y)).toBe(true);
       });
 
       // Clusters should match labels

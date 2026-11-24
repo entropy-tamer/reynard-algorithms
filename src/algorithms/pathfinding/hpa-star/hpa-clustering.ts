@@ -58,7 +58,7 @@ export class HPAClustering {
           const clusterWidth = Math.min(clusterSize, width - x);
           const clusterHeight = Math.min(clusterSize, height - y);
 
-          const cluster = this.createCluster(grid, x, y, clusterWidth, clusterHeight, width, height, clusters.length);
+          const cluster = HPAClustering.createCluster(grid, x, y, clusterWidth, clusterHeight, width, height, clusters.length);
 
           if (cluster) {
             clusters.push(cluster);
@@ -67,14 +67,14 @@ export class HPAClustering {
       }
 
       // Post-process clusters
-      const processedClusters = this.postProcessClusters(clusters, clusterOptions);
+      const processedClusters = HPAClustering.postProcessClusters(clusters, clusterOptions);
 
       // Detect entrances
-      const entranceResult = this.detectEntrances(processedClusters, grid, config, {});
+      const entranceResult = HPAClustering.detectEntrances(processedClusters, grid, config, {});
       const entrances = entranceResult.entrances;
 
       // Update clusters with entrances
-      const finalClusters = this.updateClustersWithEntrances(processedClusters, entrances);
+      const finalClusters = HPAClustering.updateClustersWithEntrances(processedClusters, entrances);
 
       const endTime = performance.now();
       const generationTime = endTime - startTime;
@@ -85,7 +85,7 @@ export class HPAClustering {
         stats: {
           clustersCreated: finalClusters.length,
           entrancesFound: entrances.length,
-          averageClusterSize: this.calculateAverageClusterSize(finalClusters),
+          averageClusterSize: HPAClustering.calculateAverageClusterSize(finalClusters),
           generationTime,
         },
       };
@@ -192,12 +192,12 @@ export class HPAClustering {
 
     // Merge small clusters if requested
     if (options.mergeSmallClusters) {
-      processedClusters = this.mergeSmallClusters(processedClusters, options);
+      processedClusters = HPAClustering.mergeSmallClusters(processedClusters, options);
     }
 
     // Apply adaptive sizing if requested
     if (options.useAdaptiveSizing) {
-      processedClusters = this.applyAdaptiveSizing(processedClusters, options);
+      processedClusters = HPAClustering.applyAdaptiveSizing(processedClusters, options);
     }
 
     return processedClusters;
@@ -223,10 +223,10 @@ export class HPAClustering {
 
       if (walkableCells < options.smallClusterThreshold) {
         // Find best neighbor to merge with
-        const bestNeighbor = this.findBestMergeNeighbor(cluster, clusters, processed);
+        const bestNeighbor = HPAClustering.findBestMergeNeighbor(cluster, clusters, processed);
 
         if (bestNeighbor) {
-          const mergedCluster = this.mergeClusters(cluster, bestNeighbor);
+          const mergedCluster = HPAClustering.mergeClusters(cluster, bestNeighbor);
           mergedClusters.push(mergedCluster);
           processed.add(cluster.id);
           processed.add(bestNeighbor.id);
@@ -260,8 +260,8 @@ export class HPAClustering {
         continue;
       }
 
-      if (this.areClustersAdjacent(cluster, other)) {
-        const score = this.calculateMergeScore(cluster, other);
+      if (HPAClustering.areClustersAdjacent(cluster, other)) {
+        const score = HPAClustering.calculateMergeScore(cluster, other);
         if (score > bestScore) {
           bestScore = score;
           bestNeighbor = other;
@@ -404,8 +404,8 @@ export class HPAClustering {
             continue;
           }
 
-          if (this.areClustersAdjacent(cluster1, cluster2)) {
-            const clusterEntrances = this.findEntrancesBetweenClusters(
+          if (HPAClustering.areClustersAdjacent(cluster1, cluster2)) {
+            const clusterEntrances = HPAClustering.findEntrancesBetweenClusters(
               cluster1,
               cluster2,
               grid,
@@ -474,17 +474,17 @@ export class HPAClustering {
     let entranceIndex = startIndex;
 
     // Find the boundary between clusters
-    const boundary = this.findClusterBoundary(cluster1, cluster2);
+    const boundary = HPAClustering.findClusterBoundary(cluster1, cluster2);
 
     if (!boundary) {
       return entrances;
     }
 
     // Find walkable cells along the boundary
-    const walkableBoundaryCells = this.findWalkableBoundaryCells(boundary, grid, config.width, config.height);
+    const walkableBoundaryCells = HPAClustering.findWalkableBoundaryCells(boundary, grid, config.width, config.height);
 
     // Group walkable cells into entrance segments
-    const entranceSegments = this.groupIntoEntranceSegments(walkableBoundaryCells, options);
+    const entranceSegments = HPAClustering.groupIntoEntranceSegments(walkableBoundaryCells, options);
 
     // Create entrances from segments
     for (const segment of entranceSegments) {
@@ -497,8 +497,8 @@ export class HPAClustering {
             y: firstPoint.y,
             clusterId: cluster1.id,
             connectedClusters: [cluster1.id, cluster2.id],
-            isBorder: this.isEntranceOnBorder(segment, config),
-            cost: this.calculateEntranceCost(segment),
+            isBorder: HPAClustering.isEntranceOnBorder(segment, config),
+            cost: HPAClustering.calculateEntranceCost(segment),
           };
 
           entrances.push(entrance);

@@ -7,7 +7,7 @@
  * @module algorithms/benchmarkUtils
  */
 
-import { performance } from "perf_hooks";
+import { performance } from "node:perf_hooks";
 import { getAlgorithmConfig } from "../../config/algorithm-config";
 
 /**
@@ -450,8 +450,8 @@ export class BenchmarkUtils {
    * @example
    */
   public saveReport(report: BenchmarkReport, filePath: string): void {
-    const fs = require("fs");
-    const path = require("path");
+    const fs = require("node:fs");
+    const path = require("node:path");
 
     const dir = path.dirname(filePath);
     if (!fs.existsSync(dir)) {
@@ -468,7 +468,7 @@ export class BenchmarkUtils {
    */
   public loadReport(filePath: string): BenchmarkReport | null {
     try {
-      const fs = require("fs");
+      const fs = require("node:fs");
       const data = fs.readFileSync(filePath, "utf-8");
       return JSON.parse(data) as BenchmarkReport;
     } catch (error) {

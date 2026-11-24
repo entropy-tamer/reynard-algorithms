@@ -5,7 +5,7 @@
  * with our FFT implementations. Generates validation reports.
  */
 
-import { readFileSync } from "fs";
+import { readFileSync } from "node:fs";
 import { FFTFactory } from "../../../../algorithms/signal-processing/fft/fft-factory";
 import { FFTAlgorithm, type FFTResult, type FFTConfig } from "../../../../algorithms/signal-processing/fft/fft-types";
 
@@ -261,8 +261,8 @@ export function runValidationSuite(
   const failed = results.length - passed;
 
   // Calculate summary statistics
-  const maxErrors = results.map((r) => r.maxError).filter((e) => isFinite(e));
-  const meanErrors = results.map((r) => r.meanError).filter((e) => isFinite(e));
+  const maxErrors = results.map((r) => r.maxError).filter((e) => Number.isFinite(e));
+  const meanErrors = results.map((r) => r.meanError).filter((e) => Number.isFinite(e));
 
   const averageMaxError = maxErrors.length > 0 ? maxErrors.reduce((a, b) => a + b, 0) / maxErrors.length : 0;
   const averageMeanError = meanErrors.length > 0 ? meanErrors.reduce((a, b) => a + b, 0) / meanErrors.length : 0;

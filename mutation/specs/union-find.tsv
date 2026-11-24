@@ -1,0 +1,11 @@
+# repo: /home/kade/reynard/algorithms
+# runner: vitest
+# Registry entry: union-find. Target suite: src/__tests__/union-find/union-find.test.ts
+# Run: bash ~/src/foxtools/testkit/mutate-check.sh ~/reynard/algorithms \
+#        mutation/specs/union-find.tsv -- src/__tests__/union-find/union-find.test.ts
+#
+# The canary is a deliberately impossible `connected` result. It must turn the
+# first UnionFind test red; if it does not, the harness is blind (UNSOUND).
+canary-connected-always-true	src/data-structures/basic/union-find/union-find-core.ts	return this.find(x) === this.find(y);	return true;
+getsetsize-hardcoded-one	src/data-structures/basic/union-find/union-find-core.ts	return this.setOps.getSetSize(x);	return 1;
+clone-shares-node-array	src/data-structures/basic/union-find/union-find-core.ts	clone.nodes = this.nodes.map(node => ({ ...node }));	clone.nodes = this.nodes;

@@ -267,9 +267,10 @@ function createLeafNode(primitives: Primitive[]): BVHNode {
  * @returns Centroid coordinates
  * @example
  */
-function getPrimitiveCentroid(_primitive: Primitive): [number, number, number] {
-  // Simplified centroid calculation - would need proper implementation based on primitive type
-  return [0, 0, 0];
+function getPrimitiveCentroid(primitive: Primitive): [number, number, number] {
+  // Every primitive carries an AABB; its center is the split point used by SAH.
+  const { min, max } = primitive.bounds;
+  return [(min.x + max.x) / 2, (min.y + max.y) / 2, (min.z + max.z) / 2];
 }
 
 /**
@@ -319,11 +320,11 @@ function calculateBounds(primitives: Primitive[]): { min: [number, number, numbe
  * @returns AABB bounds
  * @example
  */
-function getPrimitiveBounds(_primitive: Primitive): { min: [number, number, number]; max: [number, number, number] } {
-  // Simplified implementation - would need proper bounds calculation based on primitive type
+function getPrimitiveBounds(primitive: Primitive): { min: [number, number, number]; max: [number, number, number] } {
+  const { min, max } = primitive.bounds;
   return {
-    min: [0, 0, 0],
-    max: [1, 1, 1],
+    min: [min.x, min.y, min.z],
+    max: [max.x, max.y, max.z],
   };
 }
 

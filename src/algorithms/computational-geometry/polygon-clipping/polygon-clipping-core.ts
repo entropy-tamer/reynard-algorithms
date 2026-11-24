@@ -224,7 +224,7 @@ export class PolygonClipping {
       const vertex = polygon.vertices[i];
       if (!vertex || typeof vertex.x !== "number" || typeof vertex.y !== "number") {
         errors.push(`${name} polygon vertex ${i} must have x and y properties`);
-      } else if (!isFinite(vertex.x) || !isFinite(vertex.y)) {
+      } else if (!Number.isFinite(vertex.x) || !Number.isFinite(vertex.y)) {
         errors.push(`${name} polygon vertex ${i} must have finite coordinates`);
       }
     }

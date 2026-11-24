@@ -447,7 +447,7 @@ export class OBB {
 
     // Check axes
     if (validationOptions.checkAxes) {
-      if (!obb.axes || obb.axes.length !== 2) {
+      if (obb.axes?.length !== 2) {
         errors.push("OBB must have exactly 2 axes");
       } else {
         // Check unit length

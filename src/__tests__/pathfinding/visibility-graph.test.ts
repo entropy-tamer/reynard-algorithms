@@ -68,11 +68,14 @@ function expectPathHasLineOfSight(path: Point[], obstacles: Obstacle[], tol = 1e
 
 describe("VisibilityGraph constructor", () => {
   it("accepts empty config", () => {
-    expect(() => new VisibilityGraph()).not.toThrow();
+    const vg = new VisibilityGraph();
+    expect((vg as any).config.tolerance).toBe(1e-6);
+    expect(vg.build([]).vertices).toEqual([]);
   });
 
   it("accepts custom tolerance", () => {
-    expect(() => new VisibilityGraph({ tolerance: 1e-3 })).not.toThrow();
+    const vg = new VisibilityGraph({ tolerance: 1e-3 });
+    expect((vg as any).config.tolerance).toBe(1e-3);
   });
 });
 
@@ -319,6 +322,8 @@ describe("VisibilityGraph occlusion", () => {
     // degenerate polygons do not throw. Pin current tolerance of garbage-in:
     const vg = new VisibilityGraph({ validateInput: true });
     const degenerate: Obstacle = { vertices: [{ x: 0, y: 0 }] };
-    expect(() => vg.build([degenerate])).not.toThrow();
+    const result = vg.build([degenerate]);
+    expect(result.vertices).toEqual([{ x: 0, y: 0 }]);
+    expect(result.edges).toHaveLength(0);
   });
 });

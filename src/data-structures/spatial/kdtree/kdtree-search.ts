@@ -280,7 +280,7 @@ function isValidPoint(point: Point, dimensions: number): boolean {
 
   for (const key of keys) {
     const value = point[key];
-    if (typeof value !== "number" || !isFinite(value)) {
+    if (typeof value !== "number" || !Number.isFinite(value)) {
       return false;
     }
   }

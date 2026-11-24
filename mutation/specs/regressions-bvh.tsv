@@ -1,0 +1,12 @@
+# repo: /home/kade/reynard/algorithms
+# runner: vitest
+# Regression guard: BVH helpers must use real primitive bounds.
+# Target: src/__tests__/signal-processing/transforms-bvh.test.ts
+canary-bvh-ray-never-hits	src/data-structures/spatial/bvh/bvh-query.ts	function rayIntersectsAABB(ray: Ray3D, aabb: AABB): boolean {	function rayIntersectsAABB(ray: Ray3D, aabb: AABB): boolean { return false;
+bvh-primitive-bounds-hardcoded	src/data-structures/spatial/bvh/bvh-build.ts	  const { min, max } = primitive.bounds;	  const min = { x: 0, y: 0, z: 0 }, max = { x: 0, y: 0, z: 0 };
+bvh-aabb-primitive-never-hits	src/data-structures/spatial/bvh/bvh-query.ts	const bounds: AABB = primitive.bounds;	const bounds: AABB = { min: { x: 0, y: 0, z: 0 }, max: { x: 0, y: 0, z: 0 } };
+# KNOWN SURVIVOR: bvh-centroid-hardcoded (`return [0,0,0]` for the SAH split
+# point) changes tree shape but not query results: a bad split falls back to a
+# leaf, and leaf bounds still contain every primitive. It is a performance
+# defect, not a correctness one, so no fixture can kill it through the public
+# query API. Kept out of the active rows; recorded here so it is not rediscovered.

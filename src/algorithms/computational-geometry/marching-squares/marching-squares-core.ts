@@ -219,7 +219,7 @@ export class MarchingSquares {
     // Check for valid numbers
     for (const row of scalarField) {
       for (const value of row) {
-        if (typeof value !== "number" || isNaN(value)) {
+        if (typeof value !== "number" || Number.isNaN(value)) {
           throw new Error("All values in scalar field must be valid numbers");
         }
       }

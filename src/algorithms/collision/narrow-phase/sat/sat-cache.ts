@@ -98,8 +98,12 @@ export class SATCache {
    * @example
    */
   getCacheKey(polygon1: ConvexPolygon, polygon2: ConvexPolygon): string {
-    const id1 = polygon1.id || this.getPolygonHash(polygon1);
-    const id2 = polygon2.id || this.getPolygonHash(polygon2);
+    // A caller-supplied `id` is not a geometry identity: two unrelated
+    // polygons both named "a" used to share one cache entry and the second
+    // test received the first one's collision result. Always include the
+    // vertex geometry, even when ids are present.
+    const id1 = `${polygon1.id ?? ""}:${this.getPolygonHash(polygon1)}`;
+    const id2 = `${polygon2.id ?? ""}:${this.getPolygonHash(polygon2)}`;
     return `${id1}-${id2}`;
   }
 
@@ -112,9 +116,7 @@ export class SATCache {
    * @example
    */
   getAxisCacheKey(polygon1: ConvexPolygon, polygon2: ConvexPolygon): string {
-    const id1 = polygon1.id || this.getPolygonHash(polygon1);
-    const id2 = polygon2.id || this.getPolygonHash(polygon2);
-    return `axes-${id1}-${id2}`;
+    return `axes-${this.getCacheKey(polygon1, polygon2)}`;
   }
 
   /**
@@ -125,7 +127,9 @@ export class SATCache {
    * @example
    */
   private getPolygonHash(polygon: ConvexPolygon): string {
-    return `${polygon.vertices.length}-${polygon.center.x}-${polygon.center.y}`;
+    // Center plus vertex count is not enough: differently sized squares share
+    // a center and would alias. Hash every vertex.
+    return polygon.vertices.map(vertex => `${vertex.x},${vertex.y}`).join(";");
   }
 
   /**
