@@ -1,0 +1,6 @@
+# repo: /home/kade/reynard/algorithms
+# runner: vitest
+# Regression guard: LRUCache.clear() must reset hit counters.
+# Target: src/utils/__tests__/memoization.test.ts
+canary-memo-returns-zero	src/utils/memoization.ts	const result = fn(...args);	const result = 0 as any;
+lru-clear-keeps-stats	src/data-structures/basic/lru-cache/lru-cache-core.ts	this.statsManager.reset();	// stats left intact

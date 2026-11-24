@@ -173,12 +173,20 @@ function quickSort3WayRecursive<T>(
 ): void {
   if (high <= low) return;
 
-  const pivotIdx = low + Math.floor(Math.random() * (high - low + 1));
-  const pivot = arr[pivotIdx];
+  // Dutch national flag partition requires the pivot to sit at `low` before
+  // scanning starts. Picking a random pivot without moving it left element
+  // `low` unexamined and corrupted the three-way split on duplicate-heavy
+  // input. Use the deterministic midpoint so results are reproducible.
+  const pivotIdx = low + Math.floor((high - low) / 2);
+  if (pivotIdx !== low) {
+    tracker.recordSwap([low, pivotIdx], `Moving pivot from ${pivotIdx} to ${low}`);
+    [arr[low], arr[pivotIdx]] = [arr[pivotIdx]!, arr[low]!];
+  }
+  const pivot = arr[low];
   if (pivot === undefined) return;
 
   let lt = low; // arr[low..lt-1] < pivot
-  let i = low + 1; // arr[lt..i-1] == pivot
+  let i = low; // arr[lt..i-1] == pivot
   let gt = high; // arr[gt+1..high] > pivot
 
   while (i <= gt) {

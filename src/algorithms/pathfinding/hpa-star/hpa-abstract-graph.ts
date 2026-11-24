@@ -46,10 +46,10 @@ export class HPAAbstractGraph {
 
     try {
       // Create abstract nodes
-      const nodes = this.createAbstractNodes(clusters, entrances);
+      const nodes = HPAAbstractGraph.createAbstractNodes(clusters, entrances);
 
       // Create abstract edges
-      const edges = this.createAbstractEdges(nodes, clusters, entrances, config, graphOptions);
+      const edges = HPAAbstractGraph.createAbstractEdges(nodes, clusters, entrances, config, graphOptions);
 
       const endTime = performance.now();
       const constructionTime = endTime - startTime;
@@ -158,25 +158,25 @@ export class HPAAbstractGraph {
 
     // Create inter-cluster edges
     if (options.useInterClusterEdges) {
-      const interClusterEdges = this.createInterClusterEdges(nodes, clusters, entrances, config, options);
+      const interClusterEdges = HPAAbstractGraph.createInterClusterEdges(nodes, clusters, entrances, config, options);
       edges.push(...interClusterEdges);
     }
 
     // Create intra-cluster edges
     if (options.useIntraClusterEdges) {
-      const intraClusterEdges = this.createIntraClusterEdges(nodes, clusters, config, options);
+      const intraClusterEdges = HPAAbstractGraph.createIntraClusterEdges(nodes, clusters, config, options);
       edges.push(...intraClusterEdges);
     }
 
     // Create entrance edges
     if (options.useEntranceEdges) {
-      const entranceEdges = this.createEntranceEdges(nodes, entrances, config, options);
+      const entranceEdges = HPAAbstractGraph.createEntranceEdges(nodes, entrances, config, options);
       edges.push(...entranceEdges);
     }
 
     // Create direct cluster connections
     if (options.useDirectClusterConnections) {
-      const directEdges = this.createDirectClusterEdges(nodes, clusters, config, options);
+      const directEdges = HPAAbstractGraph.createDirectClusterEdges(nodes, clusters, config, options);
       edges.push(...directEdges);
     }
 
@@ -222,7 +222,7 @@ export class HPAAbstractGraph {
           const node2 = nodes.find(n => n.clusterId === cluster2.id);
 
           if (node1 && node2) {
-            const cost = this.calculateInterClusterCost(cluster1, cluster2, connectingEntrances, config);
+            const cost = HPAAbstractGraph.calculateInterClusterCost(cluster1, cluster2, connectingEntrances, config);
 
             if (cost <= options.maxEdgeCost) {
               const edge: AbstractEdge = {
@@ -230,7 +230,7 @@ export class HPAAbstractGraph {
                 to: node2.id,
                 cost,
                 isInterCluster: true,
-                path: this.generateInterClusterPath(cluster1, cluster2, connectingEntrances),
+                path: HPAAbstractGraph.generateInterClusterPath(cluster1, cluster2, connectingEntrances),
               };
               edges.push(edge);
             }
@@ -267,7 +267,7 @@ export class HPAAbstractGraph {
       for (const entrance of cluster.entrances) {
         const entranceNode = nodes.find(n => n.entranceId === entrance.id);
         if (entranceNode) {
-          const cost = this.calculateIntraClusterCost(cluster, entrance, config);
+          const cost = HPAAbstractGraph.calculateIntraClusterCost(cluster, entrance, config);
 
           if (cost <= options.maxEdgeCost) {
             const edge: AbstractEdge = {
@@ -276,7 +276,7 @@ export class HPAAbstractGraph {
               cost,
               isInterCluster: false,
               clusterId: cluster.id,
-              path: this.generateIntraClusterPath(cluster, entrance),
+              path: HPAAbstractGraph.generateIntraClusterPath(cluster, entrance),
             };
             edges.push(edge);
           }
@@ -321,7 +321,7 @@ export class HPAAbstractGraph {
           const node2 = nodes.find(n => n.entranceId === entrance2.id);
 
           if (node1 && node2) {
-            const cost = this.calculateEntranceCost(entrance1, entrance2, config);
+            const cost = HPAAbstractGraph.calculateEntranceCost(entrance1, entrance2, config);
 
             if (cost <= options.maxEdgeCost) {
               const commonClusterId = commonClusters[0];
@@ -332,7 +332,7 @@ export class HPAAbstractGraph {
                   cost,
                   isInterCluster: false,
                   clusterId: commonClusterId,
-                  path: this.generateEntrancePath(entrance1, entrance2),
+                  path: HPAAbstractGraph.generateEntrancePath(entrance1, entrance2),
                 };
                 edges.push(edge);
               }
@@ -372,12 +372,12 @@ export class HPAAbstractGraph {
         }
 
         // Check if clusters are adjacent
-        if (this.areClustersAdjacent(cluster1, cluster2)) {
+        if (HPAAbstractGraph.areClustersAdjacent(cluster1, cluster2)) {
           const node1 = nodes.find(n => n.clusterId === cluster1.id);
           const node2 = nodes.find(n => n.clusterId === cluster2.id);
 
           if (node1 && node2) {
-            const cost = this.calculateDirectClusterCost(cluster1, cluster2, config);
+            const cost = HPAAbstractGraph.calculateDirectClusterCost(cluster1, cluster2, config);
 
             if (cost <= options.maxEdgeCost) {
               const edge: AbstractEdge = {
@@ -385,7 +385,7 @@ export class HPAAbstractGraph {
                 to: node2.id,
                 cost,
                 isInterCluster: true,
-                path: this.generateDirectClusterPath(cluster1, cluster2),
+                path: HPAAbstractGraph.generateDirectClusterPath(cluster1, cluster2),
               };
               edges.push(edge);
             }

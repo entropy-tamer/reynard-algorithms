@@ -95,7 +95,7 @@ export class BitReversal {
    * @example
    */
   static getPermutation(size: number): Uint32Array {
-    if (!this.isPowerOf2(size)) {
+    if (!BitReversal.isPowerOf2(size)) {
       throw new Error(`Bit reversal requires power-of-2 size, got ${size}`);
     }
     return bitReversalCache.get(size);
@@ -165,7 +165,7 @@ export class BitReversal {
    */
   static nextPowerOf2(n: number): number {
     if (n <= 0) return 1;
-    if (this.isPowerOf2(n)) return n;
+    if (BitReversal.isPowerOf2(n)) return n;
 
     let power = 1;
     while (power < n) {
@@ -181,7 +181,7 @@ export class BitReversal {
    */
   static prevPowerOf2(n: number): number {
     if (n <= 1) return 1;
-    if (this.isPowerOf2(n)) return n;
+    if (BitReversal.isPowerOf2(n)) return n;
 
     let power = 1;
     while (power < n) {
@@ -196,7 +196,7 @@ export class BitReversal {
    * @example
    */
   static isPowerOf4(n: number): boolean {
-    return n > 0 && this.isPowerOf2(n) && (n & 0xaaaaaaaa) === 0;
+    return n > 0 && BitReversal.isPowerOf2(n) && (n & 0xaaaaaaaa) === 0;
   }
 
   /**
@@ -205,7 +205,7 @@ export class BitReversal {
    * @example
    */
   static log2(n: number): number {
-    if (!this.isPowerOf2(n)) {
+    if (!BitReversal.isPowerOf2(n)) {
       throw new Error(`log2 requires power-of-2 input, got ${n}`);
     }
 

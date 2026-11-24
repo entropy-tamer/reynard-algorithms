@@ -1,0 +1,7 @@
+# repo: /home/kade/reynard/algorithms
+# runner: vitest
+# Regression guard: the SAT cache key must include geometry, not just ids.
+# Target: src/__tests__/collision/narrow-phase-primitives.test.ts
+canary-sat-never-collides	src/algorithms/collision/narrow-phase/sat/sat-core.ts	const result = performSATTest(polygon1, polygon2, this.config);	const result = performSATTest(polygon1, polygon2, this.config); result.colliding = false;
+sat-cache-id-only	src/algorithms/collision/narrow-phase/sat/sat-cache.ts	const id1 = `${polygon1.id ?? ""}:${this.getPolygonHash(polygon1)}`;	const id1 = `${polygon1.id ?? ""}`;
+sat-cache-weak-hash	src/algorithms/collision/narrow-phase/sat/sat-cache.ts	return polygon.vertices.map(vertex => `${vertex.x},${vertex.y}`).join(";");	return `${polygon.vertices.length}-${polygon.center.x}-${polygon.center.y}`;

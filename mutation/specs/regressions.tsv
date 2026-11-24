@@ -1,0 +1,9 @@
+# repo: /home/kade/reynard/algorithms
+# runner: vitest
+# Regression guards for quickSort3Way. The original defect needed two lines to
+# reproduce (a random pivot plus scanning from low+1), which a single TSV row
+# cannot express; these rows guard the recursion instead.
+# Target: src/__tests__/sorting/sorters.test.ts
+canary-quicksort-noop	src/algorithms/sorting/classical/quick-sort.ts	quickSort3WayRecursive(arr, 0, arr.length - 1, comparator, tracker);	quickSort3WayRecursive(arr, 0, -1, comparator, tracker);
+quicksort3way-skip-recursion	src/algorithms/sorting/classical/quick-sort.ts	quickSort3WayRecursive(arr, gt + 1, high, comparator, tracker);	// right partition skipped
+quicksort3way-skip-left	src/algorithms/sorting/classical/quick-sort.ts	quickSort3WayRecursive(arr, low, lt - 1, comparator, tracker);	// left partition skipped

@@ -249,7 +249,7 @@ export function isGridFullyCollapsed(grid: Cell[][][], width: number, height: nu
     for (let y = 0; y < height; y++) {
       for (let x = 0; x < width; x++) {
         const cell = grid[z]?.[y]?.[x];
-        if (!cell || !cell.isCollapsed) {
+        if (!cell?.isCollapsed) {
           return false;
         }
       }

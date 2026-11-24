@@ -476,8 +476,8 @@ function isValidInterval(interval: Interval): boolean {
     typeof interval.start === "number" &&
     typeof interval.end === "number" &&
     interval.start <= interval.end &&
-    isFinite(interval.start) &&
-    isFinite(interval.end)
+    Number.isFinite(interval.start) &&
+    Number.isFinite(interval.end)
   );
 }
 

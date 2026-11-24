@@ -150,7 +150,7 @@ describe("ReLUPolytopePartitioner", () => {
     );
   });
 
-  it("rejects resolutions that cannot describe a grid", () => {
+  it("flags boundary lines that do not cross the bounds", () => {
     const { min, max } = DEFAULT_RELU_POLYTOPE_CONFIG.bounds;
     const partitioner = new ReLUPolytopePartitioner({ seed: 42, numNeurons: 8 });
     const result = partitioner.partition(RESOLUTION);

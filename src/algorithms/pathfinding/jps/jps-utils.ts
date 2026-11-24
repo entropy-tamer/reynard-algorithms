@@ -41,7 +41,7 @@ export class JPSUtils {
    * @example
    */
   static getDirectionVector(direction: Direction): Vector {
-    const vector = this.DIRECTION_VECTORS[direction];
+    const vector = JPSUtils.DIRECTION_VECTORS[direction];
     if (!vector) {
       return { x: 0, y: 0 };
     }
@@ -55,10 +55,10 @@ export class JPSUtils {
    * @example
    */
   static getDirectionFromVector(vector: Vector): Direction {
-    const normalized = this.normalizeVector(vector);
+    const normalized = JPSUtils.normalizeVector(vector);
 
-    for (let i = 0; i < this.DIRECTION_VECTORS.length; i++) {
-      const dir = this.DIRECTION_VECTORS[i];
+    for (let i = 0; i < JPSUtils.DIRECTION_VECTORS.length; i++) {
+      const dir = JPSUtils.DIRECTION_VECTORS[i];
       if (dir && Math.abs(normalized.x - dir.x) < 1e-10 && Math.abs(normalized.y - dir.y) < 1e-10) {
         return i as Direction;
       }
@@ -158,7 +158,7 @@ export class JPSUtils {
    * @example
    */
   static isWalkable(grid: CellType[], point: Point, width: number, height: number): boolean {
-    if (!this.isWithinBounds(point, width, height)) {
+    if (!JPSUtils.isWithinBounds(point, width, height)) {
       return false;
     }
 
@@ -176,7 +176,7 @@ export class JPSUtils {
    * @example
    */
   static getCellType(grid: CellType[], point: Point, width: number, height: number): CellType {
-    if (!this.isWithinBounds(point, width, height)) {
+    if (!JPSUtils.isWithinBounds(point, width, height)) {
       return CellType.OBSTACLE;
     }
 
@@ -198,7 +198,7 @@ export class JPSUtils {
    * @example
    */
   static setCellType(grid: CellType[], point: Point, type: CellType, width: number, height: number): void {
-    if (this.isWithinBounds(point, width, height)) {
+    if (JPSUtils.isWithinBounds(point, width, height)) {
       const index = point.y * width + point.x;
       grid[index] = type;
     }
@@ -214,15 +214,15 @@ export class JPSUtils {
   static getValidDirections(movementType: MovementType, allowDiagonal: boolean): Direction[] {
     switch (movementType) {
       case MovementType.CARDINAL:
-        return this.CARDINAL_DIRECTIONS as Direction[];
+        return JPSUtils.CARDINAL_DIRECTIONS as Direction[];
       case MovementType.DIAGONAL:
-        return this.DIAGONAL_DIRECTIONS as Direction[];
+        return JPSUtils.DIAGONAL_DIRECTIONS as Direction[];
       case MovementType.ALL:
         return allowDiagonal
           ? Array.from({ length: 8 }, (_, i) => i as Direction)
-          : (this.CARDINAL_DIRECTIONS as Direction[]);
+          : (JPSUtils.CARDINAL_DIRECTIONS as Direction[]);
       default:
-        return this.CARDINAL_DIRECTIONS as Direction[];
+        return JPSUtils.CARDINAL_DIRECTIONS as Direction[];
     }
   }
 
@@ -233,7 +233,7 @@ export class JPSUtils {
    * @example
    */
   static isCardinalDirection(direction: Direction): boolean {
-    return this.CARDINAL_DIRECTIONS.includes(direction);
+    return JPSUtils.CARDINAL_DIRECTIONS.includes(direction);
   }
 
   /**
@@ -243,7 +243,7 @@ export class JPSUtils {
    * @example
    */
   static isDiagonalDirection(direction: Direction): boolean {
-    return this.DIAGONAL_DIRECTIONS.includes(direction);
+    return JPSUtils.DIAGONAL_DIRECTIONS.includes(direction);
   }
 
   /**
@@ -254,9 +254,9 @@ export class JPSUtils {
    * @example
    */
   static getMovementCost(direction: Direction, allowDiagonal: boolean): number {
-    if (this.isCardinalDirection(direction)) {
+    if (JPSUtils.isCardinalDirection(direction)) {
       return 1;
-    } else if (this.isDiagonalDirection(direction) && allowDiagonal) {
+    } else if (JPSUtils.isDiagonalDirection(direction) && allowDiagonal) {
       return Math.sqrt(2); // Diagonal cost
     }
     return Infinity; // Invalid movement
@@ -279,21 +279,21 @@ export class JPSUtils {
     width: number,
     height: number
   ): boolean {
-    const dir = this.getDirectionVector(direction);
+    const dir = JPSUtils.getDirectionVector(direction);
 
-    if (this.isCardinalDirection(direction)) {
+    if (JPSUtils.isCardinalDirection(direction)) {
       // For cardinal directions, check perpendicular directions
-      const perp1 = this.getPerpendicularDirection(direction, true);
-      const perp2 = this.getPerpendicularDirection(direction, false);
+      const perp1 = JPSUtils.getPerpendicularDirection(direction, true);
+      const perp2 = JPSUtils.getPerpendicularDirection(direction, false);
 
-      const perp1Vec = this.getDirectionVector(perp1);
-      const perp2Vec = this.getDirectionVector(perp2);
+      const perp1Vec = JPSUtils.getDirectionVector(perp1);
+      const perp2Vec = JPSUtils.getDirectionVector(perp2);
 
       const check1 = { x: point.x + perp1Vec.x, y: point.y + perp1Vec.y };
       const check2 = { x: point.x + perp2Vec.x, y: point.y + perp2Vec.y };
 
-      const blocked1 = !this.isWalkable(grid, check1, width, height);
-      const blocked2 = !this.isWalkable(grid, check2, width, height);
+      const blocked1 = !JPSUtils.isWalkable(grid, check1, width, height);
+      const blocked2 = !JPSUtils.isWalkable(grid, check2, width, height);
 
       if (blocked1 || blocked2) {
         // Check if there are walkable cells beyond the blocked ones
@@ -301,23 +301,23 @@ export class JPSUtils {
         const beyond2 = { x: check2.x + dir.x, y: check2.y + dir.y };
 
         return (
-          (blocked1 && this.isWalkable(grid, beyond1, width, height)) ||
-          (blocked2 && this.isWalkable(grid, beyond2, width, height))
+          (blocked1 && JPSUtils.isWalkable(grid, beyond1, width, height)) ||
+          (blocked2 && JPSUtils.isWalkable(grid, beyond2, width, height))
         );
       }
-    } else if (this.isDiagonalDirection(direction)) {
+    } else if (JPSUtils.isDiagonalDirection(direction)) {
       // For diagonal directions, check cardinal components
-      const cardinal1 = this.getCardinalComponent(direction, true);
-      const cardinal2 = this.getCardinalComponent(direction, false);
+      const cardinal1 = JPSUtils.getCardinalComponent(direction, true);
+      const cardinal2 = JPSUtils.getCardinalComponent(direction, false);
 
-      const card1Vec = this.getDirectionVector(cardinal1);
-      const card2Vec = this.getDirectionVector(cardinal2);
+      const card1Vec = JPSUtils.getDirectionVector(cardinal1);
+      const card2Vec = JPSUtils.getDirectionVector(cardinal2);
 
       const check1 = { x: point.x + card1Vec.x, y: point.y + card1Vec.y };
       const check2 = { x: point.x + card2Vec.x, y: point.y + card2Vec.y };
 
-      const blocked1 = !this.isWalkable(grid, check1, width, height);
-      const blocked2 = !this.isWalkable(grid, check2, width, height);
+      const blocked1 = !JPSUtils.isWalkable(grid, check1, width, height);
+      const blocked2 = !JPSUtils.isWalkable(grid, check2, width, height);
 
       return blocked1 || blocked2;
     }
@@ -333,13 +333,13 @@ export class JPSUtils {
    * @example
    */
   static getPerpendicularDirection(direction: Direction, clockwise: boolean): Direction {
-    if (!this.isCardinalDirection(direction)) {
+    if (!JPSUtils.isCardinalDirection(direction)) {
       throw new Error("Direction must be cardinal");
     }
 
-    const index = this.CARDINAL_DIRECTIONS.indexOf(direction);
+    const index = JPSUtils.CARDINAL_DIRECTIONS.indexOf(direction);
     const perpIndex = clockwise ? (index + 1) % 4 : (index + 3) % 4;
-    return this.CARDINAL_DIRECTIONS[perpIndex] as Direction;
+    return JPSUtils.CARDINAL_DIRECTIONS[perpIndex] as Direction;
   }
 
   /**
@@ -350,13 +350,13 @@ export class JPSUtils {
    * @example
    */
   static getCardinalComponent(direction: Direction, first: boolean): Direction {
-    if (!this.isDiagonalDirection(direction)) {
+    if (!JPSUtils.isDiagonalDirection(direction)) {
       throw new Error("Direction must be diagonal");
     }
 
-    const index = this.DIAGONAL_DIRECTIONS.indexOf(direction);
+    const index = JPSUtils.DIAGONAL_DIRECTIONS.indexOf(direction);
     const cardinalIndex = first ? index : (index + 1) % 4;
-    return this.CARDINAL_DIRECTIONS[cardinalIndex] as Direction;
+    return JPSUtils.CARDINAL_DIRECTIONS[cardinalIndex] as Direction;
   }
 
   /**
@@ -393,7 +393,7 @@ export class JPSUtils {
       useEarlyTermination = true,
     } = options;
 
-    const dir = this.getDirectionVector(direction);
+    const dir = JPSUtils.getDirectionVector(direction);
     let current = { ...start };
     let distance = 0;
 
@@ -402,12 +402,12 @@ export class JPSUtils {
       distance++;
 
       // Check bounds
-      if (!this.isWithinBounds(current, width, height)) {
+      if (!JPSUtils.isWithinBounds(current, width, height)) {
         return null;
       }
 
       // Check if we hit an obstacle
-      if (!this.isWalkable(grid, current, width, height)) {
+      if (!JPSUtils.isWalkable(grid, current, width, height)) {
         return null;
       }
 
@@ -417,17 +417,17 @@ export class JPSUtils {
       }
 
       // Check for forced neighbors (jump point condition)
-      if (checkForcedNeighbors && this.hasForcedNeighbors(grid, current, direction, width, height)) {
+      if (checkForcedNeighbors && JPSUtils.hasForcedNeighbors(grid, current, direction, width, height)) {
         return current;
       }
 
       // For diagonal directions, check if we can continue in cardinal components
-      if (this.isDiagonalDirection(direction)) {
-        const cardinal1 = this.getCardinalComponent(direction, true);
-        const cardinal2 = this.getCardinalComponent(direction, false);
+      if (JPSUtils.isDiagonalDirection(direction)) {
+        const cardinal1 = JPSUtils.getCardinalComponent(direction, true);
+        const cardinal2 = JPSUtils.getCardinalComponent(direction, false);
 
-        const jump1 = this.jump(grid, current, cardinal1, goal, width, height, options);
-        const jump2 = this.jump(grid, current, cardinal2, goal, width, height, options);
+        const jump1 = JPSUtils.jump(grid, current, cardinal1, goal, width, height, options);
+        const jump2 = JPSUtils.jump(grid, current, cardinal2, goal, width, height, options);
 
         if (jump1 || jump2) {
           return current;
@@ -471,13 +471,13 @@ export class JPSUtils {
     }
   ): JumpPoint[] {
     const jumpPoints: JumpPoint[] = [];
-    const directions = this.getValidDirections(config.movementType, config.allowDiagonal);
+    const directions = JPSUtils.getValidDirections(config.movementType, config.allowDiagonal);
 
     for (const direction of directions) {
-      const jumpPoint = this.jump(grid, point, direction, goal, width, height, options);
+      const jumpPoint = JPSUtils.jump(grid, point, direction, goal, width, height, options);
 
       if (jumpPoint) {
-        const heuristic = this.manhattanDistance(jumpPoint, goal);
+        const heuristic = JPSUtils.manhattanDistance(jumpPoint, goal);
 
         jumpPoints.push({
           x: jumpPoint.x,
@@ -553,7 +553,7 @@ export class JPSUtils {
    */
   static isPathValid(grid: CellType[], path: Point[], width: number, height: number): boolean {
     for (const point of path) {
-      if (!this.isWalkable(grid, point, width, height)) {
+      if (!JPSUtils.isWalkable(grid, point, width, height)) {
         return false;
       }
     }
@@ -585,7 +585,7 @@ export class JPSUtils {
 
       if (!lastValidPoint || !currentPoint) continue;
 
-      if (!this.hasLineOfSight(grid, lastValidPoint, currentPoint, width, height)) {
+      if (!JPSUtils.hasLineOfSight(grid, lastValidPoint, currentPoint, width, height)) {
         if (prevPoint) {
           optimized.push(prevPoint);
         }
@@ -624,7 +624,7 @@ export class JPSUtils {
     while (true) {
       if (x === to.x && y === to.y) break;
 
-      if (!this.isWalkable(grid, { x, y }, width, height)) {
+      if (!JPSUtils.isWalkable(grid, { x, y }, width, height)) {
         return false;
       }
 

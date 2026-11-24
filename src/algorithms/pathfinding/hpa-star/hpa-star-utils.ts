@@ -32,7 +32,7 @@ export class HPAStarUtils {
     const grid: CellType[] = new Array(width * height).fill(CellType.WALKABLE);
 
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      HPAStarUtils.seedRandom(seed);
     }
 
     for (let i = 0; i < grid.length; i++) {
@@ -60,20 +60,20 @@ export class HPAStarUtils {
     seed?: number
   ): CellType[] {
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      HPAStarUtils.seedRandom(seed);
     }
 
     switch (pattern) {
       case "maze":
-        return this.generateMazeGrid(width, height);
+        return HPAStarUtils.generateMazeGrid(width, height);
       case "rooms":
-        return this.generateRoomGrid(width, height);
+        return HPAStarUtils.generateRoomGrid(width, height);
       case "corridors":
-        return this.generateCorridorGrid(width, height);
+        return HPAStarUtils.generateCorridorGrid(width, height);
       case "spiral":
-        return this.generateSpiralGrid(width, height);
+        return HPAStarUtils.generateSpiralGrid(width, height);
       default:
-        return this.generateTestGrid(width, height, 0.3, seed);
+        return HPAStarUtils.generateTestGrid(width, height, 0.3, seed);
     }
   }
 
@@ -96,7 +96,7 @@ export class HPAStarUtils {
       if (!current) {
         break;
       }
-      const neighbors = this.getUnvisitedNeighbors(current, grid, width, height);
+      const neighbors = HPAStarUtils.getUnvisitedNeighbors(current, grid, width, height);
 
       if (neighbors.length > 0) {
         const next = neighbors[Math.floor(Math.random() * neighbors.length)];
@@ -104,7 +104,7 @@ export class HPAStarUtils {
           stack.pop();
           continue;
         }
-        const wall = this.getWallBetween(current, next);
+        const wall = HPAStarUtils.getWallBetween(current, next);
 
         grid[next.y * width + next.x] = CellType.WALKABLE;
         grid[wall.y * width + wall.x] = CellType.WALKABLE;
@@ -175,7 +175,7 @@ export class HPAStarUtils {
         y: room2.y + Math.floor(room2.height / 2),
       };
 
-      this.createCorridor(grid, width, height, center1, center2);
+      HPAStarUtils.createCorridor(grid, width, height, center1, center2);
     }
 
     return grid;
@@ -353,7 +353,7 @@ export class HPAStarUtils {
    */
   static generateRandomGoals(count: number, width: number, height: number, grid: CellType[], seed?: number): Point[] {
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      HPAStarUtils.seedRandom(seed);
     }
 
     const goals: Point[] = [];
@@ -399,7 +399,7 @@ export class HPAStarUtils {
     seed?: number
   ): Point[] {
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      HPAStarUtils.seedRandom(seed);
     }
 
     const goals: Point[] = [];
@@ -427,7 +427,7 @@ export class HPAStarUtils {
         }
         break;
       case "random":
-        return this.generateRandomGoals(5, width, height, grid, seed);
+        return HPAStarUtils.generateRandomGoals(5, width, height, grid, seed);
     }
 
     // Filter out goals that are obstacles
@@ -635,9 +635,9 @@ export class HPAStarUtils {
       for (let x = 0; x < width; x++) {
         const point = { x, y };
 
-        if (goals.some(g => this.pointsEqual(g, point))) {
+        if (goals.some(g => HPAStarUtils.pointsEqual(g, point))) {
           result += "G";
-        } else if (agents.some(a => this.pointsEqual(a, point))) {
+        } else if (agents.some(a => HPAStarUtils.pointsEqual(a, point))) {
           result += "A";
         } else {
           switch (grid[y * width + x]) {
