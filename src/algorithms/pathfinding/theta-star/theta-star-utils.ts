@@ -31,7 +31,7 @@ export class ThetaStarUtils {
     const grid: CellType[] = new Array(width * height).fill(CellType.WALKABLE);
 
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      ThetaStarUtils.seedRandom(seed);
     }
 
     for (let i = 0; i < grid.length; i++) {
@@ -59,7 +59,7 @@ export class ThetaStarUtils {
     const grid: CellType[] = new Array(width * height).fill(CellType.OBSTACLE);
 
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      ThetaStarUtils.seedRandom(seed);
     }
 
     // Start from (1, 1)
@@ -72,7 +72,7 @@ export class ThetaStarUtils {
         stack.pop();
         continue;
       }
-      const neighbors = this.getUnvisitedNeighbors(current, grid, width, height);
+      const neighbors = ThetaStarUtils.getUnvisitedNeighbors(current, grid, width, height);
 
       if (neighbors.length > 0) {
         const next = neighbors[Math.floor(Math.random() * neighbors.length)];
@@ -80,7 +80,7 @@ export class ThetaStarUtils {
           stack.pop();
           continue;
         }
-        const wall = this.getWallBetween(current, next);
+        const wall = ThetaStarUtils.getWallBetween(current, next);
 
         grid[next.y * width + next.x] = CellType.WALKABLE;
         grid[wall.y * width + wall.x] = CellType.WALKABLE;
@@ -116,7 +116,7 @@ export class ThetaStarUtils {
     const grid: CellType[] = new Array(width * height).fill(CellType.OBSTACLE);
 
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      ThetaStarUtils.seedRandom(seed);
     }
 
     const rooms: Array<{ x: number; y: number; width: number; height: number }> = [];
@@ -167,7 +167,7 @@ export class ThetaStarUtils {
       };
 
       // Create L-shaped corridor
-      this.createCorridor(grid, width, height, center1, center2);
+      ThetaStarUtils.createCorridor(grid, width, height, center1, center2);
     }
 
     return grid;
@@ -379,7 +379,7 @@ export class ThetaStarUtils {
    * @example
    */
   static angleBetweenVectors(a: Vector, b: Vector): number {
-    const dot = this.dotProduct(a, b);
+    const dot = ThetaStarUtils.dotProduct(a, b);
     const magA = Math.sqrt(a.x * a.x + a.y * a.y);
     const magB = Math.sqrt(b.x * b.x + b.y * b.y);
 
@@ -548,7 +548,7 @@ export class ThetaStarUtils {
       if (!pj || !pi) {
         continue;
       }
-      perimeter += this.distance(pj, pi);
+      perimeter += ThetaStarUtils.distance(pj, pi);
       j = i;
     }
 
@@ -565,7 +565,7 @@ export class ThetaStarUtils {
    */
   static generateRandomPoint(width: number, height: number, seed?: number): Point {
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      ThetaStarUtils.seedRandom(seed);
     }
 
     return {
@@ -585,12 +585,12 @@ export class ThetaStarUtils {
    */
   static generateRandomPoints(count: number, width: number, height: number, seed?: number): Point[] {
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      ThetaStarUtils.seedRandom(seed);
     }
 
     const points: Point[] = [];
     for (let i = 0; i < count; i++) {
-      points.push(this.generateRandomPoint(width, height));
+      points.push(ThetaStarUtils.generateRandomPoint(width, height));
     }
 
     return points;
@@ -612,14 +612,14 @@ export class ThetaStarUtils {
     }
 
     let closest = firstPoint;
-    let minDistance = this.distance(target, closest);
+    let minDistance = ThetaStarUtils.distance(target, closest);
 
     for (let i = 1; i < points.length; i++) {
       const point = points[i];
       if (!point) {
         continue;
       }
-      const distance = this.distance(target, point);
+      const distance = ThetaStarUtils.distance(target, point);
       if (distance < minDistance) {
         minDistance = distance;
         closest = point;
@@ -638,7 +638,7 @@ export class ThetaStarUtils {
    * @example
    */
   static findPointsInRadius(target: Point, points: Point[], radius: number): Point[] {
-    return points.filter(point => this.distance(target, point) <= radius);
+    return points.filter(point => ThetaStarUtils.distance(target, point) <= radius);
   }
 
   /**
@@ -650,8 +650,8 @@ export class ThetaStarUtils {
    */
   static sortPointsByDistance(target: Point, points: Point[]): Point[] {
     return [...points].sort((a, b) => {
-      const distA = this.distance(target, a);
-      const distB = this.distance(target, b);
+      const distA = ThetaStarUtils.distance(target, a);
+      const distB = ThetaStarUtils.distance(target, b);
       return distA - distB;
     });
   }
@@ -777,9 +777,9 @@ export class ThetaStarUtils {
 
         const point = { x, y };
 
-        if (start && this.pointsEqual(point, start, 1e-10)) {
+        if (start && ThetaStarUtils.pointsEqual(point, start, 1e-10)) {
           result += "S";
-        } else if (goal && this.pointsEqual(point, goal, 1e-10)) {
+        } else if (goal && ThetaStarUtils.pointsEqual(point, goal, 1e-10)) {
           result += "G";
         } else {
           switch (grid[index]) {

@@ -53,7 +53,7 @@ export class FlowFieldGenerator {
             processed: true,
           });
           queue.push({ point, cost: 0 });
-          processed.add(this.pointToKey(point));
+          processed.add(FlowFieldGenerator.pointToKey(point));
         } else if (grid[index] === CellType.OBSTACLE) {
           integrationField.push({
             x,
@@ -61,7 +61,7 @@ export class FlowFieldGenerator {
             cost: config.maxCost,
             processed: true,
           });
-          processed.add(this.pointToKey(point));
+          processed.add(FlowFieldGenerator.pointToKey(point));
         } else {
           integrationField.push({
             x,
@@ -75,7 +75,7 @@ export class FlowFieldGenerator {
 
     // Add goals from parameter to queue if they're not already in the grid
     for (const goal of goals) {
-      const goalKey = this.pointToKey(goal);
+      const goalKey = FlowFieldGenerator.pointToKey(goal);
       if (!processed.has(goalKey)) {
         const goalIndex = goal.y * config.width + goal.x;
         if (goalIndex >= 0 && goalIndex < grid.length && grid[goalIndex] !== CellType.OBSTACLE) {
@@ -110,7 +110,7 @@ export class FlowFieldGenerator {
         break;
       }
 
-      const currentKey = this.pointToKey(current.point);
+      const currentKey = FlowFieldGenerator.pointToKey(current.point);
 
       if (processed.has(currentKey)) {
         continue;
@@ -127,16 +127,16 @@ export class FlowFieldGenerator {
       }
 
       // Process neighbors
-      const neighbors = this.getNeighbors(current.point, grid, config);
+      const neighbors = FlowFieldGenerator.getNeighbors(current.point, grid, config);
 
       for (const neighbor of neighbors) {
-        const neighborKey = this.pointToKey(neighbor);
+        const neighborKey = FlowFieldGenerator.pointToKey(neighbor);
 
         if (processed.has(neighborKey)) {
           continue;
         }
 
-        const movementCost = this.getMovementCost(current.point, neighbor, config);
+        const movementCost = FlowFieldGenerator.getMovementCost(current.point, neighbor, config);
         const newCost = current.cost + movementCost;
 
         // Check if this is a better path
@@ -203,7 +203,7 @@ export class FlowFieldGenerator {
         }
 
         // Find the neighbor with minimum integration cost
-        const neighbors = this.getNeighbors(point, grid, config);
+        const neighbors = FlowFieldGenerator.getNeighbors(point, grid, config);
         let bestNeighbor: Point | null = null;
         const currentCell = integrationField[index];
         if (!currentCell) {
@@ -290,10 +290,10 @@ export class FlowFieldGenerator {
     }
   ): { integrationField: IntegrationCell[]; flowField: FlowCell[] } {
     // Generate integration field
-    const integrationField = this.generateIntegrationField(grid, goals, config, options);
+    const integrationField = FlowFieldGenerator.generateIntegrationField(grid, goals, config, options);
 
     // Generate flow field
-    const flowField = this.generateFlowFieldFromIntegration(integrationField, grid, config, options);
+    const flowField = FlowFieldGenerator.generateFlowFieldFromIntegration(integrationField, grid, config, options);
 
     return { integrationField, flowField };
   }
@@ -326,14 +326,14 @@ export class FlowFieldGenerator {
 
     // Generate flow field for each goal group
     for (const goals of goalGroups) {
-      const result = this.generateFlowField(grid, goals, config, options);
+      const result = FlowFieldGenerator.generateFlowField(grid, goals, config, options);
       integrationFields.push(result.integrationField);
       flowFields.push(result.flowField);
     }
 
     // Compose the fields
-    const composedIntegrationField = this.composeIntegrationFields(integrationFields, config);
-    const composedFlowField = this.composeFlowFields(flowFields, config);
+    const composedIntegrationField = FlowFieldGenerator.composeIntegrationFields(integrationFields, config);
+    const composedFlowField = FlowFieldGenerator.composeFlowFields(flowFields, config);
 
     return {
       integrationField: composedIntegrationField,
@@ -395,7 +395,7 @@ export class FlowFieldGenerator {
 
       for (const field of flowFields) {
         const cell = field[i];
-        if (cell && cell.valid && cell.magnitude > bestMagnitude) {
+        if (cell?.valid && cell.magnitude > bestMagnitude) {
           bestVector = cell.vector;
           bestMagnitude = cell.magnitude;
           valid = true;
@@ -427,14 +427,14 @@ export class FlowFieldGenerator {
    */
   private static getNeighbors(point: Point, grid: CellType[], config: FlowFieldConfig): Point[] {
     const neighbors: Point[] = [];
-    const directions = this.getValidDirections(config);
+    const directions = FlowFieldGenerator.getValidDirections(config);
 
     for (const direction of directions) {
-      const neighbor = this.getNeighborInDirection(point, direction);
+      const neighbor = FlowFieldGenerator.getNeighborInDirection(point, direction);
 
       if (
-        this.isWithinBounds(neighbor, config.width, config.height) &&
-        this.isWalkable(grid, neighbor, config.width, config.height)
+        FlowFieldGenerator.isWithinBounds(neighbor, config.width, config.height) &&
+        FlowFieldGenerator.isWalkable(grid, neighbor, config.width, config.height)
       ) {
         neighbors.push(neighbor);
       }
@@ -533,7 +533,7 @@ export class FlowFieldGenerator {
    * @example
    */
   private static isWalkable(grid: CellType[], point: Point, width: number, height: number): boolean {
-    if (!this.isWithinBounds(point, width, height)) {
+    if (!FlowFieldGenerator.isWithinBounds(point, width, height)) {
       return false;
     }
 

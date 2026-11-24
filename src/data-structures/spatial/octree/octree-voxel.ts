@@ -216,7 +216,7 @@ export function getNonEmptyVoxels(voxelGrid: VoxelGrid): Voxel[] {
       if (!yArray) continue;
       for (let x = 0; x < voxelGrid.dimensions.x; x++) {
         const v = yArray[x];
-        if (v && v.occupied) results.push(v);
+        if (v?.occupied) results.push(v);
       }
     }
   }

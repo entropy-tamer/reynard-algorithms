@@ -307,7 +307,7 @@ export class VoronoiDiagram {
         throw new Error(`Invalid site at index ${i}: must have x and y properties`);
       }
 
-      if (!isFinite(site.x) || !isFinite(site.y)) {
+      if (!Number.isFinite(site.x) || !Number.isFinite(site.y)) {
         throw new Error(`Invalid site at index ${i}: coordinates must be finite numbers`);
       }
     }

@@ -528,7 +528,7 @@ export class SegmentTree<T> {
    */
   deserialize(serialized: SegmentTreeSerialization<T>): boolean {
     try {
-      if (!serialized || !serialized.data || !Array.isArray(serialized.data)) {
+      if (!serialized?.data || !Array.isArray(serialized.data)) {
         return false;
       }
       this.clear();

@@ -1,0 +1,14 @@
+# repo: /home/kade/reynard/algorithms
+# runner: vitest
+# Registry entry: A* heuristic values. Target suite: src/__tests__/pathfinding/astar.test.ts
+# Run: bash ~/src/foxtools/testkit/mutate-check.sh ~/reynard/algorithms \
+#        mutation/specs/astar-heuristics.tsv -- src/__tests__/pathfinding/astar.test.ts
+#
+# Expectation: the three REAL mutants are expected to SURVIVE. The "Heuristic
+# Functions" tests only assert `success === true` and `totalCost > 0`; they never
+# assert a heuristic's numeric value, so a wrong distance function is invisible.
+# The canary forces search failure and must be caught; if it is not, the run is UNSOUND.
+canary-search-forced-failure	src/algorithms/pathfinding/astar/astar-core.ts	const result = this.performAStarSearch(start, goal, grid);	const result = this.performAStarSearch(start, goal, grid); result.success = false;
+manhattan-sign-flipped	src/algorithms/pathfinding/astar/heuristics.ts	return Math.abs(from.x - to.x) + Math.abs(from.y - to.y);	return Math.abs(from.x - to.x) - Math.abs(from.y - to.y);
+chebyshev-max-to-min	src/algorithms/pathfinding/astar/heuristics.ts	return Math.max(Math.abs(from.x - to.x), Math.abs(from.y - to.y));	return Math.min(Math.abs(from.x - to.x), Math.abs(from.y - to.y));
+octile-drops-diagonal-term	src/algorithms/pathfinding/astar/heuristics.ts	return Math.max(dx, dy) + diagonalCost * Math.min(dx, dy);	return Math.max(dx, dy);

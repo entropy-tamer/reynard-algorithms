@@ -366,7 +366,7 @@ class SIMDDistanceCalculator {
     for (let i = 0; i < points.length; i++) {
       const point = points[i];
       if (point !== undefined) {
-        results[i] = this.euclideanDistance(point, target);
+        results[i] = SIMDDistanceCalculator.euclideanDistance(point, target);
       } else {
         results[i] = 0;
       }

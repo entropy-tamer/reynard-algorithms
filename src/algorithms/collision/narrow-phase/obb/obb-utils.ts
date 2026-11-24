@@ -207,12 +207,12 @@ export class OBBUtils {
    * @example
    */
   static projectOBB(obb: OBBData, axis: Vector): OBBProjection {
-    const centerProjection = this.projectPoint(obb.center, axis);
+    const centerProjection = OBBUtils.projectPoint(obb.center, axis);
 
     // Project the half-widths along the axis
     const halfWidthProjection =
-      Math.abs(this.dotProduct(obb.axes[0], axis)) * obb.halfWidths.x +
-      Math.abs(this.dotProduct(obb.axes[1], axis)) * obb.halfWidths.y;
+      Math.abs(OBBUtils.dotProduct(obb.axes[0], axis)) * obb.halfWidths.x +
+      Math.abs(OBBUtils.dotProduct(obb.axes[1], axis)) * obb.halfWidths.y;
 
     return {
       min: centerProjection - halfWidthProjection,
@@ -323,8 +323,8 @@ export class OBBUtils {
     };
 
     // Project onto OBB axes
-    const projectionX = Math.abs(this.dotProduct(localPoint, obb.axes[0]));
-    const projectionY = Math.abs(this.dotProduct(localPoint, obb.axes[1]));
+    const projectionX = Math.abs(OBBUtils.dotProduct(localPoint, obb.axes[0]));
+    const projectionY = Math.abs(OBBUtils.dotProduct(localPoint, obb.axes[1]));
 
     return projectionX <= obb.halfWidths.x + tolerance && projectionY <= obb.halfWidths.y + tolerance;
   }
@@ -344,8 +344,8 @@ export class OBBUtils {
     };
 
     // Project onto OBB axes
-    const projectionX = this.dotProduct(localPoint, obb.axes[0]);
-    const projectionY = this.dotProduct(localPoint, obb.axes[1]);
+    const projectionX = OBBUtils.dotProduct(localPoint, obb.axes[0]);
+    const projectionY = OBBUtils.dotProduct(localPoint, obb.axes[1]);
 
     // Clamp to OBB bounds
     const clampedX = Math.max(-obb.halfWidths.x, Math.min(obb.halfWidths.x, projectionX));
@@ -366,11 +366,11 @@ export class OBBUtils {
    * @example
    */
   static distanceToOBB(point: Point, obb: OBBData): number {
-    const closestPoint = this.closestPointOnOBB(point, obb);
-    const distance = this.distance(point, closestPoint);
+    const closestPoint = OBBUtils.closestPointOnOBB(point, obb);
+    const distance = OBBUtils.distance(point, closestPoint);
 
     // If point is inside OBB, return negative distance
-    if (this.isPointInsideOBB(point, obb)) {
+    if (OBBUtils.isPointInsideOBB(point, obb)) {
       return -distance;
     }
 
@@ -467,9 +467,9 @@ export class OBBUtils {
     // First eigenvector
     let firstEigenvector: Vector;
     if (Math.abs(b) > 1e-10) {
-      firstEigenvector = this.normalizeVector({ x: lambda1 - d, y: b });
+      firstEigenvector = OBBUtils.normalizeVector({ x: lambda1 - d, y: b });
     } else if (Math.abs(a - lambda1) > 1e-10) {
-      firstEigenvector = this.normalizeVector({ x: b, y: lambda1 - a });
+      firstEigenvector = OBBUtils.normalizeVector({ x: b, y: lambda1 - a });
     } else {
       firstEigenvector = { x: 1, y: 0 };
     }
@@ -477,7 +477,7 @@ export class OBBUtils {
     eigenvectors.push(firstEigenvector);
 
     // Second eigenvector (orthogonal to first)
-    eigenvectors.push(this.perpendicularVector(firstEigenvector));
+    eigenvectors.push(OBBUtils.perpendicularVector(firstEigenvector));
 
     return eigenvectors;
   }
@@ -514,8 +514,8 @@ export class OBBUtils {
    * @example
    */
   static angleBetweenVectors(a: Vector, b: Vector): number {
-    const dot = this.dotProduct(a, b);
-    const cross = this.crossProduct(a, b);
+    const dot = OBBUtils.dotProduct(a, b);
+    const cross = OBBUtils.crossProduct(a, b);
     return Math.atan2(cross, dot);
   }
 
@@ -528,7 +528,7 @@ export class OBBUtils {
    * @example
    */
   static vectorsOrthogonal(a: Vector, b: Vector, tolerance: number = 1e-10): boolean {
-    return Math.abs(this.dotProduct(a, b)) < tolerance;
+    return Math.abs(OBBUtils.dotProduct(a, b)) < tolerance;
   }
 
   /**
@@ -539,7 +539,7 @@ export class OBBUtils {
    * @example
    */
   static isUnitVector(vector: Vector, tolerance: number = 1e-10): boolean {
-    const length = this.vectorLength(vector);
+    const length = OBBUtils.vectorLength(vector);
     return Math.abs(length - 1) < tolerance;
   }
 

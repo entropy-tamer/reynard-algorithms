@@ -38,9 +38,8 @@ export class FFTFactory {
       case FFTAlgorithm.REAL_FFT:
         return new RealFFT(config);
 
-      case FFTAlgorithm.AUTO:
       default:
-        return this.createAuto(config.size, config);
+        return FFTFactory.createAuto(config.size, config);
     }
   }
 
@@ -86,7 +85,7 @@ export class FFTFactory {
       ...baseConfig,
     };
 
-    return this.create(config);
+    return FFTFactory.create(config);
   }
 
   /**
@@ -113,10 +112,10 @@ export class FFTFactory {
     switch (algorithm) {
       case FFTAlgorithm.RADIX_2:
       case FFTAlgorithm.REAL_FFT:
-        return this.getPowerOf2Sizes();
+        return FFTFactory.getPowerOf2Sizes();
 
       case FFTAlgorithm.RADIX_4:
-        return this.getPowerOf4Sizes();
+        return FFTFactory.getPowerOf4Sizes();
 
       case FFTAlgorithm.MIXED_RADIX:
         // Mixed-radix supports any size
@@ -124,7 +123,7 @@ export class FFTFactory {
 
       case FFTAlgorithm.AUTO:
         // Return all supported sizes
-        return [...this.getPowerOf4Sizes(), ...this.getPowerOf2Sizes()];
+        return [...FFTFactory.getPowerOf4Sizes(), ...FFTFactory.getPowerOf2Sizes()];
 
       default:
         return [];
@@ -259,8 +258,8 @@ export class FFTFactory {
     return {
       totalAlgorithms: 5, // RADIX_2, RADIX_4, MIXED_RADIX, REAL_FFT, AUTO
       implementedAlgorithms: 4, // RADIX_2, RADIX_4, MIXED_RADIX, REAL_FFT
-      supportedSizes: this.getPowerOf2Sizes().length + this.getPowerOf4Sizes().length,
-      recommendations: Object.keys(this.getRecommendations()).length,
+      supportedSizes: FFTFactory.getPowerOf2Sizes().length + FFTFactory.getPowerOf4Sizes().length,
+      recommendations: Object.keys(FFTFactory.getRecommendations()).length,
     };
   }
 }

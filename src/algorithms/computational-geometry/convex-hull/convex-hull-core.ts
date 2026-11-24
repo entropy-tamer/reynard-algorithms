@@ -516,7 +516,7 @@ export class ConvexHull {
         throw new Error(`Invalid point at index ${i}: must have x and y properties`);
       }
 
-      if (!isFinite(point.x) || !isFinite(point.y)) {
+      if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) {
         throw new Error(`Point at index ${i} has non-finite coordinates`);
       }
     }

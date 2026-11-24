@@ -223,7 +223,7 @@ export class Quadtree<T> {
 
     // Merge upwards if necessary
     let current: QuadtreeNode<T> | null = node;
-    while (current && current.parent) {
+    while (current?.parent) {
       if (this.shouldMerge(current.parent)) {
         this.merge(current.parent);
         current = current.parent.parent;

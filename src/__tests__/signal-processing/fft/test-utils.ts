@@ -173,7 +173,7 @@ export class FFTValidator {
    * const equal = FFTValidator.areEqual(result1, result2, 1e-6);
    * ```
    */
-  static areEqual(result1: FFTResult, result2: FFTResult, tolerance: number = this.TOLERANCE): boolean {
+  static areEqual(result1: FFTResult, result2: FFTResult, tolerance: number = FFTValidator.TOLERANCE): boolean {
     if (result1.real.length !== result2.real.length) return false;
     if (result1.imag.length !== result2.imag.length) return false;
 
@@ -205,7 +205,7 @@ export class FFTValidator {
   static checkParsevalsTheorem(
     timeDomain: Float32Array,
     fftResult: FFTResult,
-    tolerance: number = this.TOLERANCE * 1000 // More lenient tolerance for Parseval
+    tolerance: number = FFTValidator.TOLERANCE * 1000 // More lenient tolerance for Parseval
   ): boolean {
     // Time domain energy
     let timeEnergy = 0;
@@ -251,7 +251,7 @@ export class FFTValidator {
   static checkRoundTripAccuracy(
     original: Float32Array,
     reconstructed: Float32Array,
-    tolerance: number = this.TOLERANCE * 1000 // Very lenient for round-trip due to Float32Array precision
+    tolerance: number = FFTValidator.TOLERANCE * 1000 // Very lenient for round-trip due to Float32Array precision
   ): boolean {
     if (original.length !== reconstructed.length) return false;
 
@@ -299,7 +299,7 @@ export class FFTValidator {
 
     // Check that magnitude and power are consistent
     // Use very lenient tolerance for floating point precision (Float32Array has limited precision)
-    const tolerance = this.TOLERANCE * 10000; // Very lenient for magnitude/power checks
+    const tolerance = FFTValidator.TOLERANCE * 10000; // Very lenient for magnitude/power checks
     for (let i = 0; i < expectedSize; i++) {
       const real = result.real[i];
       const imag = result.imag[i];
@@ -333,7 +333,7 @@ export class FFTValidator {
    * const isReal = FFTValidator.isRealValued(result);
    * ```
    */
-  static isRealValued(result: FFTResult, tolerance: number = this.TOLERANCE): boolean {
+  static isRealValued(result: FFTResult, tolerance: number = FFTValidator.TOLERANCE): boolean {
     for (let i = 0; i < result.imag.length; i++) {
       const imag = result.imag[i];
       if (imag !== undefined && Math.abs(imag) > tolerance) return false;
@@ -351,7 +351,7 @@ export class FFTValidator {
    * const isImag = FFTValidator.isImaginaryValued(result);
    * ```
    */
-  static isImaginaryValued(result: FFTResult, tolerance: number = this.TOLERANCE): boolean {
+  static isImaginaryValued(result: FFTResult, tolerance: number = FFTValidator.TOLERANCE): boolean {
     for (let i = 0; i < result.real.length; i++) {
       const value = result.real[i];
       if (value !== undefined && Math.abs(value) > tolerance) return false;
@@ -369,7 +369,7 @@ export class FFTValidator {
    * const hasSymmetry = FFTValidator.checkConjugateSymmetry(result);
    * ```
    */
-  static checkConjugateSymmetry(result: FFTResult, tolerance: number = this.TOLERANCE): boolean {
+  static checkConjugateSymmetry(result: FFTResult, tolerance: number = FFTValidator.TOLERANCE): boolean {
     const n = result.real.length;
 
     // DC component should be real

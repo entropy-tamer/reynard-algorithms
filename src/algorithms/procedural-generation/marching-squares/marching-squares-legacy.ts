@@ -340,7 +340,7 @@ export class MarchingSquaresLegacy {
 
       for (let j = 0; j < row.length; j++) {
         const value = row[j];
-        if (typeof value !== "number" || !isFinite(value)) {
+        if (typeof value !== "number" || !Number.isFinite(value)) {
           throw new Error(`Invalid value at [${i}][${j}]: must be a finite number`);
         }
       }

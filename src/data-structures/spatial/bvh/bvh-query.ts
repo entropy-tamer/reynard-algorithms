@@ -231,17 +231,27 @@ function aabbIntersectionRecursive(
  * @example
  */
 function rayIntersectsAABB(ray: Ray3D, aabb: AABB): boolean {
-  const tMin = (aabb.min.x - ray.origin.x) / ray.direction.x;
-  const tMax = (aabb.max.x - ray.origin.x) / ray.direction.x;
-  const tMinY = (aabb.min.y - ray.origin.y) / ray.direction.y;
-  const tMaxY = (aabb.max.y - ray.origin.y) / ray.direction.y;
-  const tMinZ = (aabb.min.z - ray.origin.z) / ray.direction.z;
-  const tMaxZ = (aabb.max.z - ray.origin.z) / ray.direction.z;
-
-  const tMinFinal = Math.max(Math.min(tMin, tMax), Math.min(tMinY, tMaxY), Math.min(tMinZ, tMaxZ));
-  const tMaxFinal = Math.min(Math.max(tMin, tMax), Math.max(tMinY, tMaxY), Math.max(tMinZ, tMaxZ));
-
-  return tMaxFinal >= tMinFinal && tMaxFinal >= 0;
+  // Robust slab test: a zero direction component makes the division infinite,
+  // but the ray may still be inside that slab. Use the ordering form that
+  // avoids dividing by zero (Infinity is handled by IEEE arithmetic).
+  let tMin = -Infinity;
+  let tMax = Infinity;
+  for (const axis of ["x", "y", "z"] as const) {
+    const origin = ray.origin[axis];
+    const direction = ray.direction[axis];
+    const lower = aabb.min[axis];
+    const upper = aabb.max[axis];
+    if (direction === 0) {
+      if (origin < lower || origin > upper) return false;
+      continue;
+    }
+    const t1 = (lower - origin) / direction;
+    const t2 = (upper - origin) / direction;
+    tMin = Math.max(tMin, Math.min(t1, t2));
+    tMax = Math.min(tMax, Math.max(t1, t2));
+    if (tMin > tMax) return false;
+  }
+  return tMax >= Math.max(tMin, 0);
 }
 
 /**
@@ -273,10 +283,11 @@ function aabbIntersectsAABB(aabb1: AABB, aabb2: AABB): boolean {
  * @returns Distance to intersection or null if no intersection
  * @example
  */
-function rayIntersectsPrimitive(_ray: Ray3D, _primitive: any): number | null {
-  // Simplified implementation - would need proper primitive intersection tests
-  // This would depend on the primitive type (triangle, sphere, etc.)
-  return null;
+function rayIntersectsPrimitive(ray: Ray3D, primitive: any): number | null {
+  // Primitives are bounded by AABBs. Test the ray against that bound; more
+  // precise per-shape tests can refine this later, but returning null here
+  // made every BVH ray query empty.
+  return rayIntersectsAABB(ray, primitive.bounds) ? 0 : null;
 }
 
 /**
@@ -289,7 +300,14 @@ function rayIntersectsPrimitive(_ray: Ray3D, _primitive: any): number | null {
  * @returns True if AABB intersects primitive
  * @example
  */
-function aabbIntersectsPrimitive(_aabb: AABB, _primitive: any): boolean {
-  // Simplified implementation - would need proper primitive intersection tests
-  return false;
+function aabbIntersectsPrimitive(aabb: AABB, primitive: any): boolean {
+  const bounds: AABB = primitive.bounds;
+  return (
+    aabb.min.x <= bounds.max.x &&
+    aabb.max.x >= bounds.min.x &&
+    aabb.min.y <= bounds.max.y &&
+    aabb.max.y >= bounds.min.y &&
+    aabb.min.z <= bounds.max.z &&
+    aabb.max.z >= bounds.min.z
+  );
 }

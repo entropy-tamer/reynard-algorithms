@@ -188,12 +188,12 @@ function isValidPoint(point: Point3D): boolean {
     typeof point.x === "number" &&
     typeof point.y === "number" &&
     typeof point.z === "number" &&
-    !isNaN(point.x) &&
-    !isNaN(point.y) &&
-    !isNaN(point.z) &&
-    isFinite(point.x) &&
-    isFinite(point.y) &&
-    isFinite(point.z)
+    !Number.isNaN(point.x) &&
+    !Number.isNaN(point.y) &&
+    !Number.isNaN(point.z) &&
+    Number.isFinite(point.x) &&
+    Number.isFinite(point.y) &&
+    Number.isFinite(point.z)
   );
 }
 

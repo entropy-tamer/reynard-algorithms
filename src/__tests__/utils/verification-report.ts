@@ -163,8 +163,8 @@ export class VerificationReportGenerator {
    * generator.saveReport('reports/verification.json');
    */
   public saveReport(filePath: string): void {
-    const fs = require("fs");
-    const path = require("path");
+    const fs = require("node:fs");
+    const path = require("node:path");
 
     const dir = path.dirname(filePath);
     if (!fs.existsSync(dir)) {

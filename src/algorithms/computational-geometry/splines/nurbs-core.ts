@@ -241,7 +241,7 @@ export function evaluateNURBSFull(nurbs: NURBS, t: number): NURBSEvaluation {
     point,
     tangent: normalizedTangent,
     normal,
-    curvature: isNaN(curvature) ? 0 : curvature,
+    curvature: Number.isNaN(curvature) ? 0 : curvature,
     basisValues,
   };
 }
