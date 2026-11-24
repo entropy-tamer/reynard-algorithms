@@ -191,8 +191,8 @@ export class LRUCache<K, V> {
 
   /**
    * Removes ALL entries, recycling every node to the pool, and emits a
-   * `clear` event. Statistics size resets to zero; cumulative hit/miss counts
-   * (managed by the stats manager) are preserved.
+   * `clear` event. All statistics, including cumulative hit/miss counts, reset
+   * to zero so a cleared cache starts with a clean accounting.
    */
   clear(): void {
     for (const node of this.cache.values()) {
@@ -200,7 +200,9 @@ export class LRUCache<K, V> {
     }
     this.cache.clear();
     this.linkedList.clear();
-    this.statsManager.setSize(0);
+    // Clearing a cache resets its counters too. Without this, exact hit-count
+    // assertions in reused workers inherited hits from earlier suites.
+    this.statsManager.reset();
     this.eventManager.emitEvent("clear");
   }
 

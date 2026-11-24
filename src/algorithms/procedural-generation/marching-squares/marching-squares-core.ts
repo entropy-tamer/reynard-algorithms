@@ -161,7 +161,7 @@ export class MarchingSquares {
     } catch (error) {
       return this.createEmptyResult(
         grid && grid.length > 0 && grid[0] ? grid[0].length : 0,
-        grid && grid.length ? grid.length : 0,
+        grid?.length ? grid.length : 0,
         startTime,
         error instanceof Error ? error.message : "Unknown error"
       );
@@ -396,7 +396,7 @@ export class MarchingSquares {
 
       for (let j = 0; j < row.length; j++) {
         const value = row[j];
-        if (typeof value !== "number" || !isFinite(value)) {
+        if (typeof value !== "number" || !Number.isFinite(value)) {
           throw new Error(`Invalid value at [${i}][${j}]: must be a finite number`);
         }
       }

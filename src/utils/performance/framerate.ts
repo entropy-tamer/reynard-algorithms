@@ -12,6 +12,7 @@ import type { FrameRateMetrics } from "./types";
  * Frame rate monitor
  */
 export class FrameRateMonitor {
+  // biome-ignore lint/correctness/noUnusedPrivateClassMembers: read and written through bracket notation by src/__tests__/performance/framerate.test.ts; Biome cannot see string-key accesses.
   private frameCount = 0;
   private lastTime = performance.now();
   private frameTimes: number[] = [];

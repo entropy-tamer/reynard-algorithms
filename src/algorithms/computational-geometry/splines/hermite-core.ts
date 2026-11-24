@@ -105,7 +105,7 @@ function calculateCurvature(tangent: Point, secondDerivative: Point): number {
   const cross = tangent.x * secondDerivative.y - tangent.y * secondDerivative.x;
   const tangentLength = Math.sqrt(tangent.x * tangent.x + tangent.y * tangent.y);
   const curvature = Math.abs(cross) / (tangentLength * tangentLength * tangentLength);
-  return isNaN(curvature) ? 0 : curvature;
+  return Number.isNaN(curvature) ? 0 : curvature;
 }
 
 /**

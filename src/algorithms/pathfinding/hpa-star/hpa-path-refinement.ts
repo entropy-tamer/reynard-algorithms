@@ -54,7 +54,7 @@ export class HPAPathRefinement {
       let iterationsUsed = 0;
 
       // Convert abstract path to point sequence
-      const pointSequence = this.convertAbstractPathToPoints(abstractPath, clusters, entrances);
+      const pointSequence = HPAPathRefinement.convertAbstractPathToPoints(abstractPath, clusters, entrances);
 
       if (pointSequence.length === 0) {
         return {
@@ -71,15 +71,15 @@ export class HPAPathRefinement {
 
       // Refine path using selected algorithm
       if (refinementOptions.useAStarRefinement) {
-        const aStarResult = this.refineWithAStar(pointSequence, grid, config, refinementOptions);
+        const aStarResult = HPAPathRefinement.refineWithAStar(pointSequence, grid, config, refinementOptions);
         refinedPath = aStarResult.path;
         iterationsUsed = aStarResult.iterations;
       } else if (refinementOptions.useJPSRefinement) {
-        const jpsResult = this.refineWithJPS(pointSequence, grid, config, refinementOptions);
+        const jpsResult = HPAPathRefinement.refineWithJPS(pointSequence, grid, config, refinementOptions);
         refinedPath = jpsResult.path;
         iterationsUsed = jpsResult.iterations;
       } else if (refinementOptions.useThetaStarRefinement) {
-        const thetaStarResult = this.refineWithThetaStar(pointSequence, grid, config, refinementOptions);
+        const thetaStarResult = HPAPathRefinement.refineWithThetaStar(pointSequence, grid, config, refinementOptions);
         refinedPath = thetaStarResult.path;
         iterationsUsed = thetaStarResult.iterations;
       } else {
@@ -90,7 +90,7 @@ export class HPAPathRefinement {
       // Apply path smoothing if requested
       let smoothingApplied = false;
       if (refinementOptions.usePathSmoothing && refinedPath.length > 2) {
-        refinedPath = this.smoothPath(refinedPath, grid, config, refinementOptions.smoothingFactor!);
+        refinedPath = HPAPathRefinement.smoothPath(refinedPath, grid, config, refinementOptions.smoothingFactor!);
         smoothingApplied = true;
       }
 
@@ -186,7 +186,7 @@ export class HPAPathRefinement {
         continue;
       }
 
-      const aStarResult = this.findAStarPath(start, goal, grid, config, options);
+      const aStarResult = HPAPathRefinement.findAStarPath(start, goal, grid, config, options);
       refinedPath.push(...aStarResult.path.slice(0, -1)); // Exclude the last point to avoid duplication
       totalIterations += aStarResult.iterations;
     }
@@ -219,7 +219,7 @@ export class HPAPathRefinement {
   ): { path: Point[]; iterations: number } {
     // Simplified JPS implementation for path refinement
     // In a real implementation, this would use the actual JPS algorithm
-    return this.refineWithAStar(pointSequence, grid, config, options);
+    return HPAPathRefinement.refineWithAStar(pointSequence, grid, config, options);
   }
 
   /**
@@ -239,7 +239,7 @@ export class HPAPathRefinement {
   ): { path: Point[]; iterations: number } {
     // Simplified Theta* implementation for path refinement
     // In a real implementation, this would use the actual Theta* algorithm
-    return this.refineWithAStar(pointSequence, grid, config, options);
+    return HPAPathRefinement.refineWithAStar(pointSequence, grid, config, options);
   }
 
   /**
@@ -265,12 +265,12 @@ export class HPAPathRefinement {
     const gScore = new Map<string, number>();
     const fScore = new Map<string, number>();
 
-    const startKey = this.pointToKey(start);
-    const goalKey = this.pointToKey(goal);
+    const startKey = HPAPathRefinement.pointToKey(start);
+    const goalKey = HPAPathRefinement.pointToKey(goal);
 
     gScore.set(startKey, 0);
-    fScore.set(startKey, this.heuristic(start, goal, config));
-    openSet.push({ point: start, g: 0, h: this.heuristic(start, goal, config), f: fScore.get(startKey)! });
+    fScore.set(startKey, HPAPathRefinement.heuristic(start, goal, config));
+    openSet.push({ point: start, g: 0, h: HPAPathRefinement.heuristic(start, goal, config), f: fScore.get(startKey)! });
 
     let iterations = 0;
     const maxIterations = options.maxRefinementIterations || 1000;
@@ -292,7 +292,7 @@ export class HPAPathRefinement {
       if (!current) {
         break;
       }
-      const currentKey = this.pointToKey(current.point);
+      const currentKey = HPAPathRefinement.pointToKey(current.point);
 
       if (currentKey === goalKey) {
         // Reconstruct path
@@ -301,7 +301,7 @@ export class HPAPathRefinement {
 
         while (node) {
           path.unshift(node);
-          node = cameFrom.get(this.pointToKey(node));
+          node = cameFrom.get(HPAPathRefinement.pointToKey(node));
         }
 
         return { path, iterations };
@@ -310,28 +310,28 @@ export class HPAPathRefinement {
       closedSet.add(currentKey);
 
       // Check neighbors
-      const neighbors = this.getNeighbors(current.point, grid, config);
+      const neighbors = HPAPathRefinement.getNeighbors(current.point, grid, config);
 
       for (const neighbor of neighbors) {
-        const neighborKey = this.pointToKey(neighbor);
+        const neighborKey = HPAPathRefinement.pointToKey(neighbor);
 
         if (closedSet.has(neighborKey)) {
           continue;
         }
 
-        const tentativeG = gScore.get(currentKey)! + this.getMovementCost(current.point, neighbor, config);
+        const tentativeG = gScore.get(currentKey)! + HPAPathRefinement.getMovementCost(current.point, neighbor, config);
 
         if (!gScore.has(neighborKey) || tentativeG < gScore.get(neighborKey)!) {
           cameFrom.set(neighborKey, current.point);
           gScore.set(neighborKey, tentativeG);
-          fScore.set(neighborKey, tentativeG + this.heuristic(neighbor, goal, config));
+          fScore.set(neighborKey, tentativeG + HPAPathRefinement.heuristic(neighbor, goal, config));
 
           // Add to open set if not already there
-          if (!openSet.some(node => this.pointToKey(node.point) === neighborKey)) {
+          if (!openSet.some(node => HPAPathRefinement.pointToKey(node.point) === neighborKey)) {
             openSet.push({
               point: neighbor,
               g: tentativeG,
-              h: this.heuristic(neighbor, goal, config),
+              h: HPAPathRefinement.heuristic(neighbor, goal, config),
               f: fScore.get(neighborKey)!,
             });
           }
@@ -365,7 +365,7 @@ export class HPAPathRefinement {
       const next = path[i + 1]!;
 
       // Check if we can skip this point
-      if (this.hasLineOfSight(prev, next, grid, config)) {
+      if (HPAPathRefinement.hasLineOfSight(prev, next, grid, config)) {
         // Skip this point with probability based on smoothing factor
         if (Math.random() > smoothingFactor) {
           smoothedPath.push(current);
@@ -431,14 +431,14 @@ export class HPAPathRefinement {
    */
   private static getNeighbors(point: Point, grid: CellType[], config: HPAConfig): Point[] {
     const neighbors: Point[] = [];
-    const directions = this.getValidDirections(config);
+    const directions = HPAPathRefinement.getValidDirections(config);
 
     for (const direction of directions) {
-      const neighbor = this.getNeighborInDirection(point, direction);
+      const neighbor = HPAPathRefinement.getNeighborInDirection(point, direction);
 
       if (
-        this.isWithinBounds(neighbor, config.width, config.height) &&
-        this.isWalkable(grid, neighbor, config.width, config.height)
+        HPAPathRefinement.isWithinBounds(neighbor, config.width, config.height) &&
+        HPAPathRefinement.isWalkable(grid, neighbor, config.width, config.height)
       ) {
         neighbors.push(neighbor);
       }
@@ -558,7 +558,7 @@ export class HPAPathRefinement {
    * @example
    */
   private static isWalkable(grid: CellType[], point: Point, width: number, height: number): boolean {
-    if (!this.isWithinBounds(point, width, height)) {
+    if (!HPAPathRefinement.isWithinBounds(point, width, height)) {
       return false;
     }
 

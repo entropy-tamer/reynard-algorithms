@@ -258,7 +258,7 @@ function isValidFlowCell(cell: FlowCell, _tolerance: number): boolean {
     return false;
   }
 
-  if (!isFinite(cell.x) || !isFinite(cell.y) || !isFinite(cell.magnitude)) {
+  if (!Number.isFinite(cell.x) || !Number.isFinite(cell.y) || !Number.isFinite(cell.magnitude)) {
     return false;
   }
 

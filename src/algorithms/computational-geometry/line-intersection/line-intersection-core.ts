@@ -239,10 +239,10 @@ export class LineIntersection {
       // Check for infinite coordinates
       if (validationOptions.checkInfinite) {
         if (
-          !isFinite(segment.start.x) ||
-          !isFinite(segment.start.y) ||
-          !isFinite(segment.end.x) ||
-          !isFinite(segment.end.y)
+          !Number.isFinite(segment.start.x) ||
+          !Number.isFinite(segment.start.y) ||
+          !Number.isFinite(segment.end.x) ||
+          !Number.isFinite(segment.end.y)
         ) {
           errors.push(`Segment ${i} has infinite coordinates`);
           invalidCount++;
@@ -467,14 +467,23 @@ export class LineIntersection {
     seg1: LineSegment,
     seg2: LineSegment,
     sweepY: number,
-    _intersections: IntersectionPoint[]
+    intersections: IntersectionPoint[]
   ): void {
     const intersection = SweepLineUtils.lineSegmentsIntersect(seg1, seg2, this.config.tolerance);
+    if (!intersection) return;
 
-    if (intersection && intersection.point.y > sweepY + (this.config.tolerance ?? 1e-10)) {
-      // Create intersection event
-      const event = SweepLineUtils.createIntersectionEvent(intersection.point, seg1, seg2);
-      this.eventQueue.add(event);
+    const tolerance = this.config.tolerance ?? 1e-10;
+    if (intersection.point.y > sweepY + tolerance) {
+      // The crossing is ahead of the sweep line: schedule an event so the
+      // status-structure ordering is updated when the sweep reaches it.
+      this.eventQueue.add(SweepLineUtils.createIntersectionEvent(intersection.point, seg1, seg2));
+    } else {
+      // The crossing is at or behind the sweep line. Horizontal segments make
+      // this the common case: their intersection lies exactly on the current
+      // sweep position, so no future event will ever be generated for it.
+      // Recording it here is the only chance to observe it at all.
+      const point = this.createIntersectionPoint(intersection.point, seg1, seg2);
+      if (point) intersections.push(point);
     }
   }
 
@@ -629,7 +638,7 @@ export class LineIntersection {
    */
   private isValidPoint(point: Point): boolean {
     return (
-      point && typeof point.x === "number" && typeof point.y === "number" && isFinite(point.x) && isFinite(point.y)
+      point && typeof point.x === "number" && typeof point.y === "number" && Number.isFinite(point.x) && Number.isFinite(point.y)
     );
   }
 

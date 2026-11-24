@@ -32,7 +32,7 @@ export class FlowFieldUtils {
     const grid: CellType[] = new Array(width * height).fill(CellType.WALKABLE);
 
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      FlowFieldUtils.seedRandom(seed);
     }
 
     for (let i = 0; i < grid.length; i++) {
@@ -60,20 +60,20 @@ export class FlowFieldUtils {
     seed?: number
   ): CellType[] {
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      FlowFieldUtils.seedRandom(seed);
     }
 
     switch (pattern) {
       case "maze":
-        return this.generateMazeGrid(width, height);
+        return FlowFieldUtils.generateMazeGrid(width, height);
       case "rooms":
-        return this.generateRoomGrid(width, height);
+        return FlowFieldUtils.generateRoomGrid(width, height);
       case "corridors":
-        return this.generateCorridorGrid(width, height);
+        return FlowFieldUtils.generateCorridorGrid(width, height);
       case "spiral":
-        return this.generateSpiralGrid(width, height);
+        return FlowFieldUtils.generateSpiralGrid(width, height);
       default:
-        return this.generateTestGrid(width, height, 0.3, seed);
+        return FlowFieldUtils.generateTestGrid(width, height, 0.3, seed);
     }
   }
 
@@ -96,14 +96,14 @@ export class FlowFieldUtils {
       if (!current) {
         break;
       }
-      const neighbors = this.getUnvisitedNeighbors(current, grid, width, height);
+      const neighbors = FlowFieldUtils.getUnvisitedNeighbors(current, grid, width, height);
 
       if (neighbors.length > 0) {
         const next = neighbors[Math.floor(Math.random() * neighbors.length)];
         if (!next) {
           break;
         }
-        const wall = this.getWallBetween(current, next);
+        const wall = FlowFieldUtils.getWallBetween(current, next);
 
         grid[next.y * width + next.x] = CellType.WALKABLE;
         grid[wall.y * width + wall.x] = CellType.WALKABLE;
@@ -174,7 +174,7 @@ export class FlowFieldUtils {
         y: room2.y + Math.floor(room2.height / 2),
       };
 
-      this.createCorridor(grid, width, height, center1, center2);
+      FlowFieldUtils.createCorridor(grid, width, height, center1, center2);
     }
 
     return grid;
@@ -352,7 +352,7 @@ export class FlowFieldUtils {
    */
   static generateRandomGoals(count: number, width: number, height: number, grid: CellType[], seed?: number): Point[] {
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      FlowFieldUtils.seedRandom(seed);
     }
 
     const goals: Point[] = [];
@@ -398,7 +398,7 @@ export class FlowFieldUtils {
     seed?: number
   ): Point[] {
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      FlowFieldUtils.seedRandom(seed);
     }
 
     const goals: Point[] = [];
@@ -426,7 +426,7 @@ export class FlowFieldUtils {
         }
         break;
       case "random":
-        return this.generateRandomGoals(5, width, height, grid, seed);
+        return FlowFieldUtils.generateRandomGoals(5, width, height, grid, seed);
     }
 
     // Filter out goals that are obstacles
@@ -536,7 +536,7 @@ export class FlowFieldUtils {
    * @example
    */
   static angleBetweenVectors(a: Vector, b: Vector): number {
-    const dot = this.dotProduct(a, b);
+    const dot = FlowFieldUtils.dotProduct(a, b);
     const magA = Math.sqrt(a.x * a.x + a.y * a.y);
     const magB = Math.sqrt(b.x * b.x + b.y * b.y);
 
@@ -644,7 +644,7 @@ export class FlowFieldUtils {
    */
   static generateRandomAgents(count: number, width: number, height: number, grid: CellType[], seed?: number): Point[] {
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      FlowFieldUtils.seedRandom(seed);
     }
 
     const agents: Point[] = [];
@@ -692,7 +692,7 @@ export class FlowFieldUtils {
     seed?: number
   ): Point[] {
     if (seed !== undefined) {
-      this.seedRandom(seed);
+      FlowFieldUtils.seedRandom(seed);
     }
 
     const agents: Point[] = [];
@@ -734,7 +734,7 @@ export class FlowFieldUtils {
         break;
       }
       case "random":
-        return this.generateRandomAgents(count, width, height, grid, seed);
+        return FlowFieldUtils.generateRandomAgents(count, width, height, grid, seed);
     }
 
     // Filter out agents that are on obstacles
@@ -887,9 +887,9 @@ export class FlowFieldUtils {
       for (let x = 0; x < width; x++) {
         const point = { x, y };
 
-        if (goals.some(g => this.pointsEqual(g, point))) {
+        if (goals.some(g => FlowFieldUtils.pointsEqual(g, point))) {
           result += "G";
-        } else if (agents.some(a => this.pointsEqual(a, point))) {
+        } else if (agents.some(a => FlowFieldUtils.pointsEqual(a, point))) {
           result += "A";
         } else {
           switch (grid[y * width + x]) {

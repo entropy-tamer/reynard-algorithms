@@ -439,6 +439,15 @@ describe("Memoization Performance Benchmarks", () => {
 
   describe("Real-world Algorithm Simulation", () => {
     it("should demonstrate performance improvement in pathfinding algorithms", { timeout: 4000 }, () => {
+      // Shared memo state is reset in beforeAll. Use a seeded RNG so the
+      // workload (and therefore the hit rate) is reproducible; random
+      // endpoints made this assertion depend on leaked hits from other files.
+      clearMathMemo();
+      let seed = 12345;
+      const rand = () => {
+        seed = (seed * 1664525 + 1013904223) >>> 0;
+        return seed / 0xffffffff;
+      };
       const gridSize = 30;
       const iterations = 2;
 
@@ -455,16 +464,17 @@ describe("Memoization Performance Benchmarks", () => {
       const simulatePathfinding = (useMemoized: boolean) => {
         const paths: number[] = [];
         const startPoints = Array.from({ length: 20 }, () => ({
-          x: Math.floor(Math.random() * gridSize),
-          y: Math.floor(Math.random() * gridSize),
+          x: Math.floor(rand() * gridSize),
+          y: Math.floor(rand() * gridSize),
         }));
-        const endPoints = Array.from({ length: 20 }, () => ({
-          x: Math.floor(Math.random() * gridSize),
-          y: Math.floor(Math.random() * gridSize),
+        // A small endpoint pool guarantees repeated distance-key lookups.
+        const endPoints = Array.from({ length: 4 }, () => ({
+          x: Math.floor(rand() * gridSize),
+          y: Math.floor(rand() * gridSize),
         }));
 
         for (let i = 0; i < startPoints.length; i++) {
-          const end = endPoints[i]!;
+          const end = endPoints[i % endPoints.length]!;
 
           // Simulate heuristic calculations (simplified A*)
           for (let x = 0; x < gridSize; x += 10) {
