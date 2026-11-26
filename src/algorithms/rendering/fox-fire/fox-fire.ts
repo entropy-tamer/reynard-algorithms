@@ -24,6 +24,14 @@
 import { FOX_ART_ALPHABET, FOX_ART_TIERS, type FoxArtTier } from "./fox-art";
 import { RAMP_STEPS, type FireBuffer } from "./fire-dog";
 
+/**
+ * Shading steps for the mark. The original local renderer measured 12 as the
+ * cheapest grid under 10/255 per-channel error; fewer reads flat, more costs
+ * bytes without a visible gain. The snap must return integers: SGR colour
+ * parameters are integers, and a float escape is both longer and invalid.
+ */
+const GRADIENT_LEVELS = 12;
+
 /** A colour, in the 0-255 range every surface can print. */
 export interface FoxFireRgb {
     readonly r: number;
@@ -252,6 +260,17 @@ export function renderFoxFireFrame(options: FoxFireFrameOptions): FoxFireCell[][
     return frame;
 }
 
+/** Snap a colour onto the `GRADIENT_LEVELS` grid, with integer channels. */
+function quantiseRgb(color: FoxFireRgb, levels: number): FoxFireRgb {
+    if (levels <= 1) return color;
+    const step = 255 / (levels - 1);
+    return {
+        r: Math.round(Math.round(color.r / step) * step),
+        g: Math.round(Math.round(color.g / step) * step),
+        b: Math.round(Math.round(color.b / step) * step),
+    };
+}
+
 /**
  * The mark's colour at one cell.
  *
@@ -276,7 +295,7 @@ function markColor(
     let color = foxMix(base, palette.light, rim);
     const crest = smoothstep(6, 0, Math.abs(markX - (sweepX + markY * 0.35)));
     if (crest > 0) color = foxMix(color, palette.crest, crest);
-    return color;
+    return quantiseRgb(color, GRADIENT_LEVELS);
 }
 
 /**
@@ -294,7 +313,7 @@ function fireColor(ramp: number, palette: FoxFirePalette): FoxFireRgb {
 
 /** Clamp to [0, 1]. */
 function clamp01(value: number): number {
-    return value < 0 ? 0 : value > 1 ? 1 : value;
+    return value < 0 ? 0 : Math.min(value, 1);
 }
 
 /**
