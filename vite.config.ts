@@ -14,6 +14,7 @@ export default defineConfig(({ mode }) => {
           index: resolve(import.meta.dirname, "src/index.ts"),
           optimized: resolve(import.meta.dirname, "src/optimized.ts"),
           noise2d: resolve(import.meta.dirname, "src/noise2d.ts"),
+          "field-of-view": resolve(import.meta.dirname, "src/field-of-view.ts"),
         },
         name: "ReynardAlgorithms",
         fileName: (_format, entryName) => `${entryName}.${isCjsBuild ? "cjs" : "js"}`,

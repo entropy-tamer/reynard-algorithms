@@ -22,6 +22,11 @@
       "types": "./dist/noise2d.d.ts",
       "import": "./dist/noise2d.js",
       "require": "./dist/noise2d.cjs"
+    },
+    "./field-of-view": {
+      "types": "./dist/field-of-view.d.ts",
+      "import": "./dist/field-of-view.js",
+      "require": "./dist/field-of-view.cjs"
     }
   },
   "files": [

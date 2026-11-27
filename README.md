@@ -121,6 +121,7 @@ const pairs = detectCollisions(boxes);
 - [`docs/CATALOGUE.md`](docs/CATALOGUE.md): every implementation with its guide link.
 - [`docs/algorithms/INDEX.md`](docs/algorithms/INDEX.md): the guide index.
 - [docs/guides/](docs/guides/): the shared foundations (geometry, memoization, memory pooling, performance, profiling, configuration).
+- [field of view](docs/guides/field-of-view.md): Bresenham line of sight, closed diagonal corners and persistent fog-of-war memory.
 - [sly.so/reynard#algorithms](https://sly.so/reynard#algorithms): the same catalog as a page.
 
 Each guide states the model, the equations, the asymptotic cost and the failure
