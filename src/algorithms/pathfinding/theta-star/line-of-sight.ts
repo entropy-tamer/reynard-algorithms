@@ -42,7 +42,7 @@ export class LineOfSight {
     try {
       // Check if endpoints are walkable
       if (checkEndpoints) {
-        if (!this.isWalkable(grid, from, width, height) || !this.isWalkable(grid, to, width, height)) {
+        if (!LineOfSight.isWalkable(grid, from, width, height) || !LineOfSight.isWalkable(grid, to, width, height)) {
           return {
             hasLineOfSight: false,
             distanceToObstacle: 0,
@@ -52,7 +52,7 @@ export class LineOfSight {
       }
 
       // Check distance limit
-      const distance = this.distance(from, to);
+      const distance = LineOfSight.distance(from, to);
       if (distance > maxDistance) {
         return {
           hasLineOfSight: false,
@@ -62,21 +62,21 @@ export class LineOfSight {
       }
 
       // Use Bresenham's line algorithm
-      const points = this.bresenhamLine(from, to);
+      const points = LineOfSight.bresenhamLine(from, to);
 
       for (let i = 0; i < points.length; i++) {
         const point = points[i];
         if (!point) continue;
 
         // Skip endpoints if not checking them
-        if (!checkEndpoints && (this.pointsEqual(point, from) || this.pointsEqual(point, to))) {
+        if (!checkEndpoints && (LineOfSight.pointsEqual(point, from) || LineOfSight.pointsEqual(point, to))) {
           continue;
         }
 
-        if (!this.isWalkable(grid, point, width, height)) {
+        if (!LineOfSight.isWalkable(grid, point, width, height)) {
           return {
             hasLineOfSight: false,
-            distanceToObstacle: this.distance(from, point),
+            distanceToObstacle: LineOfSight.distance(from, point),
             blockedAt: point,
             success: true,
           };
@@ -134,7 +134,7 @@ export class LineOfSight {
     try {
       // Check if endpoints are walkable
       if (checkEndpoints) {
-        if (!this.isWalkable(grid, from, width, height) || !this.isWalkable(grid, to, width, height)) {
+        if (!LineOfSight.isWalkable(grid, from, width, height) || !LineOfSight.isWalkable(grid, to, width, height)) {
           return {
             hasLineOfSight: false,
             distanceToObstacle: 0,
@@ -144,7 +144,7 @@ export class LineOfSight {
       }
 
       // Check distance limit
-      const distance = this.distance(from, to);
+      const distance = LineOfSight.distance(from, to);
       if (distance > maxDistance) {
         return {
           hasLineOfSight: false,
@@ -177,14 +177,14 @@ export class LineOfSight {
         const point = { x: Math.round(x), y: Math.round(y) };
 
         // Skip endpoints if not checking them
-        if (!checkEndpoints && (this.pointsEqual(point, from) || this.pointsEqual(point, to))) {
+        if (!checkEndpoints && (LineOfSight.pointsEqual(point, from) || LineOfSight.pointsEqual(point, to))) {
           x += xIncrement;
           y += yIncrement;
           currentDistance += Math.sqrt(xIncrement * xIncrement + yIncrement * yIncrement);
           continue;
         }
 
-        if (!this.isWalkable(grid, point, width, height)) {
+        if (!LineOfSight.isWalkable(grid, point, width, height)) {
           return {
             hasLineOfSight: false,
             distanceToObstacle: currentDistance,
@@ -249,7 +249,7 @@ export class LineOfSight {
     try {
       // Check if endpoints are walkable
       if (checkEndpoints) {
-        if (!this.isWalkable(grid, from, width, height) || !this.isWalkable(grid, to, width, height)) {
+        if (!LineOfSight.isWalkable(grid, from, width, height) || !LineOfSight.isWalkable(grid, to, width, height)) {
           return {
             hasLineOfSight: false,
             distanceToObstacle: 0,
@@ -259,7 +259,7 @@ export class LineOfSight {
       }
 
       // Check distance limit
-      const distance = this.distance(from, to);
+      const distance = LineOfSight.distance(from, to);
       if (distance > maxDistance) {
         return {
           hasLineOfSight: false,
@@ -269,21 +269,21 @@ export class LineOfSight {
       }
 
       // Use ray casting algorithm
-      const ray = this.castRay(from, to, distance);
+      const ray = LineOfSight.castRay(from, to, distance);
 
       for (let i = 0; i < ray.length; i++) {
         const point = ray[i];
         if (!point) continue;
 
         // Skip endpoints if not checking them
-        if (!checkEndpoints && (this.pointsEqual(point, from) || this.pointsEqual(point, to))) {
+        if (!checkEndpoints && (LineOfSight.pointsEqual(point, from) || LineOfSight.pointsEqual(point, to))) {
           continue;
         }
 
-        if (!this.isWalkable(grid, point, width, height)) {
+        if (!LineOfSight.isWalkable(grid, point, width, height)) {
           return {
             hasLineOfSight: false,
-            distanceToObstacle: this.distance(from, point),
+            distanceToObstacle: LineOfSight.distance(from, point),
             blockedAt: point,
             success: true,
           };
@@ -339,14 +339,14 @@ export class LineOfSight {
     const { useBresenham = true, useDDA = false, useRayCasting = false } = options;
 
     if (useBresenham) {
-      return this.checkBresenham(grid, from, to, width, height, options);
+      return LineOfSight.checkBresenham(grid, from, to, width, height, options);
     } else if (useDDA) {
-      return this.checkDDA(grid, from, to, width, height, options);
+      return LineOfSight.checkDDA(grid, from, to, width, height, options);
     } else if (useRayCasting) {
-      return this.checkRayCasting(grid, from, to, width, height, options);
+      return LineOfSight.checkRayCasting(grid, from, to, width, height, options);
     } else {
       // Default to Bresenham
-      return this.checkBresenham(grid, from, to, width, height, options);
+      return LineOfSight.checkBresenham(grid, from, to, width, height, options);
     }
   }
 
@@ -429,8 +429,8 @@ export class LineOfSight {
    * @example
    */
   private static distance(a: Point, b: Point): number {
-    if (!this._memoDistance) {
-      this._memoDistance = adaptiveMemo(
+    if (!LineOfSight._memoDistance) {
+      LineOfSight._memoDistance = adaptiveMemo(
         (p1: Point, p2: Point) => {
           const dx = p2.x - p1.x;
           const dy = p2.y - p1.y;
@@ -440,7 +440,7 @@ export class LineOfSight {
         (p1: Point, p2: Point) => `${p1.x}|${p1.y}|${p2.x}|${p2.y}`
       );
     }
-    return this._memoDistance(a, b);
+    return LineOfSight._memoDistance(a, b);
   }
 
   private static _memoDistance?: (a: Point, b: Point) => number;
@@ -479,7 +479,7 @@ export class LineOfSight {
    * @example
    */
   private static isWalkable(grid: CellType[], point: Point, width: number, height: number): boolean {
-    if (!this.isWithinBounds(point, width, height)) {
+    if (!LineOfSight.isWithinBounds(point, width, height)) {
       return false;
     }
 

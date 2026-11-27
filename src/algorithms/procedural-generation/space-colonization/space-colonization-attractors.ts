@@ -208,7 +208,6 @@ export function distributeAttractors(
         random,
         options.crownBaseKeepChance ?? 0.15,
       );
-    case "sphere":
     default:
       return distributeSphere(options.bounds, options.count, random);
   }

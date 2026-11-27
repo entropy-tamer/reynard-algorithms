@@ -372,7 +372,7 @@ export class SutherlandHodgmanClipper {
         throw new Error(`${name} polygon vertex ${i} must have x and y properties`);
       }
 
-      if (!isFinite(vertex.x) || !isFinite(vertex.y)) {
+      if (!Number.isFinite(vertex.x) || !Number.isFinite(vertex.y)) {
         throw new Error(`${name} polygon vertex ${i} must have finite coordinates`);
       }
     }

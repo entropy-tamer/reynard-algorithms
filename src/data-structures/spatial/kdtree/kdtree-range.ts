@@ -373,7 +373,7 @@ function isValidPoint(point: Point, dimensions: number): boolean {
 
   for (const key of keys) {
     const value = point[key];
-    if (typeof value !== "number" || !isFinite(value)) {
+    if (typeof value !== "number" || !Number.isFinite(value)) {
       return false;
     }
   }
@@ -390,7 +390,7 @@ function isValidPoint(point: Point, dimensions: number): boolean {
  * @example
  */
 function isValidBoundingBox(bounds: BoundingBox, dimensions: number): boolean {
-  if (!bounds || !bounds.min || !bounds.max) {
+  if (!bounds?.min || !bounds.max) {
     return false;
   }
   if (bounds.min.length !== dimensions || bounds.max.length !== dimensions) {
@@ -402,8 +402,8 @@ function isValidBoundingBox(bounds: BoundingBox, dimensions: number): boolean {
     if (
       typeof minValue !== "number" ||
       typeof maxValue !== "number" ||
-      !isFinite(minValue) ||
-      !isFinite(maxValue) ||
+      !Number.isFinite(minValue) ||
+      !Number.isFinite(maxValue) ||
       minValue > maxValue
     ) {
       return false;

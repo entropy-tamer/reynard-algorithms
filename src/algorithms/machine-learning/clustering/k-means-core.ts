@@ -324,7 +324,7 @@ export class KMeans {
       if (typeof point.x !== "number" || typeof point.y !== "number") {
         throw new Error("All points must have numeric x and y coordinates");
       }
-      if (!isFinite(point.x) || !isFinite(point.y)) {
+      if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) {
         throw new Error("All point coordinates must be finite");
       }
     }

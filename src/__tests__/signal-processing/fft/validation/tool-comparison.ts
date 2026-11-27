@@ -4,8 +4,8 @@
  * Aggregates results from ffmpeg and sox comparisons and generates reports.
  */
 
-import { existsSync } from "fs";
-import { join } from "path";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 
 /**
  * Tool comparison result

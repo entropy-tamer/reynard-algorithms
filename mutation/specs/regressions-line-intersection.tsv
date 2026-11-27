@@ -1,0 +1,6 @@
+# repo: /home/kade/reynard/algorithms
+# runner: vitest
+# Regression guard: line intersections at the current sweep Y were dropped.
+# Target: src/__tests__/computational-geometry/geometry-primitives.test.ts
+canary-sweep-no-intersections	src/algorithms/computational-geometry/line-intersection/line-intersection-core.ts	const intersections = this.runSweepLineAlgorithm();	const intersections: IntersectionPoint[] = [];
+boundary-crossing-dropped	src/algorithms/computational-geometry/line-intersection/line-intersection-core.ts	if (point) intersections.push(point);	if (point) void point;

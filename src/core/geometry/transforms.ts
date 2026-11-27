@@ -129,7 +129,7 @@ export class TransformOps {
     const bottomRight: Point = { x: rect.x + rect.width, y: rect.y + rect.height };
 
     const corners = [topLeft, topRight, bottomLeft, bottomRight];
-    const transformedCorners = corners.map(corner => this.applyToPoint(transform, corner));
+    const transformedCorners = corners.map(corner => TransformOps.applyToPoint(transform, corner));
 
     const firstCorner = transformedCorners[0];
     if (!firstCorner) {

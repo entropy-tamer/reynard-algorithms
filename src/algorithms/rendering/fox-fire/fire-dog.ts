@@ -145,30 +145,6 @@ const FLICKER_RATE = 0.09;
 const FUEL_FLOOR = 0.55;
 
 /**
- * Lateral drift at a point in the buffer.
- *
- * Two waves at deliberately different scales: a short, fast one for the fine
- * lick at a tongue's tip, and a long, slow one that carries a whole tongue
- * sideways. The `y` term in the second is a vertical shear -- the same column
- * leans further over as it rises, which is what stops the flame looking like it
- * was extruded from a slot.
- *
- * The short wave's frequency and time rate are both higher than the obvious
- * choice. A slow, long wave is a *standing* field: its wavelength sets a fixed
- * convergence pattern, heat piles into those bands, and the flame grows a flat
- * bar with a period equal to that wavelength. (Measured: `sin(x * 0.21)` has a
- * 30-column period, and the shelf that came out was 33 columns wide.) Fast
- * evolution is not decoration here -- it is what keeps the field from having a
- * fixed wavelength at all.
- */
-function windAt(x: number, y: number, t: number): number {
-    return (
-        TURBULENCE *
-        (Math.sin(x * 0.38 + t * 0.26) + 0.55 * Math.sin(x * 0.11 - t * 0.19 + y * 0.045))
-    );
-}
-
-/**
  * Intensity at which a sub-row starts drawing a dot.
  *
  * Measured, not guessed. With 0 the flame base is a solid slab; the values in
@@ -330,6 +306,12 @@ export class FireBuffer {
     /** Sub-row buffer, row-major, `SUB_ROWS` entries per terminal row. */
     private readonly buf: Uint8Array;
     private readonly scratch: Uint8Array;
+    /** Reused per step: trig tables are sized once, not allocated per frame. */
+    private readonly sinA: Float64Array;
+    private readonly sinB: Float64Array;
+    private readonly cosB: Float64Array;
+    private readonly sinY: Float64Array;
+    private readonly cosY: Float64Array;
     private readonly rand: () => number;
     /** Frame counter, the time axis for the wind and the fuel flicker. */
     private t = 0;
@@ -341,6 +323,11 @@ export class FireBuffer {
         const h = this.rows * SUB_ROWS;
         this.buf = new Uint8Array(w * h);
         this.scratch = new Uint8Array(w * h);
+        this.sinA = new Float64Array(w);
+        this.sinB = new Float64Array(w);
+        this.cosB = new Float64Array(w);
+        this.sinY = new Float64Array(h);
+        this.cosY = new Float64Array(h);
         this.rand = mulberry32(opts.seed ?? 0x5eed);
     }
 
@@ -394,6 +381,27 @@ export class FireBuffer {
         const h = this.rows * SUB_ROWS;
         const t = this.t++;
 
+        // Two waves: a short fast lick and a long slow lean with vertical
+        // shear. Their frequencies are measured, not decorative -- slower
+        // values make a standing field with a fixed convergence pattern and a
+        // flat bar of flame. The sum is separable
+        // (sin(a + b) = sin(a)cos(b) + cos(a)sin(b)); hoisting its trig out of
+        // the per-cell loop removes two Math.sin calls per cell per step.
+        // At the largest tier that is ~1M calls per 24-step warm-up.
+        const { sinA, sinB, cosB, sinY, cosY } = this;
+        for (let x = 0; x < cols; x++) {
+            const a = x * 0.38 + t * 0.26;
+            const b = x * 0.11 - t * 0.19;
+            sinA[x] = Math.sin(a);
+            sinB[x] = Math.sin(b);
+            cosB[x] = Math.cos(b);
+        }
+        for (let y = 0; y < h; y++) {
+            const b = y * 0.045;
+            sinY[y] = Math.sin(b);
+            cosY[y] = Math.cos(b);
+        }
+
         // Phase 1: the fuel bed. Edges are seeded dark so the "outer columns
         // stay unlit" invariant holds here too, not just on the advected rows.
         for (let k = 0; k < FUEL_ROWS; k++) {
@@ -414,7 +422,10 @@ export class FireBuffer {
             scratch[rowStart + cols - 1] = 0;
             for (let x = 1; x < cols - 1; x++) {
                 const i = rowStart + x;
-                const vx = windAt(x, y, t) + (rand() - 0.5) * LICK;
+                const wind =
+                    TURBULENCE *
+                    (sinA[x] + 0.55 * (sinB[x] * cosY[y] + cosB[x] * sinY[y]));
+                const vx = wind + (rand() - 0.5) * LICK;
                 // Height-dependent cooling. `depth` is 0 at the fuel bed and 1
                 // at the top of the buffer, so the ramp is normalised: the same
                 // flame shape comes out of a 16-row tier and a 50-row one

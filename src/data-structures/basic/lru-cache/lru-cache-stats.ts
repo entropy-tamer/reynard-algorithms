@@ -109,6 +109,28 @@ export class LRUCacheStatsManager<K> {
    * @param size
    * @example
    */
+  reset(): void {
+    this.stats = {
+      hits: 0,
+      misses: 0,
+      sets: 0,
+      deletes: 0,
+      evictions: 0,
+      size: 0,
+      maxSize: this.stats.maxSize,
+      hitRate: 0,
+      averageAccessTime: 0,
+    };
+    this.performanceMetrics = {
+      averageGetTime: 0,
+      averageSetTime: 0,
+      averageDeleteTime: 0,
+      estimatedMemoryUsage: 0,
+      cleanupCount: 0,
+      totalCleanupTime: 0,
+    };
+  }
+
   setSize(size: number): void {
     this.stats.size = size;
   }

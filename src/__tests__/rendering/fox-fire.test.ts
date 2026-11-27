@@ -168,4 +168,34 @@ describe("renderFoxFireFrame", () => {
             expect(channel).toBeLessThanOrEqual(255);
         }
     });
+
+    it("keeps the mark on twelve integer shading steps in every tier", () => {
+        const levels = 12;
+        const step = 255 / (levels - 1);
+        const snapped = new Set(
+            Array.from({ length: levels }, (_, i) => Math.round(i * step)),
+        );
+        const colours = new Set<string>();
+        for (const tier of FOX_ART_TIERS) {
+            const layout = foxFireLayout(tier.cols, tier.rows);
+            const frame = renderFoxFireFrame({
+                tier,
+                fire: litFire(tier.cols, tier.rows),
+                cols: tier.cols,
+                rows: tier.rows,
+                offsetX: layout.offsetX,
+                offsetY: layout.offsetY,
+            });
+            for (const cell of frame.flat()) {
+                if (cell.kind !== "mark" || cell.color === undefined) continue;
+                const colour = cell.color;
+                colours.add(`${colour.r},${colour.g},${colour.b}`);
+                for (const channel of [colour.r, colour.g, colour.b]) {
+                    expect(snapped.has(channel)).toBe(true);
+                }
+            }
+        }
+        expect(colours.size).toBeGreaterThan(3);
+        expect(colours.size).toBeLessThanOrEqual(20);
+    });
 });

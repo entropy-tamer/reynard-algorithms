@@ -105,8 +105,8 @@ export class VectorOps {
    * (no NaN propagation). Adaptively memoized for hot paths.
    */
   static normalize(vector: Vector): Vector {
-    if (!this._normalizeMemo) {
-      this._normalizeMemo = adaptiveMemo(
+    if (!VectorOps._normalizeMemo) {
+      VectorOps._normalizeMemo = adaptiveMemo(
         (x: number, y: number) => {
           const mag = Math.sqrt(x * x + y * y);
           if (mag === 0) return { x: 0, y: 0 };
@@ -116,7 +116,7 @@ export class VectorOps {
         (x: number, y: number) => `${x}|${y}`
       );
     }
-    return this._normalizeMemo!(vector.x, vector.y);
+    return VectorOps._normalizeMemo!(vector.x, vector.y);
   }
 
   private static _normalizeMemo?: (x: number, y: number) => Vector;
@@ -146,9 +146,9 @@ export class VectorOps {
    * Unsigned angle between two vectors in radians, in range [0, π].
    */
   static angleBetween(a: Vector, b: Vector): number {
-    const dot = this.dot(a, b);
-    const magA = this.magnitude(a);
-    const magB = this.magnitude(b);
+    const dot = VectorOps.dot(a, b);
+    const magA = VectorOps.magnitude(a);
+    const magB = VectorOps.magnitude(b);
     return VectorOps.memoizedAcos(dot / (magA * magB));
   }
 }

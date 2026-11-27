@@ -97,7 +97,6 @@ function getArticleScalingFactors(size: number, mode: FFTNormalizationMode): { d
       return { dcScale: 1, harmonicScale: 1 };
     case FFTNormalizationMode.STANDARD:
       return { dcScale: 1, harmonicScale: 2 };
-    case FFTNormalizationMode.NONE:
     default:
       return { dcScale: 1 / size, harmonicScale: 2 / size };
   }

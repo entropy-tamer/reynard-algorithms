@@ -88,7 +88,7 @@ export class AdaptiveClustering {
       // Calculate local complexity (simplified)
       const x = i % width;
       const y = Math.floor(i / width);
-      const neighbors = this.getNeighborCount(grid, x, y, width, height);
+      const neighbors = AdaptiveClustering.getNeighborCount(grid, x, y, width, height);
       complexitySum += neighbors;
     }
 
@@ -97,7 +97,7 @@ export class AdaptiveClustering {
     const aspectRatio = width / height;
     
     // Calculate recommended cluster size based on analysis
-    const recommendedClusterSize = this.calculateOptimalClusterSize({
+    const recommendedClusterSize = AdaptiveClustering.calculateOptimalClusterSize({
       totalCells,
       obstacleDensity,
       complexity,
@@ -131,7 +131,7 @@ export class AdaptiveClustering {
     let optimalSize = Math.sqrt(totalCells / 100); // Target ~100 clusters
 
     // Adjust for obstacle density
-    if (obstacleDensity > this.config.densityThreshold) {
+    if (obstacleDensity > AdaptiveClustering.config.densityThreshold) {
       // High density - smaller clusters for better granularity
       optimalSize *= 0.7;
     } else if (obstacleDensity < 0.1) {
@@ -146,8 +146,8 @@ export class AdaptiveClustering {
     }
 
     return Math.max(
-      this.config.minClusterSize,
-      Math.min(this.config.maxClusterSize, Math.round(optimalSize))
+      AdaptiveClustering.config.minClusterSize,
+      Math.min(AdaptiveClustering.config.maxClusterSize, Math.round(optimalSize))
     );
   }
 
@@ -162,26 +162,26 @@ export class AdaptiveClustering {
     const startTime = performance.now();
 
     // Create cache key
-    const cacheKey = this.createCacheKey(grid, config, options);
+    const cacheKey = AdaptiveClustering.createCacheKey(grid, config, options);
     
     // Check cache first
-    const cached = this.clusteringCache.get(cacheKey);
+    const cached = AdaptiveClustering.clusteringCache.get(cacheKey);
     if (cached) {
       return cached;
     }
 
     // Analyze grid characteristics
-    const analysis = this.analyzeGrid(grid, config.width, config.height);
+    const analysis = AdaptiveClustering.analyzeGrid(grid, config.width, config.height);
     
     // Calculate optimal cluster size
-    const optimalClusterSize = this.calculateOptimalClusterSize(analysis);
+    const optimalClusterSize = AdaptiveClustering.calculateOptimalClusterSize(analysis);
 
     // Generate clusters with adaptive sizing
     const clusters: Cluster[] = [];
     const clusterOptions: ClusterGenerationOptions = {
       clusterSize: optimalClusterSize,
-      minClusterSize: this.config.minClusterSize,
-      maxClusterSize: this.config.maxClusterSize,
+      minClusterSize: AdaptiveClustering.config.minClusterSize,
+      maxClusterSize: AdaptiveClustering.config.maxClusterSize,
       useOverlappingClusters: false,
       overlapSize: 0,
       useAdaptiveSizing: true,
@@ -191,7 +191,7 @@ export class AdaptiveClustering {
 
     for (let y = 0; y < config.height; y += optimalClusterSize) {
       for (let x = 0; x < config.width; x += optimalClusterSize) {
-        const cluster = this.createAdaptiveCluster(
+        const cluster = AdaptiveClustering.createAdaptiveCluster(
           grid, x, y, optimalClusterSize, optimalClusterSize,
           config.width, config.height, clusters.length, analysis
         );
@@ -202,10 +202,10 @@ export class AdaptiveClustering {
     }
 
     // Post-process clusters
-    const processedClusters = this.postProcessClusters(clusters, clusterOptions, analysis);
+    const processedClusters = AdaptiveClustering.postProcessClusters(clusters, clusterOptions, analysis);
 
     // Detect entrances
-    const entranceResult = this.detectAdaptiveEntrances(
+    const entranceResult = AdaptiveClustering.detectAdaptiveEntrances(
       processedClusters, grid, config, {
         detectBorderEntrances: true,
         detectInteriorEntrances: true,
@@ -218,7 +218,7 @@ export class AdaptiveClustering {
     const entrances = entranceResult.entrances;
 
     // Update clusters with entrances
-    const finalClusters = this.updateClustersWithEntrances(processedClusters, entrances);
+    const finalClusters = AdaptiveClustering.updateClustersWithEntrances(processedClusters, entrances);
 
     const endTime = performance.now();
     const generationTime = endTime - startTime;
@@ -230,14 +230,14 @@ export class AdaptiveClustering {
       stats: {
         clustersCreated: finalClusters.length,
         entrancesFound: entrances.length,
-        averageClusterSize: this.calculateAverageClusterSize(finalClusters),
+        averageClusterSize: AdaptiveClustering.calculateAverageClusterSize(finalClusters),
         generationTime,
         adaptiveClusterSize: optimalClusterSize,
         gridAnalysis: analysis,
       },
     };
 
-    this.clusteringCache.set(cacheKey, result);
+    AdaptiveClustering.clusteringCache.set(cacheKey, result);
     return result;
   }
 
@@ -319,11 +319,11 @@ export class AdaptiveClustering {
 
     // Merge small clusters if enabled
     if (options.mergeSmallClusters) {
-      processedClusters = this.filterClustersByThreshold(processedClusters, options.smallClusterThreshold);
+      processedClusters = AdaptiveClustering.filterClustersByThreshold(processedClusters, options.smallClusterThreshold);
     }
 
     // Optimize cluster boundaries
-    processedClusters = this.optimizeClusterBoundaries(processedClusters, analysis);
+    processedClusters = AdaptiveClustering.optimizeClusterBoundaries(processedClusters, analysis);
 
     return processedClusters;
   }
@@ -346,12 +346,12 @@ export class AdaptiveClustering {
       const cluster = clusters[i];
       if (!cluster) continue;
       
-      const neighborClusters = this.findNeighborClusters(clusters, cluster, config.width, config.height);
+      const neighborClusters = AdaptiveClustering.findNeighborClusters(clusters, cluster, config.width, config.height);
       
       // Detect entrances between this cluster and neighbors
       for (const neighbor of neighborClusters) {
         if (neighbor && cluster) {
-          const sharedEntrances = this.findSharedEntrances(cluster, neighbor, grid, config);
+          const sharedEntrances = AdaptiveClustering.findSharedEntrances(cluster, neighbor, grid, config);
           entrances.push(...sharedEntrances);
         }
       }
@@ -437,7 +437,7 @@ export class AdaptiveClustering {
     ];
 
     for (const edge of edges) {
-      if (this.isValidEntrance(edge, grid, config)) {
+      if (AdaptiveClustering.isValidEntrance(edge, grid, config)) {
         entrances.push({
           id: `entrance-${cluster.id}-${neighbor.id}`,
           x: edge.x,
@@ -491,7 +491,7 @@ export class AdaptiveClustering {
    */
   static getPerformanceStats(): { size: number } {
     const results: ClusterPerformanceMetrics[] = [];
-    for (const metrics of this.performanceCache.values()) {
+    for (const metrics of AdaptiveClustering.performanceCache.values()) {
       results.push(...metrics);
     }
     return { size: results.length };
@@ -501,14 +501,14 @@ export class AdaptiveClustering {
    * Clear all caches
    */
   static resetCaches(): void {
-    this.clusteringCache.clear();
-    this.performanceCache.clear();
+    AdaptiveClustering.clusteringCache.clear();
+    AdaptiveClustering.performanceCache.clear();
   }
 
   /**
    * Configure adaptive clustering
    */
   static configure(config: Partial<AdaptiveClusteringConfig>): void {
-    this.config = { ...this.config, ...config };
+    AdaptiveClustering.config = { ...AdaptiveClustering.config, ...config };
   }
 }

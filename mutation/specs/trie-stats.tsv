@@ -1,0 +1,11 @@
+# repo: /home/kade/reynard/algorithms
+# runner: vitest
+# Registry entry: trie stats accounting. Target suite:
+#   src/__tests__/data-structures/trie-stats-traversal.test.ts
+# Run: bash ~/src/foxtools/testkit/mutate-check.sh ~/reynard/algorithms \
+#        mutation/specs/trie-stats.tsv -- src/__tests__/data-structures/trie-stats-traversal.test.ts
+#
+# The canary inflates totalWords by 10 per insert; the suite asserts exactly 500.
+canary-totalwords-inflated	src/data-structures/basic/trie/trie-core.ts	this.stats.totalWords++;	this.stats.totalWords += 10;
+totalnodes-not-counted	src/data-structures/basic/trie/trie-core.ts	this.stats.totalNodes += nodesCreated;	this.stats.totalNodes += 0;
+wordlength-not-accumulated	src/data-structures/basic/trie/trie-core.ts	this.totalWordLength += normalizedWord.length;	this.totalWordLength += 0;

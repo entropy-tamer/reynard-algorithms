@@ -140,7 +140,7 @@ describe("Comprehensive Pathfinding Validation", () => {
           allowDiagonal: true,
           diagonalOnlyWhenClear: false,
           cardinalCost: 1,
-          diagonalCost: 1.414,
+          diagonalCost: Math.SQRT2,
           maxCost: 1000,
           useManhattanDistance: false,
           useEuclideanDistance: true,

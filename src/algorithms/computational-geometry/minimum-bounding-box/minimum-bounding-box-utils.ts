@@ -54,7 +54,7 @@ export class MinimumBoundingBoxUtils {
    * @example
    */
   static normalize(v: Vector): Vector {
-    const mag = this.magnitude(v);
+    const mag = MinimumBoundingBoxUtils.magnitude(v);
     if (mag === 0) return { x: 0, y: 0 };
     return { x: v.x / mag, y: v.y / mag };
   }
@@ -253,11 +253,11 @@ export class MinimumBoundingBoxUtils {
     if (!pivot) return points;
     points.slice(1).sort((a, b) => {
       if (!a || !b) return 0;
-      const angleA = this.vectorToAngle(this.vectorFromPoints(pivot, a));
-      const angleB = this.vectorToAngle(this.vectorFromPoints(pivot, b));
+      const angleA = MinimumBoundingBoxUtils.vectorToAngle(MinimumBoundingBoxUtils.vectorFromPoints(pivot, a));
+      const angleB = MinimumBoundingBoxUtils.vectorToAngle(MinimumBoundingBoxUtils.vectorFromPoints(pivot, b));
       if (Math.abs(angleA - angleB) < 1e-10) {
         // If angles are equal, sort by distance
-        return this.distanceSquared(pivot, a) - this.distanceSquared(pivot, b);
+        return MinimumBoundingBoxUtils.distanceSquared(pivot, a) - MinimumBoundingBoxUtils.distanceSquared(pivot, b);
       }
       return angleA - angleB;
     });
@@ -277,9 +277,9 @@ export class MinimumBoundingBoxUtils {
         const prevPrev = hull[hull.length - 2];
         const prev = hull[hull.length - 1];
         if (!prevPrev || !prev) break;
-        if (this.crossProduct(
-          this.vectorFromPoints(prevPrev, prev),
-          this.vectorFromPoints(prev, pointI)
+        if (MinimumBoundingBoxUtils.crossProduct(
+          MinimumBoundingBoxUtils.vectorFromPoints(prevPrev, prev),
+          MinimumBoundingBoxUtils.vectorFromPoints(prev, pointI)
         ) <= 0) {
           hull.pop();
         } else {
@@ -311,7 +311,7 @@ export class MinimumBoundingBoxUtils {
     }
   ): Rectangle {
     if (points.length < 3) {
-      return this.calculateBoundingBox(points);
+      return MinimumBoundingBoxUtils.calculateBoundingBox(points);
     }
 
     const {
@@ -335,8 +335,8 @@ export class MinimumBoundingBoxUtils {
         const mid1 = left + (right - left) / 3;
         const mid2 = right - (right - left) / 3;
 
-        const area1 = this.calculateBoundingBoxArea(points, mid1);
-        const area2 = this.calculateBoundingBoxArea(points, mid2);
+        const area1 = MinimumBoundingBoxUtils.calculateBoundingBoxArea(points, mid1);
+        const area2 = MinimumBoundingBoxUtils.calculateBoundingBoxArea(points, mid2);
 
         if (area1 < area2) {
           right = mid2;
@@ -346,7 +346,7 @@ export class MinimumBoundingBoxUtils {
       }
 
       const optimalAngle = (left + right) / 2;
-      bestRectangle = this.calculateBoundingBoxAtAngle(points, optimalAngle);
+      bestRectangle = MinimumBoundingBoxUtils.calculateBoundingBoxAtAngle(points, optimalAngle);
     } else if (useGoldenSection) {
       // Golden section search
       const phi = (1 + Math.sqrt(5)) / 2;
@@ -358,8 +358,8 @@ export class MinimumBoundingBoxUtils {
       let x2 = a + (1 - resphi) * (b - a);
 
       while (Math.abs(b - a) > anglePrecision) {
-        const f1 = this.calculateBoundingBoxArea(points, x1);
-        const f2 = this.calculateBoundingBoxArea(points, x2);
+        const f1 = MinimumBoundingBoxUtils.calculateBoundingBoxArea(points, x1);
+        const f2 = MinimumBoundingBoxUtils.calculateBoundingBoxArea(points, x2);
 
         if (f1 < f2) {
           b = x2;
@@ -373,12 +373,12 @@ export class MinimumBoundingBoxUtils {
       }
 
       const optimalAngle = (a + b) / 2;
-      bestRectangle = this.calculateBoundingBoxAtAngle(points, optimalAngle);
+      bestRectangle = MinimumBoundingBoxUtils.calculateBoundingBoxAtAngle(points, optimalAngle);
     } else {
       // Linear search
       for (let angle = startAngle; angle <= startAngle + maxAngle; angle += angleStep) {
-        const rectangle = this.calculateBoundingBoxAtAngle(points, angle);
-        const area = this.calculateArea(rectangle);
+        const rectangle = MinimumBoundingBoxUtils.calculateBoundingBoxAtAngle(points, angle);
+        const area = MinimumBoundingBoxUtils.calculateArea(rectangle);
 
         if (area < bestArea) {
           bestArea = area;
@@ -387,7 +387,7 @@ export class MinimumBoundingBoxUtils {
       }
     }
 
-    return bestRectangle || this.calculateBoundingBox(points);
+    return bestRectangle || MinimumBoundingBoxUtils.calculateBoundingBox(points);
   }
 
   /**
@@ -398,8 +398,8 @@ export class MinimumBoundingBoxUtils {
    * @example
    */
   static calculateBoundingBoxArea(points: Point[], angle: number): number {
-    const rectangle = this.calculateBoundingBoxAtAngle(points, angle);
-    return this.calculateArea(rectangle);
+    const rectangle = MinimumBoundingBoxUtils.calculateBoundingBoxAtAngle(points, angle);
+    return MinimumBoundingBoxUtils.calculateArea(rectangle);
   }
 
   /**
@@ -460,7 +460,7 @@ export class MinimumBoundingBoxUtils {
 
     let insideCount = 0;
     for (const point of points) {
-      if (this.isPointInsideRectangle(point, rectangle, tolerance)) {
+      if (MinimumBoundingBoxUtils.isPointInsideRectangle(point, rectangle, tolerance)) {
         insideCount++;
       }
     }
@@ -498,8 +498,8 @@ export class MinimumBoundingBoxUtils {
    * @example
    */
   static calculateEfficiency(rectangle: Rectangle, aabb: Rectangle): number {
-    const rectangleArea = this.calculateArea(rectangle);
-    const aabbArea = this.calculateArea(aabb);
+    const rectangleArea = MinimumBoundingBoxUtils.calculateArea(rectangle);
+    const aabbArea = MinimumBoundingBoxUtils.calculateArea(aabb);
 
     if (aabbArea === 0) return 1;
     return Math.max(0, 1 - (rectangleArea - aabbArea) / aabbArea);
@@ -512,8 +512,8 @@ export class MinimumBoundingBoxUtils {
    * @example
    */
   static calculateCompactness(rectangle: Rectangle): number {
-    const area = this.calculateArea(rectangle);
-    const perimeter = this.calculatePerimeter(rectangle);
+    const area = MinimumBoundingBoxUtils.calculateArea(rectangle);
+    const perimeter = MinimumBoundingBoxUtils.calculatePerimeter(rectangle);
 
     if (perimeter === 0) return 0;
     return (4 * Math.PI * area) / (perimeter * perimeter);
@@ -533,7 +533,7 @@ export class MinimumBoundingBoxUtils {
 
     for (const point of points) {
       if (typeof point.x !== "number" || typeof point.y !== "number") return false;
-      if (!isFinite(point.x) || !isFinite(point.y)) return false;
+      if (!Number.isFinite(point.x) || !Number.isFinite(point.y)) return false;
     }
 
     return true;
@@ -550,8 +550,8 @@ export class MinimumBoundingBoxUtils {
   static validateRectangle(rectangle: Rectangle, _config: MinimumBoundingBoxConfig): boolean {
     if (typeof rectangle.width !== "number" || typeof rectangle.height !== "number") return false;
     if (rectangle.width < 0 || rectangle.height < 0) return false;
-    if (!isFinite(rectangle.width) || !isFinite(rectangle.height)) return false;
-    if (typeof rectangle.rotation !== "number" || !isFinite(rectangle.rotation)) return false;
+    if (!Number.isFinite(rectangle.width) || !Number.isFinite(rectangle.height)) return false;
+    if (typeof rectangle.rotation !== "number" || !Number.isFinite(rectangle.rotation)) return false;
 
     return true;
   }
@@ -569,7 +569,7 @@ export class MinimumBoundingBoxUtils {
     for (const point of points) {
       let isDuplicate = false;
       for (const existing of unique) {
-        if (this.distanceSquared(point, existing) < tolerance * tolerance) {
+        if (MinimumBoundingBoxUtils.distanceSquared(point, existing) < tolerance * tolerance) {
           isDuplicate = true;
           break;
         }
@@ -591,8 +591,8 @@ export class MinimumBoundingBoxUtils {
    */
   static sortPointsByAngle(points: Point[], reference: Point): Point[] {
     return points.slice().sort((a, b) => {
-      const angleA = this.vectorToAngle(this.vectorFromPoints(reference, a));
-      const angleB = this.vectorToAngle(this.vectorFromPoints(reference, b));
+      const angleA = MinimumBoundingBoxUtils.vectorToAngle(MinimumBoundingBoxUtils.vectorFromPoints(reference, a));
+      const angleB = MinimumBoundingBoxUtils.vectorToAngle(MinimumBoundingBoxUtils.vectorFromPoints(reference, b));
       return angleA - angleB;
     });
   }
